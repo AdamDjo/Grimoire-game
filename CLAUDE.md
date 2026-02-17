@@ -1,5 +1,8 @@
 # RPG Narratif Web - AI-Powered
 
+## ⚠️ IMPORTANT: Project Memory
+**Claude: Always read `docs/MEMORY.md` at the start of each session.** It contains persistent project state, user preferences, and implementation notes that carry across conversations.
+
 ## Project Description
 Jeu web RPG narratif interactif où l'IA génère des univers uniques à chaque partie. Le joueur crée un personnage, lit des scènes narratives, et choisit parmi des options textuelles. Gameplay style Roadwarden : stats, inventaire, choix avec conséquences, Game Over possible. Rejouabilité infinie grâce à la génération IA.
 
