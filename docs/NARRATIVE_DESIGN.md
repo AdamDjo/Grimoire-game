@@ -1,6 +1,7 @@
-# Narrative Design - Scene Writing Standards
+# Narrative Design - Scene Writing Standards (Multi-Universe)
 
 **Purpose**: Définir comment les scènes doivent être écrites par l'IA pour être rich, engaging, ET faciles à lire.
+**Architecture**: Standards adaptés aux 3 univers (Fantasy, Apocalypse, Sci-Fi)
 
 ---
 
@@ -48,17 +49,20 @@ Structure:
 
 ---
 
-## Scene Template for AI Prompting
+## Scene Template for AI Prompting (Multi-Universe)
 
-### Prompt Structure (for Claude/Gemini)
+### Universal Prompt Structure (for Claude/Gemini)
+
+**IMPORTANT**: Ce template s'adapte selon l'univers. Remplacer `{universeType}` par 'fantasy', 'apocalypse', ou 'scifi'.
 
 ```
-You are a fantasy RPG narrative engine. Generate ONE immersive scene
+You are a {universeType} RPG narrative engine. Generate ONE immersive scene
 for the player character. Follow these rules EXACTLY:
 
 WORLD CONTEXT:
-- Universe: Valorain (medieval fantasy, magic, factions, NPCs matter)
-- Character: {character.name}, {class} (Stats: Str {str}, Int {int}, Agi {agi}, Emp {emp}, Wil {wil})
+- Universe: {universeName} ({universeType} - {universeDescription})
+- Character: {character.name}, {class}
+- Stats: HP {hp}/{maxHp}, Mana {mana}/{maxMana}, Str {str}, Agi {agi}, Int {int}, Cha {cha}, Luck {luck}
 - Current inventory: {items}
 - Reputation: {faction_name}: {reputation_value}
 
@@ -198,6 +202,73 @@ out, circling. They're toying with you, confident.
 
 "Last chance, human. Drop your coin purse, walk away, and we
 don't spill your blood tonight."
+
+What do you do?
+```
+
+---
+
+## Multi-Universe Scene Examples 🆕
+
+### Fantasy (Valorain) - Example Scene
+```
+SCENE 8: The Arcane Library
+
+Dust motes dance in shafts of blue light filtering through stained glass.
+The library stretches endlessly - towering shelves packed with ancient
+tomes, their spines cracked and faded. The air smells of old parchment
+and something else... ozone, like after a lightning strike.
+
+A robed figure stands at a massive lectern, fingers tracing glowing
+runes that hover above an open book. They don't look up as you enter,
+but their voice echoes: "Another seeker of forbidden knowledge. How
+predictable."
+
+Your hand moves to your sword. This could be a test - or a trap.
+
+What do you do?
+```
+
+### Apocalypse (Terre Désolée) - Example Scene
+```
+SCENE 12: The Dead Zone Crossing
+
+Radiation warning signs hang crooked on rusted poles. Your Geiger
+counter clicks steadily - not deadly yet, but getting there. The
+highway stretches ahead, cracked asphalt swallowed by dead grass.
+
+Abandoned cars form a metal graveyard. Most have been picked clean,
+but you spot fresh boot prints in the dust. Someone passed through
+recently. Alive, from the look of it.
+
+Then you hear it: engines. Raiders. Two motorcycles, maybe three,
+coming fast from the east. You have maybe thirty seconds before
+they see you.
+
+Your supplies are low. Fighting means risking injury. But running
+means leaving potential loot behind.
+
+What do you do?
+```
+
+### Sci-Fi (Nova Galaxia) - Example Scene
+```
+SCENE 15: Docking Bay 7-Alpha
+
+Warning klaxons blare red across the station's viewport. Outside,
+three Syndicate fighters drift in formation, weapons hot. Your
+ship's AI chimes: "Hostile scan detected. Recommend immediate
+departure."
+
+The docking clamps release with a hiss. Around you, other ships
+scramble for launch clearance. Panic spreads through the bay like
+wildfire.
+
+A transmission cuts through the chaos - encrypted, but your hacker
+implant decodes it instantly: "Prototype in Bay 7. Secure it. No
+witnesses."
+
+That's YOUR bay. They're here for YOU.
 
 What do you do?
 ```
@@ -396,9 +467,9 @@ Scenes 21+:   (Endgame, multiple possible endings)
 
 ---
 
-## Integration with Backend
+## Integration with Backend (Multi-Universe)
 
-### AI Prompt in Code (Backend)
+### AI Prompt Builder (Universe-Aware)
 
 ```typescript
 // File: apps/backend/src/ai/scene-prompt.builder.ts
@@ -406,23 +477,99 @@ Scenes 21+:   (Endgame, multiple possible endings)
 export function buildScenePrompt(
   gameState: GameSession,
   previousChoice: Choice,
-  worldLore: UniverseLore
+  universeLore: UniverseLore
 ): string {
-  return `
-You are a fantasy RPG narrative engine...
-[Full prompt template above]
+  const { universeType } = gameState.session;
 
-PLAYER CONTEXT:
-${buildPlayerContext(gameState.character)}
+  // Adapter les labels selon l'univers
+  const statLabels = getStatLabelsForUniverse(universeType);
+
+  // Construire le prompt spécifique à l'univers
+  const basePrompt = getUniverseBasePrompt(universeType);
+
+  return `
+${basePrompt}
 
 WORLD CONTEXT:
-${buildWorldContext(worldLore, gameState)}
+- Universe: ${universeLore.name} (${universeType})
+- Setting: ${universeLore.description}
+- Factions: ${universeLore.factions.map(f => f.name).join(', ')}
+
+CHARACTER CONTEXT:
+- Name: ${gameState.character.name}
+- Class: ${gameState.character.class}
+- Level: ${gameState.character.level}
+- Stats:
+  HP ${gameState.character.hp}/${gameState.character.maxHp}
+  ${statLabels.resource} ${gameState.character.mana}/${gameState.character.maxMana}
+  Strength ${gameState.character.strength}
+  Agility ${gameState.character.agility}
+  Intelligence ${gameState.character.intelligence}
+  Charisma ${gameState.character.charisma}
+  Luck ${gameState.character.luck}
+
+INVENTORY:
+${gameState.character.inventory.map(item => `- ${item.name}`).join('\n')}
+
+REPUTATION:
+${gameState.reputation.map(r => `${r.faction}: ${r.value}`).join('\n')}
 
 RECENT EVENTS:
 ${gameState.eventLog.slice(-3).map(e => e.description).join('\n')}
 
-Now generate the next scene...
+LAST ACTION:
+Player chose: "${previousChoice.text}"
+Result: ${previousChoice.consequences}
+
+UNIVERSE-SPECIFIC TONE:
+${getUniverseToneGuidelines(universeType)}
+
+Now generate the next scene following the template structure.
 `;
+}
+
+// Helper: Labels adaptés par univers
+function getStatLabelsForUniverse(universeType: UniverseType): StatLabels {
+  const labels = {
+    fantasy: { resource: 'Mana' },
+    apocalypse: { resource: 'Stamina' },
+    scifi: { resource: 'Shield Energy' }
+  };
+  return labels[universeType];
+}
+
+// Helper: Prompt de base par univers
+function getUniverseBasePrompt(universeType: UniverseType): string {
+  const prompts = {
+    fantasy: `You are a fantasy RPG narrative engine. Generate vivid medieval fantasy scenes with magic, mythical creatures, and ancient lore.`,
+    apocalypse: `You are a post-apocalyptic RPG narrative engine. Generate gritty survival scenes with scarce resources, radiation zones, and desperate factions.`,
+    scifi: `You are a sci-fi space opera RPG narrative engine. Generate futuristic scenes with advanced technology, alien species, and interstellar politics.`
+  };
+  return prompts[universeType];
+}
+
+// Helper: Guidelines tonales par univers
+function getUniverseToneGuidelines(universeType: UniverseType): string {
+  const guidelines = {
+    fantasy: `
+- Use medieval/fantasy vocabulary (tavern, castle, magic, runes)
+- Creatures: dragons, goblins, undead, fey creatures
+- Technology level: swords, bows, potions, scrolls
+- Atmosphere: mystical, ancient, magical`,
+
+    apocalypse: `
+- Use survival/scavenger vocabulary (scrap, radiation, bunker)
+- Threats: raiders, mutants, starvation, disease
+- Technology level: salvaged tech, makeshift weapons, jury-rigged gear
+- Atmosphere: grim, desperate, claustrophobic`,
+
+    scifi: `
+- Use sci-fi vocabulary (starship, AI, plasma, quantum)
+- Elements: aliens, androids, corporations, space stations
+- Technology level: energy weapons, holograms, FTL travel
+- Atmosphere: sleek, advanced, political intrigue`
+  };
+  return guidelines[universeType];
 }
 ```
 

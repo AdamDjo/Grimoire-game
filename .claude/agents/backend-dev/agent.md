@@ -2,7 +2,7 @@
 name: backend-dev
 description: Backend engineer specializing in Express + TypeScript APIs. Use this agent for all backend implementation tasks (routes, services, middlewares, database, AI integration).
 tools: Read, Edit, Write, Grep, Glob, Bash
-model: opus
+model: sonnet
 maxTurns: 30
 ---
 

@@ -1,6 +1,7 @@
-# Frontend Architecture - RPG Narratif
+# Frontend Architecture - RPG Narratif Multi-Univers
 
 **Vue**: Structure Next.js 15 (App Router), composants Tailwind, approche "Statique d'abord"
+**Architecture**: Multi-univers dès Phase 1, exposition progressive (Fantasy → 3 univers)
 
 ---
 
@@ -19,6 +20,8 @@ apps/frontend/
 │   │   ├── (main)/
 │   │   │   ├── dashboard/
 │   │   │   │   └── page.tsx
+│   │   │   ├── universe-select/
+│   │   │   │   └── page.tsx (NEW - Sélection univers)
 │   │   │   ├── character-create/
 │   │   │   │   └── page.tsx
 │   │   │   ├── leaderboard/
@@ -35,7 +38,7 @@ apps/frontend/
 │   │   │
 │   │   ├── layout.tsx (root layout)
 │   │   └── page.tsx (landing page)
-│   │
+│   │   │
 │   ├── components/
 │   │   ├── ui/
 │   │   │   ├── Button.tsx
@@ -49,10 +52,15 @@ apps/frontend/
 │   │   │   ├── LoginForm.tsx
 │   │   │   └── SignupForm.tsx
 │   │   │
+│   │   ├── universe/ (NEW - Universe selection)
+│   │   │   ├── UniverseSelector.tsx
+│   │   │   ├── UniverseCard.tsx
+│   │   │   └── UniversePreview.tsx
+│   │   │
 │   │   ├── character/
 │   │   │   ├── CharacterCreator.tsx
-│   │   │   ├── ClassSelector.tsx
-│   │   │   ├── StatDistributor.tsx
+│   │   │   ├── ClassSelector.tsx (now universe-aware)
+│   │   │   ├── StatDistributor.tsx (universal stats)
 │   │   │   └── StatPreview.tsx
 │   │   │
 │   │   ├── game/
@@ -63,7 +71,7 @@ apps/frontend/
 │   │   │   └── GameOverScreen.tsx
 │   │   │
 │   │   ├── sidebar/
-│   │   │   ├── StatsSidebar.tsx
+│   │   │   ├── StatsSidebar.tsx (universal stats)
 │   │   │   ├── InventorySidebar.tsx
 │   │   │   ├── SkillsSidebar.tsx
 │   │   │   └── ReputationBar.tsx
@@ -82,6 +90,7 @@ apps/frontend/
 │   │   ├── useGameState.ts
 │   │   ├── useCharacter.ts
 │   │   ├── useSession.ts
+│   │   ├── useUniverse.ts (NEW - Universe selection)
 │   │   └── useAuth.ts
 │   │
 │   ├── lib/
@@ -246,57 +255,121 @@ interface UserStats {
 
 ---
 
-### 5. Character Creator (`/(main)/character-create/page.tsx`)
+### 5. Universe Selection (`/(main)/universe-select/page.tsx`) 🆕
 
-**Purpose**: Créer un personnage avant de commencer
+**Purpose**: Choisir l'univers avant création de personnage
 
 **Layout**:
 ```
 ┌──────────────────────────────────────────┐
+│ ◄ Retour           Choix de l'Univers   │
+├──────────────────────────────────────────┤
+│                                          │
+│  CHOISISSEZ VOTRE UNIVERS:               │
+│                                          │
+│  ┌────────────────────────────────────┐ │
+│  │  🏰 VALORAIN (Fantasy)             │ │
+│  │  Médiéval fantastique, magie       │ │
+│  │  5 classes disponibles             │ │
+│  │                                    │ │
+│  │  [JOUER]                           │ │
+│  └────────────────────────────────────┘ │
+│                                          │
+│  ┌────────────────────────────────────┐ │
+│  │  ☢️ TERRE DÉSOLÉE (Apocalypse)    │ │
+│  │  Survie post-apocalyptique         │ │
+│  │  4 classes disponibles             │ │
+│  │                                    │ │
+│  │  [BIENTÔT] 🔒 (Phase 2B)          │ │
+│  └────────────────────────────────────┘ │
+│                                          │
+│  ┌────────────────────────────────────┐ │
+│  │  🚀 NOVA GALAXIA (Sci-Fi)         │ │
+│  │  Exploration spatiale              │ │
+│  │  5 classes disponibles             │ │
+│  │                                    │ │
+│  │  [BIENTÔT] 🔒 (Phase 2B)          │ │
+│  └────────────────────────────────────┘ │
+│                                          │
+└──────────────────────────────────────────┘
+```
+
+**Components Used**:
+- `UniverseSelector.tsx` (main component)
+- `UniverseCard.tsx` (individual universe card)
+- `UniversePreview.tsx` (preview modal with lore)
+- `Button.tsx`
+- `Card.tsx`
+
+**State Management**:
+```typescript
+interface UniverseState {
+  selectedUniverse: UniverseType | null
+  availableUniverses: UniverseDefinition[]
+  selectUniverse: (universeId: string) => void
+}
+```
+
+**Phase Rollout**:
+- **Phase 1 (MVP)**: Fantasy clickable, others disabled
+- **Phase 2B**: All 3 universes clickable
+- **Phase 3**: + Custom universe creator
+
+---
+
+### 6. Character Creator (`/(main)/character-create/page.tsx`)
+
+**Purpose**: Créer un personnage pour l'univers sélectionné
+
+**Layout** (Fantasy example):
+```
+┌──────────────────────────────────────────┐
 │ ◄ Retour              Création Personnage│
+│ Univers: 🏰 Valorain (Fantasy)           │
 ├──────────────────────────────────────────┤
 │                                          │
 │  NOM:                                    │
 │  [_____________________________]         │
 │  "Thrall" (min 3, max 20 chars)        │
 │                                          │
-│  CLASSE: (Cards avec sélection)         │
+│  CLASSE: (5 fantasy classes)            │
 │                                          │
 │  ┌─────────────┐  ┌─────────────┐     │
-│  │  GUERRIER   │  │  MAGICIEN   │     │
-│  │ ♥ Str +2    │  │ ◆ Int +2    │     │
-│  │ ♦ Wil +1    │  │ ◆ Agi +1    │     │
+│  │  GUERRIER   │  │    MAGE     │     │
+│  │ ♥ Str +3    │  │ ◆ Int +3    │     │
+│  │ ♥ HP +15    │  │ ◆ Mana +20  │     │
 │  │             │  │             │     │
-│  │  Dégâts élevés │  Énigmes, magie│  │
+│  │  Combat     │  │  Magie      │     │
 │  └─────────────┘  └─────────────┘     │
 │                                          │
 │  ┌─────────────┐  ┌─────────────┐     │
-│  │   VOLEUR    │  │   PRÊTRE    │     │
-│  │ ◆ Agi +2    │  │ ♥ Emp +2    │     │
-│  │ ♥ Emp +1    │  │ ◆ Int +1    │     │
+│  │   VOLEUR    │  │ GUÉRISSEUR  │     │
+│  │ ◆ Agi +3    │  │ ♥ Int +2    │     │
+│  │ ◆ Luck +2   │  │ ◆ Cha +2    │     │
 │  │             │  │             │     │
-│  │ Stealth     │  │ Parole      │     │
+│  │ Stealth     │  │ Support     │     │
 │  └─────────────┘  └─────────────┘     │
 │                                          │
 │  ┌─────────────┐                        │
-│  │  CHEVALIER  │                        │
-│  │ ♥ Str +2    │                        │
-│  │ ♥ Wil +2    │                        │
-│  │ ◆ Agi -1    │                        │
+│  │   RÔDEUR    │                        │
+│  │ ◆ Agi +2    │                        │
+│  │ ♥ Str +1    │                        │
 │  │             │                        │
-│  │ Honorable   │                        │
+│  │ Nature      │                        │
 │  └─────────────┘                        │
 │                                          │
-│  DISTRIBUTION DE POINTS (5 points):     │
-│  Force:    ●●● [+] [-]  = 13           │
-│  Intellect: ●● [+] [-]  = 11           │
-│  Agilité:  ●●●●● [+] [-]  = 15         │
-│  Empathie: ● [+] [-]  = 8              │
-│  Volonté:  ●● [+] [-]  = 10            │
+│  STATS (Universal System):              │
+│  HP:           [███████░░░] 70          │
+│  Mana:         [█████░░░░░] 50          │
+│  Strength:     [██░░░░░░░░] 10          │
+│  Agility:      [██░░░░░░░░] 10          │
+│  Intelligence: [██░░░░░░░░] 10          │
+│  Charisma:     [██░░░░░░░░] 10          │
+│  Luck:         [██░░░░░░░░] 10          │
 │                                          │
 │  BONUS CLASSE (GUERRIER):               │
-│  Force: 13 → 15 (+2)                    │
-│  Volonté: 10 → 11 (+1)                  │
+│  Strength: 10 → 13 (+3)                 │
+│  HP: 70 → 85 (+15)                      │
 │                                          │
 │  [Annuler]              [Commencer!]    │
 │                                          │
@@ -305,9 +378,9 @@ interface UserStats {
 
 **Components Used**:
 - `CharacterCreator.tsx` (main form)
-- `ClassSelector.tsx` (class grid)
-- `StatDistributor.tsx` (stat points)
-- `StatPreview.tsx` (preview final stats)
+- `ClassSelector.tsx` (universe-aware, loads correct classes)
+- `StatDistributor.tsx` (universal stats: HP/Mana/Str/Agi/Int/Cha/Luck)
+- `StatPreview.tsx` (preview with class bonuses)
 - `Button.tsx`
 - `Input.tsx`
 
@@ -315,18 +388,38 @@ interface UserStats {
 ```typescript
 interface CharacterState {
   name: string
-  selectedClass: Class
-  baseStats: Stats
+  universeType: UniverseType  // 'fantasy' | 'apocalypse' | 'scifi'
+  selectedClass: ClassDefinition
+  baseStats: UniversalStats
   addPointToStat: (stat: StatKey) => void
   removePointFromStat: (stat: StatKey) => void
-  getFinalStats: () => Stats
+  getFinalStats: () => UniversalStats
   isValid: () => boolean
+}
+
+interface UniversalStats {
+  hp: number
+  maxHp: number
+  mana: number
+  maxMana: number
+  strength: number
+  agility: number
+  intelligence: number
+  charisma: number
+  luck: number
+  level: number
+  xp: number
 }
 ```
 
+**Notes**:
+- Classes chargées dynamiquement selon `universeType`
+- Stats adaptées au contexte (ex: "Mana" → "Stamina" en apocalypse, "Shield Energy" en scifi)
+- UI identique mais labels changent selon univers
+
 ---
 
-### 6. Game Session (`/(game)/session/[sessionId]/page.tsx`)
+### 7. Game Session (`/(game)/session/[sessionId]/page.tsx`)
 
 **Purpose**: MAIN GAME SCREEN - 70% du gameplay ici
 
@@ -411,7 +504,7 @@ interface GameSessionState {
 
 ---
 
-### 7. Game Over Screen (`/(game)/session/end/page.tsx`)
+### 8. Game Over Screen (`/(game)/session/end/page.tsx`)
 
 **Purpose**: Afficher résumé de partie
 
@@ -450,7 +543,7 @@ interface GameSessionState {
 
 ---
 
-### 8. Leaderboard (`/(main)/leaderboard/page.tsx`)
+### 9. Leaderboard (`/(main)/leaderboard/page.tsx`)
 
 **Purpose**: Voir les scores globaux
 
@@ -474,7 +567,7 @@ interface GameSessionState {
 
 ---
 
-### 9. Settings Page (`/(main)/settings/page.tsx`)
+### 10. Settings Page (`/(main)/settings/page.tsx`)
 
 **Purpose**: Paramètres utilisateur
 
@@ -565,17 +658,26 @@ Rarity Colors:
 ## Phase 1A Milestone (Week 5)
 
 **By end of week 5, DONE**:
-- ✅ All 9 pages created + navigable
+- ✅ All 10 pages created + navigable
+- ✅ Universe selector (Fantasy active, 2 disabled)
 - ✅ All components built
-- ✅ Mock data integrated
+- ✅ Mock data integrated (multi-universe aware)
 - ✅ Responsive design (desktop first)
 - ✅ No API calls yet (all static)
 
 **Pages ready to integrate with backend**:
 1. Login/Signup (auth endpoints)
 2. Dashboard (session list)
-3. Character Creator (POST /characters)
-4. Game Session (game loop)
-5. Game Over (result display)
-6. Leaderboard (static data initially)
-7. Settings (user prefs)
+3. Universe Selection (universe metadata)
+4. Character Creator (POST /characters with universeType)
+5. Game Session (game loop with universe context)
+6. Game Over (result display)
+7. Leaderboard (static data initially)
+8. Settings (user prefs)
+
+**Multi-Universe Architecture**:
+- ✅ Code supports 3 universes dès Phase 1
+- ✅ UI shows 3 cards (2 disabled avec "BIENTÔT")
+- ✅ ClassSelector loads correct classes based on universeType
+- ✅ Stats universal system (HP/Mana/Str/Agi/Int/Cha/Luck)
+- 🎯 **Exposition**: Fantasy only, Phase 2B unlocks others

@@ -7,8 +7,9 @@
 
 ## 🎯 Quick Summary
 
-**Game**: RPG narratif généré par IA (Valorain univers, 5 classes, progression visible, replayabilité infinie)
+**Game**: RPG narratif multi-univers généré par IA (3 univers de base, 14 classes, progression visible, replayabilité massive)
 **Status**: Planning done, ready to code
+**Architecture**: Multi-univers dès Phase 1, exposition progressive (Fantasy → 3 univers → Custom)
 **Next**: Phase 1A - Frontend UI (Week 1-5)
 
 ---
@@ -73,34 +74,47 @@
 ## 🎮 Game Overview (For Claude Memory)
 
 ### Concept
-- Player creates character (choose class from 5)
-- AI generates unique universe + narrative scenes
+- Player choisit un **univers** (Fantasy, Apocalypse, ou Sci-Fi)
+- Player creates character (14 classes total, 5/4/5 par univers)
+- AI generates narrative scenes adaptées à l'univers
 - Player makes choices with permanent consequences
 - Leveling + loot drops provide progression
 - Multiple endings based on choices
-- Each playthrough feels different (AI generation)
+- Each playthrough feels different (AI + multi-univers)
 
 ### Core Addictive Loop
-1. Create character (identity)
-2. See scene (immersion)
-3. Choose action (agency)
-4. See consequences (weight)
-5. Get loot/XP (reward)
-6. Level up (progression)
-7. Go to step 2 (repeat)
+1. Choose universe (theme selection)
+2. Create character (identity + classe)
+3. See scene (immersion)
+4. Choose action (agency)
+5. See consequences (weight)
+6. Get loot/XP (reward)
+7. Level up (progression)
+8. Go to step 3 (repeat)
 
-### Universe: Valorain
-- Single cohesive medieval fantasy world
-- 4 regions, 4 factions, original creatures
+### 3 Univers de Base
+
+**1. Valorain (Fantasy)**
+- Médiéval fantastique, magie, créatures mythiques
+- 5 régions, 4 factions, créatures originales
 - WoW-inspired but legally original
-- Lore cached per session (not regenerated)
+- Classes: Guerrier, Mage, Voleur, Guérisseur, Rôdeur
 
-### Classes (Each Different Playstyle)
-- Warrior: Combat, direct damage
-- Mage: Intellect, puzzles, magic
-- Rogue: Agility, stealth, theft
-- Priest: Empathy, persuasion, healing
-- Paladin: Honor-based, defensive
+**2. Terre Désolée (Apocalypse)**
+- Post-apocalypse, survie, ressources rares
+- Ruines, zones radioactives, factions humaines
+- Fallout/Metro-inspired but original
+- Classes: Récupérateur, Bagarreur, Médecin, Ingénieur
+
+**3. Nova Galaxia (Sci-Fi)**
+- Space opera, tech avancée, aliens
+- Stations spatiales, planètes colonisées
+- Mass Effect/Star Wars-inspired but original
+- Classes: Pilote, Soldat, Hacker, Diplomate, Psionique
+
+### Stats Universelles
+- HP, Mana, Strength, Agility, Intelligence, Charisma, Luck
+- Mêmes stats pour tous les univers (adaptation contextuelle)
 
 ---
 
@@ -108,30 +122,34 @@
 
 ```
 PHASE 1A (Week 1-5):  Frontend UI - ALL PAGES STATIC
-├─ Week 1: Auth pages + component library
+├─ Week 1: Auth pages + component library + universe selector
 ├─ Week 2-3: Character creation + dashboard
 ├─ Week 4: Game session screen (most complex)
 └─ Week 5: Polish + responsive design
+📍 Fantasy UNIQUEMENT exposé, code multi-univers ready
 
 PHASE 1B (Week 4-6): Backend scaffold - IN PARALLEL
-├─ Week 4-5: Database + auth endpoints
-└─ Week 6: Game engine skeleton + AI test
+├─ Week 4-5: Database schema (multi-univers) + auth endpoints
+└─ Week 6: Game engine skeleton + AI test (fantasy)
+📍 Architecture multi-univers, mais fantasy only
 
 PHASE 2 (Week 7-10): Integration - CONNECT IT ALL
 ├─ Week 7: Auth + character creation live
-├─ Week 8-9: Game loop with real AI
+├─ Week 8-9: Game loop with real AI (fantasy)
 └─ Week 10: Polish + testing
+📍 RESULT: MVP SHIPPED (Fantasy univers fully playable) ✅
 
-RESULT: MVP SHIPPED ✅
+PHASE 2B (Week 11-16): Multi-Universe + Addictive features
+├─ Week 11: Activer Apocalypse & Sci-Fi univers
+├─ Week 12: Named NPCs + relationship tracking
+├─ Week 13-14: World events + randomization
+├─ Week 15-16: Build diversity + achievements
+📍 RESULT: 3 univers, 14 classes, highly replayable ✅
 
-PHASE 2B (Week 11-16): Addictive features
-├─ Named NPCs with memory
-├─ World events + randomization
-├─ Build diversity (class affects narrative)
-└─ Achievements + leaderboards
-
-PHASE 3 (Week 17+): Polish
-├─ Cosmetics, NG+ mode, real leaderboards
+PHASE 3 (Week 17+): UGC + Polish
+├─ Custom universe creator (AI generates classes)
+├─ Universe sharing entre joueurs
+├─ Cosmetics, NG+ mode, leaderboards
 ├─ Story export, streaming integration
 └─ Community features
 ```
@@ -140,9 +158,12 @@ PHASE 3 (Week 17+): Polish
 
 ## 🔑 Key Decisions (Locked)
 
+✅ **Multi-Univers Architecture**: 3 univers de base (Fantasy, Apocalypse, Sci-Fi) + custom (Phase 3)
+✅ **Progressive Rollout**: Phase 1 = Fantasy only, Phase 2B = 3 univers, Phase 3 = custom
+✅ **Code Multi-Univers dès Phase 1**: Architecture flexible, exposition progressive
+✅ **14 Classes Total**: 5 fantasy, 4 apocalypse, 5 scifi (prédéfinies)
+✅ **Universal Stats System**: HP/Mana/Str/Agi/Int/Cha/Luck pour tous univers
 ✅ **Frontend-First**: Design UI before backend code
-✅ **Univers Valorain**: Single world, 5 classes, not multiple universes
-✅ **Phase 2B Later**: MVP first (10 weeks), addictive features after
 ✅ **Multi-AI Provider**: Claude → Gemini → Mistral (fallback)
 ✅ **Permanent Consequences**: World remembers choices
 ✅ **French Responses**: User is francophone
@@ -176,9 +197,10 @@ PHASE 3 (Week 17+): Polish
 - [ ] Auth form validation working (frontend)
 
 ### Week 2-3
+- [ ] Universe selector (3 cards: Fantasy, Apocalypse disabled, Sci-Fi disabled)
 - [ ] Character creation form complete
-- [ ] Class selector with 5 options
-- [ ] Stat distributor (5 points system)
+- [ ] Class selector (5 fantasy classes visible)
+- [ ] Stat distributor (universal stats system)
 - [ ] Dashboard page (mock data)
 - [ ] Session list display
 - [ ] Responsive design checked
@@ -187,7 +209,7 @@ PHASE 3 (Week 17+): Polish
 - [ ] Game session screen layout (main complexity)
 - [ ] Scene display component
 - [ ] Choices list (4 buttons)
-- [ ] Stats sidebar (bars: HP, Sanity, Stamina)
+- [ ] Stats sidebar (bars: HP, Mana, Str/Agi/Int/Cha/Luck)
 - [ ] Inventory sidebar with items
 - [ ] Event log component
 

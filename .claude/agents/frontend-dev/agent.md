@@ -2,7 +2,7 @@
 name: frontend-dev
 description: Frontend engineer specializing in Next.js + React + TypeScript. Use this agent for all frontend implementation tasks (pages, components, hooks, state management, styling).
 tools: Read, Edit, Write, Grep, Glob, Bash
-model: opus
+model: sonnet
 maxTurns: 30
 ---
 
