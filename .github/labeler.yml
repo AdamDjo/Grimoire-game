@@ -1,0 +1,17 @@
+frontend:
+  - any: ['apps/frontend/**']
+
+backend:
+  - any: ['apps/backend/**']
+
+shared:
+  - any:
+      - 'packages/shared/**'
+      - 'packages/eslint-config/**'
+      - 'packages/prettier-config/**'
+
+phase-1a:
+  - any: ['apps/frontend/**']
+
+phase-1b:
+  - any: ['apps/backend/**']

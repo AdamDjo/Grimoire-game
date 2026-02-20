@@ -181,11 +181,33 @@ release/0.1.0                      # depuis develop quand MVP prêt
 | Phase 2B - Multi-Universe | Week 16 | 3 univers, 14 classes |
 | Phase 3 - Polish & UGC | Week 17+ | Community features |
 
-### Comment demander à Claude de créer des issues
-Exemples de commandes valides :
-- "Crée les issues pour la Phase 1A Week 1 depuis la doc"
-- "Crée une issue pour implémenter le composant UniverseCard"
-- "Crée une PR feature/phase-1a-landing-page → develop"
-- "Crée la release branch 0.1.0"
+### PR Automation (automatic — no manual action needed)
 
-Claude lira la doc pertinente et créera automatiquement les issues/branches/PRs avec les bons labels et milestones.
+**Labels** → auto-applied by `actions/labeler@v5` via `.github/labeler.yml`:
+- Files in `apps/frontend/` → labels `frontend` + `phase-1a`
+- Files in `apps/backend/` → labels `backend` + `phase-1b`
+- Files in `packages/` → label `shared`
+
+**Milestone** → auto-assigned by `.github/workflows/pr-metadata.yml` based on branch name:
+| Branch pattern | Milestone |
+|----------------|-----------|
+| `feature/phase-1a-*` | Phase 1A - Frontend UI |
+| `feature/phase-1b-*` | Phase 1B - Backend Foundation |
+| `feature/phase-2-*` | Phase 2 - MVP |
+| `feature/phase-2b-*` | Phase 2B - Multi-Universe |
+| `feature/phase-3-*` | Phase 3 - Polish & UGC |
+| `feature/tooling-*` | _(none)_ |
+
+**Reviewers** → assigned manually (solo project).
+
+> When creating PRs via MCP github tool, still pass `labels` explicitly —
+> GitHub Actions automation only runs on GitHub-triggered events, not via API calls.
+
+### How to ask Claude to create issues
+Valid commands:
+- "Create issues for Phase 1A Week 1 from the docs"
+- "Create an issue to implement the UniverseCard component"
+- "Create a PR feature/phase-1a-landing-page → develop"
+- "Create the release branch 0.1.0"
+
+Claude will read the relevant docs and automatically create issues/branches/PRs with the correct labels and milestones.
