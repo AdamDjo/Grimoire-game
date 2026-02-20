@@ -13,18 +13,27 @@
     "@rpg-game/shared": "workspace:*",
     "@supabase/supabase-js": "^2.47.0",
     "@tanstack/react-query": "^5.55.0",
+    "axios": "^1.7.0",
+    "framer-motion": "^11.0.0",
+    "lucide-react": "^0.460.0",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-hook-form": "^7.54.0",
+    "zod": "^3.24.0",
     "zustand": "^5.0.0"
   },
   "devDependencies": {
+    "@rpg-game/eslint-config": "workspace:*",
+    "@rpg-game/prettier-config": "workspace:*",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "prettier": "^3.4.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
