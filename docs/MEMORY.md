@@ -298,6 +298,29 @@ PHASE 3 (Week 17+): UGC + Polish
 
 If unclear: Check README.md → GAME_DESIGN.md → specific doc
 
+## ⚙️ CI / GitHub Automation (Active)
+
+### PR Labels (auto-applied)
+Labels are auto-applied via `actions/labeler@v5` in `.github/workflows/ci.yml` based on files changed:
+- `apps/frontend/**` → `frontend`, `phase-1a`
+- `apps/backend/**` → `backend`, `phase-1b`
+- `packages/**` → `shared`
+
+Config: `.github/labeler.yml`
+
+### PR Milestones (auto-assigned)
+Milestones are auto-assigned via `.github/workflows/pr-metadata.yml` based on branch name:
+- `feature/phase-1a-*` → Phase 1A - Frontend UI
+- `feature/phase-1b-*` → Phase 1B - Backend Foundation
+- `feature/phase-2-*` → Phase 2 - MVP
+- `feature/phase-2b-*` → Phase 2B - Multi-Universe
+- `feature/phase-3-*` → Phase 3 - Polish & UGC
+- `feature/tooling-*` → no milestone (tooling branches)
+
+**Note**: When creating PRs via MCP GitHub tool, pass labels/milestone explicitly since automation only triggers on GitHub Actions events.
+
+---
+
 ## 📞 When to Update MEMORY.md
 
 - [ ] Phase completed

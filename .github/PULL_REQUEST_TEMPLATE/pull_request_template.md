@@ -1,36 +1,33 @@
-## Résumé
+## Summary
 
-<!-- Décris en 1-3 phrases ce que fait cette PR -->
+<!-- Describe in 1-3 sentences what this PR does -->
 
-## Issue(s) liée(s)
+## Related issue(s)
 
-Closes #<!-- numéro de l'issue -->
+Closes #<!-- issue number -->
 
-## Type de changement
+## Type of change
 
-- [ ] Nouvelle feature (Phase 1A/1B/2/2B/3)
+- [ ] New feature (Phase 1A / 1B / 2 / 2B / 3)
 - [ ] Bug fix
-- [ ] Refactoring (pas de changement de comportement)
+- [ ] Refactoring (no behavior change)
 - [ ] Config / DevOps
 - [ ] Documentation
 
-## Domaine
-
-- [ ] `frontend` (`apps/frontend/`)
-- [ ] `backend` (`apps/backend/`)
-- [ ] `shared` (`packages/shared/`)
-- [ ] `ai`
-- [ ] `database`
-
 ## Checklist
 
-- [ ] Le code suit les conventions du projet (`CLAUDE.md`)
-- [ ] Les types partagés sont dans `packages/shared` (pas dupliqués)
-- [ ] `pnpm type-check` passe
-- [ ] `pnpm lint` passe
-- [ ] Pas de `console.log` oubliés
-- [ ] Testé manuellement
+- [ ] Code follows project conventions (`CLAUDE.md`)
+- [ ] Shared types are in `packages/shared` (not duplicated)
+- [ ] `pnpm type-check` passes
+- [ ] `pnpm lint` passes
+- [ ] No forgotten `console.log`
+- [ ] Manually tested
 
-## Screenshots (si frontend)
+## Screenshots (frontend only)
 
-<!-- Capture d'écran avant/après si changement UI -->
+<!-- Before/after screenshot if UI change -->
+
+---
+
+> **Labels** and **milestone** are assigned automatically based on files changed and branch name.
+> No need to set them manually.
