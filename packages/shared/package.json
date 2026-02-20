@@ -9,6 +9,7 @@
     "lint": "eslint src/"
   },
   "devDependencies": {
+    "@typescript-eslint/parser": "^8.56.0",
     "typescript": "^5.7.0"
   }
 }

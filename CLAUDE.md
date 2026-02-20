@@ -3,6 +3,21 @@
 ## ⚠️ IMPORTANT: Project Memory
 **Claude: Always read `docs/MEMORY.md` at the start of each session.** It contains persistent project state, user preferences, and implementation notes that carry across conversations.
 
+## ⚠️ IMPORTANT: Git Commit Rules
+**Always apply these rules for every commit, no exceptions:**
+- **No `Co-Authored-By` line** — never add it
+- **Clear and descriptive message** — explain what was done and why, not just a generic list
+- **Format**: `type(scope): short summary` + blank line + detailed explanation if needed
+- **Types**: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`
+- **Example**:
+  ```
+  feat(tooling): configure shared ESLint and Prettier for the monorepo
+
+  Created packages/eslint-config with 3 configs (base, next, backend)
+  and packages/prettier-config. Each app now extends the shared config
+  instead of duplicating rules. Closes #7
+  ```
+
 ## Project Description
 Jeu web RPG narratif interactif où l'IA génère des univers uniques à chaque partie. Le joueur crée un personnage, lit des scènes narratives, et choisit parmi des options textuelles. Gameplay style Roadwarden : stats, inventaire, choix avec conséquences, Game Over possible. Rejouabilité infinie grâce à la génération IA.
 
@@ -95,3 +110,82 @@ When working with multiple Claude Code agents:
 - **Agent Shared**: works on `packages/shared/` only
 - Always start with shared types before backend/frontend implementation
 - Frontend and backend can be developed in parallel once shared types exist
+
+## GitHub Workflow (AI-Assisted)
+
+### Branch Strategy
+```
+main          ← production, protected (PRs only)
+develop       ← integration branch, all features merge here
+feature/*     ← feature branches (ex: feature/phase-1a-auth-pages)
+release/*     ← release candidates (ex: release/0.1.0)
+hotfix/*      ← urgent production fixes
+```
+
+### Branch Naming Convention
+```
+feature/phase-1a-<description>    # Phase 1A frontend
+feature/phase-1b-<description>    # Phase 1B backend
+feature/phase-2-<description>     # Phase 2 integration
+feature/phase-2b-<description>    # Phase 2B features
+feature/phase-3-<description>     # Phase 3 polish
+hotfix/<description>              # Hotfixes
+release/<semver>                  # Release (ex: release/0.1.0)
+```
+
+### Workflow Claude → GitHub (MCP github server)
+Claude peut directement, via le MCP `github`:
+
+**Créer des issues** depuis la documentation :
+1. Lire `docs/GAME_DESIGN.md` + `docs/FRONTEND_ARCHITECTURE.md` pour le contexte
+2. Créer une issue avec le bon template (phase-task ou bug-report)
+3. Assigner les labels corrects (phase, domaine, priorité)
+4. Assigner au bon milestone
+
+**Créer des branches** :
+```
+feature/phase-1a-landing-page      # depuis develop
+feature/phase-1b-auth-endpoints    # depuis develop
+release/0.1.0                      # depuis develop quand MVP prêt
+```
+
+**Créer des PRs** :
+- `feature/*` → `develop` (développement normal)
+- `release/*` → `main` (releases, déclenche workflow release.yml)
+- `hotfix/*` → `main` ET `develop`
+
+### Labels disponibles
+| Label | Usage |
+|-------|-------|
+| `phase-1a` | Frontend UI (Week 1-5) |
+| `phase-1b` | Backend Foundation (Week 4-6) |
+| `phase-2` | Integration (Week 7-10) |
+| `phase-2b` | Addictive Features (Week 11-16) |
+| `phase-3` | Polish & UGC (Week 17+) |
+| `frontend` | `apps/frontend/` |
+| `backend` | `apps/backend/` |
+| `shared` | `packages/shared/` |
+| `ai` | AI integration |
+| `database` | Supabase / schema |
+| `bug` | Bug fix |
+| `release` | Release PR |
+| `priority` | Priorité haute |
+| `blocked` | Bloqué par dépendance |
+
+### Milestones
+| Milestone | Deadline | Goal |
+|-----------|----------|------|
+| Phase 1A - Frontend UI | Week 5 | All pages static |
+| Phase 1B - Backend Foundation | Week 6 | DB + auth ready |
+| Phase 2 - MVP | Week 10 | Fully playable |
+| Phase 2B - Multi-Universe | Week 16 | 3 univers, 14 classes |
+| Phase 3 - Polish & UGC | Week 17+ | Community features |
+
+### Comment demander à Claude de créer des issues
+Exemples de commandes valides :
+- "Crée les issues pour la Phase 1A Week 1 depuis la doc"
+- "Crée une issue pour implémenter le composant UniverseCard"
+- "Crée une PR feature/phase-1a-landing-page → develop"
+- "Crée la release branch 0.1.0"
+
+Claude lira la doc pertinente et créera automatiquement les issues/branches/PRs avec les bons labels et milestones.

@@ -1,0 +1,79 @@
+name: "Tâche de Phase"
+description: "Tâche de développement liée à une phase du projet"
+title: "[PHASE] "
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: phase
+    attributes:
+      label: Phase
+      options:
+        - "Phase 1A - Frontend UI (Week 1-5)"
+        - "Phase 1B - Backend Foundation (Week 4-6)"
+        - "Phase 2 - Integration (Week 7-10)"
+        - "Phase 2B - Addictive Features (Week 11-16)"
+        - "Phase 3 - Polish & UGC (Week 17+)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: domain
+    attributes:
+      label: Domaine
+      options:
+        - "frontend"
+        - "backend"
+        - "shared"
+        - "ai"
+        - "database"
+        - "devops"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: "Qu'est-ce qui doit être fait ? Quel est le contexte ?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Critères d'acceptation
+      description: "Comment savoir que c'est terminé ?"
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: files
+    attributes:
+      label: Fichiers concernés
+      placeholder: |
+        - apps/frontend/src/...
+        - apps/backend/src/...
+        - packages/shared/src/...
+
+  - type: dropdown
+    id: week
+    attributes:
+      label: Semaine cible
+      options:
+        - "Week 1"
+        - "Week 2"
+        - "Week 3"
+        - "Week 4"
+        - "Week 5"
+        - "Week 6"
+        - "Week 7"
+        - "Week 8"
+        - "Week 9"
+        - "Week 10"
+        - "Week 11-12"
+        - "Week 13-14"
+        - "Week 15-16"
+        - "Week 17+"
