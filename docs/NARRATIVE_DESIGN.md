@@ -1,7 +1,7 @@
 # Narrative Design - Scene Writing Standards (Multi-Universe)
 
-**Purpose**: Définir comment les scènes doivent être écrites par l'IA pour être rich, engaging, ET faciles à lire.
-**Architecture**: Standards adaptés aux 3 univers (Fantasy, Apocalypse, Sci-Fi)
+**Purpose**: Define how scenes should be written by the AI to be rich, engaging, AND easy to read.
+**Architecture**: Standards adapted to the 3 universes (Fantasy, Apocalypse, Sci-Fi)
 
 ---
 
@@ -14,8 +14,8 @@
 an ambrosial confluence of synaptic perturbations..."
 
 ✅ GOOD (rich but clear):
-"Une lumière bleue baigne la pièce. L'air sent la magie ancienne.
-Vous entendez un bruit étrange - comme du verre qui tremble."
+"A blue light bathes the room. The air smells of ancient magic.
+You hear a strange noise - like trembling glass."
 ```
 
 ### 2. **Immersion Through Senses**
@@ -53,7 +53,7 @@ Structure:
 
 ### Universal Prompt Structure (for Claude/Gemini)
 
-**IMPORTANT**: Ce template s'adapte selon l'univers. Remplacer `{universeType}` par 'fantasy', 'apocalypse', ou 'scifi'.
+**IMPORTANT**: This template adapts based on the universe. Replace `{universeType}` with 'fantasy', 'apocalypse', or 'scifi'.
 
 ```
 You are a {universeType} RPG narrative engine. Generate ONE immersive scene
@@ -229,7 +229,7 @@ Your hand moves to your sword. This could be a test - or a trap.
 What do you do?
 ```
 
-### Apocalypse (Terre Désolée) - Example Scene
+### Apocalypse (Terre Desolee) - Example Scene
 ```
 SCENE 12: The Dead Zone Crossing
 
@@ -481,10 +481,10 @@ export function buildScenePrompt(
 ): string {
   const { universeType } = gameState.session;
 
-  // Adapter les labels selon l'univers
+  // Adapt labels based on the universe
   const statLabels = getStatLabelsForUniverse(universeType);
 
-  // Construire le prompt spécifique à l'univers
+  // Build the universe-specific prompt
   const basePrompt = getUniverseBasePrompt(universeType);
 
   return `
@@ -528,7 +528,7 @@ Now generate the next scene following the template structure.
 `;
 }
 
-// Helper: Labels adaptés par univers
+// Helper: Labels adapted per universe
 function getStatLabelsForUniverse(universeType: UniverseType): StatLabels {
   const labels = {
     fantasy: { resource: 'Mana' },
@@ -538,7 +538,7 @@ function getStatLabelsForUniverse(universeType: UniverseType): StatLabels {
   return labels[universeType];
 }
 
-// Helper: Prompt de base par univers
+// Helper: Base prompt per universe
 function getUniverseBasePrompt(universeType: UniverseType): string {
   const prompts = {
     fantasy: `You are a fantasy RPG narrative engine. Generate vivid medieval fantasy scenes with magic, mythical creatures, and ancient lore.`,
@@ -548,7 +548,7 @@ function getUniverseBasePrompt(universeType: UniverseType): string {
   return prompts[universeType];
 }
 
-// Helper: Guidelines tonales par univers
+// Helper: Tone guidelines per universe
 function getUniverseToneGuidelines(universeType: UniverseType): string {
   const guidelines = {
     fantasy: `
