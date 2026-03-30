@@ -1,0 +1,75 @@
+name: Release
+
+on:
+  push:
+    branches: ["release/*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version tag (ex: v0.1.0)"
+        required: true
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint & Type check
+        run: pnpm lint && pnpm type-check
+
+      - name: Build
+        run: pnpm build
+
+      - name: Extract version from branch or input
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            BRANCH="${{ github.ref_name }}"
+            VERSION="${BRANCH#release/}"
+            echo "version=v${VERSION}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: "Release ${{ steps.version.outputs.version }}"
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Auto-merge release into main
+        if: github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          gh pr create \
+            --base main \
+            --head "${{ github.ref_name }}" \
+            --title "Release ${{ steps.version.outputs.version }}" \
+            --body "Automated release PR from branch ${{ github.ref_name }}" \
+            --label "release" || echo "PR already exists"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

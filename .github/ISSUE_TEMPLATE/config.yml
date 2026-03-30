@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation du projet
+    url: https://github.com/AdamDjo/EpisodeRPG-game/tree/main/docs
+    about: Lire la documentation avant de créer une issue
