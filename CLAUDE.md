@@ -5,7 +5,7 @@
 
 ## ⚠️ IMPORTANT: Git Commit Rules
 **Always apply these rules for every commit, no exceptions:**
-- **No `Co-Authored-By` line** — never add it
+- **No Claude auto-generated `Co-Authored-By`** — never add `Co-Authored-By: Claude ... <noreply@anthropic.com>`. Co-Authored-By for real collaborators is allowed.
 - **Clear and descriptive message** — explain what was done and why, not just a generic list
 - **Format**: `type(scope): short summary` + blank line + detailed explanation if needed
 - **Types**: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`
