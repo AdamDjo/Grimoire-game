@@ -19,9 +19,12 @@
     "zod": "^3.24.0"
   },
   "devDependencies": {
+    "@rpg-game/eslint-config": "workspace:*",
+    "@rpg-game/prettier-config": "workspace:*",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.0.0",
+    "prettier": "^3.4.0",
     "@typescript-eslint/parser": "^8.56.0",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0"

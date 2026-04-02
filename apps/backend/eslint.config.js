@@ -1,12 +1,9 @@
-const tsParser = require('@typescript-eslint/parser')
+const backendConfig = require('@rpg-game/eslint-config/backend')
 
 /** @type {import("eslint").Linter.Config[]} */
 const config = [
+  ...backendConfig,
   {
-    files: ['src/**/*.ts'],
-    languageOptions: {
-      parser: tsParser,
-    },
     ignores: ['dist/**', 'node_modules/**'],
   },
 ]
