@@ -5,10 +5,35 @@
     "dev": "turbo dev",
     "build": "turbo build",
     "lint": "turbo lint",
-    "type-check": "turbo type-check"
+    "type-check": "turbo type-check",
+    "prepare": "husky",
+    "knip": "knip",
+    "test": "turbo test",
+    "test:e2e": "turbo test:e2e"
   },
   "packageManager": "pnpm@9.15.0",
   "devDependencies": {
+    "@commitlint/cli": "^19",
+    "@commitlint/config-conventional": "^19",
+    "husky": "^9",
+    "knip": "^5",
+    "lint-staged": "^15",
     "turbo": "^2.3.0"
+  },
+  "lint-staged": {
+    "apps/frontend/**/*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "apps/backend/**/*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "packages/**/*.{ts,tsx,js}": [
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   }
 }
