@@ -1,6 +1,6 @@
-# RPG Narratif Web - AI-Powered
+# Narrative RPG Web - AI-Powered
 
-## ⚠️ IMPORTANT: Project Memory
+## IMPORTANT: Project Memory
 **Claude: Always read `docs/MEMORY.md` at the start of each session.** It contains persistent project state, user preferences, and implementation notes that carry across conversations.
 
 ## ⚠️ IMPORTANT: Git Commit Rules
@@ -19,7 +19,7 @@
   ```
 
 ## Project Description
-Jeu web RPG narratif interactif où l'IA génère des univers uniques à chaque partie. Le joueur crée un personnage, lit des scènes narratives, et choisit parmi des options textuelles. Gameplay style Roadwarden : stats, inventaire, choix avec conséquences, Game Over possible. Rejouabilité infinie grâce à la génération IA.
+Interactive narrative RPG web game where AI generates unique universes for each playthrough. The player creates a character, reads narrative scenes, and chooses among text-based options. Roadwarden-style gameplay: stats, inventory, choices with consequences, possible Game Over. Infinite replayability through AI generation.
 
 ## Tech Stack
 - **Monorepo**: Turborepo (pnpm workspaces)
