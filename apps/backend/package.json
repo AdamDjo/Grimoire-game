@@ -7,7 +7,10 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "type-check": "tsc --noEmit",
-    "lint": "eslint src/"
+    "lint": "eslint src/",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@rpg-game/shared": "workspace:*",
@@ -24,9 +27,11 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.0.0",
-    "prettier": "^3.4.0",
     "@typescript-eslint/parser": "^8.56.0",
+    "@vitest/coverage-v8": "^2",
+    "prettier": "^3.4.0",
     "tsx": "^4.19.0",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "vitest": "^2"
   }
 }

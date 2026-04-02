@@ -14,6 +14,17 @@
     },
     "type-check": {
       "dependsOn": ["^build"]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
+    },
+    "test:e2e": {
+      "cache": false,
+      "dependsOn": ["build"]
+    },
+    "knip": {
+      "cache": false
     }
   }
 }
