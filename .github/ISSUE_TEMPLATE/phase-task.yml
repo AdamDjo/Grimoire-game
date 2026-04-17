@@ -1,17 +1,17 @@
 name: "Tâche de Phase"
 description: "Tâche de développement liée à une phase du projet"
 title: "[PHASE] "
-labels: ["enhancement"]
+labels: ["type: feature"]
 body:
   - type: dropdown
     id: phase
     attributes:
-      label: Phase
+      label: "Phase"
       options:
         - "Phase 1A - Frontend UI (Week 1-5)"
         - "Phase 1B - Backend Foundation (Week 4-6)"
         - "Phase 2 - Integration (Week 7-10)"
-        - "Phase 2B - Addictive Features (Week 11-16)"
+        - "Phase 2B - Multi-Universe (Week 11-16)"
         - "Phase 3 - Polish & UGC (Week 17+)"
     validations:
       required: true
@@ -19,7 +19,7 @@ body:
   - type: dropdown
     id: domain
     attributes:
-      label: Domaine
+      label: "Domaine"
       options:
         - "frontend"
         - "backend"
@@ -30,10 +30,36 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: priority
+    attributes:
+      label: "Priorité"
+      options:
+        - "critical — bloque d'autres tâches"
+        - "high — sprint courant"
+        - "medium — semaine courante"
+        - "low — backlog"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: size
+    attributes:
+      label: "Taille estimée"
+      options:
+        - "XS — ~1h (1pt)"
+        - "S — ~2h (2pt)"
+        - "M — ~4h (3pt)"
+        - "L — ~1 jour (5pt)"
+        - "XL — ~2-3 jours (8pt)"
+        - "XXL — à découper (13pt)"
+    validations:
+      required: true
+
   - type: textarea
     id: description
     attributes:
-      label: Description
+      label: "Description"
       description: "Qu'est-ce qui doit être fait ? Quel est le contexte ?"
     validations:
       required: true
@@ -41,7 +67,7 @@ body:
   - type: textarea
     id: acceptance
     attributes:
-      label: Critères d'acceptation
+      label: "Critères d'acceptation"
       description: "Comment savoir que c'est terminé ?"
       placeholder: |
         - [ ] ...
@@ -50,9 +76,16 @@ body:
       required: true
 
   - type: textarea
+    id: dependencies
+    attributes:
+      label: "Dépendances"
+      description: "Issues qui doivent être closes avant celle-ci"
+      placeholder: "Aucune / Closes #12, #15"
+
+  - type: textarea
     id: files
     attributes:
-      label: Fichiers concernés
+      label: "Fichiers concernés"
       placeholder: |
         - apps/frontend/src/...
         - apps/backend/src/...
@@ -61,7 +94,7 @@ body:
   - type: dropdown
     id: week
     attributes:
-      label: Semaine cible
+      label: "Semaine cible"
       options:
         - "Week 1"
         - "Week 2"
