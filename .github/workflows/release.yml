@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Version tag (ex: v0.1.0)"
+        description: "Version tag (ex: v1.2.3)"
         required: true
 
 jobs:
@@ -38,16 +38,25 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Extract version from branch or input
+      - name: Extract and validate version
         id: version
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+            RAW="${{ github.event.inputs.version }}"
           else
+            # release/1.2.3 → 1.2.3
             BRANCH="${{ github.ref_name }}"
-            VERSION="${BRANCH#release/}"
-            echo "version=v${VERSION}" >> $GITHUB_OUTPUT
+            RAW="${BRANCH#release/}"
           fi
+          # Normalize: strip leading 'v' then re-add it
+          VERSION="v${RAW#v}"
+          # Enforce strict semver vX.Y.Z
+          if ! echo "$VERSION" | grep -qE '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::Invalid version '$VERSION'. Branch must follow release/X.Y.Z format."
+            exit 1
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version resolved: $VERSION"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -60,16 +69,29 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Auto-merge release into main
-        if: github.event_name == 'push'
+      - name: Open PR release → main
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           gh pr create \
             --base main \
             --head "${{ github.ref_name }}" \
-            --title "Release ${{ steps.version.outputs.version }}" \
-            --body "Automated release PR from branch ${{ github.ref_name }}" \
+            --title "release: ${{ steps.version.outputs.version }}" \
+            --body "$(cat <<'EOF'
+          ## Release ${{ steps.version.outputs.version }}
+
+          This PR was automatically created by the release workflow.
+
+          - Tag `${{ steps.version.outputs.version }}` has been created ✅
+          - GitHub Release has been published ✅
+          - Merge this PR into `main` to complete the release
+
+          After merging, sync `develop`:
+          ```bash
+          git checkout develop && git merge origin/main && git push origin develop
+          ```
+          EOF
+          )" \
             --label "release" || echo "PR already exists"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
