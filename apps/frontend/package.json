@@ -13,7 +13,7 @@
     "@rpg-game/shared": "workspace:*",
     "@supabase/supabase-js": "^2.47.0",
     "@tanstack/react-query": "^5.55.0",
-    "next": "16.1.6",
+    "next": "16.2.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "zustand": "^5.0.0"
