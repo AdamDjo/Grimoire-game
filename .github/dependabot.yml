@@ -1,0 +1,66 @@
+version: 2
+updates:
+  # Root workspace (turbo, husky, commitlint, lint-staged, knip)
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Europe/Paris
+    groups:
+      tooling:
+        patterns:
+          - "turbo"
+          - "husky"
+          - "@commitlint/*"
+          - "lint-staged"
+          - "knip"
+
+  # Frontend
+  - package-ecosystem: npm
+    directory: /apps/frontend
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Europe/Paris
+    groups:
+      testing-frontend:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+          - "@testing-library/*"
+          - "cypress"
+          - "jsdom"
+          - "@vitejs/*"
+      react-ecosystem:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "next"
+          - "@types/react*"
+          - "eslint-config-next"
+
+  # Backend
+  - package-ecosystem: npm
+    directory: /apps/backend
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Europe/Paris
+    groups:
+      testing-backend:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+
+  # GitHub Actions
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Europe/Paris
