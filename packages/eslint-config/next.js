@@ -1,9 +1,9 @@
 // @ts-check
-'use strict'
+"use strict";
 
-const tseslint = require('typescript-eslint')
-const reactHooksPlugin = require('eslint-plugin-react-hooks')
-const { createBaseConfig } = require('./index.js')
+const tseslint = require("typescript-eslint");
+const reactHooksPlugin = require("eslint-plugin-react-hooks");
+const { createBaseConfig } = require("./index.js");
 
 /**
  * ESLint flat config factory for the Next.js 15 App Router frontend.
@@ -13,18 +13,19 @@ const { createBaseConfig } = require('./index.js')
  */
 function createNextConfig({ tsconfigRootDir }) {
   return tseslint.config(
+    { ignores: ["cypress/**"] },
     ...createBaseConfig({ tsconfigRootDir }),
     {
-      files: ['**/*.ts', '**/*.tsx'],
+      files: ["**/*.ts", "**/*.tsx"],
       plugins: {
-        'react-hooks': reactHooksPlugin,
+        "react-hooks": reactHooksPlugin,
       },
       rules: {
-        'react-hooks/rules-of-hooks': 'error',
-        'react-hooks/exhaustive-deps': 'warn',
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn",
       },
     },
-  )
+  );
 }
 
-module.exports = { createNextConfig }
+module.exports = { createNextConfig };
