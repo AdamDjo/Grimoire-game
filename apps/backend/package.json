@@ -1,5 +1,5 @@
 {
-  "name": "@rpg-game/backend",
+  "name": "@grimoire/backend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,7 +13,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@rpg-game/shared": "workspace:*",
+    "@grimoire/shared": "workspace:*",
     "@supabase/supabase-js": "^2.47.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.0",
@@ -22,8 +22,8 @@
     "zod": "^3.24.0"
   },
   "devDependencies": {
-    "@rpg-game/eslint-config": "workspace:*",
-    "@rpg-game/prettier-config": "workspace:*",
+    "@grimoire/eslint-config": "workspace:*",
+    "@grimoire/prettier-config": "workspace:*",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.0.0",

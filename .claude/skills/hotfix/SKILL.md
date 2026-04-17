@@ -13,7 +13,7 @@ Exécuter dans l'ordre :
 1. **Créer l'issue GitHub**
    - Demander : "Décris le problème en production en une phrase"
    - Créer l'issue via mcp**github**create_issue avec :
-     - owner: AdamDjo, repo: EpisodeRPG-game
+     - owner: AdamDjo, repo: Grimoire-game
      - labels: ["bug", "priority"]
      - title: "hotfix(<args>): <description>"
    - Noter le numéro de l'issue créée → `<numéro>`

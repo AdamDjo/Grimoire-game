@@ -13,7 +13,7 @@ Exécuter dans l'ordre :
 1. **Créer l'issue GitHub**
    - Demander : "Décris le bug en une phrase (pour l'issue GitHub)"
    - Créer l'issue via mcp**github**create_issue avec :
-     - owner: AdamDjo, repo: EpisodeRPG-game
+     - owner: AdamDjo, repo: Grimoire-game
      - labels: ["bug"]
      - title: "fix(<args>): <description du bug>"
    - Noter le numéro de l'issue créée → `<numéro>`

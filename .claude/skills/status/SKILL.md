@@ -12,8 +12,9 @@ Show the current project status by:
 3. Present a clean summary:
 
 Format:
+
 ```
-PROJECT STATUS: RPG Narratif Web
+PROJECT STATUS: Grimoire
 ================================
 Phase 1: Architecture        [####] 100%
 Phase 2: Backend Infra       [##--]  50%

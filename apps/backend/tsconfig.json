@@ -12,7 +12,7 @@
     "sourceMap": true,
     "declaration": true,
     "paths": {
-      "@rpg-game/shared": ["../../packages/shared/src"]
+      "@grimoire/shared": ["../../packages/shared/src"]
     }
   },
   "include": ["src/**/*"]

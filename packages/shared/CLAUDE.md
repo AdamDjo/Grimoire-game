@@ -1,12 +1,15 @@
 # Shared Package Agent Instructions
 
 ## Scope
+
 This agent works ONLY on `packages/shared/`. Never modify files outside this directory.
 
 ## Purpose
-Single source of truth for all TypeScript types and constants shared between frontend and backend. Published as `@rpg-game/shared`.
+
+Single source of truth for all TypeScript types and constants shared between frontend and backend. Published as `@grimoire/shared`.
 
 ## Directory Structure
+
 ```
 src/
 ├── types/              # All TypeScript interfaces & types
@@ -26,6 +29,7 @@ src/
 ```
 
 ## Rules
+
 - Types/Interfaces: `PascalCase` (e.g., `GameSession`)
 - Constants: `UPPER_SNAKE_CASE` for values, `camelCase` for helper functions
 - Files: `kebab-case.ts`
@@ -36,9 +40,11 @@ src/
 - Never import from `apps/frontend` or `apps/backend`
 
 ## When to Modify
+
 - Before implementing a new feature in backend/frontend, define types here first
 - When a backend/frontend change requires a shared contract change
 - When adding new game constants (items, skills, etc.)
 
 ## Testing
+
 - Run `pnpm type-check --filter shared` to verify types compile

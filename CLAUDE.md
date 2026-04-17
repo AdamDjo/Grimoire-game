@@ -1,4 +1,4 @@
-# Narrative RPG Web - AI-Powered
+# Grimoire — AI-Powered Narrative RPG
 
 ## IMPORTANT: Project Memory
 
@@ -38,7 +38,7 @@ Interactive narrative RPG web game where AI generates unique universes for each 
 ## Project Structure
 
 ```
-rpg-game/
+grimoire/
 ├── apps/frontend/          # Next.js 15 app (proxy API)
 ├── apps/backend/           # Express API (game engine, AI, rules)
 └── packages/shared/        # Shared TypeScript types & constants
@@ -61,7 +61,7 @@ pnpm type-check             # TypeScript check all
 
 - TypeScript strict mode everywhere
 - All types shared between frontend/backend go in `packages/shared`
-- Never duplicate types - always import from `@rpg-game/shared`
+- Never duplicate types - always import from `@grimoire/shared`
 - Use named exports, not default exports
 - Use `async/await`, never raw Promises with `.then()`
 
@@ -158,7 +158,12 @@ fix/31-login-crash                 # Issue #31, bug fix
 hotfix/32-auth-token-leak          # Issue #32, hotfix prod
 ```
 
-**Règle absolue : toujours créer l'issue avant la branche.** Utiliser les skills `/feature`, `/bug`, `/hotfix` qui font ça automatiquement.
+**Règles absolues — sans aucune exception :**
+
+- Toujours créer l'issue avant la branche
+- Ne jamais commiter directement sur `develop` ou `main` — même pour du tooling, config, rename, ou chore
+- Avant tout `git commit`, vérifier qu'on est sur une branche `feature/*`, `fix/*`, `hotfix/*` — jamais sur `develop`/`main`
+- Utiliser les skills `/feature`, `/bug`, `/hotfix` qui créent l'issue et la branche automatiquement
 
 ### Workflow Claude → GitHub (MCP github server)
 

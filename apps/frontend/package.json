@@ -1,5 +1,5 @@
 {
-  "name": "@rpg-game/frontend",
+  "name": "@grimoire/frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -17,7 +17,7 @@
     "analyze": "ANALYZE=true pnpm build"
   },
   "dependencies": {
-    "@rpg-game/shared": "workspace:*",
+    "@grimoire/shared": "workspace:*",
     "@supabase/supabase-js": "^2.47.0",
     "@tanstack/react-query": "^5.55.0",
     "axios": "^1.7.0",
@@ -32,8 +32,8 @@
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^15",
-    "@rpg-game/eslint-config": "workspace:*",
-    "@rpg-game/prettier-config": "workspace:*",
+    "@grimoire/eslint-config": "workspace:*",
+    "@grimoire/prettier-config": "workspace:*",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6",
     "@testing-library/react": "^16",

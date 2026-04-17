@@ -1,9 +1,11 @@
 # Frontend Agent Instructions
 
 ## Scope
+
 This agent works ONLY on `apps/frontend/`. Never modify files outside this directory.
 
 ## Architecture
+
 - Next.js 15 (App Router) + React 19 + TypeScript
 - Tailwind CSS 4 for styling (no CSS modules)
 - Zustand for UI/client state
@@ -12,6 +14,7 @@ This agent works ONLY on `apps/frontend/`. Never modify files outside this direc
 - Frontend is display-only: shows scenes, presents choices, displays stats
 
 ## Directory Structure
+
 ```
 src/
 ├── app/
@@ -32,7 +35,8 @@ src/
 ```
 
 ## Rules
-- Import types ONLY from `@rpg-game/shared`
+
+- Import types ONLY from `@grimoire/shared`
 - React components: `PascalCase.tsx` (e.g., `SceneDisplay.tsx`)
 - Other files: `kebab-case.ts` (e.g., `use-game-session.ts`)
 - Named exports only
@@ -41,16 +45,19 @@ src/
 - Tailwind for all styling, use design tokens/theme variables
 
 ## State Management
+
 - **Zustand stores**: UI state (sidebar open, theme, modals)
 - **React Query**: All server data (sessions, characters, scenes)
 - Never duplicate server state in Zustand
 
 ## API Pattern
+
 ```typescript
 // All API calls go through the proxy:
 // Frontend -> /api/game/action -> Backend -> /api/game/action
 ```
 
 ## Testing
+
 - Run `pnpm type-check --filter frontend` to verify types
 - Run `pnpm dev --filter frontend` to test dev server

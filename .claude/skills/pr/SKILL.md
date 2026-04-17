@@ -63,7 +63,7 @@ Exécuter dans l'ordre :
 
 8. **Créer la PR via mcp**github**create_pull_request**
    - owner: AdamDjo
-   - repo: EpisodeRPG-game
+   - repo: Grimoire-game
    - head: branche courante
    - base: cible déterminée à l'étape 3
 
