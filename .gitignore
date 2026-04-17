@@ -46,3 +46,7 @@ coverage/
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# Cypress
+apps/frontend/cypress/screenshots
+apps/frontend/cypress/videos
