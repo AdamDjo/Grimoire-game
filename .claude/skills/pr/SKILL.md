@@ -1,7 +1,7 @@
 ---
 name: pr
-description: Pousse la branche courante et ouvre une PR vers la bonne cible (develop pour feature/fix, main pour hotfix/release). Crée l'issue si elle n'existe pas.
-allowed-tools: Bash, mcp__github__create_pull_request, mcp__github__create_issue
+description: Pousse la branche courante et ouvre une PR vers la bonne cible. Extrait le numéro d'issue du nom de branche automatiquement.
+allowed-tools: Bash, mcp__github__create_pull_request
 ---
 
 L'utilisateur veut pousser sa branche courante et ouvrir une PR.
@@ -9,6 +9,7 @@ L'utilisateur veut pousser sa branche courante et ouvrir une PR.
 Exécuter dans l'ordre :
 
 1. **Récupérer le contexte**
+
    ```bash
    git rev-parse --abbrev-ref HEAD
    git log origin/develop..HEAD --oneline 2>/dev/null || git log origin/main..HEAD --oneline
@@ -24,14 +25,22 @@ Exécuter dans l'ordre :
    - `hotfix/*` → cible : `main`
    - `release/*` → cible : `main`
 
-4. **Pousser la branche**
+4. **Extraire le numéro d'issue du nom de branche**
+   - Le nom de branche suit le pattern : `<préfixe>/<numéro>-<description>`
+   - Exemple : `feature/29-phase-1a-landing-page` → issue #29
+   - Exemple : `fix/30-login-crash` → issue #30
+   - Si pas de numéro détecté, demander : "Il y a un numéro d'issue à fermer ? (ou entrée pour passer)"
+
+5. **Pousser la branche**
+
    ```bash
    git push origin <branche-courante>
    ```
 
-5. **Préparer le titre et le body de la PR**
+6. **Préparer le titre et le body de la PR**
    - Titre : basé sur le nom de la branche et les commits
-   - Body : utiliser le template suivant (sans Co-Authored-By Claude) :
+   - Body :
+
      ```
      ## Summary
      <liste des changements principaux>
@@ -41,21 +50,21 @@ Exécuter dans l'ordre :
      - [ ] Tests unitaires passent
      - [ ] Testé en local
 
-     Closes #<numéro issue si connu>
+     Closes #<numéro issue>
      ```
-   - Demander à l'utilisateur : "Il y a un numéro d'issue à fermer ? (ou entrée pour passer)"
 
-6. **Déterminer les labels selon le préfixe de branche :**
-   - `feature/phase-1a-*` → `["frontend", "phase-1a"]`
-   - `feature/phase-1b-*` → `["backend", "phase-1b"]`
+7. **Déterminer les labels selon le préfixe de branche :**
+   - `feature/*phase-1a*` → `["frontend", "phase-1a"]`
+   - `feature/*phase-1b*` → `["backend", "phase-1b"]`
+   - `feature/*phase-2*` → `["frontend", "backend", "phase-2"]`
    - `fix/*` → `["bug"]`
    - `hotfix/*` → `["bug", "priority"]`
    - `release/*` → `["release"]`
 
-7. **Créer la PR via mcp__github__create_pull_request**
+8. **Créer la PR via mcp**github**create_pull_request**
    - owner: AdamDjo
    - repo: EpisodeRPG-game
    - head: branche courante
    - base: cible déterminée à l'étape 3
 
-8. **Confirmer à l'utilisateur avec l'URL de la PR**
+9. **Confirmer à l'utilisateur avec l'URL de la PR**

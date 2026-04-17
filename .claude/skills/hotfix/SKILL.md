@@ -1,6 +1,6 @@
 ---
 name: hotfix
-description: Crée une branche hotfix depuis main pour un fix urgent en production. Usage: /hotfix <nom> — ex: /hotfix fix-auth-crash
+description: Crée une issue GitHub puis une branche hotfix depuis main avec le numéro d'issue. Usage: /hotfix <nom> — ex: /hotfix auth-crash
 allowed-tools: Bash, mcp__github__create_issue
 ---
 
@@ -10,30 +10,35 @@ Si aucun arg fourni, demander le nom et la description du problème.
 
 Exécuter dans l'ordre :
 
-1. **Créer une issue GitHub pour tracer le hotfix**
+1. **Créer l'issue GitHub**
    - Demander : "Décris le problème en production en une phrase"
-   - Créer l'issue via mcp__github__create_issue avec :
+   - Créer l'issue via mcp**github**create_issue avec :
      - owner: AdamDjo, repo: EpisodeRPG-game
      - labels: ["bug", "priority"]
-     - title: "hotfix: <description>"
-   - Noter le numéro de l'issue créée
+     - title: "hotfix(<args>): <description>"
+   - Noter le numéro de l'issue créée → `<numéro>`
 
 2. **Partir de main (pas develop — c'est urgent)**
+
    ```bash
    git checkout main && git pull origin main
    ```
 
-3. **Créer la branche hotfix**
+3. **Créer la branche hotfix avec le numéro d'issue**
+
    ```bash
-   git checkout -b hotfix/<args>
+   git checkout -b hotfix/<numéro>-<args>
    ```
 
+   Exemple : issue #31 + args "auth-crash" → `hotfix/31-auth-crash`
+
 4. **Confirmer à l'utilisateur :**
+
    ```
    ⚠️  HOTFIX — tu pars de main (production)
 
    ✅ Issue #<numéro> créée (priority)
-   ✅ Branche 'hotfix/<args>' créée depuis main
+   ✅ Branche 'hotfix/<numéro>-<args>' créée depuis main
 
    Workflow :
    1. Corrige le bug, commite avec : git commit -m "fix(<scope>): <description>"

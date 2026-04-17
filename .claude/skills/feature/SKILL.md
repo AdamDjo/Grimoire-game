@@ -1,6 +1,6 @@
 ---
 name: feature
-description: Crée une branche feature depuis develop. Usage: /feature <nom> — ex: /feature phase-1a-landing-page
+description: Crée une issue GitHub puis une branche feature depuis develop avec le numéro d'issue. Usage: /feature <nom> — ex: /feature phase-1a-landing-page
 allowed-tools: Bash, mcp__github__create_issue
 ---
 
@@ -10,29 +10,38 @@ Si aucun arg fourni, demander le nom à l'utilisateur.
 
 Exécuter dans l'ordre :
 
-1. **Vérifier s'il y a une issue GitHub**
-   - Demander : "Il y a un numéro d'issue GitHub pour cette feature ? (numéro ou entrée pour passer)"
-   - Si oui, noter le numéro pour l'utiliser dans les commits et la PR
+1. **Créer l'issue GitHub**
+   - Demander : "Décris la feature en une phrase (pour l'issue GitHub)"
+   - Demander : "Quels labels ? (ex: frontend, backend, phase-1a, phase-1b...)"
+   - Créer l'issue via mcp**github**create_issue avec :
+     - owner: AdamDjo, repo: EpisodeRPG-game
+     - title: "feat(<args>): <description>"
+     - labels fournis par l'utilisateur
+   - Noter le numéro de l'issue créée → `<numéro>`
 
 2. **Mettre develop à jour**
+
    ```bash
    git checkout develop && git pull origin develop
    ```
 
-3. **Créer la branche**
+3. **Créer la branche avec le numéro d'issue**
+
    ```bash
-   git checkout -b feature/<args>
+   git checkout -b feature/<numéro>-<args>
    ```
+
+   Exemple : issue #29 + args "phase-1a-landing-page" → `feature/29-phase-1a-landing-page`
 
 4. **Confirmer à l'utilisateur :**
-   ```
-   ✅ Branche 'feature/<args>' créée depuis develop
 
-   Tu es maintenant sur : feature/<args>
+   ```
+   ✅ Issue #<numéro> créée
+   ✅ Branche 'feature/<numéro>-<args>' créée depuis develop
 
    Workflow :
    1. Code, commits avec : git commit -m "feat(<scope>): <description>"
-   2. Quand prêt : /pr pour pousser et ouvrir la PR → develop
+   2. Quand prêt : /pr pour pousser et ouvrir la PR → develop (Closes #<numéro>)
 
    Format commit :
    feat | fix | chore | docs | refactor | test
