@@ -1,11 +1,6 @@
-const nextConfig = require('@rpg-game/eslint-config/next')
+// @ts-check
+'use strict'
 
-/** @type {import("eslint").Linter.Config[]} */
-const config = [
-  ...nextConfig,
-  {
-    ignores: ['.next/**', 'node_modules/**'],
-  },
-]
+const { createNextConfig } = require('@rpg-game/eslint-config/next')
 
-module.exports = config
+module.exports = createNextConfig({ tsconfigRootDir: __dirname })
