@@ -1,15 +1,15 @@
 # RPG Game - Project Memory & Status
 
-**Last Updated**: Février 2026
+**Last Updated**: February 2026
 **Current Phase**: Planning Complete → Ready for Phase 1A ✅
 
 ---
 
 ## 🎯 Quick Summary
 
-**Game**: RPG narratif multi-univers généré par IA (3 univers de base, 14 classes, progression visible, replayabilité massive)
+**Game**: Narrative multi-universe RPG powered by AI (3 base universes, 14 classes, visible progression, massive replayability)
 **Status**: Planning done, ready to code
-**Architecture**: Multi-univers dès Phase 1, exposition progressive (Fantasy → 3 univers → Custom)
+**Architecture**: Multi-universe from Phase 1, progressive exposure (Fantasy → 3 universes → Custom)
 **Next**: Phase 1A - Frontend UI (Week 1-5)
 
 ---
@@ -74,17 +74,17 @@
 ## 🎮 Game Overview (For Claude Memory)
 
 ### Concept
-- Player choisit un **univers** (Fantasy, Apocalypse, ou Sci-Fi)
-- Player creates character (14 classes total, 5/4/5 par univers)
-- AI generates narrative scenes adaptées à l'univers
+- Player chooses a **universe** (Fantasy, Apocalypse, or Sci-Fi)
+- Player creates character (14 classes total, 5/4/5 per universe)
+- AI generates narrative scenes adapted to the universe
 - Player makes choices with permanent consequences
 - Leveling + loot drops provide progression
 - Multiple endings based on choices
-- Each playthrough feels different (AI + multi-univers)
+- Each playthrough feels different (AI + multi-universe)
 
 ### Core Addictive Loop
 1. Choose universe (theme selection)
-2. Create character (identity + classe)
+2. Create character (identity + class)
 3. See scene (immersion)
 4. Choose action (agency)
 5. See consequences (weight)
@@ -92,29 +92,29 @@
 7. Level up (progression)
 8. Go to step 3 (repeat)
 
-### 3 Univers de Base
+### 3 Base Universes
 
 **1. Valorain (Fantasy)**
-- Médiéval fantastique, magie, créatures mythiques
-- 5 régions, 4 factions, créatures originales
+- Medieval fantasy, magic, mythical creatures
+- 5 regions, 4 factions, original creatures
 - WoW-inspired but legally original
-- Classes: Guerrier, Mage, Voleur, Guérisseur, Rôdeur
+- Classes: Warrior, Mage, Thief, Healer, Ranger
 
-**2. Terre Désolée (Apocalypse)**
-- Post-apocalypse, survie, ressources rares
-- Ruines, zones radioactives, factions humaines
+**2. Terre Desolee (Apocalypse)**
+- Post-apocalypse, survival, scarce resources
+- Ruins, radioactive zones, human factions
 - Fallout/Metro-inspired but original
-- Classes: Récupérateur, Bagarreur, Médecin, Ingénieur
+- Classes: Scavenger, Brawler, Medic, Engineer
 
 **3. Nova Galaxia (Sci-Fi)**
-- Space opera, tech avancée, aliens
-- Stations spatiales, planètes colonisées
+- Space opera, advanced tech, aliens
+- Space stations, colonized planets
 - Mass Effect/Star Wars-inspired but original
-- Classes: Pilote, Soldat, Hacker, Diplomate, Psionique
+- Classes: Pilot, Soldier, Hacker, Diplomat, Psionic
 
-### Stats Universelles
+### Universal Stats
 - HP, Mana, Strength, Agility, Intelligence, Charisma, Luck
-- Mêmes stats pour tous les univers (adaptation contextuelle)
+- Same stats for all universes (contextual adaptation)
 
 ---
 
@@ -126,29 +126,29 @@ PHASE 1A (Week 1-5):  Frontend UI - ALL PAGES STATIC
 ├─ Week 2-3: Character creation + dashboard
 ├─ Week 4: Game session screen (most complex)
 └─ Week 5: Polish + responsive design
-📍 Fantasy UNIQUEMENT exposé, code multi-univers ready
+📍 Fantasy ONLY exposed, multi-universe code ready
 
 PHASE 1B (Week 4-6): Backend scaffold - IN PARALLEL
-├─ Week 4-5: Database schema (multi-univers) + auth endpoints
+├─ Week 4-5: Database schema (multi-universe) + auth endpoints
 └─ Week 6: Game engine skeleton + AI test (fantasy)
-📍 Architecture multi-univers, mais fantasy only
+📍 Multi-universe architecture, but fantasy only
 
 PHASE 2 (Week 7-10): Integration - CONNECT IT ALL
 ├─ Week 7: Auth + character creation live
 ├─ Week 8-9: Game loop with real AI (fantasy)
 └─ Week 10: Polish + testing
-📍 RESULT: MVP SHIPPED (Fantasy univers fully playable) ✅
+📍 RESULT: MVP SHIPPED (Fantasy universe fully playable) ✅
 
 PHASE 2B (Week 11-16): Multi-Universe + Addictive features
-├─ Week 11: Activer Apocalypse & Sci-Fi univers
+├─ Week 11: Enable Apocalypse & Sci-Fi universes
 ├─ Week 12: Named NPCs + relationship tracking
 ├─ Week 13-14: World events + randomization
 ├─ Week 15-16: Build diversity + achievements
-📍 RESULT: 3 univers, 14 classes, highly replayable ✅
+📍 RESULT: 3 universes, 14 classes, highly replayable ✅
 
 PHASE 3 (Week 17+): UGC + Polish
 ├─ Custom universe creator (AI generates classes)
-├─ Universe sharing entre joueurs
+├─ Universe sharing between players
 ├─ Cosmetics, NG+ mode, leaderboards
 ├─ Story export, streaming integration
 └─ Community features
@@ -158,11 +158,11 @@ PHASE 3 (Week 17+): UGC + Polish
 
 ## 🔑 Key Decisions (Locked)
 
-✅ **Multi-Univers Architecture**: 3 univers de base (Fantasy, Apocalypse, Sci-Fi) + custom (Phase 3)
-✅ **Progressive Rollout**: Phase 1 = Fantasy only, Phase 2B = 3 univers, Phase 3 = custom
-✅ **Code Multi-Univers dès Phase 1**: Architecture flexible, exposition progressive
-✅ **14 Classes Total**: 5 fantasy, 4 apocalypse, 5 scifi (prédéfinies)
-✅ **Universal Stats System**: HP/Mana/Str/Agi/Int/Cha/Luck pour tous univers
+✅ **Multi-Universe Architecture**: 3 base universes (Fantasy, Apocalypse, Sci-Fi) + custom (Phase 3)
+✅ **Progressive Rollout**: Phase 1 = Fantasy only, Phase 2B = 3 universes, Phase 3 = custom
+✅ **Multi-Universe Code from Phase 1**: Flexible architecture, progressive exposure
+✅ **14 Classes Total**: 5 fantasy, 4 apocalypse, 5 scifi (predefined)
+✅ **Universal Stats System**: HP/Mana/Str/Agi/Int/Cha/Luck for all universes
 ✅ **Frontend-First**: Design UI before backend code
 ✅ **Multi-AI Provider**: Claude → Gemini → Mistral (fallback)
 ✅ **Permanent Consequences**: World remembers choices

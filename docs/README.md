@@ -1,110 +1,110 @@
-# RPG Narratif - Documentation Index
+# Narrative RPG - Documentation Index
 
-**Last Updated**: Février 2026
-**Status**: Phase Planning Complete ✅
+**Last Updated**: February 2026
+**Status**: Phase Planning Complete
 
 ---
 
-## 📖 Documents Guide
+## Documents Guide
 
-Cette page indexe tous les documents et explique leur relation. **Lis-la d'abord.**
+This page indexes all documents and explains their relationships. **Read this first.**
 
-### 1. **GAME_DESIGN.md** ⭐ (START HERE)
-**What**: Complète vision du jeu, univers, classes, phases, roadmap
+### 1. **GAME_DESIGN.md** (START HERE)
+**What**: Complete game vision, universes, classes, phases, roadmap
 
 **Contains**:
-- ✅ Concept du jeu
-- ✅ Univers Valorain (cohérent, original)
-- ✅ 5 classes détaillées
-- ✅ Fonctionnalités par phase (MVP, Phase 2B, Phase 3)
-- ✅ Pourquoi certaines features viennent après MVP
-- ✅ Timeline et calendrier
-- ✅ Success criteria
+- Game concept
+- Valorain universe (coherent, original)
+- 5 detailed classes
+- Features by phase (MVP, Phase 2B, Phase 3)
+- Why certain features come after MVP
+- Timeline and calendar
+- Success criteria
 
-**Read This If**: Tu veux comprendre le jeu dans sa globalité
+**Read This If**: You want to understand the game as a whole
 
 **Update This When**:
-- Concept/univers change
-- Classes modifiées
-- Phase redéfinie
+- Concept/universe changes
+- Classes modified
+- Phase redefined
 
 ---
 
-### 2. **FRONTEND_ARCHITECTURE.md** 🎨 (FOR BUILDING UI)
-**What**: Structure complète du frontend Next.js et tous les composants
+### 2. **FRONTEND_ARCHITECTURE.md** (FOR BUILDING UI)
+**What**: Complete Next.js frontend structure and all components
 
 **Contains**:
-- ✅ Directory structure
-- ✅ 9 pages détaillées (Landing, Auth, Dashboard, Game, etc.)
-- ✅ Wireframes ASCII pour chaque page
-- ✅ 20+ composants React à créer
-- ✅ Gestion d'état (Zustand)
-- ✅ Mock data structures
-- ✅ Styling strategy (Tailwind)
-- ✅ Phase 1A milestone checklist
+- Directory structure
+- 9 detailed pages (Landing, Auth, Dashboard, Game, etc.)
+- ASCII wireframes for each page
+- 20+ React components to build
+- State management (Zustand)
+- Mock data structures
+- Styling strategy (Tailwind)
+- Phase 1A milestone checklist
 
-**Read This If**: Tu vas coder le frontend
+**Read This If**: You are building the frontend
 
 **Update This When**:
-- Design de page change
-- Nouveau composant découvert
-- Wireframes affinées
+- Page design changes
+- New component discovered
+- Wireframes refined
 
 ---
 
-### 3. **NARRATIVE_DESIGN.md** 📖 (FOR AI/STORY)
-**What**: Standards pour les scènes narratives générées par l'IA
+### 3. **NARRATIVE_DESIGN.md** (FOR AI/STORY)
+**What**: Standards for AI-generated narrative scenes
 
 **Contains**:
-- ✅ Principes narratifs (rich + simple)
-- ✅ Template pour prompts IA
-- ✅ Exemples de scènes (bon/mauvais)
-- ✅ Mécaniques d'engagement (NPCs, world events, branching)
-- ✅ Replayability patterns
-- ✅ Scene validation checklist
-- ✅ Intégration backend
+- Narrative principles (rich + simple)
+- AI prompt template
+- Scene examples (good/bad)
+- Engagement mechanics (NPCs, world events, branching)
+- Replayability patterns
+- Scene validation checklist
+- Backend integration
 
-**Read This If**: Tu codes les services IA et backend
+**Read This If**: You are coding AI services and backend
 
 **Update This When**:
-- Template IA changé (après tests)
-- Nouvelles mécaniques découvertes
-- Validation rules modifiées
+- AI template changed (after testing)
+- New mechanics discovered
+- Validation rules modified
 
 ---
 
-### 4. **TECH_STACK.md** 🛠️ (FOR CODE QUALITY)
-**What**: Libraries recommandées, architecture patterns, security, best practices
+### 4. **TECH_STACK.md** (FOR CODE QUALITY)
+**What**: Recommended libraries, architecture patterns, security, best practices
 
 **Contains**:
-- ✅ Frontend libraries (Zustand, React Query, Framer Motion, etc.)
-- ✅ Backend libraries (Prisma, JWT, bcryptjs, logging, etc.)
-- ✅ Architecture patterns (service layer, DI, error handling)
-- ✅ Security best practices (validation, CORS, rate limiting, auth)
-- ✅ Code conventions (TypeScript, naming, comments)
-- ✅ Performance optimization
-- ✅ Testing & monitoring
+- Frontend libraries (Zustand, React Query, Framer Motion, etc.)
+- Backend libraries (Prisma, JWT, bcryptjs, logging, etc.)
+- Architecture patterns (service layer, DI, error handling)
+- Security best practices (validation, CORS, rate limiting, auth)
+- Code conventions (TypeScript, naming, comments)
+- Performance optimization
+- Testing & monitoring
 
-**Read This If**: Tu codes ou tu fais code review
+**Read This If**: You are coding or doing code review
 
 **Update This When**:
-- Nouvelle library découverte (utile)
-- Pattern mieux practice trouvé
-- Security issue identifiée
+- Useful new library discovered
+- Better practice pattern found
+- Security issue identified
 
 ---
 
-### 5. **MEMORY.md** 🧠 (SESSION TRACKING)
-**What**: État du projet, préférences, status par phase
+### 5. **MEMORY.md** (SESSION TRACKING)
+**What**: Project state, preferences, status per phase
 
 **Contains**:
-- ✅ Current project state
-- ✅ User preferences & constraints
-- ✅ Phase status & progress
-- ✅ Key decisions made
-- ✅ Important notes pour Claude
+- Current project state
+- User preferences & constraints
+- Phase status & progress
+- Key decisions made
+- Important notes for Claude
 
-**Read This If**: Tu cherches l'état actuel du projet
+**Read This If**: You are looking for the current project state
 
 **Update This When**:
 - Phase change (completed)
@@ -114,45 +114,45 @@ Cette page indexe tous les documents et explique leur relation. **Lis-la d'abord
 
 ---
 
-## 🔄 Relationship Between Docs
+## Relationship Between Docs
 
 ```
 GAME_DESIGN.md (What to build)
-    ├─ What does the game do?
-    ├─ How many phases?
-    └─ Timeline?
+    |-- What does the game do?
+    |-- How many phases?
+    +-- Timeline?
 
 FRONTEND_ARCHITECTURE.md (How to build frontend)
-    ├─ Pages needed
-    ├─ Components needed
-    └─ Data structures
+    |-- Pages needed
+    |-- Components needed
+    +-- Data structures
 
 NARRATIVE_DESIGN.md (How to generate story)
-    ├─ Scene quality standards
-    ├─ AI prompt template
-    └─ Validation rules
+    |-- Scene quality standards
+    |-- AI prompt template
+    +-- Validation rules
 
 TECH_STACK.md (How to code it well)
-    ├─ Libraries to use
-    ├─ Architecture patterns
-    ├─ Security practices
-    └─ Code conventions
+    |-- Libraries to use
+    |-- Architecture patterns
+    |-- Security practices
+    +-- Code conventions
 
 MEMORY.md (Current status)
-    ├─ Where are we now?
-    ├─ What's next?
-    └─ Important notes
+    |-- Where are we now?
+    |-- What's next?
+    +-- Important notes
 ```
 
 ---
 
-## 📋 How to Use These Docs
+## How to Use These Docs
 
 ### For Planning (Now)
-1. Read **GAME_DESIGN.md** → Understand game concept
-2. Read **FRONTEND_ARCHITECTURE.md** → See what pages to build
-3. Read **MEMORY.md** → Check current status
-4. Read **TECH_STACK.md** → Understand code standards
+1. Read **GAME_DESIGN.md** -> Understand game concept
+2. Read **FRONTEND_ARCHITECTURE.md** -> See what pages to build
+3. Read **MEMORY.md** -> Check current status
+4. Read **TECH_STACK.md** -> Understand code standards
 
 ### For Frontend Development (Week 1-5)
 1. Reference **FRONTEND_ARCHITECTURE.md** for pages
@@ -172,7 +172,7 @@ MEMORY.md (Current status)
 
 ---
 
-## 🤖 How Claude Uses These Docs
+## How Claude Uses These Docs
 
 **Every Session, Claude**:
 1. **Reads** MEMORY.md first (current status)
@@ -193,7 +193,7 @@ Claude starts session:
 
 ---
 
-## ✅ Doc Maintenance
+## Doc Maintenance
 
 ### When to Update Docs
 
@@ -225,36 +225,36 @@ Claude starts session:
 
 ---
 
-## 📊 Current Status Summary
+## Current Status Summary
 
 | Aspect | Status | Details |
 |--------|--------|---------|
-| **Game Design** | ✅ Complete | Univers Valorain, 5 classes, 3 phases |
-| **Frontend Spec** | ✅ Complete | 9 pages, 20+ components, wireframes |
-| **Narrative Design** | ✅ Complete | AI prompts, validation, standards |
-| **Tech Stack** | ✅ Complete | All libraries + best practices |
-| **Phase 1A (Frontend)** | 🕐 Ready | Can start week 1 |
-| **Phase 1B (Backend)** | 🕐 Ready | Can start week 4 |
-| **Phase 2 (Integration)** | 📋 Planned | Week 7-10 |
+| **Game Design** | Complete | Valorain universe, 5 classes, 3 phases |
+| **Frontend Spec** | Complete | 9 pages, 20+ components, wireframes |
+| **Narrative Design** | Complete | AI prompts, validation, standards |
+| **Tech Stack** | Complete | All libraries + best practices |
+| **Phase 1A (Frontend)** | Ready | Can start week 1 |
+| **Phase 1B (Backend)** | Ready | Can start week 4 |
+| **Phase 2 (Integration)** | Planned | Week 7-10 |
 
 ---
 
-## 🎯 Next Steps
+## Next Steps
 
 **Current Phase**: Planning (Complete)
 **Next Phase**: Phase 1A - Frontend UI
 
 **Before Starting**:
-1. ✅ Confirm docs are clear
-2. ✅ Confirm timeline (10 weeks for MVP)
-3. ✅ Confirm no major changes needed
-4. ✅ Confirm Claude should start coding
+1. Confirm docs are clear
+2. Confirm timeline (10 weeks for MVP)
+3. Confirm no major changes needed
+4. Confirm Claude should start coding
 
 **When Ready**: Say "Start Phase 1A - Frontend UI"
 
 ---
 
-## 📝 Document Versions
+## Document Versions
 
 | Doc | Version | Last Updated |
 |-----|---------|--------------|
@@ -267,7 +267,7 @@ Claude starts session:
 
 ---
 
-## 🆘 Questions?
+## Questions?
 
 If you're confused about:
 - **What to build**: Read GAME_DESIGN.md
@@ -278,16 +278,16 @@ If you're confused about:
 
 ---
 
-## ✨ Summary
+## Summary
 
 **You have everything needed to build a professional RPG game:**
-- ✅ Complete game design
-- ✅ Full architecture planned
-- ✅ Clear components
-- ✅ Narrative standards
-- ✅ Tech stack optimized
-- ✅ Best practices documented
-- ✅ Security patterns defined
-- ✅ Roadmap clear
+- Complete game design
+- Full architecture planned
+- Clear components
+- Narrative standards
+- Tech stack optimized
+- Best practices documented
+- Security patterns defined
+- Roadmap clear
 
 **Ready to ship a game people will love playing.**

@@ -1,87 +1,87 @@
-# Game Design - RPG Narratif Multi-Univers
+# Game Design - Narrative RPG Multi-Universe
 
 **Version**: 3.0 (Multi-Universe Architecture)
 **Status**: Ready to Develop ✅
 
 ---
 
-## 📖 Vue d'ensemble
+## 📖 Overview
 
 ### Concept
-**RPG Narratif Web** est un jeu d'aventure généré par IA où chaque partie est unique. Le joueur choisit un **univers** (Fantasy, Apocalypse, ou Sci-Fi), crée un personnage, et explore des histoires générées dynamiquement. Progression visible (leveling, loot) + narrative rich + multi-univers = replayabilité massive.
+**Narrative Web RPG** is an AI-generated adventure game where every playthrough is unique. The player chooses a **universe** (Fantasy, Apocalypse, or Sci-Fi), creates a character, and explores dynamically generated stories. Visible progression (leveling, loot) + rich narrative + multi-universe = massive replayability.
 
 ### Core Hook
-- 🎮 **Progression**: Leveling visible, loot drops, skills débloqués
-- 📖 **Narrative**: Scènes riches générées par IA, conséquences permanentes
-- 🌍 **Multi-Univers**: 3 univers distincts (Fantasy, Apocalypse, Sci-Fi) + custom (Phase 3)
-- 🔄 **Replayabilité**: 15+ classes, 5+ endings par univers, expériences uniques
-- 🎯 **Engagement**: Le monde se souvient des choix, NPCs réagissent, world change
+- 🎮 **Progression**: Visible leveling, loot drops, unlocked skills
+- 📖 **Narrative**: Rich AI-generated scenes, permanent consequences
+- 🌍 **Multi-Universe**: 3 distinct universes (Fantasy, Apocalypse, Sci-Fi) + custom (Phase 3)
+- 🔄 **Replayability**: 15+ classes, 5+ endings per universe, unique experiences
+- 🎯 **Engagement**: The world remembers your choices, NPCs react, world changes
 
-### Exemple de Session (Fantasy)
+### Example Session (Fantasy)
 ```
-1. Choisir univers "Valorain" (Fantasy)
-2. Créer Thrall, Guerrier (HP 100, Str 15, Agi 11, Int 8, Cha 10, Luck 10)
-3. L'IA génère scène 1: Terres Sauvages de Valorain
-4. Rencontrer bandits → choisir combat ou négociation
-5. Combat gagné → [EPIC] Épée des Anciens (loot!)
-6. Level 2! +2 HP, +1 Strength. Skill "Cleave" débloqué!
-7. Festival arrive → nouvelles opportunités
-8. 1h30+ de gameplay → possible mort, victoire, ou fin secrète
-9. Rejouer = même univers, classe différente OU univers différent = expérience totalement unique
+1. Choose universe "Valorain" (Fantasy)
+2. Create Thrall, Warrior (HP 100, Str 15, Agi 11, Int 8, Cha 10, Luck 10)
+3. AI generates scene 1: Wild Lands of Valorain
+4. Encounter bandits -> choose combat or negotiation
+5. Combat won -> [EPIC] Sword of the Ancients (loot!)
+6. Level 2! +2 HP, +1 Strength. Skill "Cleave" unlocked!
+7. Festival arrives -> new opportunities
+8. 1h30+ of gameplay -> possible death, victory, or secret ending
+9. Replay = same universe, different class OR different universe = totally unique experience
 ```
 
 ---
 
-## 🌍 Les 3 Univers de Base
+## 🌍 The 3 Base Universes
 
-### 1. Valorain (Fantasy WoW-like)
+### 1. Valorain (WoW-like Fantasy)
 
-**Theme**: Médiéval fantastique, magie, créatures mythiques
-**Inspirations**: World of Warcraft, Skyrim (mais 100% original)
+**Theme**: Medieval fantasy, magic, mythical creatures
+**Inspirations**: World of Warcraft, Skyrim (but 100% original)
 
 **Geography**:
-- **Valorheim**: Terres nordiques, guerriers, châteaux de pierre
-- **Shadowveil**: Lands corrompues, undead, darkness
-- **Sanctum**: Tours de magie, forêts enchantées, mystères
-- **Verdantis**: Jungles denses, nature sauvage, créatures primitives
-- **Skybound**: Îles flottantes, êtres célestes, mystère
+- **Valorheim**: Northern lands, warriors, stone castles
+- **Shadowveil**: Corrupted lands, undead, darkness
+- **Sanctum**: Magic towers, enchanted forests, mysteries
+- **Verdantis**: Dense jungles, wild nature, primitive creatures
+- **Skybound**: Floating islands, celestial beings, mystery
 
 **Factions**:
 | Faction | Alignment | Goal |
 |---------|-----------|------|
-| **Order of Honor** | Good | Maintenir l'ordre, protéger innocents |
-| **Shadow Circle** | Evil | Conquête du pouvoir, corruption |
-| **Wild Kin** | Neutral | Liberté, nature, autodétermination |
-| **Mage Council** | Neutral | Connaissance, magie, étude |
+| **Order of Honor** | Good | Maintain order, protect the innocent |
+| **Shadow Circle** | Evil | Power conquest, corruption |
+| **Wild Kin** | Neutral | Freedom, nature, self-determination |
+| **Mage Council** | Neutral | Knowledge, magic, study |
 
-**Creatures** (Originaux):
-- **Valorrim**: Humanoids nordiques
-- **Aether-touched**: Êtres magiques
-- **Voidborn**: Créatures shadow
-- **Feylins**: Folk forestiers
-- **Drakonir**: Humanoids écailleux
+**Creatures** (Original):
+- **Valorrim**: Nordic humanoids
+- **Aether-touched**: Magical beings
+- **Voidborn**: Shadow creatures
+- **Feylins**: Forest folk
+- **Drakonir**: Scaled humanoids
 
 ---
 
-### 2. Terre Désolée (Post-Apocalypse)
+### 2. Terre Desolee (Post-Apocalypse)
 
-**Theme**: Survie, ressources rares, factions humaines hostiles
-**Inspirations**: Fallout, The Last of Us, Metro (mais original)
+**Theme**: Survival, scarce resources, hostile human factions
+**Inspirations**: Fallout, The Last of Us, Metro (but original)
 
 **Geography**:
-- **Les Ruines**: Grandes villes effondrées, gratte-ciels en ruine
-- **La Zone Verte**: Rares oasis de nature revigorée
-- **Le Désert de Cendres**: Wasteland radioactif, danger permanent
-- **Les Bunkers**: Réseaux souterrains, civilisation cachée
-- **Les Marais Toxiques**: Zones mutantes, créatures étranges
+- **The Ruins**: Collapsed cities, crumbling skyscrapers
+- **The Green Zone**: Rare oases of revived nature
+- **The Ash Desert**: Radioactive wasteland, constant danger
+- **The Bunkers**: Underground networks, hidden civilization
+- **The Toxic Marshes**: Mutant zones, strange creatures
 
 **Factions**:
 | Faction | Alignment | Goal |
 |---------|-----------|------|
-| **Les Éclaireurs** | Good | Reconstruire la civilisation |
-| **Les Pillards** | Evil | Survie par la force, vol |
-| **Les Nomades** | Neutral | Liberté, commerce itinérant |
-| **Le Culte du Renouveau** | Neutral | Mutation = évolution |
+| **The Scouts** | Good | Rebuild civilization |
+| **The Raiders** | Evil | Survival by force, theft |
+| **The Nomads** | Neutral | Freedom, itinerant trade |
+| **The Renewal Cult** | Neutral | Mutation = evolution |
 
 **Threats**:
 - Radiation zones, mutants, raiders, scarcity
@@ -90,154 +90,154 @@
 
 ### 3. Nova Galaxia (Sci-Fi Space Opera)
 
-**Theme**: Exploration spatiale, technologies avancées, aliens
-**Inspirations**: Mass Effect, Star Wars (mais original)
+**Theme**: Space exploration, advanced technologies, aliens
+**Inspirations**: Mass Effect, Star Wars (but original)
 
 **Geography**:
-- **Nexus Prime**: Station spatiale centrale, hub commercial
-- **Secteur Frontier**: Planètes colonisées, lawless
-- **Le Void**: Espace profond, mystères anciens
-- **Ceinture d'Astéroïdes**: Mines, pirates, danger
-- **Mondes Xenos**: Planètes aliens, civilisations inconnues
+- **Nexus Prime**: Central space station, trade hub
+- **Frontier Sector**: Colonized planets, lawless
+- **The Void**: Deep space, ancient mysteries
+- **Asteroid Belt**: Mines, pirates, danger
+- **Xenos Worlds**: Alien planets, unknown civilizations
 
 **Factions**:
 | Faction | Alignment | Goal |
 |---------|-----------|------|
-| **Confédération Stellaire** | Good | Ordre, paix galactique |
-| **Syndicat Noir** | Evil | Profit, marché noir, crime |
-| **Explorateurs Libres** | Neutral | Découverte, liberté |
-| **Culte Ancien** | Neutral | Technologie alien ancestrale |
+| **Stellar Confederation** | Good | Order, galactic peace |
+| **Black Syndicate** | Evil | Profit, black market, crime |
+| **Free Explorers** | Neutral | Discovery, freedom |
+| **Ancient Cult** | Neutral | Ancestral alien technology |
 
 **Species**:
 - Humans, Synthetics (AI), Xenos (diverse alien races)
 
 ---
 
-## ⚔️ Classes par Univers
+## ⚔️ Classes by Universe
 
-### 📖 Système de Stats Universel
+### 📖 Universal Stats System
 
-**Toutes les classes utilisent ces 7 stats** :
+**All classes use these 7 stats**:
 
 | Stat | Fantasy | Apocalypse | Sci-Fi |
 |------|---------|------------|--------|
-| **HP** | Points de vie | Santé | Intégrité corporelle |
-| **Mana** | Énergie magique | Stamina | Énergie bouclier |
-| **Strength** | Force physique | Force brute | Force gravitique |
-| **Agility** | Agilité combat | Vitesse, esquive | Réflexes pilotage |
-| **Intelligence** | Connaissance magie | Ingénierie, craft | Hacking, tech |
-| **Charisma** | Persuasion, social | Leadership | Diplomatie aliens |
-| **Luck** | Chance loot | Scavenge bonus | Rencontres rares |
+| **HP** | Hit points | Health | Body integrity |
+| **Mana** | Magical energy | Stamina | Shield energy |
+| **Strength** | Physical strength | Raw strength | Gravitational force |
+| **Agility** | Combat agility | Speed, dodge | Piloting reflexes |
+| **Intelligence** | Magic knowledge | Engineering, crafting | Hacking, tech |
+| **Charisma** | Persuasion, social | Leadership | Alien diplomacy |
+| **Luck** | Loot chance | Scavenge bonus | Rare encounters |
 
 ---
 
 ### 🏰 Fantasy - Valorain (5 classes)
 
-#### Guerrier
+#### Warrior
 - **Bonus**: +3 Strength, +15 Max HP, -1 Intelligence
-- **Playstyle**: Combat rapproché, tanking, dégâts bruts
-- **Starting Skills**: Frappe Puissante, Cri de Guerre
-- **Unique**: Peut briser portes, intimider ennemis
+- **Playstyle**: Melee combat, tanking, raw damage
+- **Starting Skills**: Power Strike, War Cry
+- **Unique**: Can break doors, intimidate enemies
 
 #### Mage
 - **Bonus**: +3 Intelligence, +20 Max Mana, -1 Strength
-- **Playstyle**: Sorts élémentaires, résolution d'énigmes
-- **Starting Skills**: Boule de Feu, Bouclier Arcanique
-- **Unique**: Déchiffre runes anciennes, lévitation
+- **Playstyle**: Elemental spells, puzzle solving
+- **Starting Skills**: Fireball, Arcane Shield
+- **Unique**: Deciphers ancient runes, levitation
 
-#### Voleur
+#### Thief
 - **Bonus**: +3 Agility, +2 Luck, -5 Max HP
-- **Playstyle**: Stealth, vols, pièges, esquive
-- **Starting Skills**: Attaque Sournoise, Crochetage
-- **Unique**: Détecte pièges, pickpocket NPCs
+- **Playstyle**: Stealth, theft, traps, dodge
+- **Starting Skills**: Sneak Attack, Lockpicking
+- **Unique**: Detects traps, pickpocket NPCs
 
-#### Guérisseur
+#### Healer
 - **Bonus**: +2 Intelligence, +2 Charisma, +15 Max Mana
-- **Playstyle**: Support, soins, buffs
-- **Starting Skills**: Soin Mineur, Purification
-- **Unique**: Guérit maladies, calme NPCs hostiles
+- **Playstyle**: Support, healing, buffs
+- **Starting Skills**: Minor Heal, Purification
+- **Unique**: Cures diseases, calms hostile NPCs
 
-#### Rôdeur
+#### Ranger
 - **Bonus**: +2 Agility, +1 Strength, +1 Luck
-- **Playstyle**: Archerie, nature, survie
-- **Starting Skills**: Tir Précis, Pistage
-- **Unique**: Apprivoise créatures, survie wilderness
+- **Playstyle**: Archery, nature, survival
+- **Starting Skills**: Precise Shot, Tracking
+- **Unique**: Tames creatures, wilderness survival
 
 ---
 
-### 💀 Apocalypse - Terre Désolée (4 classes)
+### 💀 Apocalypse - Terre Desolee (4 classes)
 
-#### Récupérateur
+#### Scavenger
 - **Bonus**: +3 Luck, +1 Intelligence, +1 Agility
-- **Playstyle**: Fouille, craft, bricolage
-- **Starting Skills**: Fouille Experte, Bricolage
-- **Unique**: Trouve ressources rares, répare objets
+- **Playstyle**: Scavenging, crafting, tinkering
+- **Starting Skills**: Expert Scavenging, Tinkering
+- **Unique**: Finds rare resources, repairs objects
 
-#### Bagarreur
+#### Brawler
 - **Bonus**: +3 Strength, +10 Max HP, -1 Intelligence
-- **Playstyle**: Combat de rue, brutal, résistant
-- **Starting Skills**: Coup de Poing, Résistance
-- **Unique**: Ignore douleur, combat sans armes
+- **Playstyle**: Street fighting, brutal, resilient
+- **Starting Skills**: Punch, Endurance
+- **Unique**: Ignores pain, unarmed combat
 
-#### Médecin
+#### Medic
 - **Bonus**: +3 Intelligence, +2 Charisma, -1 Strength
-- **Playstyle**: Soins, diagnostics, chimie
-- **Starting Skills**: Premiers Soins, Diagnostic
-- **Unique**: Créer médicaments, soigner radiation
+- **Playstyle**: Healing, diagnostics, chemistry
+- **Starting Skills**: First Aid, Diagnosis
+- **Unique**: Creates medicine, treats radiation
 
-#### Ingénieur
+#### Engineer
 - **Bonus**: +3 Intelligence, +1 Agility, -1 Charisma
-- **Playstyle**: Tech, hacking, pièges
-- **Starting Skills**: Réparation, Piège Improvisé
-- **Unique**: Hack terminaux, créer explosifs
+- **Playstyle**: Tech, hacking, traps
+- **Starting Skills**: Repair, Improvised Trap
+- **Unique**: Hacks terminals, creates explosives
 
 ---
 
 ### 🚀 Sci-Fi - Nova Galaxia (5 classes)
 
-#### Pilote
+#### Pilot
 - **Bonus**: +3 Agility, +2 Luck, -1 Strength
-- **Playstyle**: Pilotage, manœuvres, vitesse
-- **Starting Skills**: Manœuvre Évasive, Navigation Stellaire
-- **Unique**: Pilote vaisseaux, évite combats spatiaux
+- **Playstyle**: Piloting, maneuvers, speed
+- **Starting Skills**: Evasive Maneuver, Stellar Navigation
+- **Unique**: Pilots ships, avoids space combat
 
-#### Soldat
+#### Soldier
 - **Bonus**: +2 Strength, +10 Max HP, +1 Agility
-- **Playstyle**: Combat tactique, armes lourdes
-- **Starting Skills**: Tir de Barrage, Couverture Tactique
-- **Unique**: Tactiques militaires, résiste blessures
+- **Playstyle**: Tactical combat, heavy weapons
+- **Starting Skills**: Barrage Fire, Tactical Cover
+- **Unique**: Military tactics, resists injuries
 
 #### Hacker
 - **Bonus**: +3 Intelligence, +1 Agility, -2 Strength
-- **Playstyle**: Intrusion, contrôle systèmes
-- **Starting Skills**: Intrusion Système, Scan de Données
-- **Unique**: Hack drones, désactive sécurité
+- **Playstyle**: Intrusion, system control
+- **Starting Skills**: System Intrusion, Data Scan
+- **Unique**: Hacks drones, disables security
 
-#### Diplomate
+#### Diplomat
 - **Bonus**: +3 Charisma, +2 Intelligence, -2 Strength
-- **Playstyle**: Négociation, résolution pacifique
-- **Starting Skills**: Persuasion, Analyse Culturelle
-- **Unique**: Évite combats, accès factions
+- **Playstyle**: Negotiation, peaceful resolution
+- **Starting Skills**: Persuasion, Cultural Analysis
+- **Unique**: Avoids combat, faction access
 
-#### Psionique
+#### Psion
 - **Bonus**: +2 Intelligence, +20 Max Mana, +1 Charisma
-- **Playstyle**: Pouvoirs mentaux, manipulation
-- **Starting Skills**: Télékinésie, Lecture Mentale
-- **Unique**: Contrôle esprit, détecte mensonges
+- **Playstyle**: Mental powers, manipulation
+- **Starting Skills**: Telekinesis, Mind Reading
+- **Unique**: Mind control, detects lies
 
 ---
 
-## 🎮 Features par Phase
+## 🎮 Features by Phase
 
 ### Phase 1 - MVP (Week 1-10) ✅
 **Goal**: Game is playable and fun
-**Universe**: Fantasy (Valorain) UNIQUEMENT
+**Universe**: Fantasy (Valorain) ONLY
 
 #### Essential Features
 | Feature | Why | Example |
 |---------|-----|---------|
 | **Authentication** | Control access | Login/signup |
-| **Universe Selection** | Choose theme | Fantasy visible, autres grisés (Phase 2B) |
+| **Universe Selection** | Choose theme | Fantasy visible, others grayed out (Phase 2B) |
 | **Character Creation** | Player identity | Choose class (5 fantasy), distribute stats |
 | **Scene Generation** | Core gameplay | AI generates narrative (fantasy only) |
 | **Choices & Consequences** | Interactivity | Choices affect stats, inventory |
@@ -248,10 +248,10 @@
 | **Game Over** | Stakes | Possible death, madness, betrayal |
 
 **Code Architecture**:
-- ✅ Backend prêt pour multi-univers (types, DB schema)
-- ✅ Frontend UI avec sélecteur d'univers (mais 2 univers disabled)
-- ✅ AI prompts adaptables par univers
-- 🎯 **Exposition**: Fantasy uniquement
+- ✅ Backend ready for multi-universe (types, DB schema)
+- ✅ Frontend UI with universe selector (but 2 universes disabled)
+- ✅ AI prompts adaptable per universe
+- 🎯 **Exposure**: Fantasy only
 
 #### Not In MVP (But Planned)
 - Apocalypse & Sci-Fi universes (Phase 2B)
@@ -263,11 +263,11 @@
 
 ### Phase 2B - Addictive Features + Multi-Universe (Week 11-16)
 **Goal**: Game is addictive, highly replayable
-**Universe**: Les 3 univers de base activés
+**Universe**: All 3 base universes activated
 
 | Feature | Addiction | Details |
 |---------|-----------|---------|
-| **Apocalypse & Sci-Fi** | 3x replayability | Activer les 2 autres univers |
+| **Apocalypse & Sci-Fi** | 3x replayability | Activate the 2 other universes |
 | **Named NPCs** | Emotional investment | Tormund remembers you in scene 5, 12, 18 |
 | **World Events** | Surprise, freshness | Random merchants, festivals, rare bosses |
 | **Build Diversity** | Class identity | Warrior ≠ Mage experience (30-40% different) |
@@ -275,16 +275,16 @@
 | **Reputation** | Consequences felt | Factions react to your choices |
 
 **Deliverable**:
-- ✅ 3 univers jouables (Fantasy, Apocalypse, Sci-Fi)
-- ✅ 14 classes au total (5+4+5)
-- ✅ Replayabilité massive (3 univers × 5 classes × 5 endings = 75+ expériences)
+- ✅ 3 playable universes (Fantasy, Apocalypse, Sci-Fi)
+- ✅ 14 total classes (5+4+5)
+- ✅ Massive replayability (3 universes x 5 classes x 5 endings = 75+ experiences)
 
 ### Phase 3 - Polish + Custom Universes (Week 17+)
 **Goal**: Community, cosmetics, UGC (User Generated Content)
 
 | Feature | Purpose |
 |---------|---------|
-| **Custom Universe Creator** | UGC ultimate | Player crée son univers, IA génère classes |
+| **Custom Universe Creator** | Ultimate UGC | Player creates their universe, AI generates classes |
 | **Cosmetics** | Portraits, skins, titles |
 | **NG+ Mode** | Meta-knowledge rewards |
 | **Real Leaderboards** | Competition |
@@ -356,11 +356,11 @@ Cosmetics, NG+, leaderboards, streaming, community
 - ✅ Session playable 50-70 minutes
 - ✅ Multiple endings (5+) exist
 - ✅ 0 game-breaking bugs
-- ✅ Code prêt pour multi-univers (architecture)
+- ✅ Code ready for multi-universe (architecture)
 
 ### Phase 2B Success (Week 16)
-- ✅ 3 univers jouables (Fantasy, Apocalypse, Sci-Fi)
-- ✅ 14 classes total fonctionnelles
+- ✅ 3 playable universes (Fantasy, Apocalypse, Sci-Fi)
+- ✅ 14 total functional classes
 - ✅ NPCs appear multiple times, remember you
 - ✅ World events add surprise factor
 - ✅ Class affects 30-40% of content
@@ -369,7 +369,7 @@ Cosmetics, NG+, leaderboards, streaming, community
 
 ### Addiction Metric
 **By MVP (Week 10), players should feel**:
-- 🎮 "I want to play again with different class" (5 classes fantasy)
+- 🎮 "I want to play again with different class" (5 fantasy classes)
 - 📖 "What if I made different choice in scene 5?"
 - 🌍 "The world felt different this playthrough"
 
@@ -440,7 +440,7 @@ Cosmetics, NG+, leaderboards, streaming, community
 - ✅ Get feedback
 - ✅ Implement Phase 2B (week 11-16)
 - ✅ Launch Phase 2B update
-- ✅ Game becomes viral (word of mouth)
+- ✅ Game goes viral (word of mouth)
 
 ---
 
@@ -494,14 +494,14 @@ Phase 3 (Week 17+):   95%+ addictive
 
 ## ❓ Key Decisions Made
 
-✅ **Multi-Univers Architecture** (3 de base + custom en Phase 3)
-✅ **Progressive Rollout** (Phase 1 = Fantasy, Phase 2B = 3 univers, Phase 3 = custom)
-✅ **14 Classes Total** (5 fantasy, 4 apocalypse, 5 scifi)
-✅ **Universal Stats System** (HP/Mana/Str/Agi/Int/Cha/Luck pour tous les univers)
+✅ **Multi-Universe Architecture** (3 base + custom in Phase 3)
+✅ **Progressive Rollout** (Phase 1 = Fantasy, Phase 2B = 3 universes, Phase 3 = custom)
+✅ **14 Total Classes** (5 fantasy, 4 apocalypse, 5 scifi)
+✅ **Universal Stats System** (HP/Mana/Str/Agi/Int/Cha/Luck for all universes)
 ✅ **Frontend-First** (design before backend)
 ✅ **Multi-AI Provider** (fallback reliability)
 ✅ **Permanent Consequences** (weight of choices)
-✅ **Code Multi-Univers dès Phase 1** (architecture flexible, exposition progressive)
+✅ **Multi-Universe Code from Phase 1** (flexible architecture, progressive exposure)
 
 ---
 
