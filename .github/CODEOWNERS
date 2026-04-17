@@ -1,0 +1,5 @@
+# CODEOWNERS — Assignation automatique des reviewers
+# AdamDjo est l'unique reviewer sur tout le repo
+# Toute PR ouverte déclenche automatiquement une demande de review
+
+* @AdamDjo
