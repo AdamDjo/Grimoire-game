@@ -18,15 +18,16 @@ jobs:
           BRANCH: ${{ github.head_ref }}
           REPO: ${{ github.repository }}
         run: |
-          if [[ "$BRANCH" == feature/phase-1a-* ]]; then
+          # Support feature/*, fix/*, hotfix/* branches with phase pattern
+          if [[ "$BRANCH" == feature/phase-1a-* ]] || [[ "$BRANCH" == fix/phase-1a-* ]] || [[ "$BRANCH" == hotfix/phase-1a-* ]]; then
             MILESTONE="Phase 1A - Frontend UI"
-          elif [[ "$BRANCH" == feature/phase-1b-* ]]; then
+          elif [[ "$BRANCH" == feature/phase-1b-* ]] || [[ "$BRANCH" == fix/phase-1b-* ]] || [[ "$BRANCH" == hotfix/phase-1b-* ]]; then
             MILESTONE="Phase 1B - Backend Foundation"
-          elif [[ "$BRANCH" == feature/phase-2b-* ]]; then
+          elif [[ "$BRANCH" == feature/phase-2b-* ]] || [[ "$BRANCH" == fix/phase-2b-* ]] || [[ "$BRANCH" == hotfix/phase-2b-* ]]; then
             MILESTONE="Phase 2B - Multi-Universe"
-          elif [[ "$BRANCH" == feature/phase-2-* ]]; then
+          elif [[ "$BRANCH" == feature/phase-2-* ]] || [[ "$BRANCH" == fix/phase-2-* ]] || [[ "$BRANCH" == hotfix/phase-2-* ]]; then
             MILESTONE="Phase 2 - MVP"
-          elif [[ "$BRANCH" == feature/phase-3-* ]]; then
+          elif [[ "$BRANCH" == feature/phase-3-* ]] || [[ "$BRANCH" == fix/phase-3-* ]] || [[ "$BRANCH" == hotfix/phase-3-* ]]; then
             MILESTONE="Phase 3 - Polish & UGC"
           else
             echo "No milestone to assign for branch: $BRANCH"
