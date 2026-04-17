@@ -1,33 +1,46 @@
-## Summary
+## Résumé
 
-<!-- Describe in 1-3 sentences what this PR does -->
+<!-- Décris en 1-3 phrases ce que fait cette PR -->
 
-## Related issue(s)
+## Issue(s) liée(s)
 
-Closes #<!-- issue number -->
+Closes #<!-- numéro d'issue -->
 
-## Type of change
+## Type de changement
 
-- [ ] New feature (Phase 1A / 1B / 2 / 2B / 3)
+- [ ] Nouvelle fonctionnalité (phase concernée : ___)
 - [ ] Bug fix
-- [ ] Refactoring (no behavior change)
-- [ ] Config / DevOps
-- [ ] Documentation
+- [ ] Refactoring (aucun changement de comportement)
+- [ ] Chore / Tooling / Config
+- [ ] Documentation uniquement
 
-## Checklist
+## Phase & Domaine
 
-- [ ] Code follows project conventions (`CLAUDE.md`)
-- [ ] Shared types are in `packages/shared` (not duplicated)
-- [ ] `pnpm type-check` passes
-- [ ] `pnpm lint` passes
-- [ ] No forgotten `console.log`
-- [ ] Manually tested
+- **Phase** : <!-- phase: 1a / 1b / 2 / 2b / 3 -->
+- **Domaine** : <!-- domain: frontend / backend / shared / ai / database / devops -->
 
-## Screenshots (frontend only)
+## Checklist technique
 
-<!-- Before/after screenshot if UI change -->
+- [ ] Code suit les conventions `CLAUDE.md` (naming, patterns)
+- [ ] Types partagés dans `packages/shared` (jamais dupliqués)
+- [ ] `pnpm type-check` passe sans erreur
+- [ ] `pnpm lint` passe sans erreur
+- [ ] Aucun `console.log` oublié
+- [ ] Testé manuellement (décrire ci-dessous)
+
+## Test manuel effectué
+
+<!-- Décris comment tu as testé cette PR -->
+<!-- ex: "Lancé pnpm dev, navigué sur /game, vérifié que les stats s'affichent" -->
+
+## Captures d'écran (frontend uniquement)
+
+<!-- Avant / Après si changement d'UI — supprimer si non applicable -->
+
+## Notes pour la review
+
+<!-- Points d'attention, compromis techniques, décisions prises -->
 
 ---
 
-> **Labels** and **milestone** are assigned automatically based on files changed and branch name.
-> No need to set them manually.
+> Labels et milestone assignés automatiquement via CI selon les fichiers modifiés et le nom de branche.
