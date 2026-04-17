@@ -1,11 +1,6 @@
-const backendConfig = require('@rpg-game/eslint-config/backend')
+// @ts-check
+'use strict'
 
-/** @type {import("eslint").Linter.Config[]} */
-const config = [
-  ...backendConfig,
-  {
-    ignores: ['dist/**', 'node_modules/**'],
-  },
-]
+const { createBackendConfig } = require('@rpg-game/eslint-config/backend')
 
-module.exports = config
+module.exports = createBackendConfig({ tsconfigRootDir: __dirname })
