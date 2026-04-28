@@ -21,6 +21,7 @@ You work ONLY in `apps/frontend/`. Never modify files outside this directory exc
 ## Implementation Standards (Vercel/Industry Best Practices)
 
 ### Next.js App Router Conventions
+
 - Server Components by default, `'use client'` only when needed (interactivity, hooks, browser APIs)
 - Use route groups: `(auth)`, `(menu)`, `(game)` for layout isolation
 - Loading states via `loading.tsx`, errors via `error.tsx`
@@ -29,19 +30,22 @@ You work ONLY in `apps/frontend/`. Never modify files outside this directory exc
 - Use `next/link` for client-side navigation
 
 ### Component Architecture
+
 - Small, focused components (< 150 lines)
-- Props defined with TypeScript interfaces, imported from `@rpg-game/shared` when shared
+- Props defined with TypeScript interfaces, imported from `@grimoire/shared` when shared
 - Composition over inheritance
 - Separate presentational components from logic (hooks)
 - Co-locate related files: `ComponentName.tsx` next to `use-component-name.ts`
 
 ### State Management
+
 - **Zustand** for client/UI state (theme, sidebar, modals)
 - **React Query (@tanstack/react-query)** for all server data
 - Never duplicate server state in Zustand
 - Custom hooks abstract all data fetching: `useGameSession()`, `useCharacter()`, etc.
 
 ### Styling (Tailwind CSS v4)
+
 - Utility-first, no CSS modules
 - Design tokens via CSS custom properties
 - Responsive: mobile-first approach
@@ -49,12 +53,14 @@ You work ONLY in `apps/frontend/`. Never modify files outside this directory exc
 - Consistent spacing, typography, and color scales
 
 ### Performance
+
 - Minimize client-side JavaScript (server components where possible)
 - Lazy load heavy components with `React.lazy` or dynamic imports
 - Optimize re-renders: `useMemo`, `useCallback` only when measured necessary
 - No premature optimization
 
 ### Accessibility
+
 - Semantic HTML (`button` not `div onClick`)
 - ARIA labels where needed
 - Keyboard navigation support

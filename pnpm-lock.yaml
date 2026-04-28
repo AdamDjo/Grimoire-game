@@ -28,7 +28,7 @@ importers:
 
   apps/backend:
     dependencies:
-      "@rpg-game/shared":
+      "@grimoire/shared":
         specifier: workspace:*
         version: link:../../packages/shared
       "@supabase/supabase-js":
@@ -50,10 +50,10 @@ importers:
         specifier: ^3.24.0
         version: 3.25.76
     devDependencies:
-      "@rpg-game/eslint-config":
+      "@grimoire/eslint-config":
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      "@rpg-game/prettier-config":
+      "@grimoire/prettier-config":
         specifier: workspace:*
         version: link:../../packages/prettier-config
       "@types/cors":
@@ -86,7 +86,7 @@ importers:
 
   apps/frontend:
     dependencies:
-      "@rpg-game/shared":
+      "@grimoire/shared":
         specifier: workspace:*
         version: link:../../packages/shared
       "@supabase/supabase-js":
@@ -123,15 +123,15 @@ importers:
         specifier: ^5.0.0
         version: 5.0.11(@types/react@19.2.14)(react@19.2.3)
     devDependencies:
+      "@grimoire/eslint-config":
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      "@grimoire/prettier-config":
+        specifier: workspace:*
+        version: link:../../packages/prettier-config
       "@next/bundle-analyzer":
         specifier: ^15
         version: 15.5.15
-      "@rpg-game/eslint-config":
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      "@rpg-game/prettier-config":
-        specifier: workspace:*
-        version: link:../../packages/prettier-config
       "@tailwindcss/postcss":
         specifier: ^4
         version: 4.1.18

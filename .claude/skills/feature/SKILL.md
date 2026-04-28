@@ -14,7 +14,7 @@ Exécuter dans l'ordre :
    - Demander : "Décris la feature en une phrase (pour l'issue GitHub)"
    - Demander : "Quels labels ? (ex: frontend, backend, phase-1a, phase-1b...)"
    - Créer l'issue via mcp**github**create_issue avec :
-     - owner: AdamDjo, repo: EpisodeRPG-game
+     - owner: AdamDjo, repo: Grimoire-game
      - title: "feat(<args>): <description>"
      - labels fournis par l'utilisateur
    - Noter le numéro de l'issue créée → `<numéro>`

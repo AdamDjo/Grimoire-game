@@ -99,7 +99,7 @@ apps/frontend/
 │   │   └── game-constants.ts
 │   │
 │   ├── types/
-│   │   └── index.ts (import from @rpg-game/shared)
+│   │   └── index.ts (import from @grimoire/shared)
 │   │
 │   └── styles/
 │       └── globals.css
@@ -114,6 +114,7 @@ apps/frontend/
 **Purpose**: First page before login
 
 **Layout**:
+
 ```
 ┌─────────────────────────────────────────┐
 │  Narrative RPG Logo       [Login] [Sign] │
@@ -137,6 +138,7 @@ apps/frontend/
 ```
 
 **Components Used**:
+
 - `Header.tsx` (branding, navigation)
 - `Card.tsx` (feature cards)
 - `Button.tsx` (CTA buttons)
@@ -148,6 +150,7 @@ apps/frontend/
 **Purpose**: User authentication
 
 **Layout**:
+
 ```
 ┌─────────────────────────────────────────┐
 │  Narrative RPG                          │
@@ -166,11 +169,13 @@ apps/frontend/
 ```
 
 **Components Used**:
+
 - `LoginForm.tsx` (form logic)
 - `Input.tsx` (form inputs)
 - `Button.tsx` (submit)
 
 **Form Validation**:
+
 - Email required, valid email
 - Password required, min 6 chars
 - Show error messages
@@ -184,6 +189,7 @@ apps/frontend/
 **Layout**: Similar to Login, but with password confirmation
 
 **Components Used**:
+
 - `SignupForm.tsx`
 - `Input.tsx`
 - `Button.tsx`
@@ -195,6 +201,7 @@ apps/frontend/
 **Purpose**: Main menu after login
 
 **Layout**:
+
 ```
 ┌─────────────────────────────────────────┐
 │ Profile: John Doe   [Settings] [Logout] │
@@ -231,25 +238,27 @@ apps/frontend/
 ```
 
 **Components Used**:
+
 - `Header.tsx` (user info)
 - `Card.tsx` (sections)
 - `Button.tsx` (actions)
 
 **Data Structure** (Mock for MVP):
+
 ```typescript
 interface UserSession {
-  characterName: string
-  class: string
-  level: number
-  playtimeSeconds: number
-  lastPlayedAt: Date
+  characterName: string;
+  class: string;
+  level: number;
+  playtimeSeconds: number;
+  lastPlayedAt: Date;
 }
 
 interface UserStats {
-  totalSessionsPlayed: number
-  totalHoursPlayed: number
-  bestCompletionTime: number
-  achievementsUnlocked: number
+  totalSessionsPlayed: number;
+  totalHoursPlayed: number;
+  bestCompletionTime: number;
+  achievementsUnlocked: number;
 }
 ```
 
@@ -260,6 +269,7 @@ interface UserStats {
 **Purpose**: Choose the universe before character creation
 
 **Layout**:
+
 ```
 ┌──────────────────────────────────────────┐
 │ ◄ Back              Choose Your Universe │
@@ -295,6 +305,7 @@ interface UserStats {
 ```
 
 **Components Used**:
+
 - `UniverseSelector.tsx` (main component)
 - `UniverseCard.tsx` (individual universe card)
 - `UniversePreview.tsx` (preview modal with lore)
@@ -302,15 +313,17 @@ interface UserStats {
 - `Card.tsx`
 
 **State Management**:
+
 ```typescript
 interface UniverseState {
-  selectedUniverse: UniverseType | null
-  availableUniverses: UniverseDefinition[]
-  selectUniverse: (universeId: string) => void
+  selectedUniverse: UniverseType | null;
+  availableUniverses: UniverseDefinition[];
+  selectUniverse: (universeId: string) => void;
 }
 ```
 
 **Phase Rollout**:
+
 - **Phase 1 (MVP)**: Fantasy clickable, others disabled
 - **Phase 2B**: All 3 universes clickable
 - **Phase 3**: + Custom universe creator
@@ -322,6 +335,7 @@ interface UniverseState {
 **Purpose**: Create a character for the selected universe
 
 **Layout** (Fantasy example):
+
 ```
 ┌──────────────────────────────────────────┐
 │ ◄ Back              Character Creation   │
@@ -377,6 +391,7 @@ interface UniverseState {
 ```
 
 **Components Used**:
+
 - `CharacterCreator.tsx` (main form)
 - `ClassSelector.tsx` (universe-aware, loads correct classes)
 - `StatDistributor.tsx` (universal stats: HP/Mana/Str/Agi/Int/Cha/Luck)
@@ -385,34 +400,36 @@ interface UniverseState {
 - `Input.tsx`
 
 **State Management** (Zustand):
+
 ```typescript
 interface CharacterState {
-  name: string
-  universeType: UniverseType  // 'fantasy' | 'apocalypse' | 'scifi'
-  selectedClass: ClassDefinition
-  baseStats: UniversalStats
-  addPointToStat: (stat: StatKey) => void
-  removePointFromStat: (stat: StatKey) => void
-  getFinalStats: () => UniversalStats
-  isValid: () => boolean
+  name: string;
+  universeType: UniverseType; // 'fantasy' | 'apocalypse' | 'scifi'
+  selectedClass: ClassDefinition;
+  baseStats: UniversalStats;
+  addPointToStat: (stat: StatKey) => void;
+  removePointFromStat: (stat: StatKey) => void;
+  getFinalStats: () => UniversalStats;
+  isValid: () => boolean;
 }
 
 interface UniversalStats {
-  hp: number
-  maxHp: number
-  mana: number
-  maxMana: number
-  strength: number
-  agility: number
-  intelligence: number
-  charisma: number
-  luck: number
-  level: number
-  xp: number
+  hp: number;
+  maxHp: number;
+  mana: number;
+  maxMana: number;
+  strength: number;
+  agility: number;
+  intelligence: number;
+  charisma: number;
+  luck: number;
+  level: number;
+  xp: number;
 }
 ```
 
 **Notes**:
+
 - Classes loaded dynamically based on `universeType`
 - Stats adapted to context (e.g., "Mana" → "Stamina" in apocalypse, "Shield Energy" in scifi)
 - Identical UI but labels change depending on universe
@@ -424,6 +441,7 @@ interface UniversalStats {
 **Purpose**: MAIN GAME SCREEN - 70% of gameplay happens here
 
 **Layout**:
+
 ```
 ┌────────────────────────────────────────────────────────┐
 │ [Menu] Thrall | HP 85/100 | San 70/100 | Stamina 75/100│
@@ -470,6 +488,7 @@ interface UniversalStats {
 ```
 
 **Components Used**:
+
 - `SceneDisplay.tsx` (scene title + description)
 - `EventLog.tsx` (last 3-4 events)
 - `ChoicesList.tsx` (all 4 choices)
@@ -479,6 +498,7 @@ interface UniversalStats {
 - `Header.tsx` (top bar with quick stats)
 
 **Interactions**:
+
 1. User clicks choice button
 2. POST `/api/game/action` { sessionId, choiceId }
 3. Scene updates with animation
@@ -486,19 +506,20 @@ interface UniversalStats {
 5. Stats potentially change
 
 **State Management**:
+
 ```typescript
 interface GameSessionState {
-  sessionId: string
-  character: Character
-  currentScene: Scene
-  eventLog: LogEntry[]
-  inventory: InventoryItem[]
-  stats: Stats
-  level: number
-  xp: number
+  sessionId: string;
+  character: Character;
+  currentScene: Scene;
+  eventLog: LogEntry[];
+  inventory: InventoryItem[];
+  stats: Stats;
+  level: number;
+  xp: number;
 
-  selectChoice: (choiceId: string) => Promise<void>
-  updateFromAPI: (data: APIResponse) => void
+  selectChoice: (choiceId: string) => Promise<void>;
+  updateFromAPI: (data: APIResponse) => void;
 }
 ```
 
@@ -509,6 +530,7 @@ interface GameSessionState {
 **Purpose**: Display game summary
 
 **Layout**:
+
 ```
 ┌──────────────────────────────────────────┐
 │                                          │
@@ -537,6 +559,7 @@ interface GameSessionState {
 ```
 
 **Components Used**:
+
 - `GameOverScreen.tsx` (main)
 - `Card.tsx` (summary box)
 - `Button.tsx`
@@ -548,6 +571,7 @@ interface GameSessionState {
 **Purpose**: View global scores
 
 **Layout**:
+
 ```
 ┌──────────────────────────────────────────┐
 │ Leaderboards                             │
@@ -572,6 +596,7 @@ interface GameSessionState {
 **Purpose**: User settings
 
 **Options**:
+
 - Sound on/off
 - Difficulty (Easy/Normal/Hard)
 - Narrative style (Dark/Comedy/Epic)
@@ -584,44 +609,48 @@ interface GameSessionState {
 ## Component Library (Reusable UI)
 
 ### Button.tsx
+
 ```typescript
 interface ButtonProps {
-  children: React.ReactNode
-  onClick?: () => void
-  disabled?: boolean
-  variant?: 'primary' | 'secondary' | 'danger'
-  size?: 'sm' | 'md' | 'lg'
-  className?: string
+  children: React.ReactNode;
+  onClick?: () => void;
+  disabled?: boolean;
+  variant?: "primary" | "secondary" | "danger";
+  size?: "sm" | "md" | "lg";
+  className?: string;
 }
 ```
 
 ### Input.tsx
+
 ```typescript
 interface InputProps {
-  type?: 'text' | 'email' | 'password'
-  placeholder?: string
-  value: string
-  onChange: (value: string) => void
-  error?: string
-  disabled?: boolean
+  type?: "text" | "email" | "password";
+  placeholder?: string;
+  value: string;
+  onChange: (value: string) => void;
+  error?: string;
+  disabled?: boolean;
 }
 ```
 
 ### Card.tsx
+
 ```typescript
 interface CardProps {
-  children: React.ReactNode
-  title?: string
-  className?: string
-  onClick?: () => void
+  children: React.ReactNode;
+  title?: string;
+  className?: string;
+  onClick?: () => void;
 }
 ```
 
 ### Badge.tsx (for rarity)
+
 ```typescript
 interface BadgeProps {
-  rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary'
-  children: React.ReactNode
+  rarity: "common" | "uncommon" | "rare" | "epic" | "legendary";
+  children: React.ReactNode;
 }
 // Colors: white, green, blue, purple, orange
 ```
@@ -631,6 +660,7 @@ interface BadgeProps {
 ## Styling Strategy
 
 **Colors (Tailwind)**:
+
 ```
 Primary: Indigo-600 (buttons, focus)
 Secondary: Slate-700 (text, backgrounds)
@@ -647,6 +677,7 @@ Rarity Colors:
 ```
 
 **Typography**:
+
 - H1: 3xl bold (page titles)
 - H2: 2xl bold (section titles)
 - H3: xl bold (subsection titles)
@@ -658,6 +689,7 @@ Rarity Colors:
 ## Phase 1A Milestone (Week 5)
 
 **By end of week 5, DONE**:
+
 - ✅ All 10 pages created + navigable
 - ✅ Universe selector (Fantasy active, 2 disabled)
 - ✅ All components built
@@ -666,6 +698,7 @@ Rarity Colors:
 - ✅ No API calls yet (all static)
 
 **Pages ready to integrate with backend**:
+
 1. Login/Signup (auth endpoints)
 2. Dashboard (session list)
 3. Universe Selection (universe metadata)
@@ -676,6 +709,7 @@ Rarity Colors:
 8. Settings (user prefs)
 
 **Multi-Universe Architecture**:
+
 - ✅ Code supports 3 universes from Phase 1
 - ✅ UI shows 3 cards (2 disabled with "COMING SOON")
 - ✅ ClassSelector loads correct classes based on universeType

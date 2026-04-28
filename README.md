@@ -1,4 +1,4 @@
-# EpisodeRPG — AI-Powered Narrative RPG
+# Grimoire — AI-Powered Narrative RPG
 
 An interactive web narrative RPG where AI generates unique universes every playthrough. Players create a character, read narrative scenes, and choose from text options. Roadwarden-style gameplay: stats, inventory, choices with permanent consequences, and Game Over possible. Infinite replayability through AI generation.
 
@@ -10,8 +10,8 @@ An interactive web narrative RPG where AI generates unique universes every playt
 ## Installation
 
 ```bash
-git clone https://github.com/AdamDjo/EpisodeRPG-game.git
-cd EpisodeRPG-game
+git clone https://github.com/AdamDjo/Grimoire-game.git
+cd Grimoire-game
 pnpm install
 ```
 
@@ -33,8 +33,8 @@ cp .mcp.json.example .mcp.json
 # Fill in your tokens in .mcp.json
 ```
 
-| Placeholder | Where to get it |
-|-------------|-----------------|
+| Placeholder           | Where to get it                                                 |
+| --------------------- | --------------------------------------------------------------- |
 | `ghp_YOUR_TOKEN_HERE` | GitHub → Settings → Developer Settings → Personal Access Tokens |
 
 > ⚠️ Never commit `.mcp.json` — it contains your secrets. It is listed in `.gitignore`.
@@ -53,14 +53,14 @@ pnpm type-check                # TypeScript check across all packages
 ## Project Structure
 
 ```
-EpisodeRPG-game/
+Grimoire-game/
 ├── apps/
 │   ├── frontend/              # Next.js 16 (App Router) — port 3000
 │   └── backend/               # Express + TypeScript — port 3001
 ├── packages/
-│   ├── shared/                # Shared types & constants (@rpg-game/shared)
-│   ├── eslint-config/         # Shared ESLint config (@rpg-game/eslint-config)
-│   └── prettier-config/       # Shared Prettier config (@rpg-game/prettier-config)
+│   ├── shared/                # Shared types & constants (@grimoire/shared)
+│   ├── eslint-config/         # Shared ESLint config (@grimoire/eslint-config)
+│   └── prettier-config/       # Shared Prettier config (@grimoire/prettier-config)
 ├── docs/
 │   ├── GAME_DESIGN.md         # Game vision, phases, classes, universes
 │   ├── FRONTEND_ARCHITECTURE.md  # Pages, components, Next.js structure
@@ -87,11 +87,11 @@ Feature branches follow the convention `feature/<issue-number>-<description>` to
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Frontend | Next.js 16, React 19, Tailwind CSS v4 |
-| Backend | Express, TypeScript, Zod |
-| Database | Supabase (PostgreSQL) |
-| State management | Zustand + React Query |
-| AI | Claude, Gemini, Mistral (fallback chain) |
-| Monorepo | Turborepo + pnpm workspaces |
+| Layer            | Technology                               |
+| ---------------- | ---------------------------------------- |
+| Frontend         | Next.js 16, React 19, Tailwind CSS v4    |
+| Backend          | Express, TypeScript, Zod                 |
+| Database         | Supabase (PostgreSQL)                    |
+| State management | Zustand + React Query                    |
+| AI               | Claude, Gemini, Mistral (fallback chain) |
+| Monorepo         | Turborepo + pnpm workspaces              |
