@@ -1,4 +1,4 @@
-# RPG Game - Project Memory & Status
+# Grimoire - Project Memory
 
 **Last Updated**: February 2026
 **Current Phase**: Planning Complete → Ready for Phase 1A ✅
@@ -18,14 +18,14 @@
 
 **ALL DOCS ARE HERE**: `docs/` folder
 
-| Doc | Purpose | Read When |
-|-----|---------|-----------|
-| **README.md** | Index + overview | First! Shows structure |
-| **GAME_DESIGN.md** | Game vision, phases, design | Understand WHAT to build |
-| **FRONTEND_ARCHITECTURE.md** | All pages & components | Build frontend |
-| **NARRATIVE_DESIGN.md** | Story standards, AI prompts | Code backend/AI |
-| **TECH_STACK.md** | Libraries, patterns, security | Code anything |
-| **MEMORY.md** | This file - status tracking | Every session |
+| Doc                          | Purpose                       | Read When                |
+| ---------------------------- | ----------------------------- | ------------------------ |
+| **README.md**                | Index + overview              | First! Shows structure   |
+| **GAME_DESIGN.md**           | Game vision, phases, design   | Understand WHAT to build |
+| **FRONTEND_ARCHITECTURE.md** | All pages & components        | Build frontend           |
+| **NARRATIVE_DESIGN.md**      | Story standards, AI prompts   | Code backend/AI          |
+| **TECH_STACK.md**            | Libraries, patterns, security | Code anything            |
+| **MEMORY.md**                | This file - status tracking   | Every session            |
 
 **Note**: Old docs (PROJECT_SPECIFICATION.md, ROADMAP_DETAILED.md, TECH_RECOMMENDATIONS.md) → MERGED into consolidated docs above. Keep for reference if needed, but not authoritative.
 
@@ -34,6 +34,7 @@
 ## 🤖 How Claude Uses Docs
 
 **EVERY SESSION**:
+
 1. Read this MEMORY.md first (current status)
 2. Check GAME_DESIGN.md for context (game vision)
 3. Reference specific doc based on task:
@@ -51,6 +52,7 @@
 ## 📋 Project State
 
 ### Setup
+
 - ✅ Monorepo: Turborepo + pnpm
 - ✅ Frontend: Next.js 15 (installed)
 - ✅ Backend: Express + TypeScript (ready)
@@ -58,6 +60,7 @@
 - ✅ Git hook: pnpm type-check active
 
 ### Documentation
+
 - ✅ Game design (GAME_DESIGN.md)
 - ✅ Frontend spec (FRONTEND_ARCHITECTURE.md)
 - ✅ Narrative standards (NARRATIVE_DESIGN.md)
@@ -65,6 +68,7 @@
 - ✅ All docs indexed (README.md)
 
 ### Code
+
 - ⏳ Frontend: NOT STARTED (ready to start Week 1)
 - ⏳ Backend: NOT STARTED (starts Week 4)
 - ⏳ Shared types: 95% complete (minor updates as needed)
@@ -74,6 +78,7 @@
 ## 🎮 Game Overview (For Claude Memory)
 
 ### Concept
+
 - Player chooses a **universe** (Fantasy, Apocalypse, or Sci-Fi)
 - Player creates character (14 classes total, 5/4/5 per universe)
 - AI generates narrative scenes adapted to the universe
@@ -83,6 +88,7 @@
 - Each playthrough feels different (AI + multi-universe)
 
 ### Core Addictive Loop
+
 1. Choose universe (theme selection)
 2. Create character (identity + class)
 3. See scene (immersion)
@@ -95,24 +101,28 @@
 ### 3 Base Universes
 
 **1. Valorain (Fantasy)**
+
 - Medieval fantasy, magic, mythical creatures
 - 5 regions, 4 factions, original creatures
 - WoW-inspired but legally original
 - Classes: Warrior, Mage, Thief, Healer, Ranger
 
 **2. Terre Desolee (Apocalypse)**
+
 - Post-apocalypse, survival, scarce resources
 - Ruins, radioactive zones, human factions
 - Fallout/Metro-inspired but original
 - Classes: Scavenger, Brawler, Medic, Engineer
 
 **3. Nova Galaxia (Sci-Fi)**
+
 - Space opera, advanced tech, aliens
 - Space stations, colonized planets
 - Mass Effect/Star Wars-inspired but original
 - Classes: Pilot, Soldier, Hacker, Diplomat, Psionic
 
 ### Universal Stats
+
 - HP, Mana, Strength, Agility, Intelligence, Charisma, Luck
 - Same stats for all universes (contextual adaptation)
 
@@ -189,6 +199,7 @@ PHASE 3 (Week 17+): UGC + Polish
 **When Starting Phase 1A ("Start Phase 1A - Frontend UI")**:
 
 ### Week 1
+
 - [ ] Next.js structure confirmed
 - [ ] Tailwind CSS setup done
 - [ ] Component library started (Button, Input, Card, etc.)
@@ -197,6 +208,7 @@ PHASE 3 (Week 17+): UGC + Polish
 - [ ] Auth form validation working (frontend)
 
 ### Week 2-3
+
 - [ ] Universe selector (3 cards: Fantasy, Apocalypse disabled, Sci-Fi disabled)
 - [ ] Character creation form complete
 - [ ] Class selector (5 fantasy classes visible)
@@ -206,6 +218,7 @@ PHASE 3 (Week 17+): UGC + Polish
 - [ ] Responsive design checked
 
 ### Week 4
+
 - [ ] Game session screen layout (main complexity)
 - [ ] Scene display component
 - [ ] Choices list (4 buttons)
@@ -214,6 +227,7 @@ PHASE 3 (Week 17+): UGC + Polish
 - [ ] Event log component
 
 ### Week 5
+
 - [ ] Game over screen
 - [ ] Leaderboard mockup
 - [ ] Settings page
@@ -228,6 +242,7 @@ PHASE 3 (Week 17+): UGC + Polish
 ## 📝 Session Template (For Claude)
 
 **At START of session**:
+
 ```
 ✓ Read MEMORY.md (current status)
 ✓ Check docs (README.md shows which to read)
@@ -236,6 +251,7 @@ PHASE 3 (Week 17+): UGC + Polish
 ```
 
 **During session**:
+
 ```
 ✓ Reference specific docs as needed
 ✓ Update MEMORY.md with progress
@@ -244,6 +260,7 @@ PHASE 3 (Week 17+): UGC + Polish
 ```
 
 **At END of session**:
+
 ```
 ✓ Update MEMORY.md with:
   - What was accomplished
@@ -257,24 +274,25 @@ PHASE 3 (Week 17+): UGC + Polish
 
 ## 🔗 Important Files
 
-| Path | Purpose |
-|------|---------|
-| `docs/README.md` | Index + structure overview |
-| `docs/GAME_DESIGN.md` | Full game spec |
-| `docs/FRONTEND_ARCHITECTURE.md` | All pages + components |
-| `docs/NARRATIVE_DESIGN.md` | Story standards |
-| `docs/TECH_STACK.md` | Libraries + patterns |
-| `docs/MEMORY.md` | This file - status |
-| `CLAUDE.md` | Root rules (conventions, etc.) |
-| `apps/frontend/src/` | Frontend code (when building) |
-| `apps/backend/src/` | Backend code (when building) |
-| `packages/shared/src/` | Shared types |
+| Path                            | Purpose                        |
+| ------------------------------- | ------------------------------ |
+| `docs/README.md`                | Index + structure overview     |
+| `docs/GAME_DESIGN.md`           | Full game spec                 |
+| `docs/FRONTEND_ARCHITECTURE.md` | All pages + components         |
+| `docs/NARRATIVE_DESIGN.md`      | Story standards                |
+| `docs/TECH_STACK.md`            | Libraries + patterns           |
+| `docs/MEMORY.md`                | This file - status             |
+| `CLAUDE.md`                     | Root rules (conventions, etc.) |
+| `apps/frontend/src/`            | Frontend code (when building)  |
+| `apps/backend/src/`             | Backend code (when building)   |
+| `packages/shared/src/`          | Shared types                   |
 
 ---
 
 ## 🎯 Success Criteria
 
 **MVP Success (Week 10)**:
+
 - ✅ User can create character (all 5 classes)
 - ✅ Game generates unique scenes via AI
 - ✅ Choices have visible consequences
@@ -286,6 +304,7 @@ PHASE 3 (Week 17+): UGC + Polish
 - ✅ **Player wants to play again immediately**
 
 **Phase 2B Success (Week 16)**:
+
 - ✅ NPCs reappear, remember you
 - ✅ World events add surprise
 - ✅ Class affects content (30-40% different)
@@ -297,6 +316,33 @@ PHASE 3 (Week 17+): UGC + Polish
 ## 🆘 Questions to Ask Claude
 
 If unclear: Check README.md → GAME_DESIGN.md → specific doc
+
+## ⚙️ CI / GitHub Automation (Active)
+
+### PR Labels (auto-applied)
+
+Labels are auto-applied via `actions/labeler@v5` in `.github/workflows/ci.yml` based on files changed:
+
+- `apps/frontend/**` → `frontend`, `phase-1a`
+- `apps/backend/**` → `backend`, `phase-1b`
+- `packages/**` → `shared`
+
+Config: `.github/labeler.yml`
+
+### PR Milestones (auto-assigned)
+
+Milestones are auto-assigned via `.github/workflows/pr-metadata.yml` based on branch name:
+
+- `feature/phase-1a-*` → Phase 1A - Frontend UI
+- `feature/phase-1b-*` → Phase 1B - Backend Foundation
+- `feature/phase-2-*` → Phase 2 - MVP
+- `feature/phase-2b-*` → Phase 2B - Multi-Universe
+- `feature/phase-3-*` → Phase 3 - Polish & UGC
+- `feature/tooling-*` → no milestone (tooling branches)
+
+**Note**: When creating PRs via MCP GitHub tool, pass labels/milestone explicitly since automation only triggers on GitHub Actions events.
+
+---
 
 ## 📞 When to Update MEMORY.md
 

@@ -1,0 +1,91 @@
+name: "Feature Request"
+description: "Proposer une nouvelle fonctionnalité"
+title: "[FEATURE] "
+labels: ["type:feature"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description de la fonctionnalité
+      description: "Décris clairement ce que tu veux ajouter et pourquoi."
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation / Problème résolu
+      description: "Quel problème ou besoin cette feature adresse-t-elle ?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Critères d'acceptation
+      placeholder: |
+        - [ ] Critère 1
+        - [ ] Critère 2
+    validations:
+      required: true
+
+  - type: dropdown
+    id: domain
+    attributes:
+      label: Domaine
+      options:
+        - "domain:frontend"
+        - "domain:backend"
+        - "domain:shared"
+        - "domain:ai"
+        - "domain:database"
+        - "domain:devops"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: phase
+    attributes:
+      label: Phase
+      options:
+        - "phase:1a"
+        - "phase:1b"
+        - "phase:2"
+        - "phase:2b"
+        - "phase:3"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priorité
+      options:
+        - "priority:critical"
+        - "priority:high"
+        - "priority:medium"
+        - "priority:low"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: size
+    attributes:
+      label: Taille estimée
+      options:
+        - "size:XS (< 1h)"
+        - "size:S (1-3h)"
+        - "size:M (3-8h)"
+        - "size:L (1-2j)"
+        - "size:XL (2-5j)"
+        - "size:XXL (> 5j)"
+    validations:
+      required: false
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dépendances
+      description: "Issues ou PRs dont cette feature dépend (ex: #12, #15)"
+    validations:
+      required: false

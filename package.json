@@ -1,14 +1,23 @@
 {
-  "name": "rpg-game",
+  "name": "grimoire",
   "private": true,
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
     "lint": "turbo lint",
-    "type-check": "turbo type-check"
+    "type-check": "turbo type-check",
+    "prepare": "husky",
+    "knip": "knip",
+    "test": "turbo test",
+    "test:e2e": "turbo test:e2e"
   },
   "packageManager": "pnpm@9.15.0",
   "devDependencies": {
+    "@commitlint/cli": "^19",
+    "@commitlint/config-conventional": "^19",
+    "husky": "^9",
+    "knip": "^5",
+    "lint-staged": "^15",
     "turbo": "^2.3.0"
   }
 }

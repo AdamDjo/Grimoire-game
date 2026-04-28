@@ -1,0 +1,63 @@
+name: "Chore / Maintenance"
+description: "Tâche technique, tooling, refactoring ou maintenance"
+title: "[CHORE] "
+labels: ["type:chore"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: "Décris la tâche de maintenance ou d'infrastructure à effectuer."
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: "Pourquoi cette tâche est-elle nécessaire ?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: tasks
+    attributes:
+      label: Tâches
+      placeholder: |
+        - [ ] Tâche 1
+        - [ ] Tâche 2
+    validations:
+      required: true
+
+  - type: dropdown
+    id: domain
+    attributes:
+      label: Domaine
+      options:
+        - "domain:devops"
+        - "domain:frontend"
+        - "domain:backend"
+        - "domain:shared"
+        - "domain:database"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priorité
+      options:
+        - "priority:high"
+        - "priority:medium"
+        - "priority:low"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist technique
+      options:
+        - label: "Aucun changement de comportement fonctionnel"
+        - label: "CI/CD non cassé"
+        - label: "Tests existants passent toujours"

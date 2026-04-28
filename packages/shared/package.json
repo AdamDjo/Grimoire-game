@@ -1,5 +1,5 @@
 {
-  "name": "@rpg-game/shared",
+  "name": "@grimoire/shared",
   "version": "0.1.0",
   "private": true,
   "main": "./src/index.ts",
@@ -9,6 +9,7 @@
     "lint": "eslint src/"
   },
   "devDependencies": {
+    "@typescript-eslint/parser": "^8.56.0",
     "typescript": "^5.7.0"
   }
 }

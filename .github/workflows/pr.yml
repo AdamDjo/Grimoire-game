@@ -1,0 +1,59 @@
+name: PR Automation
+
+on:
+  pull_request:
+    types: [opened, reopened, edited, synchronize]
+
+jobs:
+  label:
+    name: Auto Label
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/labeler@v5
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+  milestone:
+    name: Assign Milestone
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Assign milestone based on branch name
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BRANCH: ${{ github.head_ref }}
+          REPO: ${{ github.repository }}
+        run: |
+          if [[ "$BRANCH" == feature/phase-1a-* ]] || [[ "$BRANCH" == fix/phase-1a-* ]] || [[ "$BRANCH" == hotfix/phase-1a-* ]]; then
+            MILESTONE="Phase 1A - Frontend UI"
+          elif [[ "$BRANCH" == feature/phase-1b-* ]] || [[ "$BRANCH" == fix/phase-1b-* ]] || [[ "$BRANCH" == hotfix/phase-1b-* ]]; then
+            MILESTONE="Phase 1B - Backend Foundation"
+          elif [[ "$BRANCH" == feature/phase-2b-* ]] || [[ "$BRANCH" == fix/phase-2b-* ]] || [[ "$BRANCH" == hotfix/phase-2b-* ]]; then
+            MILESTONE="Phase 2B - Multi-Universe"
+          elif [[ "$BRANCH" == feature/phase-2-* ]] || [[ "$BRANCH" == fix/phase-2-* ]] || [[ "$BRANCH" == hotfix/phase-2-* ]]; then
+            MILESTONE="Phase 2 - MVP"
+          elif [[ "$BRANCH" == feature/phase-3-* ]] || [[ "$BRANCH" == fix/phase-3-* ]] || [[ "$BRANCH" == hotfix/phase-3-* ]]; then
+            MILESTONE="Phase 3 - Polish & UGC"
+          else
+            echo "No milestone to assign for branch: $BRANCH"
+            exit 0
+          fi
+
+          MILESTONE_NUMBER=$(gh api repos/$REPO/milestones \
+            --jq ".[] | select(.title == \"$MILESTONE\") | .number")
+
+          if [ -z "$MILESTONE_NUMBER" ]; then
+            echo "Milestone '$MILESTONE' not found, skipping."
+            exit 0
+          fi
+
+          gh api repos/$REPO/issues/$PR_NUMBER \
+            --method PATCH \
+            --field milestone=$MILESTONE_NUMBER
+
+          echo "Assigned milestone '$MILESTONE' to PR #$PR_NUMBER"
