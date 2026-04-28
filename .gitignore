@@ -18,6 +18,7 @@ build/
 .env.production.local
 apps/backend/.env
 apps/frontend/.env.local
+!**/.env.example
 
 # IDE
 .vscode/
