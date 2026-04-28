@@ -14,17 +14,25 @@ Exécuter dans l'ordre :
    - Demander : "Décris le bug en une phrase (pour l'issue GitHub)"
    - Créer l'issue via mcp**github**create_issue avec :
      - owner: AdamDjo, repo: Grimoire-game
-     - labels: ["bug"]
-     - title: "fix(<args>): <description du bug>"
+     - title: "fix: <description du bug>"
+     - labels: ["type: bug"]
+     - assignees: ["AdamDjo"]
    - Noter le numéro de l'issue créée → `<numéro>`
 
-2. **Mettre develop à jour**
+2. **Ajouter l'issue au projet Scrum Board**
+
+   ```bash
+   ISSUE_NODE_ID=$(gh api repos/AdamDjo/Grimoire-game/issues/<numéro> --jq '.node_id')
+   gh api graphql -f query='mutation { addProjectV2ItemById(input: { projectId: "PVT_kwHOAacnj84BU6rS" contentId: "'$ISSUE_NODE_ID'" }) { item { id } } }'
+   ```
+
+3. **Mettre develop à jour**
 
    ```bash
    git checkout develop && git pull origin develop
    ```
 
-3. **Créer la branche avec le numéro d'issue**
+4. **Créer la branche avec le numéro d'issue**
 
    ```bash
    git checkout -b fix/<numéro>-<args>
@@ -32,10 +40,10 @@ Exécuter dans l'ordre :
 
    Exemple : issue #30 + args "login-crash" → `fix/30-login-crash`
 
-4. **Confirmer à l'utilisateur :**
+5. **Confirmer à l'utilisateur :**
 
    ```
-   ✅ Issue #<numéro> créée
+   ✅ Issue #<numéro> créée — assignée à AdamDjo, ajoutée au Scrum Board
    ✅ Branche 'fix/<numéro>-<args>' créée depuis develop
 
    Workflow :
