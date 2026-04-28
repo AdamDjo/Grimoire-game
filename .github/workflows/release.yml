@@ -22,7 +22,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v5
+      - uses: pnpm/action-setup@v4
 
       - uses: actions/setup-node@v4
         with:
@@ -70,28 +70,27 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Open PR release → main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+          BRANCH: ${{ github.ref_name }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          gh pr create \
-            --base main \
-            --head "${{ github.ref_name }}" \
-            --title "release: ${{ steps.version.outputs.version }}" \
-            --body "$(cat <<'EOF'
-          ## Release ${{ steps.version.outputs.version }}
+          PR_BODY="## Release ${VERSION}
 
           This PR was automatically created by the release workflow.
 
-          - Tag `${{ steps.version.outputs.version }}` has been created ✅
-          - GitHub Release has been published ✅
-          - Merge this PR into `main` to complete the release
+          - Tag \`${VERSION}\` has been created
+          - GitHub Release has been published
+          - Merge this PR into \`main\` to complete the release
 
-          After merging, sync `develop`:
-          ```bash
+          After merging, sync \`develop\`:
+          \`\`\`bash
           git checkout develop && git merge origin/main && git push origin develop
-          ```
-          EOF
-          )" \
+          \`\`\`"
+
+          gh pr create \
+            --base main \
+            --head "${BRANCH}" \
+            --title "release: ${VERSION}" \
+            --body "${PR_BODY}" \
             --label "release" || echo "PR already exists"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
