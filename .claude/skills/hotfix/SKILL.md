@@ -14,17 +14,25 @@ Exécuter dans l'ordre :
    - Demander : "Décris le problème en production en une phrase"
    - Créer l'issue via mcp**github**create_issue avec :
      - owner: AdamDjo, repo: Grimoire-game
-     - labels: ["bug", "priority"]
-     - title: "hotfix(<args>): <description>"
+     - title: "hotfix: <description>"
+     - labels: ["type: bug", "priority: high"]
+     - assignees: ["AdamDjo"]
    - Noter le numéro de l'issue créée → `<numéro>`
 
-2. **Partir de main (pas develop — c'est urgent)**
+2. **Ajouter l'issue au projet Scrum Board**
+
+   ```bash
+   ISSUE_NODE_ID=$(gh api repos/AdamDjo/Grimoire-game/issues/<numéro> --jq '.node_id')
+   gh api graphql -f query='mutation { addProjectV2ItemById(input: { projectId: "PVT_kwHOAacnj84BU6rS" contentId: "'$ISSUE_NODE_ID'" }) { item { id } } }'
+   ```
+
+3. **Partir de main (pas develop — c'est urgent)**
 
    ```bash
    git checkout main && git pull origin main
    ```
 
-3. **Créer la branche hotfix avec le numéro d'issue**
+4. **Créer la branche hotfix avec le numéro d'issue**
 
    ```bash
    git checkout -b hotfix/<numéro>-<args>
@@ -32,12 +40,12 @@ Exécuter dans l'ordre :
 
    Exemple : issue #31 + args "auth-crash" → `hotfix/31-auth-crash`
 
-4. **Confirmer à l'utilisateur :**
+5. **Confirmer à l'utilisateur :**
 
    ```
    ⚠️  HOTFIX — tu pars de main (production)
 
-   ✅ Issue #<numéro> créée (priority)
+   ✅ Issue #<numéro> créée — assignée à AdamDjo, ajoutée au Scrum Board
    ✅ Branche 'hotfix/<numéro>-<args>' créée depuis main
 
    Workflow :
