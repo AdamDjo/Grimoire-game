@@ -1,10 +1,21 @@
-name: PR Metadata
+name: PR Automation
 
 on:
   pull_request:
-    types: [opened, reopened, edited]
+    types: [opened, reopened, edited, synchronize]
 
 jobs:
+  label:
+    name: Auto Label
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/labeler@v5
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
   milestone:
     name: Assign Milestone
     runs-on: ubuntu-latest
@@ -18,7 +29,6 @@ jobs:
           BRANCH: ${{ github.head_ref }}
           REPO: ${{ github.repository }}
         run: |
-          # Support feature/*, fix/*, hotfix/* branches with phase pattern
           if [[ "$BRANCH" == feature/phase-1a-* ]] || [[ "$BRANCH" == fix/phase-1a-* ]] || [[ "$BRANCH" == hotfix/phase-1a-* ]]; then
             MILESTONE="Phase 1A - Frontend UI"
           elif [[ "$BRANCH" == feature/phase-1b-* ]] || [[ "$BRANCH" == fix/phase-1b-* ]] || [[ "$BRANCH" == hotfix/phase-1b-* ]]; then
