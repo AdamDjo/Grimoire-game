@@ -1,80 +1,91 @@
-name: "Demande de fonctionnalité"
-description: "Proposer une nouvelle fonctionnalité pour Grimoire"
+name: "Feature Request"
+description: "Proposer une nouvelle fonctionnalité"
 title: "[FEATURE] "
-labels: ["type: feature", "status: needs-info"]
+labels: ["type:feature"]
 body:
-  - type: markdown
+  - type: textarea
+    id: description
     attributes:
-      value: |
-        Décris la fonctionnalité souhaitée en précisant la phase et le domaine concernés.
+      label: Description de la fonctionnalité
+      description: "Décris clairement ce que tu veux ajouter et pourquoi."
+    validations:
+      required: true
 
-  - type: dropdown
-    id: phase
+  - type: textarea
+    id: motivation
     attributes:
-      label: "Phase cible"
-      options:
-        - "Phase 1A - Frontend UI (Week 1-5)"
-        - "Phase 1B - Backend Foundation (Week 4-6)"
-        - "Phase 2 - Integration (Week 7-10)"
-        - "Phase 2B - Multi-Universe (Week 11-16)"
-        - "Phase 3 - Polish & UGC (Week 17+)"
+      label: Motivation / Problème résolu
+      description: "Quel problème ou besoin cette feature adresse-t-elle ?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Critères d'acceptation
+      placeholder: |
+        - [ ] Critère 1
+        - [ ] Critère 2
     validations:
       required: true
 
   - type: dropdown
     id: domain
     attributes:
-      label: "Domaine"
+      label: Domaine
       options:
-        - "frontend"
-        - "backend"
-        - "shared"
-        - "ai"
-        - "database"
-        - "devops"
+        - "domain:frontend"
+        - "domain:backend"
+        - "domain:shared"
+        - "domain:ai"
+        - "domain:database"
+        - "domain:devops"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: phase
+    attributes:
+      label: Phase
+      options:
+        - "phase:1a"
+        - "phase:1b"
+        - "phase:2"
+        - "phase:2b"
+        - "phase:3"
     validations:
       required: true
 
   - type: dropdown
     id: priority
     attributes:
-      label: "Priorité estimée"
+      label: Priorité
       options:
-        - "critical — bloque d'autres tâches"
-        - "high — sprint courant"
-        - "medium — backlog planifié"
-        - "low — backlog diffus"
+        - "priority:critical"
+        - "priority:high"
+        - "priority:medium"
+        - "priority:low"
     validations:
       required: true
 
-  - type: textarea
-    id: problem
+  - type: dropdown
+    id: size
     attributes:
-      label: "Problème à résoudre"
-      description: "Quel besoin ou manque cette fonctionnalité adresse-t-elle ?"
+      label: Taille estimée
+      options:
+        - "size:XS (< 1h)"
+        - "size:S (1-3h)"
+        - "size:M (3-8h)"
+        - "size:L (1-2j)"
+        - "size:XL (2-5j)"
+        - "size:XXL (> 5j)"
     validations:
-      required: true
+      required: false
 
   - type: textarea
-    id: solution
+    id: dependencies
     attributes:
-      label: "Solution proposée"
-      description: "Comment tu imagines que ça devrait fonctionner ?"
+      label: Dépendances
+      description: "Issues ou PRs dont cette feature dépend (ex: #12, #15)"
     validations:
-      required: true
-
-  - type: textarea
-    id: alternatives
-    attributes:
-      label: "Alternatives considérées"
-      description: "Y a-t-il d'autres approches possibles ?"
-
-  - type: textarea
-    id: acceptance
-    attributes:
-      label: "Critères d'acceptation"
-      placeholder: |
-        - [ ] ...
-        - [ ] ...
-    validations:
-      required: true
+      required: false

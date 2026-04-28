@@ -1,64 +1,63 @@
-name: "Chore / Tooling"
-description: "Maintenance, refacto, mise à jour de dépendances, CI/CD"
+name: "Chore / Maintenance"
+description: "Tâche technique, tooling, refactoring ou maintenance"
 title: "[CHORE] "
-labels: ["type: chore", "domain: devops"]
+labels: ["type:chore"]
 body:
-  - type: dropdown
-    id: type
+  - type: textarea
+    id: description
     attributes:
-      label: "Type de chore"
-      options:
-        - "Refactoring (pas de changement de comportement)"
-        - "Mise à jour de dépendance"
-        - "Configuration CI/CD"
-        - "Amélioration de tooling"
-        - "Nettoyage de code"
-        - "Mise à jour documentation"
-        - "Rename / restructuration"
+      label: Description
+      description: "Décris la tâche de maintenance ou d'infrastructure à effectuer."
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: "Pourquoi cette tâche est-elle nécessaire ?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: tasks
+    attributes:
+      label: Tâches
+      placeholder: |
+        - [ ] Tâche 1
+        - [ ] Tâche 2
     validations:
       required: true
 
   - type: dropdown
     id: domain
     attributes:
-      label: "Domaine"
+      label: Domaine
       options:
-        - "devops"
-        - "frontend"
-        - "backend"
-        - "shared"
+        - "domain:devops"
+        - "domain:frontend"
+        - "domain:backend"
+        - "domain:shared"
+        - "domain:database"
+    validations:
+      required: true
 
   - type: dropdown
-    id: size
+    id: priority
     attributes:
-      label: "Taille estimée"
+      label: Priorité
       options:
-        - "XS — ~1h (1pt)"
-        - "S — ~2h (2pt)"
-        - "M — ~4h (3pt)"
-        - "L — ~1 jour (5pt)"
+        - "priority:high"
+        - "priority:medium"
+        - "priority:low"
     validations:
       required: true
-
-  - type: textarea
-    id: description
-    attributes:
-      label: "Description"
-      description: "Qu'est-ce qui doit être fait et pourquoi ?"
-    validations:
-      required: true
-
-  - type: textarea
-    id: impact
-    attributes:
-      label: "Impact attendu"
-      description: "Qu'est-ce que ça améliore concrètement ?"
 
   - type: checkboxes
-    id: safety
+    id: checklist
     attributes:
-      label: "Vérifications"
+      label: Checklist technique
       options:
-        - label: "Pas de changement de comportement fonctionnel"
-        - label: "Les tests passent après le changement"
+        - label: "Aucun changement de comportement fonctionnel"
         - label: "CI/CD non cassé"
+        - label: "Tests existants passent toujours"
