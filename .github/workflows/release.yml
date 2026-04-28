@@ -92,4 +92,5 @@ jobs:
             --head "${BRANCH}" \
             --title "release: ${VERSION}" \
             --body "${PR_BODY}" \
-            --label "release" || echo "PR already exists"
+            --label "type: release" \
+            --assignee "AdamDjo" || echo "PR already exists"
