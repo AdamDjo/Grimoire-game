@@ -22,7 +22,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v4
+      - name: Install pnpm
+        run: npm install -g pnpm@9.15.0
 
       - uses: actions/setup-node@v4
         with:
@@ -59,15 +60,13 @@ jobs:
           echo "Version resolved: $VERSION"
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ steps.version.outputs.version }}
-          name: "Release ${{ steps.version.outputs.version }}"
-          generate_release_notes: true
-          draft: false
-          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          gh release create "${VERSION}" \
+            --title "Release ${VERSION}" \
+            --generate-notes
 
       - name: Open PR release → main
         env:
@@ -93,4 +92,5 @@ jobs:
             --head "${BRANCH}" \
             --title "release: ${VERSION}" \
             --body "${PR_BODY}" \
-            --label "release" || echo "PR already exists"
+            --label "type: release" \
+            --assignee "AdamDjo" || echo "PR already exists"
