@@ -1,17 +1,39 @@
-frontend:
+# Auto-labeling des PRs selon les fichiers modifiés
+# Labels préfixés par catégorie (domain:, phase:)
+
+# --- DOMAINES ---
+"domain: frontend":
   - any: ['apps/frontend/**']
 
-backend:
+"domain: backend":
   - any: ['apps/backend/**']
 
-shared:
+"domain: shared":
   - any:
       - 'packages/shared/**'
       - 'packages/eslint-config/**'
       - 'packages/prettier-config/**'
 
-phase-1a:
+"domain: devops":
+  - any:
+      - '.github/**'
+      - 'turbo.json'
+      - 'pnpm-workspace.yaml'
+      - 'knip.config.ts'
+      - 'commitlint.config.js'
+      - '.husky/**'
+      - '.lintstagedrc.js'
+
+"type: docs":
+  - any:
+      - 'docs/**'
+      - '*.md'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/PULL_REQUEST_TEMPLATE/**'
+
+# --- PHASES (par dossier, pour auto-assign milestone) ---
+"phase: 1a":
   - any: ['apps/frontend/**']
 
-phase-1b:
+"phase: 1b":
   - any: ['apps/backend/**']

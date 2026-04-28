@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Documentation du projet
-    url: https://github.com/AdamDjo/EpisodeRPG-game/tree/main/docs
-    about: Lire la documentation avant de créer une issue
+    url: https://github.com/AdamDjo/Grimoire-game/tree/main/docs
+    about: Lire la documentation technique avant de créer une issue
+  - name: Wiki — Workflow & Labels
+    url: https://github.com/AdamDjo/Grimoire-game/wiki
+    about: Guide complet du workflow Git, labels Scrum et CI/CD
