@@ -105,8 +105,8 @@ importers:
         specifier: ^0.460.0
         version: 0.460.0(react@19.2.3)
       next:
-        specifier: 16.2.3
-        version: 16.2.3(@babel/core@7.29.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+        specifier: 16.1.6
+        version: 16.1.6(@babel/core@7.29.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       react:
         specifier: 19.2.3
         version: 19.2.3
@@ -3177,10 +3177,10 @@ packages:
       }
     engines: { node: ">=6" }
 
-  caniuse-lite@1.0.30001769:
+  caniuse-lite@1.0.30001788:
     resolution:
       {
-        integrity: sha512-BCfFL1sHijQlBGWBMuJyhZUhzo7wer5sVj9hqekB/7xn0Ypy+pER/edCYQm4exbXj4WiySGp40P8UuTh6w1srg==,
+        integrity: sha512-6q8HFp+lOQtcf7wBK+uEenxymVWkGKkjFpCvw5W25cmMwEDU45p1xQFBQv8JDlMMry7eNxyBaR+qxgmTUZkIRQ==,
       }
 
   caseless@0.12.0:
@@ -9347,7 +9347,7 @@ snapshots:
 
   browserslist@4.28.1:
     dependencies:
-      baseline-browser-mapping: 2.10.19
+      baseline-browser-mapping: 2.9.19
       caniuse-lite: 1.0.30001788
       electron-to-chromium: 1.5.286
       node-releases: 2.0.27
@@ -11186,12 +11186,12 @@ snapshots:
 
   negotiator@0.6.3: {}
 
-  next@16.2.3(@babel/core@7.29.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
+  next@16.1.6(@babel/core@7.29.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
     dependencies:
       "@next/env": 16.1.6
       "@swc/helpers": 0.5.15
       baseline-browser-mapping: 2.9.19
-      caniuse-lite: 1.0.30001769
+      caniuse-lite: 1.0.30001788
       postcss: 8.4.31
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
