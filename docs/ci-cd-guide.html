@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guide CI/CD — Grimoire</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d2e;
+      --surface2: #232640;
+      --border: #2e3255;
+      --primary: #7c6af7;
+      --primary-light: #a89af9;
+      --green: #4ade80;
+      --red: #f87171;
+      --yellow: #fbbf24;
+      --blue: #60a5fa;
+      --orange: #fb923c;
+      --text: #e2e8f0;
+      --text-muted: #8892b0;
+      --code-bg: #141624;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0;
+      width: 260px;
+      height: 100vh;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 16px;
+      overflow-y: auto;
+      z-index: 100;
+    }
+
+    nav .logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary-light);
+      margin-bottom: 8px;
+    }
+    nav .subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    nav ul { list-style: none; }
+    nav ul li { margin-bottom: 4px; }
+    nav ul li a {
+      display: block;
+      padding: 6px 12px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    nav ul li a:hover { background: var(--surface2); color: var(--text); }
+    nav ul li a.active { background: var(--primary); color: white; }
+    nav .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 16px 12px 6px;
+    }
+
+    /* MAIN */
+    main {
+      margin-left: 260px;
+      padding: 48px 48px 96px;
+      max-width: 960px;
+    }
+
+    /* SECTIONS */
+    section { margin-bottom: 80px; }
+
+    h1 {
+      font-size: 36px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-light), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--primary-light);
+      margin: 24px 0 12px;
+    }
+
+    p { color: var(--text-muted); margin-bottom: 16px; }
+    strong { color: var(--text); }
+
+    /* CARDS */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+
+    /* GRID */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+    /* BADGES */
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge-green { background: rgba(74,222,128,0.15); color: var(--green); }
+    .badge-red { background: rgba(248,113,113,0.15); color: var(--red); }
+    .badge-yellow { background: rgba(251,191,36,0.15); color: var(--yellow); }
+    .badge-blue { background: rgba(96,165,250,0.15); color: var(--blue); }
+    .badge-purple { background: rgba(124,106,247,0.15); color: var(--primary-light); }
+    .badge-orange { background: rgba(251,146,60,0.15); color: var(--orange); }
+
+    /* CODE */
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      overflow-x: auto;
+      margin: 16px 0;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    code {
+      font-family: 'Fira Code', 'Cascadia Code', monospace;
+      color: var(--primary-light);
+    }
+    pre code { color: var(--text); }
+    .c-comment { color: #546e8a; font-style: italic; }
+    .c-key { color: #7c6af7; }
+    .c-val { color: #4ade80; }
+    .c-str { color: #fbbf24; }
+    .c-cmd { color: #60a5fa; }
+
+    /* PIPELINE DIAGRAM */
+    .pipeline {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin: 24px 0;
+      flex-wrap: wrap;
+    }
+    .pipeline-step {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      text-align: center;
+      min-width: 120px;
+      position: relative;
+    }
+    .pipeline-step .step-icon { font-size: 24px; margin-bottom: 4px; }
+    .pipeline-step .step-name { font-size: 12px; font-weight: 600; color: var(--text); }
+    .pipeline-step .step-time { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .pipeline-arrow {
+      color: var(--text-muted);
+      font-size: 20px;
+      padding: 0 8px;
+    }
+    .pipeline-step.success { border-color: var(--green); }
+    .pipeline-step.fail { border-color: var(--red); }
+    .pipeline-step.warn { border-color: var(--yellow); }
+
+    /* FLOW DIAGRAM */
+    .flow {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      margin: 24px 0;
+    }
+    .flow-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .flow-box {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+      min-width: 110px;
+    }
+    .flow-box.dev { background: rgba(124,106,247,0.2); border: 1px solid var(--primary); color: var(--primary-light); }
+    .flow-box.branch { background: rgba(96,165,250,0.15); border: 1px solid var(--blue); color: var(--blue); }
+    .flow-box.action { background: rgba(74,222,128,0.15); border: 1px solid var(--green); color: var(--green); }
+    .flow-box.fail { background: rgba(248,113,113,0.15); border: 1px solid var(--red); color: var(--red); }
+    .flow-box.main-box { background: rgba(251,191,36,0.15); border: 1px solid var(--yellow); color: var(--yellow); }
+    .flow-arrow { color: var(--text-muted); font-size: 18px; }
+    .flow-down { text-align: center; color: var(--text-muted); font-size: 18px; margin: 4px 0; }
+
+    /* COMPARISON TABLE */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+    th {
+      background: var(--surface2);
+      padding: 12px 16px;
+      text-align: left;
+      color: var(--text-muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    td strong { color: var(--text); }
+
+    /* CALLOUT */
+    .callout {
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 16px 0;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+    .callout-body { flex: 1; }
+    .callout-title { font-weight: 700; margin-bottom: 4px; font-size: 14px; }
+    .callout-text { font-size: 14px; }
+    .callout.info { background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); }
+    .callout.info .callout-title { color: var(--blue); }
+    .callout.warn { background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); }
+    .callout.warn .callout-title { color: var(--yellow); }
+    .callout.success { background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3); }
+    .callout.success .callout-title { color: var(--green); }
+    .callout.danger { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); }
+    .callout.danger .callout-title { color: var(--red); }
+
+    /* TIMELINE */
+    .timeline { margin: 24px 0; }
+    .timeline-item {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .timeline-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .timeline-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .timeline-line {
+      width: 2px;
+      flex: 1;
+      background: var(--border);
+      margin: 4px 0;
+      min-height: 20px;
+    }
+    .timeline-content { flex: 1; padding-top: 6px; }
+    .timeline-content h4 { font-size: 15px; color: var(--text); margin-bottom: 4px; }
+    .timeline-content p { font-size: 13px; margin-bottom: 0; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, rgba(124,106,247,0.1), rgba(96,165,250,0.05));
+      border: 1px solid rgba(124,106,247,0.3);
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 48px;
+    }
+    .hero p { font-size: 17px; color: var(--text-muted); margin-top: 12px; }
+
+    /* WORKFLOW FILE VISUAL */
+    .workflow-visual {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 16px 0;
+    }
+    .workflow-header {
+      background: var(--surface2);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .workflow-header .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .workflow-header .filename { font-size: 13px; color: var(--text-muted); margin-left: 8px; }
+    .workflow-body { padding: 20px; }
+
+    /* PROS CONS */
+    .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+    .pros { background: rgba(74,222,128,0.05); border: 1px solid rgba(74,222,128,0.2); border-radius: 10px; padding: 16px; }
+    .cons { background: rgba(248,113,113,0.05); border: 1px solid rgba(248,113,113,0.2); border-radius: 10px; padding: 16px; }
+    .pros h4 { color: var(--green); margin-bottom: 8px; }
+    .cons h4 { color: var(--red); margin-bottom: 8px; }
+    .pros ul, .cons ul { padding-left: 16px; font-size: 13px; color: var(--text-muted); }
+    .pros ul li, .cons ul li { margin-bottom: 4px; }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { display: none; }
+      main { margin-left: 0; padding: 24px; }
+      .grid-2, .grid-3, .pros-cons { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Grimoire CI/CD</div>
+  <div class="subtitle">Guide complet pour les débutants</div>
+
+  <div class="section-title">Fondamentaux</div>
+  <ul>
+    <li><a href="#intro">C'est quoi le CI/CD ?</a></li>
+    <li><a href="#pourquoi">Pourquoi en a-t-on besoin ?</a></li>
+    <li><a href="#github-actions">GitHub Actions</a></li>
+  </ul>
+
+  <div class="section-title">Nos Workflows</div>
+  <ul>
+    <li><a href="#ci">ci.yml — Le CI</a></li>
+    <li><a href="#pr">pr.yml — PR Automation</a></li>
+    <li><a href="#release">release.yml — Release</a></li>
+    <li><a href="#codeql">codeql.yml — Sécurité</a></li>
+  </ul>
+
+  <div class="section-title">Architecture</div>
+  <ul>
+    <li><a href="#separation">Séparation des responsabilités</a></li>
+    <li><a href="#gitflow">GitFlow & Branches</a></li>
+    <li><a href="#branch-protection">Branch Protection</a></li>
+  </ul>
+
+  <div class="section-title">Problèmes & Solutions</div>
+  <ul>
+    <li><a href="#erreurs">Erreurs rencontrées</a></li>
+    <li><a href="#bonnes-pratiques">Bonnes pratiques</a></li>
+    <li><a href="#recap">Récap complet</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>Maîtriser le CI/CD</h1>
+    <p>Ce guide t'explique tout ce qu'on a mis en place sur Grimoire — de zéro à expert. Chaque concept est illustré avec des schémas, des exemples concrets et les vraies raisons derrière chaque décision.</p>
+    <div style="margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap;">
+      <span class="badge badge-purple">GitHub Actions</span>
+      <span class="badge badge-green">4 workflows</span>
+      <span class="badge badge-blue">GitFlow</span>
+      <span class="badge badge-yellow">Branch Protection</span>
+      <span class="badge badge-orange">Release automatisée</span>
+    </div>
+  </div>
+
+  <!-- SECTION 1 : C'EST QUOI -->
+  <section id="intro">
+    <h2>🤔 C'est quoi le CI/CD ?</h2>
+
+    <p>Imagine que tu travailles avec 3 développeurs sur le même projet. Chacun code de son côté. Quand quelqu'un pousse du code, comment tu sais que ça ne casse pas ce que les autres ont fait ? C'est là qu'intervient le CI/CD.</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">CI — Intégration Continue</div>
+        <p style="font-size: 14px;"><strong>Continuous Integration</strong> — À chaque fois que quelqu'un pousse du code, une série de vérifications automatiques se lancent :</p>
+        <ul style="padding-left: 16px; font-size: 13px; color: var(--text-muted);">
+          <li>Le code compile-t-il ?</li>
+          <li>Les tests passent-ils ?</li>
+          <li>Le linting est-il respecté ?</li>
+          <li>Les types TypeScript sont-ils corrects ?</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">CD — Déploiement Continu</div>
+        <p style="font-size: 14px;"><strong>Continuous Deployment</strong> — Si le CI est vert, on peut automatiquement :</p>
+        <ul style="padding-left: 16px; font-size: 13px; color: var(--text-muted);">
+          <li>Créer une release</li>
+          <li>Publier un tag git</li>
+          <li>Déployer en production</li>
+          <li>Notifier l'équipe</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">Analogie simple</div>
+        <div class="callout-text">Le CI/CD c'est comme un contrôle qualité en usine. Sur une chaîne de montage, chaque pièce passe par des tests automatiques avant d'aller à l'étape suivante. Si une pièce est défectueuse, la chaîne s'arrête. En code c'est pareil — si le lint échoue, le test ne se lance pas, si le test échoue, le build ne se lance pas.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2 : POURQUOI -->
+  <section id="pourquoi">
+    <h2>🎯 Pourquoi en a-t-on besoin ?</h2>
+
+    <p>Sans CI/CD, voici ce qui se passe dans une vraie équipe :</p>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-left">
+          <div class="timeline-dot" style="background: rgba(248,113,113,0.2); color: var(--red);">😤</div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-content">
+          <h4>Dev A pousse du code vendredi soir</h4>
+          <p>Il n'a pas lancé les tests. "Ça marche sur ma machine."</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-left">
+          <div class="timeline-dot" style="background: rgba(251,191,36,0.2); color: var(--yellow);">😴</div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-content">
+          <h4>Dev B pull lundi matin</h4>
+          <p>Son environnement est différent. Les tests qu'il lance échouent. Il perd 2h à comprendre pourquoi.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-left">
+          <div class="timeline-dot" style="background: rgba(248,113,113,0.2); color: var(--red);">💥</div>
+        </div>
+        <div class="timeline-content">
+          <h4>Lundi après-midi : la prod est cassée</h4>
+          <p>Personne ne sait quel commit a causé le bug. Il faut revenir en arrière manuellement.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout success">
+      <div class="callout-icon">✅</div>
+      <div class="callout-body">
+        <div class="callout-title">Avec le CI/CD</div>
+        <div class="callout-text">Le code du Dev A est rejeté automatiquement vendredi soir. GitHub bloque la PR. Dev A voit l'erreur immédiatement et la corrige. Dev B ne voit jamais ce code cassé. La prod reste stable.</div>
+      </div>
+    </div>
+
+    <h3>Les bénéfices concrets</h3>
+    <div class="grid-3">
+      <div class="card">
+        <div style="font-size: 28px; margin-bottom: 8px;">🛡️</div>
+        <div class="card-title">Fiabilité</div>
+        <p style="font-size: 13px;">Le code qui atteint <code>main</code> a toujours passé tous les checks. Jamais de surprise.</p>
+      </div>
+      <div class="card">
+        <div style="font-size: 28px; margin-bottom: 8px;">⚡</div>
+        <div class="card-title">Vitesse</div>
+        <p style="font-size: 13px;">Les reviews humaines se concentrent sur la logique, pas sur "as-tu lancé le lint ?".</p>
+      </div>
+      <div class="card">
+        <div style="font-size: 28px; margin-bottom: 8px;">📖</div>
+        <div class="card-title">Traçabilité</div>
+        <p style="font-size: 13px;">Chaque commit a un statut vert ou rouge. On sait exactement quel commit a cassé quoi.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3 : GITHUB ACTIONS -->
+  <section id="github-actions">
+    <h2>⚙️ GitHub Actions — L'outil</h2>
+
+    <p>GitHub Actions est le moteur qui fait tourner notre CI/CD. C'est un service directement intégré à GitHub — pas besoin d'un serveur externe.</p>
+
+    <h3>Les concepts clés</h3>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">📄 Workflow</div>
+        <p style="font-size: 13px;">Un fichier YAML dans <code>.github/workflows/</code>. C'est la recette complète : quand lancer, quoi faire.</p>
+        <div style="margin-top: 8px;">
+          <span class="badge badge-blue">ci.yml</span>
+          <span class="badge badge-purple">pr.yml</span>
+          <span class="badge badge-orange">release.yml</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">🎯 Trigger (déclencheur)</div>
+        <p style="font-size: 13px;">Ce qui lance le workflow. Exemples :</p>
+        <ul style="padding-left: 16px; font-size: 13px; color: var(--text-muted);">
+          <li><code>push</code> — quelqu'un pousse du code</li>
+          <li><code>pull_request</code> — une PR est ouverte</li>
+          <li><code>schedule</code> — tâche planifiée (cron)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">💼 Job</div>
+        <p style="font-size: 13px;">Un ensemble de steps qui tournent sur une machine virtuelle (ubuntu). Les jobs peuvent tourner en parallèle ou en séquence avec <code>needs:</code>.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">🔧 Step</div>
+        <p style="font-size: 13px;">Une action atomique dans un job. Soit une commande bash (<code>run:</code>), soit une action réutilisable (<code>uses:</code>).</p>
+      </div>
+    </div>
+
+    <h3>Structure d'un workflow</h3>
+
+    <div class="workflow-visual">
+      <div class="workflow-header">
+        <div class="dot" style="background:#ff5f57"></div>
+        <div class="dot" style="background:#febc2e"></div>
+        <div class="dot" style="background:#28c840"></div>
+        <span class="filename">.github/workflows/ci.yml</span>
+      </div>
+      <div class="workflow-body">
+        <pre><code><span class="c-comment"># 1. NOM du workflow (affiché dans GitHub Actions)</span>
+<span class="c-key">name:</span> <span class="c-val">CI</span>
+
+<span class="c-comment"># 2. TRIGGER — quand ce workflow se déclenche</span>
+<span class="c-key">on:</span>
+  <span class="c-key">push:</span>
+    <span class="c-key">branches:</span> <span class="c-val">[main, develop, "release/*"]</span>
+  <span class="c-key">pull_request:</span>
+    <span class="c-key">branches:</span> <span class="c-val">[main, develop]</span>
+
+<span class="c-comment"># 3. JOBS — ce qui se passe</span>
+<span class="c-key">jobs:</span>
+  <span class="c-key">lint-and-typecheck:</span>          <span class="c-comment"># nom du job</span>
+    <span class="c-key">runs-on:</span> <span class="c-val">ubuntu-latest</span>    <span class="c-comment"># machine virtuelle GitHub</span>
+    <span class="c-key">steps:</span>
+      - <span class="c-key">uses:</span> <span class="c-val">actions/checkout@v4</span>   <span class="c-comment"># clone le repo</span>
+      - <span class="c-key">name:</span> <span class="c-val">Install pnpm</span>
+        <span class="c-key">run:</span> <span class="c-cmd">npm install -g pnpm@9.15.0</span>
+      - <span class="c-key">name:</span> <span class="c-val">Lint</span>
+        <span class="c-key">run:</span> <span class="c-cmd">pnpm lint</span>
+
+  <span class="c-key">test:</span>
+    <span class="c-key">needs:</span> <span class="c-val">lint-and-typecheck</span>    <span class="c-comment"># attend que lint soit vert</span>
+    <span class="c-key">runs-on:</span> <span class="c-val">ubuntu-latest</span>
+    <span class="c-key">steps:</span>
+      - <span class="c-key">run:</span> <span class="c-cmd">pnpm test</span></code></pre>
+      </div>
+    </div>
+
+    <h3>La machine virtuelle GitHub</h3>
+
+    <div class="callout info">
+      <div class="callout-icon">🖥️</div>
+      <div class="callout-body">
+        <div class="callout-title">Chaque job = une machine fraîche</div>
+        <div class="callout-text">GitHub crée une nouvelle machine Ubuntu vierge pour chaque job. Elle installe Node, pnpm, clone ton repo, lance les commandes, puis est détruite. C'est pour ça qu'on doit réinstaller pnpm à chaque job — aucune donnée n'est partagée entre les jobs par défaut.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4 : CI.YML -->
+  <section id="ci">
+    <h2>🔍 ci.yml — Le cœur du CI</h2>
+
+    <p>C'est le workflow le plus important. Il vérifie la qualité du code à chaque push et à chaque PR.</p>
+
+    <h3>Ce qu'il fait — étape par étape</h3>
+
+    <div class="pipeline">
+      <div class="pipeline-step success">
+        <div class="step-icon">📥</div>
+        <div class="step-name">Checkout</div>
+        <div class="step-time">2s</div>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step success">
+        <div class="step-icon">📦</div>
+        <div class="step-name">Install pnpm</div>
+        <div class="step-time">10s</div>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step success">
+        <div class="step-icon">🔍</div>
+        <div class="step-name">Lint</div>
+        <div class="step-time">30s</div>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step success">
+        <div class="step-icon">📐</div>
+        <div class="step-name">Type Check</div>
+        <div class="step-time">20s</div>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step success">
+        <div class="step-icon">🧪</div>
+        <div class="step-name">Tests</div>
+        <div class="step-time">45s</div>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step success">
+        <div class="step-icon">🏗️</div>
+        <div class="step-name">Build</div>
+        <div class="step-time">60s</div>
+      </div>
+    </div>
+
+    <h3>L'ordre a de l'importance — le principe du "fail fast"</h3>
+
+    <p>On utilise <code>needs:</code> pour que les jobs s'enchaînent dans l'ordre. Pourquoi ? Pour <strong>échouer le plus tôt possible</strong>.</p>
+
+    <div class="card">
+      <div class="card-title">Exemple concret</div>
+      <p style="font-size: 13px;">Tu as une faute de frappe dans une variable TypeScript. Le lint va échouer en 30 secondes. <strong>Sans <code>needs:</code></strong>, les tests ET le build se lancent quand même en parallèle — tu gaspilles 2 minutes de compute pour rien. <strong>Avec <code>needs:</code></strong>, dès que le lint échoue, tout s'arrête. Tu as ton erreur en 30 secondes.</p>
+    </div>
+
+    <pre><code><span class="c-key">jobs:</span>
+  <span class="c-key">lint-and-typecheck:</span>        <span class="c-comment"># Job 1 — lance en premier</span>
+    ...
+
+  <span class="c-key">test:</span>
+    <span class="c-key">needs:</span> <span class="c-val">lint-and-typecheck</span>  <span class="c-comment"># Job 2 — attend le Job 1</span>
+    ...
+
+  <span class="c-key">build:</span>
+    <span class="c-key">needs:</span> <span class="c-val">[lint-and-typecheck, test]</span>  <span class="c-comment"># Job 3 — attend les deux</span>
+    ...</code></pre>
+
+    <h3>Pourquoi <code>npm install -g pnpm@9.15.0</code> et pas l'action pnpm ?</h3>
+
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">Leçon apprise à la dure</div>
+        <div class="callout-text">On utilisait <code>pnpm/action-setup@v4</code>. Fin avril 2026, cette action a commencé à causer des <strong>startup_failure</strong> — le workflow mourait avant même de lancer un seul job. Cause : le tag <code>@v4</code> sur le marketplace GitHub pointait vers une version cassée. En utilisant <code>npm install -g pnpm@9.15.0</code>, on pin exactement la version qu'on veut, sans dépendre d'une action tierce.</div>
+      </div>
+    </div>
+
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>✅ npm install -g pnpm@9.15.0</h4>
+        <ul>
+          <li>Version exacte pinned</li>
+          <li>Pas de dépendance externe</li>
+          <li>Toujours reproductible</li>
+          <li>Fonctionne partout</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>❌ pnpm/action-setup@v4</h4>
+        <ul>
+          <li>Tag peut bouger</li>
+          <li>Dépendance tierce</li>
+          <li>startup_failure sans raison</li>
+          <li>Difficile à déboguer</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Sur quelles branches se déclenche-t-il ?</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Événement</th>
+          <th>Branche</th>
+          <th>CI se lance ?</th>
+          <th>Pourquoi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-blue">push</span></td>
+          <td><code>main</code></td>
+          <td><span class="badge badge-green">✅ Oui</span></td>
+          <td>Vérifier que main reste stable</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-blue">push</span></td>
+          <td><code>develop</code></td>
+          <td><span class="badge badge-green">✅ Oui</span></td>
+          <td>Vérifier l'intégration continue</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-blue">push</span></td>
+          <td><code>release/*</code></td>
+          <td><span class="badge badge-green">✅ Oui</span></td>
+          <td>Valider avant de releaser</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-purple">pull_request</span></td>
+          <td>→ <code>main</code> ou <code>develop</code></td>
+          <td><span class="badge badge-green">✅ Oui</span></td>
+          <td>Gate avant le merge</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-blue">push</span></td>
+          <td><code>feature/*</code></td>
+          <td><span class="badge badge-red">❌ Non</span></td>
+          <td>Pas utile — le CI tourne sur la PR</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- SECTION 5 : PR.YML -->
+  <section id="pr">
+    <h2>🏷️ pr.yml — Automatisation des PRs</h2>
+
+    <p>Ce workflow s'occupe uniquement des automatisations liées aux Pull Requests. Il se déclenche <strong>uniquement sur l'événement <code>pull_request</code></strong>.</p>
+
+    <h3>Pourquoi séparer ça du CI ?</h3>
+
+    <div class="callout danger">
+      <div class="callout-icon">🚨</div>
+      <div class="callout-body">
+        <div class="callout-title">L'erreur qu'on a faite au départ</div>
+        <div class="callout-text">On avait mis le job <code>label</code> (avec <code>actions/labeler@v5</code>) <strong>directement dans <code>ci.yml</code></strong>. Résultat : quand le labeler avait un problème, tout le CI échouait — même sur des pushs simples qui n'ont rien à voir avec les labels. Le CI devenait fragile à cause d'une fonctionnalité accessoire.</div>
+      </div>
+    </div>
+
+    <h3>Ce que fait pr.yml</h3>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">🏷️ Job : Auto Label</div>
+        <p style="font-size: 13px;">Lit le fichier <code>labeler.yml</code> et applique automatiquement les labels selon les fichiers modifiés :</p>
+        <ul style="padding-left: 16px; font-size: 13px; color: var(--text-muted);">
+          <li>Fichiers dans <code>apps/frontend/</code> → <span class="badge badge-blue">domain: frontend</span></li>
+          <li>Fichiers dans <code>apps/backend/</code> → <span class="badge badge-blue">domain: backend</span></li>
+          <li>Fichiers dans <code>.github/</code> → <span class="badge badge-yellow">domain: devops</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">🎯 Job : Assign Milestone</div>
+        <p style="font-size: 13px;">Lit le nom de la branche et assigne le milestone correspondant :</p>
+        <ul style="padding-left: 16px; font-size: 13px; color: var(--text-muted);">
+          <li><code>feature/phase-1a-*</code> → Phase 1A</li>
+          <li><code>feature/phase-1b-*</code> → Phase 1B</li>
+          <li><code>feature/phase-2-*</code> → Phase 2 MVP</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>labeler.yml — La configuration du labeler</h3>
+
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">Syntaxe v4 vs v5 — l'erreur classique</div>
+        <div class="callout-text">La version 5 de <code>actions/labeler</code> a changé sa syntaxe. L'ancienne syntaxe (<code>any:</code>) ne fonctionne plus. Il faut utiliser <code>changed-files</code> avec <code>any-glob-to-any-file</code>.</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <p style="color: var(--red); font-weight: 700; margin-bottom: 8px;">❌ Ancienne syntaxe (v4)</p>
+        <pre><code>frontend:
+  - any: ['apps/frontend/**']
+
+backend:
+  - any: ['apps/backend/**']</code></pre>
+      </div>
+      <div>
+        <p style="color: var(--green); font-weight: 700; margin-bottom: 8px;">✅ Nouvelle syntaxe (v5)</p>
+        <pre><code>"domain: frontend":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "apps/frontend/**"
+
+"domain: backend":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "apps/backend/**"</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6 : RELEASE.YML -->
+  <section id="release">
+    <h2>🚀 release.yml — Automatisation des releases</h2>
+
+    <p>Ce workflow se déclenche quand on pousse sur une branche <code>release/X.Y.Z</code>. Il automatise tout le processus de release.</p>
+
+    <h3>Le flow complet d'une release</h3>
+
+    <div class="flow">
+      <div class="flow-row">
+        <div class="flow-box dev">develop</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box branch">/release 0.1.0</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box branch">release/0.1.0</div>
+      </div>
+      <div class="flow-down">↓ push déclenche release.yml</div>
+      <div class="flow-row">
+        <div class="flow-box action">Lint + Build</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box action">Tag v0.1.0</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box action">GitHub Release</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box action">PR → main</div>
+      </div>
+      <div class="flow-down">↓ après merge dans main</div>
+      <div class="flow-row">
+        <div class="flow-box main-box">main (production)</div>
+        <div class="flow-arrow">+</div>
+        <div class="flow-box dev">/sync → develop</div>
+      </div>
+    </div>
+
+    <h3>Problèmes qu'on a rencontrés et solutions</h3>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-left">
+          <div class="timeline-dot" style="background: rgba(248,113,113,0.2); color: var(--red);">1</div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-content">
+          <h4>startup_failure — <code>softprops/action-gh-release@v2</code></h4>
+          <p>L'action tierce causait un startup_failure à 0s. <strong>Solution :</strong> on l'a remplacée par <code>gh release create</code> — la CLI GitHub native, sans dépendance externe.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-left">
+          <div class="timeline-dot" style="background: rgba(248,113,113,0.2); color: var(--red);">2</div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="timeline-content">
+          <h4>Heredoc avec <code>${{ }}</code></h4>
+          <p>On écrivait le body de la PR avec un heredoc <code>&lt;&lt;'EOF'</code> contenant des expressions <code>${{ steps.version.outputs.version }}</code>. GitHub tente de parser ces expressions au chargement du workflow, pas à l'exécution. <strong>Solution :</strong> on passe les valeurs via <code>env:</code> et on utilise des variables bash <code>${VERSION}</code>.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-left">
+          <div class="timeline-dot" style="background: rgba(248,113,113,0.2); color: var(--red);">3</div>
+        </div>
+        <div class="timeline-content">
+          <h4>Label <code>release</code> introuvable</h4>
+          <p>On passait <code>--label "release"</code> mais le label s'appelle <code>"type: release"</code> avec le préfixe catégorie. La PR était créée mais sans label et l'erreur était silencieuse à cause du <code>|| echo "PR already exists"</code>. <strong>Solution :</strong> utiliser le bon nom de label.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 7 : CODEQL -->
+  <section id="codeql">
+    <h2>🔒 codeql.yml — Sécurité</h2>
+
+    <p>CodeQL est l'outil d'analyse statique de sécurité de GitHub. Il analyse le code pour trouver des vulnérabilités potentielles.</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Ce qu'il détecte</div>
+        <ul style="padding-left: 16px; font-size: 13px; color: var(--text-muted);">
+          <li>Injection SQL</li>
+          <li>XSS (Cross-Site Scripting)</li>
+          <li>Exposition de données sensibles</li>
+          <li>Mauvaise gestion des erreurs</li>
+          <li>Dépendances avec CVE</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Quand il tourne</div>
+        <ul style="padding-left: 16px; font-size: 13px; color: var(--text-muted);">
+          <li>Push sur <code>main</code> et <code>develop</code></li>
+          <li>Pull requests</li>
+          <li>Tous les dimanches à minuit (cron)</li>
+        </ul>
+        <pre style="margin-top: 8px;"><code><span class="c-key">schedule:</span>
+  - <span class="c-key">cron:</span> <span class="c-str">"0 0 * * 0"</span></code></pre>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-icon">🧠</div>
+      <div class="callout-body">
+        <div class="callout-title">Pourquoi CodeQL n'a jamais eu de startup_failure ?</div>
+        <div class="callout-text">CodeQL n'utilise que des actions <strong>github/codeql-action</strong> — des actions officielles GitHub, jamais de tiers comme pnpm ou labeler. C'est pour ça qu'il était le seul workflow qui passait toujours. La leçon : moins on dépend d'actions tierces dans le CI critique, plus c'est stable.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 8 : SÉPARATION -->
+  <section id="separation">
+    <h2>🏗️ Séparation des responsabilités</h2>
+
+    <p>C'est <strong>la règle d'or</strong> qu'on a appliquée. En entreprise, chaque workflow a une et une seule responsabilité.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Workflow</th>
+          <th>Responsabilité</th>
+          <th>Trigger</th>
+          <th>Si ça casse</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>ci.yml</strong></td>
+          <td>Qualité du code</td>
+          <td>push + pull_request</td>
+          <td>🚫 PR bloquée</td>
+        </tr>
+        <tr>
+          <td><strong>pr.yml</strong></td>
+          <td>Automatisation PR</td>
+          <td>pull_request uniquement</td>
+          <td>⚠️ Pas de labels (non bloquant)</td>
+        </tr>
+        <tr>
+          <td><strong>release.yml</strong></td>
+          <td>Publication</td>
+          <td>push release/*</td>
+          <td>⚠️ Release manuelle</td>
+        </tr>
+        <tr>
+          <td><strong>codeql.yml</strong></td>
+          <td>Sécurité</td>
+          <td>push + schedule</td>
+          <td>⚠️ Alerte sécurité</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout success">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <div class="callout-title">Pourquoi c'est important</div>
+        <div class="callout-text">Si <code>pr.yml</code> a un bug (ex: labeler qui plante), le CI continue de fonctionner — les PRs sont toujours validées. L'automatisation des labels est une feature pratique mais <strong>jamais critique</strong>. En séparant, on protège ce qui est critique (CI) de ce qui est accessoire (labels).</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 9 : GITFLOW -->
+  <section id="gitflow">
+    <h2>🌿 GitFlow & Branches</h2>
+
+    <p>Notre stratégie de branches définit qui peut faire quoi et où.</p>
+
+    <div class="flow">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <div class="flow-box main-box" style="display: inline-block;">main — Production</div>
+        <div class="flow-down">↕ merge via release PR ou hotfix</div>
+        <div class="flow-box dev" style="display: inline-block;">develop — Intégration</div>
+      </div>
+
+      <div style="display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;">
+        <div style="text-align: center;">
+          <div class="flow-box branch" style="margin-bottom: 8px;">feature/42-auth-page</div>
+          <div style="font-size: 12px; color: var(--text-muted);">↑ PR → develop</div>
+        </div>
+        <div style="text-align: center;">
+          <div class="flow-box branch" style="margin-bottom: 8px;">fix/43-login-crash</div>
+          <div style="font-size: 12px; color: var(--text-muted);">↑ PR → develop</div>
+        </div>
+        <div style="text-align: center;">
+          <div class="flow-box branch" style="margin-bottom: 8px;">release/0.2.0</div>
+          <div style="font-size: 12px; color: var(--text-muted);">↑ PR → main</div>
+        </div>
+        <div style="text-align: center;">
+          <div class="flow-box branch" style="margin-bottom: 8px; border-color: var(--red); color: var(--red);">hotfix/44-prod-bug</div>
+          <div style="font-size: 12px; color: var(--text-muted);">↑ PR → main + /sync</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Convention de nommage des branches</h3>
+
+    <table>
+      <thead>
+        <tr><th>Pattern</th><th>Exemple</th><th>Depuis</th><th>Merge vers</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>feature/&lt;numéro&gt;-&lt;desc&gt;</code></td>
+          <td><code>feature/29-landing-page</code></td>
+          <td>develop</td>
+          <td>develop</td>
+        </tr>
+        <tr>
+          <td><code>fix/&lt;numéro&gt;-&lt;desc&gt;</code></td>
+          <td><code>fix/31-login-crash</code></td>
+          <td>develop</td>
+          <td>develop</td>
+        </tr>
+        <tr>
+          <td><code>hotfix/&lt;numéro&gt;-&lt;desc&gt;</code></td>
+          <td><code>hotfix/32-auth-token</code></td>
+          <td>main</td>
+          <td>main + develop</td>
+        </tr>
+        <tr>
+          <td><code>release/&lt;semver&gt;</code></td>
+          <td><code>release/0.1.0</code></td>
+          <td>develop</td>
+          <td>main</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout info">
+      <div class="callout-icon">🔢</div>
+      <div class="callout-body">
+        <div class="callout-title">Pourquoi le numéro d'issue dans le nom de branche ?</div>
+        <div class="callout-text">Le numéro d'issue dans le nom de branche sert deux choses : (1) traçabilité — on sait immédiatement à quelle issue cette branche correspond, (2) fermeture automatique — <code>Closes #29</code> dans la PR body ferme l'issue quand la PR est mergée dans <code>develop</code> (la default branch).</div>
+      </div>
+    </div>
+
+    <h3>Pourquoi develop est la default branch ?</h3>
+
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">GitHub ferme les issues uniquement sur la default branch</div>
+        <div class="callout-text">Quand une PR avec <code>Closes #42</code> est mergée, GitHub ferme l'issue <strong>seulement si la branche cible est la default branch</strong>. Si <code>main</code> était la default branch, les issues ne se fermeraient jamais automatiquement (les features mergent dans <code>develop</code>, pas <code>main</code>). On a donc changé <code>develop</code> comme default branch.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 10 : BRANCH PROTECTION -->
+  <section id="branch-protection">
+    <h2>🛡️ Branch Protection Rules</h2>
+
+    <p>Les branch protection rules sont des règles qui protègent tes branches importantes contre les pushs accidentels ou non vérifiés.</p>
+
+    <h3>Configuration actuelle</h3>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title" style="display: flex; align-items: center; gap: 8px;">
+          <span class="badge badge-yellow">main</span> — Production
+        </div>
+        <ul style="padding-left: 16px; font-size: 13px; color: var(--text-muted); margin-top: 8px;">
+          <li>✅ PR obligatoire</li>
+          <li>✅ 1 reviewer requis</li>
+          <li>✅ CI doit être vert</li>
+          <li>✅ Code owner review</li>
+          <li>❌ Pas de push direct</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title" style="display: flex; align-items: center; gap: 8px;">
+          <span class="badge badge-purple">develop</span> — Intégration
+        </div>
+        <ul style="padding-left: 16px; font-size: 13px; color: var(--text-muted); margin-top: 8px;">
+          <li>✅ PR obligatoire</li>
+          <li>✅ 1 reviewer requis</li>
+          <li>✅ CI doit être vert</li>
+          <li>⭐ <strong>enforce_admins: false</strong></li>
+          <li>→ Tu peux bypasser comme admin</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Le bouton "Merge without waiting for requirements"</h3>
+
+    <p>Puisque <code>enforce_admins: false</code>, en tant qu'admin du repo, tu vois ce bouton sur tes propres PRs. Il te permet de merger même sans reviewer — c'est ton bypass personnel. Les autres contributors ne le voient pas.</p>
+
+    <div class="callout info">
+      <div class="callout-icon">🏢</div>
+      <div class="callout-body">
+        <div class="callout-title">En entreprise avec plusieurs devs</div>
+        <div class="callout-text">Quand d'autres personnes rejoignent le projet, <code>CODEOWNERS</code> te désigne automatiquement comme reviewer sur toutes leurs PRs. Tu reçois une notification GitHub et tu peux approuver ou demander des modifications. Eux ne peuvent pas bypasser — ils doivent attendre ta review.</div>
+      </div>
+    </div>
+
+    <h3>CODEOWNERS</h3>
+
+    <pre><code><span class="c-comment"># .github/CODEOWNERS</span>
+<span class="c-comment"># * signifie "tous les fichiers"</span>
+<span class="c-comment"># @AdamDjo sera automatiquement ajouté comme reviewer</span>
+<span class="c-comment"># sur toute PR qui touche n'importe quel fichier</span>
+
+* @AdamDjo</code></pre>
+  </section>
+
+  <!-- SECTION 11 : ERREURS -->
+  <section id="erreurs">
+    <h2>🐛 Erreurs rencontrées et solutions</h2>
+
+    <p>Voici un catalogue des vraies erreurs qu'on a eu et comment les identifier / résoudre.</p>
+
+    <h3>startup_failure à 0s</h3>
+    <div class="card">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+        <span class="badge badge-red">startup_failure</span>
+        <span style="font-size: 13px; color: var(--text-muted);">0 jobs lancés, 0 logs disponibles</span>
+      </div>
+      <p style="font-size: 13px;"><strong>Cause :</strong> GitHub ne peut pas parser ou résoudre le workflow avant de le lancer. Cela peut venir de :</p>
+      <ul style="padding-left: 16px; font-size: 13px; color: var(--text-muted);">
+        <li>Une action tierce avec un tag cassé (<code>pnpm/action-setup@v4</code>)</li>
+        <li>Une action tierce qui n'est pas dans la whitelist (<code>softprops/action-gh-release@v2</code>)</li>
+        <li>Une erreur de syntaxe YAML invisible</li>
+      </ul>
+      <p style="font-size: 13px; margin-top: 8px;"><strong>Comment diagnostiquer :</strong> compare avec le dernier commit qui marchait — <code>git diff &lt;bon-commit&gt;..HEAD -- .github/workflows/</code></p>
+    </div>
+
+    <h3>ERR_PNPM_OUTDATED_LOCKFILE</h3>
+    <div class="card">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+        <span class="badge badge-red">failure</span>
+        <span style="font-size: 13px; color: var(--text-muted);">Install dependencies — exit code 1</span>
+      </div>
+      <p style="font-size: 13px;"><strong>Cause :</strong> Le <code>pnpm-lock.yaml</code> n'est pas synchronisé avec <code>package.json</code>. Ça arrive quand on résout un merge conflict en prenant le mauvais côté du lockfile.</p>
+      <p style="font-size: 13px; margin-top: 8px;"><strong>Solution :</strong> <code>pnpm install</code> en local, puis commit le <code>pnpm-lock.yaml</code> mis à jour.</p>
+    </div>
+
+    <h3>Release.tag_name already exists</h3>
+    <div class="card">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+        <span class="badge badge-red">failure</span>
+        <span style="font-size: 13px; color: var(--text-muted);">Create GitHub Release — HTTP 422</span>
+      </div>
+      <p style="font-size: 13px;"><strong>Cause :</strong> Le workflow release a déjà créé le tag lors d'un run précédent. Les pushs suivants sur la même branche retentent de créer le même tag.</p>
+      <p style="font-size: 13px; margin-top: 8px;"><strong>Ce que ça veut dire concrètement :</strong> ce n'est pas un vrai problème — la release est déjà publiée. C'est juste le workflow qui ne sait pas qu'il a déjà fait son travail. Sûr de merger.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 12 : BONNES PRATIQUES -->
+  <section id="bonnes-pratiques">
+    <h2>✨ Bonnes pratiques enterprise</h2>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">🎯 Un workflow = une responsabilité</div>
+        <p style="font-size: 13px;">Ne jamais mélanger CI (qualité) avec automation PR (labels). Si l'automation plante, le CI reste vert.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">📌 Pin les versions exactes</div>
+        <p style="font-size: 13px;"><code>pnpm@9.15.0</code> et non pas <code>pnpm@latest</code>. Un tag <code>@v4</code> peut pointer vers n'importe quoi demain.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">🔧 Préférer les outils natifs</div>
+        <p style="font-size: 13px;"><code>gh release create</code> plutôt que <code>softprops/action-gh-release</code>. La CLI GitHub est maintenue par GitHub, jamais cassée.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">⚡ Fail fast avec needs:</div>
+        <p style="font-size: 13px;">Toujours chaîner les jobs critiques. Si le lint échoue, ne pas lancer les tests — économise du temps et de l'argent.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">🔕 Masquer les erreurs avec soin</div>
+        <p style="font-size: 13px;"><code>|| echo "PR already exists"</code> masque les vraies erreurs. Utiliser seulement quand l'erreur est vraiment attendue et non-critique.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">🌿 Default branch = develop</div>
+        <p style="font-size: 13px;">Dans un GitFlow, develop est la branche d'intégration. GitHub ferme les issues automatiquement uniquement sur la default branch.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 13 : RECAP -->
+  <section id="recap">
+    <h2>📋 Récap — Vue d'ensemble</h2>
+
+    <p>Voici comment tous les éléments s'articulent ensemble dans le projet Grimoire :</p>
+
+    <div class="flow">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <div>
+          <h3 style="margin-top: 0;">Cycle feature classique</h3>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-left">
+                <div class="timeline-dot" style="background: rgba(124,106,247,0.2); color: var(--primary);">1</div>
+                <div class="timeline-line"></div>
+              </div>
+              <div class="timeline-content">
+                <h4>/feature 42-auth-page</h4>
+                <p>Issue GitHub créée, assignée, ajoutée au Scrum Board. Branche <code>feature/42-auth-page</code> depuis develop.</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-left">
+                <div class="timeline-dot" style="background: rgba(96,165,250,0.2); color: var(--blue);">2</div>
+                <div class="timeline-line"></div>
+              </div>
+              <div class="timeline-content">
+                <h4>Code + commits</h4>
+                <p>Tu développes. Commits avec <code>feat(auth): ...</code>.</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-left">
+                <div class="timeline-dot" style="background: rgba(74,222,128,0.2); color: var(--green);">3</div>
+                <div class="timeline-line"></div>
+              </div>
+              <div class="timeline-content">
+                <h4>/pr</h4>
+                <p>PR créée vers develop. CI se lance. pr.yml applique labels + milestone.</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-left">
+                <div class="timeline-dot" style="background: rgba(251,191,36,0.2); color: var(--yellow);">4</div>
+              </div>
+              <div class="timeline-content">
+                <h4>Merge dans develop</h4>
+                <p>Issue #42 fermée automatiquement. Code intégré.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h3 style="margin-top: 0;">Cycle release</h3>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-left">
+                <div class="timeline-dot" style="background: rgba(251,146,60,0.2); color: var(--orange);">1</div>
+                <div class="timeline-line"></div>
+              </div>
+              <div class="timeline-content">
+                <h4>/release 0.2.0</h4>
+                <p>Branche <code>release/0.2.0</code> créée depuis develop.</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-left">
+                <div class="timeline-dot" style="background: rgba(74,222,128,0.2); color: var(--green);">2</div>
+                <div class="timeline-line"></div>
+              </div>
+              <div class="timeline-content">
+                <h4>release.yml se lance</h4>
+                <p>Lint + Build + Tag <code>v0.2.0</code> + GitHub Release + PR → main.</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-left">
+                <div class="timeline-dot" style="background: rgba(251,191,36,0.2); color: var(--yellow);">3</div>
+                <div class="timeline-line"></div>
+              </div>
+              <div class="timeline-content">
+                <h4>Merge PR → main</h4>
+                <p>Bouton bypass (tu es admin). main = production à jour.</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-left">
+                <div class="timeline-dot" style="background: rgba(124,106,247,0.2); color: var(--primary);">4</div>
+              </div>
+              <div class="timeline-content">
+                <h4>/sync</h4>
+                <p>develop resynchronisé avec main. Prêt pour la prochaine feature.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Les 4 fichiers workflows en résumé</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Fichier</th>
+          <th>Déclenché par</th>
+          <th>Jobs</th>
+          <th>Si ça casse ?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>ci.yml</strong></td>
+          <td>push main/develop/release, PR</td>
+          <td>lint-typecheck → test → build</td>
+          <td>🚫 PR bloquée — critique</td>
+        </tr>
+        <tr>
+          <td><strong>pr.yml</strong></td>
+          <td>PR opened/updated</td>
+          <td>label, milestone</td>
+          <td>⚠️ Juste pas de label auto</td>
+        </tr>
+        <tr>
+          <td><strong>release.yml</strong></td>
+          <td>push release/*</td>
+          <td>lint+build → tag → release → PR</td>
+          <td>⚠️ Release manuelle possible</td>
+        </tr>
+        <tr>
+          <td><strong>codeql.yml</strong></td>
+          <td>push main/develop, PR, dimanche</td>
+          <td>analyze</td>
+          <td>⚠️ Alerte sécurité à traiter</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout success">
+      <div class="callout-icon">🎓</div>
+      <div class="callout-body">
+        <div class="callout-title">Tu maîtrises maintenant :</div>
+        <div class="callout-text">
+          <strong>CI/CD :</strong> ce que c'est, pourquoi c'est indispensable, comment ça fonctionne.<br>
+          <strong>GitHub Actions :</strong> workflows, triggers, jobs, steps, needs, env vars, actions vs run.<br>
+          <strong>Nos 4 workflows :</strong> leurs responsabilités, leurs triggers, pourquoi ils sont séparés.<br>
+          <strong>GitFlow :</strong> la stratégie de branches, pourquoi develop est la default branch.<br>
+          <strong>Branch protection :</strong> reviewer, bypass admin, CODEOWNERS.<br>
+          <strong>Erreurs courantes :</strong> startup_failure, lockfile, tag déjà existant — et comment les résoudre.
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // Active nav link on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === '#' + entry.target.id) {
+            link.classList.add('active');
+          }
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
