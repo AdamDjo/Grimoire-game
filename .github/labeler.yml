@@ -1,7 +1,3 @@
-# Auto-labeling des PRs selon les fichiers modifiés
-# Syntaxe actions/labeler@v5 — changed-files avec any-glob-to-any-file
-
-# --- DOMAINES ---
 "domain: frontend":
   - changed-files:
       - any-glob-to-any-file: ["apps/frontend/**"]
@@ -36,7 +32,6 @@
           - ".github/ISSUE_TEMPLATE/**"
           - ".github/PULL_REQUEST_TEMPLATE/**"
 
-# --- PHASES ---
 "phase: 1a":
   - changed-files:
       - any-glob-to-any-file: ["apps/frontend/**"]
