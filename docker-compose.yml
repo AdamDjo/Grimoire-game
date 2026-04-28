@@ -1,21 +1,4 @@
 services:
-  postgres:
-    image: postgres:16-alpine
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-grimoire}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in your .env}
-      POSTGRES_DB: ${POSTGRES_DB:-grimoire}
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-grimoire}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
   backend:
     build:
       context: .
@@ -29,9 +12,6 @@ services:
       SUPABASE_SERVICE_KEY: ${SUPABASE_SERVICE_KEY}
     ports:
       - "3001:3001"
-    depends_on:
-      postgres:
-        condition: service_healthy
 
   frontend:
     build:
@@ -49,6 +29,3 @@ services:
       - "3000:3000"
     depends_on:
       - backend
-
-volumes:
-  postgres_data:
