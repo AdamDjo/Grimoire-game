@@ -51,7 +51,7 @@
     "jsdom": "^25",
     "prettier": "^3.4.0",
     "tailwindcss": "^4",
-    "typescript": "^5",
+    "typescript": "^6",
     "vitest": "^2"
   }
 }
