@@ -41,17 +41,17 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@vitejs/plugin-react": "^4",
-    "@vitest/coverage-v8": "^2",
-    "@vitest/ui": "^2",
-    "cypress": "^13",
+    "@vitejs/plugin-react": "^6",
+    "@vitest/coverage-v8": "^4",
+    "@vitest/ui": "^4",
+    "cypress": "^15",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "eslint-plugin-react-hooks": "^5.0.0",
-    "jsdom": "^25",
+    "jsdom": "^29",
     "prettier": "^3.4.0",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^2"
+    "vitest": "^4"
   }
 }
