@@ -48,7 +48,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "eslint-plugin-react-hooks": "^5.0.0",
-    "jsdom": "^25",
+    "jsdom": "^29",
     "prettier": "^3.4.0",
     "tailwindcss": "^4",
     "typescript": "^5",
