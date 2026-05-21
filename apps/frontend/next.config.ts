@@ -7,7 +7,7 @@ const withBundleAnalyzer = bundleAnalyzer({
 })
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: process.env.DOCKER_BUILD === 'true' ? 'standalone' : undefined,
 }
 
 export default withBundleAnalyzer(nextConfig)
