@@ -1,5 +1,6 @@
-# CODEOWNERS — Assignation automatique des reviewers
-# AdamDjo est l'unique reviewer sur tout le repo
-# Toute PR ouverte déclenche automatiquement une demande de review
+# CODEOWNERS — désactivé pour projet solo
+# GitHub Enterprise uniquement supporte le bypass par acteur.
+# Sur repo personnel, CODEOWNERS force le reviewer même pour le propriétaire.
+# Réactiver si le projet passe en organisation ou avec des collaborateurs.
 
-* @AdamDjo
+# * @AdamDjo
