@@ -62,9 +62,8 @@ Grimoire-game/
 │   ├── eslint-config/         # Shared ESLint config (@grimoire/eslint-config)
 │   └── prettier-config/       # Shared Prettier config (@grimoire/prettier-config)
 ├── docs/
-│   ├── GAME_DESIGN.md         # Game vision, phases, classes, universes
-│   ├── FRONTEND_ARCHITECTURE.md  # Pages, components, Next.js structure
-│   ├── NARRATIVE_DESIGN.md    # Narrative standards, AI prompts
+│   ├── GAME_DESIGN.md         # The WHAT: vision, universes, classes, UI, narrative, RP features
+│   ├── TECH_STACK.md          # The HOW: stack, architecture, AI prompts, validation, security
 │   └── MEMORY.md              # Current project state (read by Claude each session)
 ├── .github/
 │   ├── workflows/             # CI (lint, type-check, build) + Release
