@@ -1,8 +1,10 @@
 # Game Design — Grimoire
 
-**Version**: 5.0 (The Reliable AI Game Master)
+**Version**: 6.0 (Design System aligned — docs/Grimoire/ is the UI reference)
 **Status**: Ready to Develop
-**Scope of this doc**: The **WHAT** — vision, the world of Valorain (fixed canon), JdR rules, UI/look, narrative standards, RP features, phases. For the **HOW** (stack, lore/memory system, AI prompts, Ollama, endpoints, validation), see `TECH_STACK.md`. For current status, see `MEMORY.md`.
+**Scope of this doc**: The **WHAT** — vision, the world of Valorain (fixed canon), JdR rules, UI/look, narrative standards, RP features, phases. For the **HOW** (stack, lore/memory system, AI prompts, endpoints, validation), see `TECH_STACK.md`. For current status, see `MEMORY.md`.
+
+> **UI canon**: The folder `docs/Grimoire/` contains the 5 finalized hi-fi HTML designs (Accueil, Session, Création, Campagne, Carte). Every frontend page **must match** those designs exactly — colors, fonts, layout, interactions. Do not re-invent what is already done there.
 
 > **Single source of truth.** Anything about _what the game is, how its world works, how it looks and plays_ lives here. Anything about _how it's coded_ lives in `TECH_STACK.md`. Stats, the scene JSON schema, AI prompts, and the lore/memory engine are documented **once** — in `TECH_STACK.md` — and only referenced here.
 
@@ -106,13 +108,24 @@ Dice can fail. The threat advances. But the player sets the dial: tone (grim / h
 
 A blight called the **Corruption** seeps out of **Shadowveil**, twisting land, beasts, and people into **Voidborn**. It does not march like an army — it _creeps_, village by village, while the living argue. The **Order of Honor** holds the line and is slowly losing. This is the world's clock: **it advances while the player hesitates.** Delay has a cost; the map gets worse. That ticking threat is the spine that gives every choice weight.
 
-### 4.3 The Five Regions
+### 4.3 The Eight Regions of Valorain
 
-- **Valorheim** — northern stone holds, warriors, the Order's heartland (relatively safe, grim, dutiful).
-- **Shadowveil** — corrupted lands, undead, the source of the blight (deadly).
-- **Sanctum** — mage towers and enchanted forests, keepers of dangerous knowledge (secretive).
-- **Verdantis** — dense wild jungle, primitive creatures, beyond most laws (lawless).
-- **Skybound** — floating islands and celestial mystery (remote, strange).
+These are the **canonical region names** as shown on the interactive map (`docs/Grimoire/Grimoire - Carte de Valorain.html`). They are the names the UI, the MJ, and the backend all use — do not rename them.
+
+| Region                                       | Status at launch                           | Mood / Type                                       | Difficulty |
+| -------------------------------------------- | ------------------------------------------ | ------------------------------------------------- | ---------- |
+| **Les Cendres de Valorain**                  | ● Current (starting region)                | Scarred heartland — where every run begins        | Débutant   |
+| **La Forêt d'Aelorn** (La Forêt qui Murmure) | Unlockable (reach level 6)                 | Fae forest, capricious pacts, paths that lie      | Débutant   |
+| **La Couronne Engloutie** (Cité Noyée)       | Unlockable (finish ch. VII of Les Cendres) | Submerged city, 3-day time limit, drowned kingdom | Confirmé   |
+| **La Tour de l'Arcaniste**                   | Sealed (unlocks mid-campaign)              | Mage's sealed tower, every floor a trap           | Confirmé   |
+| **Le Givre Éternel** (Confins du Nord)       | Sealed (veteran region)                    | Arctic expanse, ancient sleeping evil             | Vétéran    |
+| **Les Catacombes Sans Fin**                  | Sealed (unlocks via story)                 | Shifting dungeon, roguelike, you leave changed    | Vétéran    |
+| **L'Or des Damnés**                          | Premium                                    | Heist in the Count-Lich's vault                   | Confirmé   |
+| **Le Pacte du Dragon** (Pic du Dragon)       | Premium                                    | Negotiate with the last dragon of Valorain        | Vétéran    |
+
+**Region graph** (edges = accessible connections): Les Cendres ↔ Forêt · Les Cendres ↔ Couronne Engloutie · Les Cendres → Catacombes (dim) · Les Cendres → Tour (dim) · Tour → Givre (dim) · Tour → Or des Damnés (dim) · Couronne → Pacte du Dragon (dim).
+
+> **MVP is Les Cendres de Valorain only** (§2). Other regions are locked/premium at launch — their existence on the map creates horizon and aspiration without scope bloat.
 
 ### 4.4 The Four Factions
 
@@ -270,17 +283,51 @@ All classes use the same 7 stats; only labels change per universe for flavor. Ca
 | **Charisma**     | Persuasion         | Leadership     | Alien diplomacy     |
 | **Luck**         | Loot chance        | Scavenge bonus | Rare encounters     |
 
-### 6.2 Valorain — the 5 MVP classes
+### 6.2 Valorain Stats
 
-| Class       | Bonus                        | Playstyle                                | Starting Skills           | Unique                      |
-| ----------- | ---------------------------- | ---------------------------------------- | ------------------------- | --------------------------- |
-| **Warrior** | +3 Str, +15 Max HP, −1 Int   | Melee, tanking                           | Power Strike, War Cry     | Breaks doors, intimidates   |
-| **Mage**    | +3 Int, +20 Max Mana, −1 Str | Spells, puzzles (magic is feared — §4.1) | Fireball, Arcane Shield   | Deciphers runes, levitation |
-| **Thief**   | +3 Agi, +2 Luck, −5 Max HP   | Stealth, theft, dodge                    | Sneak Attack, Lockpicking | Detects traps, pickpockets  |
-| **Healer**  | +2 Int, +2 Cha, +15 Max Mana | Support, healing                         | Minor Heal, Purification  | Cures disease, calms NPCs   |
-| **Ranger**  | +2 Agi, +1 Str, +1 Luck      | Archery, survival                        | Precise Shot, Tracking    | Tames creatures, survival   |
+The 5 stats used in Valorain (mapped from the Universal Stats in `TECH_STACK.md §5.2`):
 
-> Apocalypse (Terre Desolee, 4 classes) and Sci-Fi (Nova Galaxia, 5 classes) are designed but **deferred** (§2). Their full rosters live in version control history / will be re-documented when 2B begins; they are intentionally not detailed here to keep focus on Valorain.
+| Stat           | Label in Valorain   | Description                       |
+| -------------- | ------------------- | --------------------------------- |
+| `strength`     | **FOR** — Force     | Brute strength, melee combat      |
+| `agility`      | **AGI** — Agilité   | Speed, stealth, dodge             |
+| `intelligence` | **INT** — Intellect | Arcane, knowledge, perception     |
+| `charisma`     | **CHA** — Charisme  | Words, presence, social influence |
+| `luck`         | **CHANCE**          | The thumb of fate on your dice    |
+
+**Character creation stat system** (from `docs/Grimoire/grimoire-forge.js`): base 8 in each stat, pool of 12 points to distribute, cap at 15. The backend applies racial bonuses/maluses on top (§6.4).
+
+### 6.3 Valorain — the 10 classes (Phase 1A playable; 5 unlocked at MVP)
+
+From `docs/Grimoire/grimoire-forge.js`. All 10 are shown in the character creation UI; the bottom 5 are locked behind higher levels/phases.
+
+| Class          | Glyph | Primary stat | Archetype                            | Difficulty | Signature skill                                              |
+| -------------- | ----- | ------------ | ------------------------------------ | ---------- | ------------------------------------------------------------ |
+| **Guerrier**   | ⚔     | FOR          | The steel wall that holds the line   | ★☆☆        | Frappe brisante — ignores part of enemy armor                |
+| **Paladin**    | ✝     | FOR          | Oath of steel, faith as shield       | ★☆☆        | Châtiment — wave of holy light at contact                    |
+| **Rôdeur**     | ➶     | AGI          | Desert eye, arrow before the whisper | ★★☆        | Tir traqueur — mark a prey, hits always find it              |
+| **Roublard**   | 🜁     | AGI          | Shadow, blade, and locks that yield  | ★★☆        | Coup fourbe — damage ×N on surprised target                  |
+| **Clerc**      | ☩     | INT          | Hand that heals, voice that condemns | ★★☆        | Lumière vive — heals ally or burns undead                    |
+| **Barde**      | ♪     | CHA          | Words as weapon, crowd as ally       | ★★☆        | Refrain d'audace — inspires ally, bonus to next roll         |
+| **Mage**       | ✶     | INT          | Arcane weaver, fragile but deadly    | ★★★        | Trait de givre — freezes and slows a distant target          |
+| **Druide**     | ❀     | INT          | Nature as ally, beast as mask        | ★★★        | Forme bestiale — take the shape of a beast for a fight       |
+| **Barbare**    | 🜉     | FOR          | Rage incarnate, pain as engine       | ★☆☆        | Furie — the more you bleed, the harder you hit               |
+| **Invocateur** | ◑     | CHA          | Never alone: the pact calls servants | ★★★        | Appel du Voile — summon a bound entity that fights alongside |
+
+### 6.4 Valorain — the 6 peoples (races)
+
+From `docs/Grimoire/grimoire-forge.js`. Chosen in character creation step 2 (Lignée).
+
+| People              | Glyph | Tag                   | Stat bonuses           | Stat maluses |
+| ------------------- | ----- | --------------------- | ---------------------- | ------------ |
+| **Humain**          | 🜂     | Adaptables, ambitieux | +1 FOR, +1 AGI, +1 CHA | —            |
+| **Elfe sylvain**    | ☘     | Gracieux, longévifs   | +2 AGI, +1 INT         | —            |
+| **Nain des forges** | ⛏     | Endurants, tenaces    | +2 FOR                 | −1 AGI       |
+| **Orsanguin**       | ⚔     | Colosses, marginaux   | +2 FOR, +1 CHANCE      | −1 CHA       |
+| **Sang-de-lune**    | ✶     | Marqués par l'arcane  | +2 INT, +1 CHA         | —            |
+| **Féerin**          | ❋     | Rusés, insaisissables | +2 CHANCE, +1 CHA      | −1 FOR       |
+
+> Apocalypse and Sci-Fi universes are **deferred** (§2) and intentionally not detailed here.
 
 ---
 
@@ -288,70 +335,172 @@ All classes use the same 7 stats; only labels change per universe for flavor. Ca
 
 Frontend is **display-only** (logic lives backend-side — see `TECH_STACK.md`). This is the visual/UX spec; file paths and state shapes are in `TECH_STACK.md`.
 
-### 7.1 Pages
+> **The designs in `docs/Grimoire/` are the single reference for everything in this section.** When in doubt, open the HTML file in the browser — do not improvise.
 
-| #   | Page             | Route                         | Purpose                                                 |
-| --- | ---------------- | ----------------------------- | ------------------------------------------------------- |
-| 1   | Landing          | `/`                           | Pitch (§1), feature cards, CTA                          |
-| 2   | Login            | `/(auth)/login`               | Email/password                                          |
-| 3   | Signup           | `/(auth)/signup`              | Registration                                            |
-| 4   | Dashboard        | `/(main)/dashboard`           | New game, ongoing games, stats                          |
-| 5   | Universe Select  | `/(main)/universe-select`     | Valorain active; others 🔒 ("later")                    |
-| 6   | Character Create | `/(main)/character-create`    | Name, class, stats, **backstory & flaws** (§5.5)        |
-| 7   | Game Session     | `/(game)/session/[sessionId]` | **Main screen** (§7.2)                                  |
-| 8   | Game Over        | `/(game)/session/end`         | Summary, export chronicle, share seed                   |
-| 9   | Leaderboard      | `/(main)/leaderboard`         | Global + per-seed                                       |
-| 10  | Settings         | `/(main)/settings`            | Sound, **tone**, **lethality**, narrative length, theme |
+### 7.1 Pages & Design references
 
-### 7.2 Game Session Layout
+| #   | Page             | Route                           | Design file                           | Purpose                                                                      |
+| --- | ---------------- | ------------------------------- | ------------------------------------- | ---------------------------------------------------------------------------- |
+| 1   | Landing          | `/`                             | `Grimoire - Accueil.html`             | Pitch, universe portals, feature cards, live demo strip, CTA                 |
+| 2   | Login            | `/(auth)/login`                 | _(standard, same design tokens)_      | Email/password                                                               |
+| 3   | Signup           | `/(auth)/signup`                | _(standard, same design tokens)_      | Registration                                                                 |
+| 4   | Campaign hub     | `/(main)/campaign/[campaignId]` | `Grimoire - Campagne.html`            | Resume last scene, chapter timeline, quests, factions, NPC log, dice journal |
+| 5   | World map        | `/(main)/world`                 | `Grimoire - Carte de Valorain.html`   | Interactive region map — current/unlockable/sealed/premium                   |
+| 6   | Character create | `/(main)/character-create`      | `Grimoire - Creation Personnage.html` | 7-step forge stepper                                                         |
+| 7   | Game session     | `/(game)/session/[sessionId]`   | `Grimoire - Session.html`             | **Main screen** (§7.2)                                                       |
+| 8   | Game Over        | `/(game)/session/end`           | _(based on Session tokens)_           | Summary, export chronicle, share seed                                        |
+| 9   | Leaderboard      | `/(main)/leaderboard`           | _(standard)_                          | Global + per-seed                                                            |
+| 10  | Settings         | `/(main)/settings`              | _(standard)_                          | Tone, lethality, narrative length, safety tools                              |
+
+> **Note on routing changes vs. previous versions**: `/(main)/dashboard` is renamed `/(main)/campaign/[campaignId]` (it's a per-campaign hub, not a generic dashboard). `/(main)/universe-select` is replaced by `/(main)/world` (it's the Valorain interactive map, not a generic universe picker).
+
+### 7.2 Game Session Layout — exact reference: `Grimoire - Session.html`
+
+The session screen is a **two-column layout** (`grid: 1fr 360px`), sticky topbar, no footer.
 
 ```
-┌────────────────────────────────────────────────────────┐
-│ [Menu] Vael | HP 85/100 | Mana 40/100 | Lvl 5          │
-├────────────────────────────────────────────────────────┤
-│  SCENE (70%)                          │ SIDEBARS (30%)  │
-│  ┌──────────────────────────────┐     │ STATS           │
-│  │ SCENE 7: The Wilting Hamlet  │     │ HP ████░ 85     │
-│  │ [400–600 word MJ narrative,  │     │ Mana ██░░ 40    │
-│  │  dark-fantasy, measured]     │     │ Lvl 5  XP ██    │
-│  │ [EVENT LOG — last 3-4]       │     │ STR 15 AGI 15   │
-│  └──────────────────────────────┘     │ INT 11 CHA 8    │
-│                                        │                 │
-│  ┌──────────────────────────────┐     │ NPCS (affinity) │
-│  │ TON ACTION — LIBRE           │ ←   │ Tormund  ▓▓░ +2 │
-│  │ "Qui va là ?" *je dégaine…*  │     │ Aldric   ▓▓▓ +5 │
-│  │  💬+⚔ Mixte          [AGIR]  │     │                 │
-│  └──────────────────────────────┘     │ INVENTORY (6/10)│
-│  "…" parle · *…* agis · libre=action  │ Sword +2 Str    │
-│  — or pick a suggestion —             │ Golden Key      │
-│  ⊳ Reason with the elder (Cha 12)     │ REPUTATION      │
-│  ⊳ Force the door (Str 15) ✓✓✓        │ Order +25       │
-│  ⊳ Slip away into the dark (Agi 10)   │ Corruption ▲    │
-└────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│ TOPBAR (sticky)                                                      │
+│ ❖ GRIMOIRE · VALORAIN │ ▸ Reprendre · 🗺 Le Monde · ❖ Campagne · ⚔ │
+│                        │ ⏱ 01:24 · Recommencer · ⚙ · [avatar]      │
+├──────────────────────────────────────┬──────────────────────────────┤
+│  TOME (centre — flex 1)              │  CODEX (droite — 360px fixe) │
+│                                      │                               │
+│  [Image de scène cinématique]        │  ┌─ Personnage ────────────┐  │
+│  [hero-scrim + titre + chapitre]     │  │ Portrait · Niv · Classe │  │
+│                                      │  │ HP ██████░ 85/100       │  │
+│  ✦ Le Maître du Jeu                  │  │ Mana ████░░ 40/60       │  │
+│  [Narration EB Garamond 20px]        │  │ Vigueur ████░ 75/100    │  │
+│  [Event pills: +XP · item · −PV]    │  └─────────────────────────┘  │
+│                                      │  ┌─ Niveau ────────────────┐  │
+│  [Thinking indicator (MJ tisse…)]    │  │ [Ring XP] Niv 5 Guerrier│  │
+│                                      │  └─────────────────────────┘  │
+│  QUE FAIS-TU ?                       │  ┌─ Statistiques ──────────┐  │
+│  [Choice A]  [Choice B]              │  │ FOR ████░ 15            │  │
+│  [Choice C]  [Choice D]              │  │ AGI ███░░ 11  INT 8     │  │
+│                                      │  │ CHA ██░░░ 10  CHANCE 10 │  │
+│  ╔═ IC/OOC toggle ══════════════╗   │  └─────────────────────────┘  │
+│  ║ [IC] [OOC]   Slash palette ║   │  ┌─ Inventaire (grille 5×N) ┐  │
+│  ║ [Textarea — EB Garamond]    ║   │  │ [⚔][🔑][…][…][ ][ ][ ] │  │
+│  ║              [AGIR ▸]       ║   │  └─────────────────────────┘  │
+│  ╚═══════════════════════════════╝   │  ┌─ Réputation ────────────┐  │
+│                                      │  │ Ordre ████░ · Faction…  │  │
+│  [Dice overlay — plein écran]        │  └─────────────────────────┘  │
+└──────────────────────────────────────┴──────────────────────────────┘
 ```
 
-The **free input sits above the suggestions** (§3.1) and carries the arcane-violet accent (the MJ's voice). Note the **pedagogical placeholder**, the **persistent hint** beneath it, and the **live detection chip** (`💬 / ⚔ / 💬+⚔`) — see §5.2. A discreet **Corruption ▲** indicator shows the world's clock ticking (§4.2). On a stat check, the D20 resolves visibly (§5.9).
+Key implementation details from the design:
 
-### 7.3 Visual Direction — "Arcane Grimoire by Candlelight" (UI canon)
+- **Choices** rendered as a `grid 2 colonnes`, not a vertical list — each choice has a left ember-bar on hover, a label + italic sub-description + optional stat check badge.
+- **Thinking indicator** (`.thinking.on`) — arcane orb pulsing + "Le Maître du Jeu tisse la suite…" — shown while awaiting the AI response.
+- **D20 overlay** — full-screen, blur backdrop, animated die states: `armed → rolling → win/crit/lose/fumble`, with modifier breakdown and verdict.
+- **Event pills** (`.epill`) — inline tags after narration: `xp` (ember) · `good` (green) · `bad` (red).
+- The **Codex** (right panel) contains: character card, level ring (conic-gradient XP), 5 stat bars, inventory grid (5 cols, rarity color-coded), reputation bars.
 
-This is the locked visual identity (validated via the hi-fi mockup). Grimoire must feel like **a game client, not a website** — a dark, warm, premium old tome with modern legibility.
+### 7.3 Character Creation — 7-step stepper: `Grimoire - Creation Personnage.html`
 
-**Palette**:
+The forge has a **sticky top stepper** showing progress. Each step is an animated panel (`.panel.on` fade-in).
 
-- **Ink** — very dark warm ink background (`#0F0C08` family), parchment/bone text (`#FAF9F5`).
-- **Ember/Gold** — primary accent (`#D97757` ember) for actions, the player's agency, loot highlights.
-- **Arcane Violet** — the MJ's voice & magic: the free-action block border, the "echo" of the player's action, spell/Aether moments.
-- **Rarity**: Common White · Uncommon Green · Rare Blue · Epic Purple · Legendary Orange.
+| Step | Label            | Key content                                                                                                                                  |
+| ---- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1    | Identité         | Name, epithet, pronouns (segmented), age, portrait (image-slot 150×188px), pitch ≤ 300 chars                                                 |
+| 2    | Lignée           | 6 people tiles (§6.4) — selectable, shows bonus/malus chips                                                                                  |
+| 3    | Voie             | 10 class cards (§6.3) — with difficulty pips, archetype, affinity tags, signature skill                                                      |
+| 4    | Caractéristiques | 5 stat sliders — base 8, pool 12, cap 15; racial bonuses auto-applied                                                                        |
+| 5    | Histoire & âme   | Backstory textarea, 16 trait chips (multi-select, max 3), alignment grid 3×3, ideal/bond/flaw                                                |
+| 6    | Voix & confort   | Narrative tone (solennel → brutal), dice preference, **5 safety cursors** (violence / dark / horror / romance / trahison : ok / veil / line) |
+| 7    | Le Pacte         | Full recap of choices + confirm button                                                                                                       |
 
-**Typography**:
+### 7.4 Campaign hub — `Grimoire - Campagne.html`
 
-- **Cinzel** — ornamental titles, chapter headers, logo.
-- **EB Garamond** — the MJ's narrative prose (immersive, book-like — _not_ a UI font).
-- **Outfit** (or similar clean sans) — UI chrome, stats, buttons, labels.
+Two-column grid (`1.35fr 1fr`), no fixed sidebar. Contains:
 
-**Texture & mood**: subtle paper grain, candle-lit warmth, muted and cold elsewhere to sell the dark-fantasy-measured tone. Respect `prefers-reduced-motion` (entry animations gated; base state always visible). Chronicle export themed as aged parchment.
+- **Resume hero** — large card with cinematic art, last scene title, "Reprendre" CTA, chapter progress bar
+- **Chronicle** — timeline of chapters (done ✓ · current ● · locked 🔒)
+- **Quests** — tabbed: Principales / Secondaires / Personnelles
+- **Factions & réputation** — bars per faction
+- **NPCs log** — portraits (initials + color), affinity gauge
+- **Dice journal** — recent rolls with outcome chips
+- **Campaign stats** — scenes played, hours, total dice
 
-> The hi-fi mockup (`Grimoire — Session`) is the reference for this direction; the frontend should match it, not re-invent it.
+### 7.5 World Map — `Grimoire - Carte de Valorain.html`
+
+Interactive SVG-positioned nodes on a dark parchment map background. Features:
+
+- **8 region medallions** positioned at absolute `x,y %` (from `grimoire-carte.js`)
+- Edge lines: `lit` (ember dashes, animated flow) = accessible · `dim` (grey dashes) = sealed
+- **Region states**: `current` (ember) · `unlockable` (steel) · `sealed` (ink-3) · `premium` (gold)
+- **Hover panel** — slides in right, shows region kicker/tagline/description/meta + CTA
+- **Hero selector dropdown** — switch active character, create new
+
+### 7.6 Landing page — `Grimoire - Accueil.html`
+
+- Animated ember particles (floating up)
+- Hero: Cinzel 86px gradient title, live typewriter demo strip
+- Universe portals grid (3 cards: Valorain ● live · 2 × coming soon)
+- Features grid (3 cols × 2 rows)
+- RP band (IC/OOC + dice mock demo)
+- "How it works" 3 steps
+- Final CTA
+
+### 7.7 Visual Tokens — implement once in `tailwind.config.ts` / `globals.css`
+
+All pages share the **same OKLCH CSS variables**. Transcribe them as Tailwind `theme.extend.colors` and CSS custom properties. Never hard-code a color value in a component.
+
+**Backgrounds**:
+
+```css
+--bg: oklch(0.15 0.013 52) /* deepest dark */ --bg-2: oklch(0.2 0.015 54)
+  /* panel bg */ --bg-3: oklch(0.255 0.016 56) /* raised surface */
+  --panel-edge: oklch(0.34 0.018 58 / 0.7) --line: oklch(0.32 0.014 58 / 0.55);
+```
+
+**Text**:
+
+```css
+--ink: oklch(0.93 0.02 78) /* primary */ --ink-2: oklch(0.74 0.018 72)
+  /* secondary */ --ink-3: oklch(0.56 0.015 66) /* muted */
+  --ink-4: oklch(0.42 0.012 60) /* disabled */;
+```
+
+**Accents**:
+
+```css
+--ember: oklch(0.8 0.135 67) /* CTA, player agency, loot */
+  --ember-deep: oklch(0.66 0.14 55) --arcane: oklch(0.74 0.115 290)
+  /* AI / MJ / magic / IC mode */ --arcane-2: oklch(0.64 0.13 292)
+  --steel: oklch(0.74 0.07 225) /* OOC mode */ --steel-2: oklch(0.58 0.06 240);
+```
+
+**Stats bars**:
+
+```css
+--hp: oklch(0.63 0.17 28) /* red */ --mana: oklch(0.68 0.12 248) /* blue */
+  --vig: oklch(0.78 0.12 95) /* yellow-green */;
+```
+
+**Item rarities**:
+
+```css
+--r-common: oklch(0.82 0.015 80) --r-unc: oklch(0.74 0.13 145)
+  /* uncommon green */ --r-rare: oklch(0.7 0.12 240) /* rare blue */
+  --r-epic: oklch(0.7 0.14 300) /* epic purple */ --r-leg: oklch(0.78 0.15 65)
+  /* legendary orange */;
+```
+
+**Typography** — load via Google Fonts (already in every design file):
+
+```
+Cinzel 500/600/700/800      → --disp  (titles, chapter headers, logo, labels)
+EB Garamond 400/500/600 + italic → --serif (MJ narration, descriptions)
+Outfit 300/400/500/600/700  → --ui    (all UI chrome: buttons, stats, nav)
+```
+
+**Atmosphere effects** (replicate in globals.css, not per-component):
+
+- `body::before` — radial gradients: warm ember top + cool arcane bottom
+- `body::after` — SVG fractalNoise grain at 5% opacity, `mix-blend-mode: overlay`
+- Floating ember particles (Phase 1A: CSS animation; Phase 3: canvas optional)
 
 ---
 

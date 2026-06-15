@@ -11,5 +11,8 @@
         ]
       }
     ]
-  }
+  },
+  "model": "sonnet",
+  "alwaysThinkingEnabled": false,
+  "autoCompactWindow": 150000
 }
