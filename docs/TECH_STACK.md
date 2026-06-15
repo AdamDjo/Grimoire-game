@@ -1,7 +1,9 @@
 # Tech Stack & Implementation — Grimoire
 
-**Version**: 2.0 (Reliable MJ: memory engine + local-first AI)
-**Scope of this doc**: The **HOW** — stack, architecture, conventions, the lore/memory engine (the moat), AI integration (Ollama-first), data contracts, validation, security, and technical specs for the Hardcore RP features. For the **WHAT** (vision, world of Valorain, classes, UI look, narrative standards), see `GAME_DESIGN.md`. For current status, see `MEMORY.md`.
+**Version**: 3.0 (Design-aligned: routes, components, and DB schema match docs/Grimoire/)
+**Scope of this doc**: The **HOW** — stack, architecture, conventions, the lore/memory engine (the moat), AI integration, data contracts, validation, security, and technical specs for the Hardcore RP features. For the **WHAT** (vision, world of Valorain, classes, UI look, narrative standards), see `GAME_DESIGN.md`. For current status, see `MEMORY.md`.
+
+> **UI reference**: `docs/Grimoire/` contains 5 finalized hi-fi HTML designs. All frontend routes, component names, and prop shapes defined here must match them exactly.
 
 > **This is the file you copy-paste to the AI when asking it to build a feature.** It is self-contained. No technical detail is duplicated in `GAME_DESIGN.md`.
 
@@ -75,32 +77,133 @@ grimoire/
 
 ### Frontend (`apps/frontend/src/`)
 
+Routes and component names mirror the 5 design files in `docs/Grimoire/` exactly.
+
 ```
 app/
-├── (auth)/login|signup/page.tsx
-├── (main)/dashboard|universe-select|character-create|leaderboard|settings/page.tsx
-├── (game)/session/[sessionId]/page.tsx   # MAIN GAME SCREEN
-├── (game)/session/end/page.tsx
-├── api/[...path]/route.ts                # proxy — ALL API calls go here
+├── (auth)/
+│   ├── login/page.tsx
+│   └── signup/page.tsx
+├── (main)/
+│   ├── campaign/[campaignId]/page.tsx    # Grimoire - Campagne.html (agnostic universe)
+│   ├── world/page.tsx                    # Grimoire - Carte de Valorain.html (fetches currentUniverse)
+│   ├── character-create/page.tsx         # Grimoire - Creation Personnage.html (7-step forge, picks universe)
+│   ├── settings/universe/page.tsx        # ← NEW: switch universe modal/page
+│   ├── leaderboard/page.tsx
+│   └── settings/page.tsx
+├── (game)/
+│   ├── session/[sessionId]/page.tsx      # Grimoire - Session.html  ← MAIN SCREEN (agnostic universe)
+│   └── session/end/page.tsx
+├── api/[...path]/route.ts                # proxy — ALL frontend API calls go here
 ├── layout.tsx
-└── page.tsx                              # landing
+└── page.tsx                              # Grimoire - Accueil.html  (landing, shows universes)
+
 components/
-├── ui/        Button, Input, Card, Modal, Tabs, Badge
-├── auth/      LoginForm, SignupForm
-├── universe/  UniverseSelector, UniverseCard, UniversePreview
-├── character/ CharacterCreator, ClassSelector, StatDistributor, StatPreview,
-│              BackstoryEditor, FlawSelector            # §9.2
-├── game/      SceneDisplay, ChoicesList, ChoiceButton, EventLog, GameOverScreen,
-│              FreeActionInput, DiceRoll, NpcAffinityList, CorruptionMeter  # §9
-├── sidebar/   StatsSidebar, InventorySidebar, SkillsSidebar, ReputationBar
-└── layout/    Header, Navigation, Footer, Sidebar
-hooks/   useGameState, useCharacter, useSession, useUniverse, useAuth, useDiceRoll
-lib/     utils, api-client, game-constants
-types/   index.ts  # re-exports @grimoire/shared
-styles/  globals.css
+├── ui/
+│   └── Button, Input, Card, Modal, Tabs, Badge, Toast
+├── auth/
+│   └── LoginForm, SignupForm
+├── world/                                # Carte de Valorain
+│   └── WorldMap, RegionNode, RegionPanel, HeroSelector
+├── character/                            # Forge — 7-step stepper
+│   ├── ForgeStepIdentity                 # step 1: name, epithet, pronouns, portrait, pitch
+│   ├── ForgeStepPeople                   # step 2: 6 peoples (§6.4 GAME_DESIGN)
+│   ├── ForgeStepClass                    # step 3: 10 classes (§6.3 GAME_DESIGN)
+│   ├── ForgeStepStats                    # step 4: stat allocation (base 8, pool 12, cap 15)
+│   ├── ForgeStepHistory                  # step 5: backstory, traits, alignment, ideal/bond/flaw
+│   ├── ForgeStepVoice                    # step 6: tone, dice pref, safety settings
+│   ├── ForgeStepPact                     # step 7: recap + confirm
+│   ├── StatDistributor                   # shared sub-component (step 4)
+│   └── SafetySettings                    # shared sub-component (step 6) — see §5.6
+├── game/                                 # Session screen
+│   ├── Topbar                            # brand + TopNav + vitals + timer + actions
+│   ├── SceneHero                         # cinematic image + scrim + chapter/title overlay
+│   ├── Narration                         # EB Garamond prose + mj-mark + reveal animation
+│   ├── EventLog                          # epill chips (xp / good / bad)
+│   ├── ThinkingIndicator                 # MJ processing state
+│   ├── ChoicesList                       # 2-col grid of ChoiceButton
+│   ├── ChoiceButton                      # label + sub + stat check badge + hover ember bar
+│   ├── ActionField                       # IC/OOC toggle + textarea + SlashPalette + submit btn
+│   ├── SlashPalette                      # /roll /recap /inventaire /repos /regarder ...
+│   ├── DiceOverlay                       # full-screen D20 roll — armed/rolling/win/crit/lose/fumble
+│   ├── GameOverScreen
+│   └── FreeActionChip                    # live 💬 / ⚔ / 💬+⚔ detection chip
+├── codex/                                # Right sidebar of Session screen
+│   ├── Codex                             # container for all right-panel cards
+│   ├── CharacterCard                     # portrait + name + class + HP/Mana/Vigueur bars
+│   ├── LevelRing                         # conic-gradient XP ring
+│   ├── StatsPanel                        # FOR/AGI/INT/CHA/CHANCE bars
+│   ├── InventoryGrid                     # 5-col grid, rarity color-coded
+│   └── ReputationPanel                   # bars per faction
+├── campaign/                             # Campaign hub
+│   ├── ResumeHero                        # cinematic hero card with last scene + CTA
+│   ├── ChapterTimeline                   # vertical chronicle (done/current/locked)
+│   ├── QuestTabs                         # Principales / Secondaires / Personnelles
+│   ├── FactionReputation
+│   ├── NpcLog
+│   ├── DiceJournal
+│   └── CampaignStats
+└── layout/
+    └── Header, Navigation, Footer
+
+hooks/
+├── useGameState        # currentUniverse, sessionState
+├── useCharacter        # fetches chars for currentUniverse
+├── useSession          # fetches session for char in currentUniverse
+├── useWorld            # fetches universe data (regions, NPCs, lore)
+├── useAuth
+├── useDiceRoll
+├── useCampaign         # campaign stats for char in currentUniverse
+└── useUniverseSwitch   # switchUniverse(id) → refetch everything
+
+lib/
+├── utils
+├── api-client
+├── game-constants
+├── design-tokens
+└── universe-store.ts   # Zustand: { currentUniverse, switchUniverse }
+
+types/
+└── index.ts  # re-exports @grimoire/shared
+
+styles/
+└── globals.css   # CSS custom properties (all --bg / --ember / --arcane / etc.)
+                  # body::before gradient + body::after grain — applied globally
 ```
 
-> Note: `FreeActionInput` renders **above** `ChoicesList` (it's the primary interface — `GAME_DESIGN.md` §3.1).
+> `ActionField` (IC/OOC + free text + slash palette) renders **below** `ChoicesList` visually, but is the **primary interface** — the cursor blinks there first (`GAME_DESIGN.md` §3.1). Choices are suggestions, not the main input.
+
+### 2.1 Universe Switching — Zero Logout
+
+**Core principle**: universe is a **client-side setting**, not part of auth. Logged-in users switch universes via modal/page without logout.
+
+**Zustand store** (`hooks/use-universe-store.ts`):
+
+```typescript
+interface UniverseStore {
+  currentUniverse: string; // 'valorain' | 'zombie' | ...
+  switchUniverse(id: string): void;
+}
+```
+
+**Data scope per universe**:
+
+- `Character[]` indexed by `(userId, universe)` → **Character.universe** field
+- `Session[]` linked to `Character.id` → session inherits character's universe
+- `Campaign[]` linked to `Character.id` → campaign inherits character's universe
+- World NPCs/lore/regions: keyed by universe in backend
+
+**Flow on universe switch**:
+
+1. User clicks "Valorain" or "Zombie" in settings or landing
+2. Zustand updates `currentUniverse`
+3. Frontend refetches:
+   - Characters for new universe (→ `GET /api/characters?universe=valorain`)
+   - Last session ID (→ `GET /api/characters/:id/last-session`)
+   - World data (regions, NPCs, lore)
+4. If session active, redirect to `/(game)/session/[sessionId]`; else show campaign hub
+
+**No logout. Session persists across universe switches. Character data stays synced to universe.**
 
 ### Backend (`apps/backend/src/`)
 
@@ -141,12 +244,25 @@ A structured, read-only constitution of Valorain the AI may never contradict (`G
 interface FixedCanon {
   worldLaws: string[]; // magic is rare/costly, death is permanent, etc.
   centralConflict: string; // the Rising Corruption (the world clock)
-  regions: Region[]; // 5 regions, danger level, mood
+  regions: Region[]; // 8 regions — see GAME_DESIGN.md §4.3 for canonical names
   factions: Faction[]; // 4 factions, alignment, goal
   creatures: Creature[]; // original bestiary
   pillarNpcs: PillarNpc[]; // 4 pre-written backbone NPCs (Aldric, Hollow King, Caelith, Brenna)
   tone: "dark-fantasy-measured";
 }
+
+// Canonical region IDs (from grimoire-carte.js — must match exactly)
+type RegionId =
+  | "cendres" // Les Cendres de Valorain — starting region
+  | "foret" // La Forêt d'Aelorn (La Forêt qui Murmure)
+  | "couronne" // La Couronne Engloutie (Cité Noyée)
+  | "tour" // La Tour de l'Arcaniste
+  | "givre" // Le Givre Éternel (Confins du Nord)
+  | "catacombes" // Les Catacombes Sans Fin
+  | "or" // L'Or des Damnés — Premium
+  | "dragon"; // Le Pacte du Dragon (Pic du Dragon) — Premium
+
+type RegionState = "current" | "unlockable" | "sealed" | "premium";
 ```
 
 The relevant slices of Fixed Canon are injected into **every** prompt's system section. `lore.service.ts` exposes `getCanonForPrompt()` and a `assertNoContradiction(scene)` used by the validator (§6.3).
@@ -185,6 +301,50 @@ model WorldClock {
   corruptionLevel  Int    @default(0)   // advances over time / on delay (§4.2)
   villagesLost     Int    @default(0)
   scenesElapsed    Int    @default(0)
+}
+
+// Character persisted in DB — matches CharacterCreate type in §5.4
+model Character {
+  id         String @id @default(cuid())
+  userId     String
+  name       String
+  epithet    String
+  pronouns   String   // 'il' | 'elle' | 'iel'
+  age        String
+  pitch      String
+  portraitUrl String?
+  people     String   // RegionId-like enum: 'humain' | 'elfe' | 'nain' | 'orsang' | 'sangmaud' | 'feerin'
+  class      String   // 'guerrier' | 'mage' | 'rodeur' | ...
+
+  // Stats (base alloc — racial bonuses applied at runtime by stats.ts)
+  statFor    Int @default(8)
+  statAgi    Int @default(8)
+  statInt    Int @default(8)
+  statCha    Int @default(8)
+  statChance Int @default(8)
+
+  // Lore (step 5)
+  backstory  String
+  traits     String[]
+  alignment  String?
+  ideal      String?
+  bond       String?
+  flaw       String?
+
+  // Voice & comfort (step 6)
+  narrativeProse   String @default("equilibre")
+  dicePreference   String @default("equilibre")
+  voiceStyles      String[]
+
+  // Safety settings (step 6) — injected into every system prompt
+  safetyViolence String @default("ok")
+  safetyDark     String @default("ok")
+  safetyHorror   String @default("veil")
+  safetyRomance  String @default("veil")
+  safetyBetray   String @default("ok")
+
+  sessions   Session[]
+  createdAt  DateTime @default(now())
 }
 ```
 
@@ -304,14 +464,80 @@ interface NewEntity {
 }
 ```
 
-### 5.4 Character Lore (referenced by `GAME_DESIGN.md` §5.5)
+### 5.4 Character Schema (full — from `Grimoire - Creation Personnage.html`)
 
 ```typescript
+// packages/shared/src/types/character.types.ts
+
+type Pronouns = "il" | "elle" | "iel";
+type Alignment = "LB" | "NB" | "CB" | "LN" | "NN" | "CN" | "LM" | "NM" | "CM";
+type NarrativeProse = "sombre" | "equilibre" | "heroique";
+type DicePreference = "permissif" | "equilibre" | "brutal";
+type SafetyLevel = "ok" | "veil" | "line";
+
 interface CharacterLore {
-  backstory: string; // ≤ 300 chars
-  flaws: string[]; // e.g. ['fear_of_corruption', 'haunted_by_betrayal']
-  qualities: string[];
+  backstory: string; // ≤ 300 chars — injected in every MJ system prompt
+  traits: string[]; // max 3 picks from 16 options (Loyal, Sarcastique, Impulsif…)
+  align: Alignment | null;
+  ideal: string; // free text — what your character fights for
+  bond: string; // free text — who/what your character protects
+  flaw: string; // free text — your character's weakness
 }
+
+interface CharacterVoiceSettings {
+  voices: string[]; // picked from: Solennel, Familier, Archaïsant, Laconique…
+  prose: NarrativeProse; // affects MJ tone in system prompt
+  dice: DicePreference; // affects difficulty thresholds
+}
+
+// Injected into system prompt; backend never overrides it. Player-set.
+interface SafetySettings {
+  violence: SafetyLevel;
+  dark: SafetyLevel;
+  horror: SafetyLevel;
+  romance: SafetyLevel;
+  betray: SafetyLevel;
+}
+
+interface CharacterCreate {
+  // Step 1 — Identity
+  name: string;
+  epithet: string;
+  pronouns: Pronouns;
+  age: string;
+  pitch: string; // player's own description ≤ 300 chars
+  portraitUrl?: string; // uploaded image; generated initials+color at MVP
+
+  // Step 2 — Lignée
+  people: "humain" | "elfe" | "nain" | "orsang" | "sangmaud" | "feerin";
+
+  // Step 3 — Voie
+  class:
+    | "guerrier"
+    | "mage"
+    | "rodeur"
+    | "roublard"
+    | "clerc"
+    | "barde"
+    | "paladin"
+    | "druide"
+    | "barbare"
+    | "invoc";
+
+  // Step 4 — Stats (player allocation; racial bonuses applied by backend)
+  alloc: { FOR: number; AGI: number; INT: number; CHA: number; CHANCE: number };
+  // base 8, pool 12 pts to distribute, cap 15 before racial bonus
+
+  // Step 5 — Histoire & âme
+  lore: CharacterLore;
+
+  // Step 6 — Voix & confort
+  voice: CharacterVoiceSettings;
+  safety: SafetySettings;
+}
+```
+
+```typescript
 interface FlawDefinition {
   id: string;
   label: string;
@@ -319,6 +545,8 @@ interface FlawDefinition {
   modifier: { trigger: string; stat: StatKey; delta: number }; // applied by backend, not AI
 }
 ```
+
+**SafetySettings** are persisted on the character and injected as a hard instruction in every system prompt (system-level, never revealed to the MJ prose). A `line` topic → never generated. A `veil` topic → kept off-screen (mentioned but not described).
 
 ### 5.5 API envelope
 
@@ -332,9 +560,71 @@ interface ApiResponse<T> {
 
 ---
 
-## 6. AI Integration (API-first, free fallback chain)
+## 6. API Endpoints
 
-### 6.1 Provider abstraction + fallback chain
+All frontend-to-backend calls go through `frontend/src/app/api/[...path]/route.ts` (proxy). Backend runs on `http://localhost:3001`.
+
+### 7.1 Authentication
+
+```
+POST   /api/auth/signup           body: { email, password, username }
+POST   /api/auth/login            body: { email, password }
+POST   /api/auth/logout
+GET    /api/auth/me               returns: { userId, email, username, universes: string[] }
+```
+
+### 7.2 Character (universe-scoped)
+
+```
+GET    /api/characters?universe=valorain         returns: Character[]
+POST   /api/characters                           body: { universe, name, class, people, stats, ... }
+GET    /api/characters/:id                       returns: Character (with lastSessionId if exists)
+GET    /api/characters/:id/last-session          returns: { sessionId } | null
+PATCH  /api/characters/:id                       body: { xp, level, inventory, ... }
+DELETE /api/characters/:id
+```
+
+### 7.3 Session (narrative gameplay)
+
+```
+POST   /api/sessions                             body: { characterId, startRegion }  returns: Session
+GET    /api/sessions/:id                         returns: Session (full state)
+POST   /api/sessions/:id/action                  body: { action, stat?, freeAction? }  returns: Scene + xp/inventory deltas
+POST   /api/sessions/:id/choice                  body: { choiceId }  returns: Scene
+POST   /api/sessions/:id/slash                   body: { command, args } (e.g. /roll d20)
+GET    /api/sessions/:id/journal                 returns: SceneLog[]
+PATCH  /api/sessions/:id/end                     body: { reason }  returns: { finalStats, rewards }
+```
+
+### 7.4 World (universe lore)
+
+```
+GET    /api/world?universe=valorain              returns: { regions[], npcs[], facts[] }
+GET    /api/world/npc/:npcId                     returns: NPC full profile
+GET    /api/world/region/:regionId               returns: Region (description, connected regions, NPCs, items)
+```
+
+### 7.5 Codex (session-scoped stats + inventory)
+
+```
+GET    /api/sessions/:id/codex                   returns: { character, inventory, reputation[], npcLog[] }
+POST   /api/sessions/:id/codex/equip             body: { itemId }
+POST   /api/sessions/:id/codex/consume           body: { itemId }
+```
+
+**All responses**:
+
+```typescript
+type ApiResponse<T> =
+  | { success: true; data: T }
+  | { success: false; error: string };
+```
+
+---
+
+## 7. AI Integration (API-first, free fallback chain)
+
+### 7.1 Provider abstraction + fallback chain
 
 ```typescript
 // ai/ai-provider.interface.ts
@@ -364,7 +654,7 @@ async function generateWithFallback(prompt, schema, order): Promise<Scene> {
 
 **Selecting/reordering providers is config, never code.** The chain is the anti-bug net _and_ the load absorber (§ Capacity).
 
-### 6.2 Why a cheap/free model is enough here
+### 7.2 Why a cheap/free model is enough here
 
 In Grimoire the model only writes prose — the backend supplies the memory, rules, and dice. So the model's job is small, and these techniques make even a free-tier model reliable:
 
@@ -375,7 +665,7 @@ In Grimoire the model only writes prose — the backend supplies the memory, rul
 5. **Validate + regenerate (§6.3).** Broken format/tone/canon → retry once with the error; second failure → safety scene. The player never sees a broken scene.
 6. **Develop on Claude, run on the free chain.** Tune prompts against the best prose, then let Gemini→Mistral serve them in prod.
 
-### 6.3 Validation (structure + canon)
+### 7.3 Validation (structure + canon)
 
 ```typescript
 export function validateScene(
@@ -397,14 +687,14 @@ export function validateScene(
 
 On failure, `game-engine.service` regenerates once (passing `errors` back to the model), then falls back to a neutral pre-written scene.
 
-### 6.4 AI anti-patterns to enforce
+### 7.4 AI anti-patterns to enforce
 
 Don't: fancy vocabulary; >700-word scenes; invent NPCs that contradict world-state; make all choices equally good; expose raw stat numbers; overuse the player name; break the dark-fantasy-measured tone; ignore the Corruption clock; all-combat pacing.
 Do: clear language; 400–600 words; reuse persisted NPCs by name; some risky/failing choices; show consequences; vary scene types including quiet/mundane beats; reference the advancing threat.
 
 ---
 
-## 7. Security & Quality
+## 8. Security & Quality
 
 - Validate every input with Zod at the route boundary; never trust the frontend.
 - Auth: JWT (short access + refresh), bcryptjs, secrets via env.
@@ -417,7 +707,7 @@ Do: clear language; 400–600 words; reuse persisted NPCs by name; some risky/fa
 
 ---
 
-## 8. Deployment & Capacity (free-first, degrade gracefully)
+## 9. Deployment & Capacity (free-first, degrade gracefully)
 
 ### 8.1 Free deployment
 
@@ -449,7 +739,7 @@ The bottleneck is **not** the app (a scene is a light DB read/write) — it's th
 
 ---
 
-## 9. Commands
+## 10. Commands
 
 ```bash
 pnpm dev                    # start all apps
@@ -462,7 +752,7 @@ pnpm type-check             # TS check all
 
 ---
 
-## 10. Hardcore RP — Technical Specs 🎭
+## 11. Hardcore RP — Technical Specs 🎭
 
 Design/rationale in `GAME_DESIGN.md` §5. Implementation contracts below. (Twitch/streamer voting is **cut** — `GAME_DESIGN.md` §2.)
 
@@ -514,13 +804,13 @@ function segmentInput(raw: string): Segment[];
 
 The frontend chip is a UX hint only; the backend re-segments and never trusts client classification (§7).
 
-### 9.3 Backstory + Flaws/Qualities
+### 9.3 Backstory + History & Soul (step 5 of the Forge)
 
-Types in §5.4. `BackstoryEditor.tsx` (300-char counter) + `FlawSelector.tsx` on character-create. Backstory/flaws are injected into the system prompt (context-builder), and **the backend** applies flaw modifiers in `dice.ts` when a scene's context matches a `trigger` (e.g. `fear_of_corruption` → −2 in Shadowveil). The AI is _told_ about flaws for flavor; it does not compute their mechanical effect.
+Types in §5.4. Components: `ForgeStepHistory` contains `BackstoryEditor` (300-char counter), `TraitChips` (16 options, max 3 selected), `AlignmentGrid` (3×3), and free-text fields for ideal/bond/flaw. All persisted on `CharacterCreate.lore`. Backstory + traits are injected into the MJ system prompt (context-builder), and **the backend** applies flaw modifiers in `dice.ts` when a scene's context matches a `trigger` (e.g. `fear_of_corruption` → −2 inside Les Catacombes). The AI is _told_ about flaws for flavor; it does not compute their mechanical effect.
 
 ### 9.4 IC / OOC mode + Slash commands (`GAME_DESIGN.md` §5.3, §5.4)
 
-**IC / OOC** — every action carries a mode. The frontend shows an **IC/OOC toggle** on `FreeActionInput`; a message prefixed with `//` forces OOC for that line (the Discord convention). OOC talks _to the MJ out of fiction_ — "résume-moi", "je peux retenter ?", "on évite ce thème" — and the MJ answers without advancing the story or rolling dice.
+**IC / OOC** — the `ActionField` component shows an `[IC] [OOC]` toggle (`.ca-modes`). A message prefixed with `//` forces OOC. The toggle's visual state changes the entire field's accent color: IC → arcane violet · OOC → steel blue (exactly as in `Grimoire - Session.html`).
 
 ```
 POST /api/game/action
@@ -528,9 +818,24 @@ POST /api/game/action
 ```
 
 - **IC** → normal flow (§9.1, §9.2): segment, analyze, roll, advance the scene.
-- **OOC** → a separate `ai/ooc.service.ts` with its own prompt ("you are the GM speaking to the player out-of-character; do not advance the story"). No world-state mutation, no dice. Supports recap, rules questions, retry requests, safety asks.
+- **OOC** → `ai/ooc.service.ts` — its own prompt ("you are the GM speaking out-of-character; do not advance the story"). No world-state mutation, no dice. The OOC thread renders as a distinct message list (`.ooc-thread`) below the field, separate from the narrative. Supports: recap, rules questions, retry requests, safety asks.
 
-**Slash commands** — a comfort layer over OOC/utilities (Discord muscle memory). Typing `/` opens a palette. MVP set: `/roll <expr>` (§9.5), `/recap` (→ OOC summary), `/inventaire` (open inventory). Extended in 2B: `/regarder`, `/repos`, `/sauvegarder`, etc. Most slash commands are thin shortcuts to things the MJ already does in natural language — implement as client-side intents that map to existing endpoints, not a new engine.
+**Slash commands** — `SlashPalette` component. Typing `/` opens a positioned dropdown (`position: absolute; bottom: calc(100% + 8px)`). Navigation: ↑↓ keys + Enter/Tab to confirm.
+
+Full slash command spec (from `docs/Grimoire/grimoire-session.js`):
+
+| Command        | Type   | Handler                                                               | Phase |
+| -------------- | ------ | --------------------------------------------------------------------- | ----- |
+| `/roll <expr>` | Dice   | Client-side RNG + logged to dice journal                              | 2     |
+| `/recap`       | OOC    | `POST /api/game/action { mode: 'ooc', input: 'résume la situation' }` | 2     |
+| `/inventaire`  | UI     | Flash Codex inventory card (`.card.flash` CSS animation)              | 2     |
+| `/statut`      | UI     | Flash Codex stats card                                                | 2     |
+| `/regarder`    | IC     | Observation action → INT check                                        | 2B    |
+| `/repos`       | IC     | Rest action → recover HP/Vigueur                                      | 2B    |
+| `/partager`    | Export | Share scene to Discord (copy formatted text)                          | 2B    |
+| `/sauvegarder` | Meta   | Force-save session state                                              | 2B    |
+
+Slash commands are **thin client-side shortcuts** — they map to existing endpoints or UI actions. No new backend engine needed.
 
 ### 9.5 Dice resolution + visible roll + dice journal + free rolls
 
