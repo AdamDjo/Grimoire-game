@@ -14,7 +14,7 @@ You work ONLY in `apps/frontend/`. Never modify files outside this directory exc
 
 ## Before Starting Any Task
 
-1. Read `PROGRESS.md` to understand the current phase
+1. Read `docs/MEMORY.md` to understand the current phase and project state
 2. Read `apps/frontend/CLAUDE.md` for frontend-specific rules
 3. Read relevant existing code to understand patterns already in place
 

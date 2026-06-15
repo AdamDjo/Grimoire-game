@@ -136,7 +136,7 @@
 | ---------------- | ---------------------------------------------------------------------------- |
 | **Tooling / CI** | ✅ All in place (ESLint, Prettier, Husky, Vitest, Cypress, Renovate, CodeQL) |
 | **Game design**  | ✅ Complete — `GAME_DESIGN.md` v6.0 + `TECH_STACK.md` v3.0                   |
-| **UI designs**   | ✅ 5 hi-fi designs in `docs/Grimoire/` — source de vérité UI                 |
+| **UI designs**   | ✅ 5 hi-fi designs in `docs/Design/` — source de vérité UI                   |
 | **Frontend**     | ⏳ Not started — ready for Phase 1A                                          |
 | **Backend**      | ⏳ Not started — ready for Phase 1B                                          |
 | **Open PR**      | #80 `feature/79-docs-consolidation` → develop (ready to merge) ⚠️ à merger   |
@@ -150,23 +150,60 @@
 | `docs/MEMORY.md`      | This file — session state                           | Every session            |
 | `docs/GAME_DESIGN.md` | The WHAT: vision, Valorain, UI, RP features, phases | Design, UI, narrative    |
 | `docs/TECH_STACK.md`  | The HOW: stack, routes, components, AI, DB schema   | Code, architecture, AI   |
-| `docs/Grimoire/`      | **Hi-fi HTML designs** — source de vérité UI        | Before any frontend work |
+| `docs/Design/`        | **Hi-fi HTML designs** — source de vérité UI        | Before any frontend work |
 
 > `FRONTEND_ARCHITECTURE.md`, `NARRATIVE_DESIGN.md`, `docs/README.md` → deleted (content merged into the 2 docs above). Do not recreate.
 
 ---
 
-## Next Steps
+## Checklist par phase
 
-1. **Merge PR #80** → develop (docs consolidation)
-2. **Phase 1A** — Valorain frontend: 5 pages statiques qui reproduisent exactement les designs `docs/Grimoire/`
-   - Landing (`Grimoire - Accueil.html`)
-   - Session (`Grimoire - Session.html` + `grimoire-session.js`)
-   - Character Create — forge 7 étapes (`Grimoire - Creation Personnage.html` + `grimoire-forge.js`)
-   - Campaign hub (`Grimoire - Campagne.html`)
-   - World map (`Grimoire - Carte de Valorain.html` + `grimoire-carte.js`)
-3. **Phase 1B** — Backend: DB schema (`Character` + safety settings + `WorldNpc/Fact/Clock`), auth, AI providers
-4. **Phase 2** — Integration: playable MVP + Free Action + IC/OOC + Flaws + persistent NPCs + world-state
+> Source de vérité unique (remplace PROGRESS.md supprimé). Mettre à jour ici après chaque tâche complétée.
+
+### Phase 1A — Frontend UI (Valorain) ⏳
+
+- [x] Routing structure par univers (`/(main)/valorain/`, `/(game)/valorain/`)
+- [x] Pages vides créées : landing, character-create, campaign, world, session
+- [x] Composants UI de base : StatBar, Toast, Stepper, Button, Card, Input, Badge, Modal
+- [ ] Landing page `/` — reproduire `Grimoire - Accueil.html`
+- [ ] World map `/(main)/valorain/world` — reproduire `Grimoire - Carte de Valorain.html`
+- [ ] Character create `/(main)/valorain/character-create` — forge 7 étapes (`Grimoire - Creation Personnage.html`)
+- [ ] Campaign hub `/(main)/valorain/campaign` — reproduire `Grimoire - Campagne.html`
+- [ ] Session `/(game)/valorain/session/[id]` — reproduire `Grimoire - Session.html`
+
+### Phase 1B — Backend Foundation ⏳
+
+- [ ] Supabase client setup + environment config
+- [ ] Error handler middleware
+- [ ] Auth middleware (Supabase JWT)
+- [ ] Zod validation middleware
+- [ ] DB schema migrations (Character + safety settings + WorldNpc/Fact/Clock)
+- [ ] Auth routes + service (register, login, session)
+- [ ] Character routes + service (CRUD)
+
+### Phase 2 — Intégration MVP ⏳
+
+- [ ] AI Provider interface (Claude → Gemini Flash → Mistral fallback)
+- [ ] Context builder (game state → prompt)
+- [ ] Output parser (AI response → validated JSON)
+- [ ] Game engine service (orchestrateur central)
+- [ ] Free Action + IC/OOC + Flaws
+- [ ] Persistent NPCs + world-state
+- [ ] End-to-end game flow playable
+
+### Phase 2B — Multi-Univers ⏳
+
+- [ ] 2e univers (Zombie) — fork du routing valorain + nouveaux design tokens
+- [ ] 3e univers
+- [ ] 14 classes total
+- [ ] Universe switcher (Zustand, zero logout)
+
+### Phase 3 — Polish & UGC ⏳
+
+- [ ] Responsive design + animations
+- [ ] D20 + critiques + dice journal
+- [ ] Inspiration token + Narrative Titles + cliffhanger
+- [ ] Community features
 
 ---
 
