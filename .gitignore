@@ -51,3 +51,6 @@ coverage/
 # Cypress
 apps/frontend/cypress/screenshots
 apps/frontend/cypress/videos
+
+# Design files (local, not tracked)
+docs/Design/
