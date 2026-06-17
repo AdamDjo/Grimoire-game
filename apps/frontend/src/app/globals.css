@@ -1,61 +1,63 @@
 @import "tailwindcss";
 
 /* ─── Google Fonts ─────────────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
 
-/* ─── Design tokens ─────────────────────────────────────────────────────────── */
+/* ─── Design tokens — Grimoire Kit UI ──────────────────────────────────────── */
 :root {
   /* Backgrounds */
-  --bg:          oklch(0.150 0.013 52);
-  --bg-2:        oklch(0.200 0.015 54);
-  --bg-3:        oklch(0.255 0.016 56);
-  --panel-edge:  oklch(0.34 0.018 58 / .7);
+  --bg:           #0B0805;
+  --bg-2:         #14100A;
+  --bg-3:         #211B14;
+  --bg-4:         #2B2319;
 
-  /* Text */
-  --ink:         oklch(0.93 0.020 78);
-  --ink-2:       oklch(0.74 0.018 72);
-  --ink-3:       oklch(0.56 0.015 66);
-  --ink-4:       oklch(0.42 0.012 60);
+  /* Surfaces / parchment */
+  --parchment:    #E7D9BA;
+  --parchment-2:  #D9C8A6;
+  --parchment-3:  #B6A17C;
 
-  /* Ember / gold — player agency, CTA, loot */
-  --ember:       oklch(0.80 0.135 67);
-  --ember-deep:  oklch(0.66 0.14 55);
+  /* Text on dark */
+  --ink:          #D8C8AC;
+  --ink-2:        #AB9C80;
+  --ink-3:        #9C8D75;
+  --ink-4:        #7C6F5B;
+  --ink-5:        #6B5F4C;
 
-  /* Arcane violet — MJ voice, magic, free-action */
-  --arcane:      oklch(0.74 0.115 290);
-  --arcane-2:    oklch(0.64 0.13 292);
+  /* Text on parchment */
+  --text-parch:   #2B2014;
+  --text-parch-2: #43331F;
+  --text-parch-3: #6B573B;
 
-  /* Steel — safety / OOC / neutral UI */
-  --steel:       oklch(0.74 0.07 225);
-  --steel-2:     oklch(0.58 0.06 240);
+  /* Gold — accent principal */
+  --gold:         #C4A468;
+  --gold-light:   #E0C489;
+  --gold-dark:    #9C7F4E;
+  --gold-border:  #8A6F48;
+  --gold-hover:   #F4DCA8;
 
-  /* Stat bars */
-  --hp:          oklch(0.63 0.17 28);
-  --mana:        oklch(0.68 0.12 248);
-  --vig:         oklch(0.78 0.12 95);
+  /* Ruby — quêtes / danger */
+  --ruby:         #7C241A;
 
-  /* Item rarity */
-  --r-common:    oklch(0.82 0.015 80);
-  --r-unc:       oklch(0.74 0.13 145);
-  --r-rare:      oklch(0.70 0.12 240);
-  --r-epic:      oklch(0.70 0.14 300);
-  --r-leg:       oklch(0.78 0.15 65);
+  /* Borders */
+  --border:       rgba(196, 164, 104, 0.22);
+  --border-parch: #B29A6A;
+  --border-choice: #6E5A3C;
 
-  /* Borders & misc */
-  --line:        oklch(0.32 0.014 58 / .55);
-  --radius:      14px;
+  /* Radius */
+  --radius:       4px;
+  --radius-md:    4px;
+  --radius-full:  9999px;
 
   /* Typography */
-  --font-disp:   'Cinzel', Georgia, serif;
-  --font-serif:  'EB Garamond', Georgia, serif;
-  --font-ui:     'Outfit', system-ui, sans-serif;
+  --font-disp:    'Cinzel', Georgia, serif;
+  --font-serif:   'EB Garamond', Georgia, serif;
 }
 
 /* ─── Tailwind theme bridge ─────────────────────────────────────────────────── */
 @theme inline {
   --color-background: var(--bg);
   --color-foreground: var(--ink);
-  --font-sans: var(--font-ui);
+  --font-sans: var(--font-serif);
   --font-serif: var(--font-serif);
   --font-display: var(--font-disp);
 }
@@ -70,108 +72,156 @@ html, body {
   padding: 0;
 }
 
+::selection {
+  background: rgba(196, 164, 104, 0.3);
+  color: #f0e4c8;
+}
+
 body {
-  background: var(--bg);
+  background-color: var(--bg);
+  background:
+    radial-gradient(ellipse 90% 50% at 50% -5%, rgba(120, 84, 40, 0.22), transparent 55%),
+    radial-gradient(ellipse 120% 90% at 50% 40%, rgba(40, 28, 16, 0.5), transparent 70%),
+    linear-gradient(180deg, #0d0a06, #080604 60%, #0a0705);
+  background-color: #0a0705;
   color: var(--ink);
-  font-family: var(--font-ui);
+  font-family: var(--font-serif);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
-/* Warm candlelight ambient glow */
+/* Wood grain overlay */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
-  z-index: 0;
   pointer-events: none;
+  opacity: 0.4;
+  z-index: 0;
   background:
-    radial-gradient(120% 80% at 50% -10%, oklch(0.42 0.07 60 / .35), transparent 55%),
-    radial-gradient(90% 70% at 50% 120%, oklch(0.30 0.06 290 / .18), transparent 60%);
-}
-
-/* Paper grain texture */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: .05;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    repeating-linear-gradient(90deg, rgba(0,0,0,0) 0, rgba(0,0,0,0) 38px, rgba(0,0,0,.25) 39px, rgba(0,0,0,0) 42px),
+    repeating-linear-gradient(90deg, rgba(120,90,50,.04) 0, rgba(0,0,0,0) 7px);
 }
 
 /* ─── Scrollbar ─────────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-2); }
-::-webkit-scrollbar-thumb { background: var(--panel-edge); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--ink-4); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold-dark); }
 
 /* ─── Focus ring ────────────────────────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid var(--ember);
+  outline: 2px solid var(--gold);
   outline-offset: 2px;
-  border-radius: 6px;
+  border-radius: var(--radius);
 }
 
 /* ─── Animations ────────────────────────────────────────────────────────────── */
-@media (prefers-reduced-motion: no-preference) {
-  @keyframes rise {
-    from { opacity: 0; transform: translateY(10px); filter: blur(3px); }
-    to   { opacity: 1; transform: none; filter: none; }
-  }
-  @keyframes ember-pulse {
-    0%, 100% { box-shadow: 0 0 16px oklch(0.6 0.13 65 / .3); }
-    50%       { box-shadow: 0 0 28px oklch(0.6 0.13 65 / .55); }
-  }
-  .animate-rise { animation: rise .45s cubic-bezier(.2,.8,.2,1) both; }
-  .animate-ember-pulse { animation: ember-pulse 2.4s ease-in-out infinite; }
+@keyframes glowPulse {
+  0%, 100% { opacity: .55; transform: scale(.92); }
+  50%       { opacity: 1;   transform: scale(1.08); }
 }
 
-/* ─── Utility classes ───────────────────────────────────────────────────────── */
+@keyframes auraBreathe {
+  0%, 100% { opacity: .5; }
+  50%       { opacity: .85; }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); filter: blur(3px); }
+  to   { opacity: 1; transform: none; filter: none; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-rise         { animation: rise .45s cubic-bezier(.2,.8,.2,1) both; }
+  .animate-glow-pulse   { animation: glowPulse 3.5s ease-in-out infinite; }
+  .animate-aura-breathe { animation: auraBreathe 5s ease-in-out infinite; }
+}
+
+/* ─── Typography utilities ──────────────────────────────────────────────────── */
 .font-disp  { font-family: var(--font-disp); }
 .font-serif { font-family: var(--font-serif); }
-.font-ui    { font-family: var(--font-ui); }
 
-.text-ink   { color: var(--ink); }
-.text-ink-2 { color: var(--ink-2); }
-.text-ink-3 { color: var(--ink-3); }
-.text-ink-4 { color: var(--ink-4); }
-.text-ember { color: var(--ember); }
-.text-arcane { color: var(--arcane); }
+/* ─── Color utilities ───────────────────────────────────────────────────────── */
+.text-gold        { color: var(--gold); }
+.text-gold-light  { color: var(--gold-light); }
+.text-gold-dark   { color: var(--gold-dark); }
+.text-ink         { color: var(--ink); }
+.text-ink-2       { color: var(--ink-2); }
+.text-ink-3       { color: var(--ink-3); }
+.text-ink-4       { color: var(--ink-4); }
+.text-ruby        { color: var(--ruby); }
+.text-parch       { color: var(--text-parch); }
+.text-parch-2     { color: var(--text-parch-2); }
+.text-parch-3     { color: var(--text-parch-3); }
 
-.bg-base    { background: var(--bg); }
-.bg-panel   { background: var(--bg-2); }
-.bg-panel-3 { background: var(--bg-3); }
+.bg-base          { background: var(--bg); }
+.bg-surface       { background: var(--bg-3); }
+.bg-parchment     { background: linear-gradient(160deg, var(--parchment), #d2bf99 55%, #c2ad86); }
 
-.border-line { border-color: var(--line); }
-.border-panel { border-color: var(--panel-edge); }
-
-/* Ember gradient — CTA buttons, active states */
-.bg-ember-grad {
-  background: linear-gradient(180deg, var(--ember), var(--ember-deep));
-}
-
-/* Arcane gradient — MJ voice, free-action block */
-.bg-arcane-grad {
-  background: linear-gradient(180deg, var(--arcane), var(--arcane-2));
-}
-
-/* Ornamental divider */
+/* ─── Ornamental divider ────────────────────────────────────────────────────── */
 .ornament {
   display: flex;
   align-items: center;
-  gap: 14px;
-  color: var(--ink-4);
-  margin: 24px 0;
+  justify-content: center;
+  gap: 12px;
 }
 .ornament::before,
 .ornament::after {
   content: "";
+  flex: 0 1 160px;
   height: 1px;
-  flex: 1;
-  background: linear-gradient(90deg, transparent, var(--line), transparent);
 }
-.ornament span { color: var(--ember); font-size: 12px; opacity: .85; }
+.ornament::before { background: linear-gradient(90deg, transparent, var(--gold-dark)); }
+.ornament::after  { background: linear-gradient(270deg, transparent, var(--gold-dark)); }
+.ornament-diamond {
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--gold);
+  transform: rotate(45deg);
+}
+.ornament-dot {
+  width: 5px;
+  height: 5px;
+  background: var(--gold-dark);
+  transform: rotate(45deg);
+}
+
+/* ─── Section header ────────────────────────────────────────────────────────── */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 30px;
+}
+.section-label {
+  font-family: var(--font-disp);
+  font-size: 12px;
+  letter-spacing: .3em;
+  color: var(--gold);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.section-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(178, 154, 106, .5), rgba(178, 154, 106, 0));
+}
+
+/* ─── Aura / magic light ────────────────────────────────────────────────────── */
+.aura-gold {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(224, 196, 137, 0.5), transparent 65%);
+  animation: auraBreathe 5s ease-in-out infinite;
+  pointer-events: none;
+}
+.aura-magic {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(150, 200, 255, .9), rgba(90, 150, 230, .35) 40%, transparent 70%);
+  filter: blur(2px);
+  animation: auraBreathe 4s ease-in-out infinite;
+  pointer-events: none;
+}
