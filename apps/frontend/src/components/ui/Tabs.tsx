@@ -1,5 +1,7 @@
 'use client'
 
+import { useState } from 'react'
+
 interface Tab {
   id: string
   label: string
@@ -12,27 +14,55 @@ interface TabsProps {
 }
 
 export function Tabs({ tabs, activeTab, onChange }: TabsProps) {
+  const [hoveredId, setHoveredId] = useState<string | null>(null)
+
   return (
-    <div role="tablist" className="flex border-b border-[var(--line)] gap-1">
+    <div
+      role="tablist"
+      style={{
+        display: 'flex',
+        borderBottom: '1px solid var(--border)',
+        gap: '4px',
+      }}
+    >
       {tabs.map((tab) => {
         const isActive = tab.id === activeTab
+        const isHovered = tab.id === hoveredId
+
         return (
           <button
             key={tab.id}
             role="tab"
             aria-selected={isActive}
             onClick={() => onChange(tab.id)}
-            className={[
-              'relative px-4 py-2.5 text-sm font-ui font-medium transition-colors duration-200',
-              'focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--ember)] rounded-t-md',
-              isActive ? 'text-[var(--ember)]' : 'text-[var(--ink-3)] hover:text-[var(--ink-2)]',
-            ].join(' ')}
+            onMouseEnter={() => setHoveredId(tab.id)}
+            onMouseLeave={() => setHoveredId(null)}
+            style={{
+              position: 'relative',
+              padding: '10px 18px',
+              fontFamily: 'var(--font-disp)',
+              fontSize: '11px',
+              letterSpacing: '.22em',
+              textTransform: 'uppercase',
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              color: isActive ? 'var(--gold-light)' : isHovered ? 'var(--ink)' : 'var(--ink-3)',
+              transition: 'color .2s',
+            }}
           >
             {tab.label}
             {isActive && (
               <span
                 aria-hidden
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-ember-grad rounded-full"
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: '18px',
+                  right: '18px',
+                  height: '1px',
+                  background: 'linear-gradient(90deg, transparent, var(--gold), transparent)',
+                }}
               />
             )}
           </button>
