@@ -5,8 +5,7 @@
       "name": "frontend",
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["dev", "--filter", "@grimoire/frontend"],
-      "port": 3000,
-      "autoPort": true
+      "port": 3000
     },
     {
       "name": "backend",

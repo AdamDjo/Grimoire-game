@@ -3,31 +3,21 @@
 export function UniversPill({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
     <div
+      className="group hover:bg-surface-dark hover:-translate-y-0.5 transition-all duration-300"
       style={{
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         gap: 8,
         padding: '14px 8px',
-        border: '1px solid rgba(196,164,104,0.2)',
+        border: '1px solid var(--gold-20)',
         borderRadius: 'var(--radius)',
         cursor: 'pointer',
-        transition: 'all .3s',
         color: 'var(--gold)',
       }}
-      className="hover:border-[var(--gold)] hover:bg-[linear-gradient(160deg,#211b14,#16110b)] hover:shadow-[0_0_20px_rgba(196,164,104,0.2)] hover:-translate-y-0.5 hover:text-[var(--gold-light)] group"
     >
-      <span className="group-hover:text-[var(--gold-light)]">{icon}</span>
-      <span
-        style={{
-          fontFamily: 'var(--font-disp)',
-          fontSize: 9,
-          letterSpacing: '0.22em',
-          textTransform: 'uppercase',
-          color: 'var(--ink-3)',
-        }}
-        className="group-hover:text-[var(--ink)]"
-      >
+      <span className="group-hover:text-gold-light transition-colors duration-300">{icon}</span>
+      <span className="text-disp-xs group-hover:text-ink transition-colors duration-300">
         {label}
       </span>
     </div>

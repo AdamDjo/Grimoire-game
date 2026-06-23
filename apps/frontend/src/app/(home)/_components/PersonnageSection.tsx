@@ -26,21 +26,13 @@ export function PersonnageSection({
       style={{
         display: 'flex',
         alignItems: 'center',
-        padding: '0 80px',
-        borderTop: '1px solid rgba(196,164,104,0.08)',
+        borderTop: '1px solid var(--gold-08)',
         overflow: 'hidden',
       }}
     >
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: 80,
-            alignItems: 'start',
-            marginBottom: 56,
-          }}
-        >
+      <div className="w-full max-w-[1200px] mx-auto px-5 md:px-20 py-8 md:py-0">
+        {/* Header grid : texte + rôles */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 items-start mb-10 md:mb-14">
           <motion.div
             variants={fadeUp}
             initial="hidden"
@@ -48,16 +40,7 @@ export function PersonnageSection({
             viewport={{ once: true }}
           >
             <Heading title="Crée ton Personnage" />
-            <p
-              style={{
-                fontFamily: 'var(--font-serif)',
-                fontSize: 15,
-                lineHeight: 1.85,
-                color: 'var(--ink-2)',
-                marginBottom: 28,
-                maxWidth: 400,
-              }}
-            >
+            <p className="text-serif-md" style={{ marginBottom: 28, maxWidth: 400 }}>
               Choisis ton peuple, les magies, les remplumes et élève ton histoire. Chaque être avec
               son propre parcours et rôle au sein de ce monde...
             </p>
@@ -72,16 +55,7 @@ export function PersonnageSection({
             custom={1}
           >
             <OrnamentBorder style={{ padding: '24px 28px' }}>
-              <p
-                style={{
-                  fontFamily: 'var(--font-disp)',
-                  fontSize: 10,
-                  letterSpacing: '0.28em',
-                  color: 'var(--gold)',
-                  marginBottom: 20,
-                  textTransform: 'uppercase',
-                }}
-              >
+              <p className="text-disp-sm" style={{ marginBottom: 20 }}>
                 Exemples de rôles
               </p>
               {ROLES.map(({ icon: Icon, label }) => (
@@ -91,15 +65,8 @@ export function PersonnageSection({
           </motion.div>
         </div>
 
-        {/* Row 1 — 5 portraits */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(5, 1fr)',
-            gap: 10,
-            marginBottom: 10,
-          }}
-        >
+        {/* Row 1 — 5 portraits sur desktop, 2 sur mobile, 3 sur tablet */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 mb-2.5">
           {PORTRAITS.slice(0, 5).map((p) => (
             <PortraitCard
               key={p.id}
@@ -110,8 +77,8 @@ export function PersonnageSection({
           ))}
         </div>
 
-        {/* Row 2 — 3 portraits centered */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 10 }}>
+        {/* Row 2 — 3 portraits centrés sur desktop, inline sur mobile */}
+        <div className="hidden lg:grid lg:grid-cols-5 gap-2.5">
           <div />
           {PORTRAITS.slice(5, 8).map((p) => (
             <PortraitCard
@@ -122,6 +89,18 @@ export function PersonnageSection({
             />
           ))}
           <div />
+        </div>
+
+        {/* Row 2 mobile/tablet — portraits 5-7 inline */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 lg:hidden">
+          {PORTRAITS.slice(5, 8).map((p) => (
+            <PortraitCard
+              key={p.id}
+              portrait={p}
+              selected={selectedPortrait === p.id}
+              onClick={() => onSelectPortrait(p.id)}
+            />
+          ))}
         </div>
       </div>
     </Section>

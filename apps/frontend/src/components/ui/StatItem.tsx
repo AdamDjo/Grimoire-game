@@ -10,32 +10,17 @@ export function StatItem({
   iconLabel: string
 }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-      <span aria-label={iconLabel} role="img" style={{ color: 'var(--gold)' }}>
+    <div className="flex flex-col items-center gap-1.5">
+      <span aria-label={iconLabel} role="img" className="text-gold">
         {icon}
       </span>
       <span
-        style={{
-          fontFamily: 'var(--font-disp)',
-          fontSize: 22,
-          fontWeight: 600,
-          color: 'var(--gold-light)',
-          letterSpacing: '0.05em',
-        }}
+        className="font-display font-semibold text-gold-light tracking-[0.05em]"
+        style={{ fontSize: 28 }}
       >
         {value}
       </span>
-      <span
-        style={{
-          fontFamily: 'var(--font-disp)',
-          fontSize: 9,
-          letterSpacing: '0.22em',
-          color: 'var(--ink-4)',
-          textTransform: 'uppercase',
-        }}
-      >
-        {label}
-      </span>
+      <span className="text-disp-xs">{label}</span>
     </div>
   )
 }

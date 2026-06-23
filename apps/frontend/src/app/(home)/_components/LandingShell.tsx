@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { PageShell } from '@/components/ui/PageShell'
 import { SECTION_IDS } from '@/lib/home-data'
 
+import { LandingAmbiance } from './LandingAmbiance'
 import { PaginationDot } from './PaginationDot'
 
 export function LandingShell({ children }: { children: React.ReactNode }) {
@@ -31,19 +32,11 @@ export function LandingShell({ children }: { children: React.ReactNode }) {
 
   return (
     <PageShell scrollSnap>
+      <LandingAmbiance />
+
       <nav
         aria-label="Sections de la page"
-        style={{
-          position: 'fixed',
-          right: 24,
-          top: '50%',
-          transform: 'translateY(-50%)',
-          zIndex: 200,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 18,
-          alignItems: 'center',
-        }}
+        className="hidden md:flex fixed right-6 top-1/2 -translate-y-1/2 z-[200] flex-col gap-[18px] items-center"
       >
         {SECTION_IDS.map((id, i) => (
           <PaginationDot

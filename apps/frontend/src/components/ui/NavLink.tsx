@@ -17,18 +17,13 @@ export function NavLink({
     <a
       href={href}
       aria-current={ariaCurrent ?? (active ? 'page' : undefined)}
-      style={{
-        fontFamily: 'var(--font-disp)',
-        fontSize: small ? 10 : 11,
-        letterSpacing: '0.22em',
-        textTransform: 'uppercase',
-        textDecoration: 'none',
-        color: active ? 'var(--gold-light)' : 'var(--ink-3)',
-        borderBottom: active ? '1px solid var(--gold)' : '1px solid transparent',
-        paddingBottom: 2,
-        transition: 'color .25s',
-      }}
-      className="hover:!text-[var(--gold-light)]"
+      className={[
+        'font-display uppercase no-underline transition-colors duration-[250ms] pb-0.5',
+        small ? 'text-[11px] tracking-[0.22em]' : 'text-[13px] tracking-[0.22em]',
+        active
+          ? 'text-gold-light border-b border-gold'
+          : 'text-ink-3 border-b border-transparent hover:text-gold-light',
+      ].join(' ')}
     >
       {label}
     </a>

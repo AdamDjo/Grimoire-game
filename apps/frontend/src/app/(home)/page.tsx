@@ -9,7 +9,6 @@ import {
   UniversSection,
   PersonnageSection,
   CommunauteSection,
-  FooterSection,
 } from './_components'
 
 export default function LandingPage() {
@@ -25,7 +24,6 @@ export default function LandingPage() {
         onSelectPortrait={setSelectedPortrait}
       />
       <CommunauteSection />
-      <FooterSection />
     </LandingShell>
   )
 }

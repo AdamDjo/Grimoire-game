@@ -76,9 +76,9 @@ const ORBS = [
 ]
 
 const ACCENT_ORBS = [
-  { w: 500, h: 400, top: '5%', left: '15%', dur: 18, delay: 2, color: 'rgba(35,18,5,0.6)' },
-  { w: 400, h: 400, top: '45%', left: '72%', dur: 22, delay: 6, color: 'rgba(28,12,3,0.55)' },
-  { w: 600, h: 350, top: '78%', left: '30%', dur: 20, delay: 10, color: 'rgba(22,10,2,0.58)' },
+  { w: 500, h: 400, top: '5%', left: '15%', dur: 18, delay: 2, color: 'rgba(90,55,15,0.35)' },
+  { w: 400, h: 400, top: '45%', left: '72%', dur: 22, delay: 6, color: 'rgba(80,48,12,0.3)' },
+  { w: 600, h: 350, top: '78%', left: '30%', dur: 20, delay: 10, color: 'rgba(70,42,10,0.32)' },
 ]
 
 export function SmokeBackground() {

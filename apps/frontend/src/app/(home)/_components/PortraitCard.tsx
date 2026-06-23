@@ -50,16 +50,8 @@ export function PortraitCard({
           }}
         >
           <p
-            style={{
-              fontFamily: 'var(--font-disp)',
-              fontSize: 9,
-              letterSpacing: '0.16em',
-              color: selected ? 'var(--gold-light)' : 'var(--ink-3)',
-              margin: 0,
-              textTransform: 'uppercase',
-              textAlign: 'center',
-              transition: 'color .3s',
-            }}
+            className="text-disp-xs text-center m-0 transition-colors duration-300"
+            style={{ color: selected ? 'var(--gold-light)' : 'var(--ink-3)' }}
           >
             {portrait.role}
           </p>

@@ -1,81 +1,153 @@
 @import "tailwindcss";
 
-/* ─── Design tokens — Grimoire Kit UI ──────────────────────────────────────── */
+/* ─── Design tokens ─────────────────────────────────────────────────────────── */
 :root {
   /* Backgrounds */
-  --bg:           #0B0805;
-  --bg-2:         #14100A;
-  --bg-3:         #211B14;
-  --bg-4:         #2B2319;
+  --bg:   #0B0805;
+  --bg-2: #14100A;
+  --bg-3: #211B14;
+  --bg-4: #2B2319;
 
-  /* Surfaces / parchment */
-  --parchment:    #E7D9BA;
-  --parchment-2:  #D9C8A6;
-  --parchment-3:  #B6A17C;
+  /* Parchment */
+  --parchment:   #E7D9BA;
+  --parchment-3: #B6A17C;
 
   /* Text on dark */
-  --ink:          #D8C8AC;
-  --ink-2:        #AB9C80;
-  --ink-3:        #9C8D75;
-  --ink-4:        #7C6F5B;
-  --ink-5:        #6B5F4C;
+  --ink:   #D8C8AC;
+  --ink-2: #AB9C80;
+  --ink-3: #9C8D75;
+  --ink-4: #7C6F5B;
 
   /* Text on parchment */
   --text-parch:   #2B2014;
-  --text-parch-2: #43331F;
   --text-parch-3: #6B573B;
 
-  /* Gold — accent principal */
-  --gold:         #C4A468;
-  --gold-light:   #E0C489;
-  --gold-dark:    #9C7F4E;
-  --gold-border:  #8A6F48;
-  --gold-hover:   #F4DCA8;
+  /* Gold */
+  --gold:        #C4A468;
+  --gold-light:  #E0C489;
+  --gold-dark:   #9C7F4E;
+  --gold-hover:  #F4DCA8;
 
-  /* Ruby — quêtes / danger */
-  --ruby:         #7C241A;
+  /* Gold avec alpha */
+  --gold-08: rgba(196, 164, 104, 0.08);
+  --gold-15: rgba(196, 164, 104, 0.15);
+  --gold-20: rgba(196, 164, 104, 0.20);
+  --gold-30: rgba(196, 164, 104, 0.30);
+  --gold-50: rgba(196, 164, 104, 0.50);
+
+  /* Ruby */
+  --ruby: #7C241A;
 
   /* Borders */
-  --border:       rgba(196, 164, 104, 0.22);
-  --border-parch: #B29A6A;
+  --border:        rgba(196, 164, 104, 0.22);
+  --border-parch:  #B29A6A;
   --border-choice: #6E5A3C;
 
   /* Radius */
-  --radius:       4px;
-  --radius-md:    4px;
-  --radius-full:  9999px;
+  --radius:      4px;
+  --radius-full: 9999px;
 
-  /* Typography */
-  --font-disp:    'Cinzel', Georgia, serif;
-  --font-serif:   'EB Garamond', Georgia, serif;
+  /* Polices */
+  --font-disp:  'Cinzel', Georgia, serif;
+  --font-serif: 'EB Garamond', Georgia, serif;
+
+  /* Overlay fond sombre */
+  --bg-overlay-15: rgba(5, 5, 6, 0.15);
+  --bg-overlay-25: rgba(5, 5, 6, 0.25);
+  --bg-overlay-50: rgba(5, 5, 6, 0.50);
+  --bg-overlay-55: rgba(5, 5, 6, 0.55);
+  --bg-overlay-70: rgba(5, 5, 6, 0.70);
+  --bg-overlay-92: rgba(5, 5, 6, 0.92);
+  --bg-overlay-95: rgba(5, 5, 6, 0.95);
+  --bg-overlay-97: rgba(5, 5, 6, 0.97);
+
+  /* Gradients */
+  --gradient-heading:      linear-gradient(180deg, #e8d4a0 0%, #c4a468 100%);
+  --gradient-surface:      linear-gradient(160deg, var(--bg-3), var(--bg-2));
+  --gradient-surface-warm: linear-gradient(160deg, #2c2217, #1a130c);
 }
 
 /* ─── Tailwind theme bridge ─────────────────────────────────────────────────── */
+/*
+  Expose les tokens au système de classes Tailwind.
+  Permet d'écrire text-gold, bg-bg-2, font-display au lieu de style={{ color: 'var(--gold)' }}.
+*/
 @theme inline {
   --color-background: var(--bg);
   --color-foreground: var(--ink);
-  --font-sans: var(--font-serif);
-  --font-serif: var(--font-serif);
-  --font-display: var(--font-disp);
+  --color-gold:        var(--gold);
+  --color-gold-light:  var(--gold-light);
+  --color-gold-dark:   var(--gold-dark);
+  --color-gold-hover:  var(--gold-hover);
+  --color-ink:   var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-ink-4: var(--ink-4);
+  --color-bg:   var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-bg-3: var(--bg-3);
+  --color-bg-4: var(--bg-4);
+  --color-ruby:      var(--ruby);
+  --font-serif:      var(--font-serif);
+  --font-display:    var(--font-disp);
+}
+
+/* ─── Utility classes ───────────────────────────────────────────────────────── */
+/*
+  Règle : une utility class = combo de 3+ propriétés statiques répétées 3+ fois dans le code.
+  Utiliser Tailwind natif pour layout/couleurs seules, inline style pour valeurs JS dynamiques.
+*/
+@layer utilities {
+
+  /* ── Cinzel (display) ───────────────────────────────────────────────────── */
+  /* Base commune : évite de répéter font-family + text-transform dans chaque variante */
+  .text-disp-xs,
+  .text-disp-sm,
+  .text-disp-md,
+  .text-disp-lg {
+    font-family: var(--font-disp);
+    text-transform: uppercase;
+  }
+
+  .text-disp-xs { font-size: 11px; letter-spacing: 0.22em; color: var(--ink-3); }
+  .text-disp-sm { font-size: 12px; letter-spacing: 0.30em; color: var(--gold); }
+  .text-disp-md { font-size: 16px; letter-spacing: 0.12em; color: var(--ink); }
+  .text-disp-lg { font-size: clamp(28px, 3vw, 42px); letter-spacing: 0.06em; font-weight: 700; color: var(--ink); }
+
+  /* ── EB Garamond (serif) ────────────────────────────────────────────────── */
+  .text-serif-sm,
+  .text-serif-md {
+    font-family: var(--font-serif);
+    line-height: 1.8;
+    color: var(--ink-2);
+  }
+
+  .text-serif-sm { font-size: clamp(14px, 1.1vw, 17px); }
+  .text-serif-md { font-size: clamp(16px, 1.4vw, 21px); }
+
+  /* ── Gradient doré ──────────────────────────────────────────────────────── */
+  .text-gradient-gold {
+    background: var(--gradient-heading);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Surfaces ───────────────────────────────────────────────────────────── */
+  .bg-surface-dark { background: var(--gradient-surface); }
+  .bg-surface-warm { background: var(--gradient-surface-warm); }
 }
 
 /* ─── Base reset ────────────────────────────────────────────────────────────── */
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
-html, body {
-  margin: 0;
-  padding: 0;
-}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
 
 ::selection {
-  background: rgba(196, 164, 104, 0.3);
+  background: var(--gold-30);
   color: #f0e4c8;
 }
 
 body {
-  background-color: var(--bg);
   background:
     radial-gradient(ellipse 90% 50% at 50% -5%, rgba(120, 84, 40, 0.22), transparent 55%),
     radial-gradient(ellipse 120% 90% at 50% 40%, rgba(40, 28, 16, 0.5), transparent 70%),
@@ -88,7 +160,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Wood grain overlay */
+/* Grain bois */
 body::before {
   content: "";
   position: fixed;
@@ -97,15 +169,15 @@ body::before {
   opacity: 0.4;
   z-index: 0;
   background:
-    repeating-linear-gradient(90deg, rgba(0,0,0,0) 0, rgba(0,0,0,0) 38px, rgba(0,0,0,.25) 39px, rgba(0,0,0,0) 42px),
-    repeating-linear-gradient(90deg, rgba(120,90,50,.04) 0, rgba(0,0,0,0) 7px);
+    repeating-linear-gradient(90deg, transparent 0, transparent 38px, rgba(0,0,0,.25) 39px, transparent 42px),
+    repeating-linear-gradient(90deg, rgba(120,90,50,.04) 0, transparent 7px);
 }
 
 /* ─── Scrollbar ─────────────────────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-2); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--gold-dark); }
+::-webkit-scrollbar              { width: 6px; height: 6px; }
+::-webkit-scrollbar-track        { background: var(--bg-2); }
+::-webkit-scrollbar-thumb        { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover  { background: var(--gold-dark); }
 
 /* ─── Focus ring ────────────────────────────────────────────────────────────── */
 :focus-visible {
@@ -136,28 +208,7 @@ body::before {
   .animate-aura-breathe { animation: auraBreathe 5s ease-in-out infinite; }
 }
 
-/* ─── Typography utilities ──────────────────────────────────────────────────── */
-.font-disp  { font-family: var(--font-disp); }
-.font-serif { font-family: var(--font-serif); }
-
-/* ─── Color utilities ───────────────────────────────────────────────────────── */
-.text-gold        { color: var(--gold); }
-.text-gold-light  { color: var(--gold-light); }
-.text-gold-dark   { color: var(--gold-dark); }
-.text-ink         { color: var(--ink); }
-.text-ink-2       { color: var(--ink-2); }
-.text-ink-3       { color: var(--ink-3); }
-.text-ink-4       { color: var(--ink-4); }
-.text-ruby        { color: var(--ruby); }
-.text-parch       { color: var(--text-parch); }
-.text-parch-2     { color: var(--text-parch-2); }
-.text-parch-3     { color: var(--text-parch-3); }
-
-.bg-base          { background: var(--bg); }
-.bg-surface       { background: var(--bg-3); }
-.bg-parchment     { background: linear-gradient(160deg, var(--parchment), #d2bf99 55%, #c2ad86); }
-
-/* ─── Ornamental divider ────────────────────────────────────────────────────── */
+/* ─── Ornement ──────────────────────────────────────────────────────────────── */
 .ornament {
   display: flex;
   align-items: center;
@@ -170,55 +221,37 @@ body::before {
   flex: 0 1 160px;
   height: 1px;
 }
-.ornament::before { background: linear-gradient(90deg, transparent, var(--gold-dark)); }
+.ornament::before { background: linear-gradient(90deg,  transparent, var(--gold-dark)); }
 .ornament::after  { background: linear-gradient(270deg, transparent, var(--gold-dark)); }
-.ornament-diamond {
-  width: 8px;
-  height: 8px;
-  border: 1px solid var(--gold);
-  transform: rotate(45deg);
-}
-.ornament-dot {
-  width: 5px;
-  height: 5px;
-  background: var(--gold-dark);
-  transform: rotate(45deg);
-}
+
+.ornament-diamond, .ornament-dot { transform: rotate(45deg); }
+.ornament-diamond { width: 8px; height: 8px; border: 1px solid var(--gold); }
+.ornament-dot     { width: 5px; height: 5px; background: var(--gold-dark); }
 
 /* ─── Section header ────────────────────────────────────────────────────────── */
+/* Utiliser : <div class="section-header"><p class="text-disp-sm whitespace-nowrap">…</p><div class="section-rule" /></div> */
 .section-header {
   display: flex;
   align-items: center;
   gap: 18px;
   margin-bottom: 30px;
 }
-.section-label {
-  font-family: var(--font-disp);
-  font-size: 12px;
-  letter-spacing: .3em;
-  color: var(--gold);
-  text-transform: uppercase;
-  white-space: nowrap;
-}
 .section-rule {
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, rgba(178, 154, 106, .5), rgba(178, 154, 106, 0));
+  background: linear-gradient(90deg, var(--gold-50), transparent);
 }
 
-/* ─── Aura / magic light ────────────────────────────────────────────────────── */
-.aura-gold {
+/* ─── Aura ──────────────────────────────────────────────────────────────────── */
+.aura-gold, .aura-magic {
   position: absolute;
   border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(224, 196, 137, 0.5), transparent 65%);
-  animation: auraBreathe 5s ease-in-out infinite;
   pointer-events: none;
+  animation: auraBreathe 5s ease-in-out infinite;
 }
+.aura-gold  { background: radial-gradient(ellipse, var(--gold-50), transparent 65%); }
 .aura-magic {
-  position: absolute;
-  border-radius: 50%;
   background: radial-gradient(circle, rgba(150, 200, 255, .9), rgba(90, 150, 230, .35) 40%, transparent 70%);
   filter: blur(2px);
-  animation: auraBreathe 4s ease-in-out infinite;
-  pointer-events: none;
+  animation-duration: 4s;
 }

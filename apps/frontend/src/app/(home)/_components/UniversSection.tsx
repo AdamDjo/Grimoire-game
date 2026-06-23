@@ -38,7 +38,7 @@ export function UniversSection() {
             position: 'absolute',
             inset: 0,
             background:
-              'linear-gradient(90deg, rgba(8,6,4,0.96) 0%, rgba(8,6,4,0.88) 30%, rgba(8,6,4,0.45) 48%, rgba(8,6,4,0.08) 68%, rgba(8,6,4,0.0) 100%)',
+              'linear-gradient(90deg, var(--bg-overlay-97) 0%, var(--bg-overlay-92) 30%, var(--bg-overlay-50) 48%, var(--bg-overlay-15) 68%, transparent 100%)',
           }}
         />
         <div
@@ -46,28 +46,30 @@ export function UniversSection() {
             position: 'absolute',
             inset: 0,
             background:
-              'linear-gradient(180deg, rgba(8,6,4,0.6) 0%, transparent 15%, transparent 80%, rgba(8,6,4,0.8) 100%)',
+              'linear-gradient(180deg, var(--bg-overlay-50) 0%, transparent 15%, transparent 80%, var(--bg-overlay-70) 100%)',
           }}
+        />
+        {/* Mobile extra overlay for readability */}
+        <div
+          className="md:hidden"
+          style={{ position: 'absolute', inset: 0, background: 'var(--bg-overlay-55)' }}
         />
       </div>
 
       <MapAtmosphere />
 
-      {/* Region labels */}
+      {/* Region labels — hidden on mobile */}
       {MAP_LABELS.map(({ label, ...pos }) => (
         <div
           key={label}
+          className="hidden lg:block text-disp-xs"
           style={{
             position: 'absolute',
             zIndex: 2,
-            fontFamily: 'var(--font-disp)',
-            fontSize: 9,
-            letterSpacing: '0.2em',
             color: 'rgba(224,196,137,0.85)',
             textShadow: '0 1px 6px rgba(0,0,0,0.9)',
             whiteSpace: 'pre-line',
             textAlign: 'center',
-            textTransform: 'uppercase',
             ...pos,
           }}
         >
@@ -75,32 +77,15 @@ export function UniversSection() {
         </div>
       ))}
 
-      {/* Compass top-right */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 90,
-          right: 48,
-          zIndex: 3,
-          opacity: 0.7,
-        }}
-      >
+      {/* Compass — hidden on mobile */}
+      <div className="hidden md:block absolute z-[3] opacity-70" style={{ top: 90, right: 48 }}>
         <CompassRose size={52} />
       </div>
 
       {/* Left content */}
       <div
-        style={{
-          position: 'relative',
-          zIndex: 3,
-          width: '46%',
-          minWidth: 420,
-          padding: '0 0 0 80px',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          height: '100%',
-        }}
+        className="relative z-[3] flex flex-col justify-center h-full w-full px-6 md:px-20"
+        style={{ maxWidth: 560 }}
       >
         <motion.div
           variants={fadeUp}
@@ -108,31 +93,13 @@ export function UniversSection() {
           whileInView="visible"
           viewport={{ once: true }}
         >
-          <p
-            style={{
-              fontFamily: 'var(--font-disp)',
-              fontSize: 9,
-              letterSpacing: '0.32em',
-              color: 'var(--gold)',
-              textTransform: 'uppercase',
-              marginBottom: 10,
-            }}
-          >
+          <p className="text-disp-sm" style={{ marginBottom: 10 }}>
             Chapitre I
           </p>
 
           <Heading title="L'Univers" />
 
-          <p
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: 15,
-              lineHeight: 1.9,
-              color: 'var(--ink-2)',
-              marginBottom: 36,
-              maxWidth: 400,
-            }}
-          >
+          <p className="text-serif-md" style={{ marginBottom: 36, maxWidth: 400 }}>
             Un monde lacéré par les dieux, déchiré par les guerres, et régi par des forces qui ont
             su se faire réellement comprendre. Découvrez les continents, les peuples,
             l&apos;histoire et les secrets qui composent notre univers.
@@ -142,7 +109,7 @@ export function UniversSection() {
             Explorer le Monde
           </Button>
 
-          <div style={{ display: 'flex', gap: 16 }}>
+          <div className="flex flex-wrap gap-3 md:gap-4">
             {UNIVERS_PILLS.map(({ icon: Icon, label }) => (
               <UniversPill key={label} icon={<Icon size={18} />} label={label} />
             ))}

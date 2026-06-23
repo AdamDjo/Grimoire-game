@@ -51,7 +51,7 @@ const VARIANTS: Record<ButtonVariant, StyleMap> = {
       letterSpacing: '.16em',
       color: 'var(--ink)',
       padding: '14px 30px',
-      borderColor: 'var(--gold-border)',
+      borderColor: 'var(--gold-dark)',
       background: 'linear-gradient(180deg, #241c12, #16100a)',
       boxShadow: 'inset 0 1px 0 rgba(224,196,137,.15), 0 5px 14px rgba(0,0,0,.35)',
     },
