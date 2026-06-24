@@ -89,6 +89,9 @@ importers:
       "@grimoire/shared":
         specifier: workspace:*
         version: link:../../packages/shared
+      "@gsap/react":
+        specifier: ^2.1.2
+        version: 2.1.2(gsap@3.15.0)(react@19.2.3)
       "@supabase/supabase-js":
         specifier: ^2.47.0
         version: 2.95.3
@@ -101,6 +104,9 @@ importers:
       framer-motion:
         specifier: ^11.0.0
         version: 11.18.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      gsap:
+        specifier: ^3.15.0
+        version: 3.15.0
       lucide-react:
         specifier: ^0.460.0
         version: 0.460.0(react@19.2.3)
@@ -1142,6 +1148,15 @@ packages:
         integrity: sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA==,
       }
     engines: { node: ^18.18.0 || ^20.9.0 || >=21.1.0 }
+
+  "@gsap/react@2.1.2":
+    resolution:
+      {
+        integrity: sha512-JqliybO1837UcgH2hVOM4VO+38APk3ECNrsuSM4MuXp+rbf+/2IG2K1YJiqfTcXQHH7XlA0m3ykniFYstfq0Iw==,
+      }
+    peerDependencies:
+      gsap: ^3.12.5
+      react: ">=17"
 
   "@humanfs/core@0.19.1":
     resolution:
@@ -4827,6 +4842,12 @@ packages:
         integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==,
       }
 
+  gsap@3.15.0:
+    resolution:
+      {
+        integrity: sha512-dMW4CWBTUK1AEEDeZc1g4xpPGIrSf9fJF960qbTZmN/QwZIWY5wgliS6JWl9/25fpTGJrMRtSjGtOmPnfjZB+A==,
+      }
+
   gzip-size@6.0.0:
     resolution:
       {
@@ -8244,6 +8265,11 @@ snapshots:
       "@eslint/core": 0.17.0
       levn: 0.4.1
 
+  "@gsap/react@2.1.2(gsap@3.15.0)(react@19.2.3)":
+    dependencies:
+      gsap: 3.15.0
+      react: 19.2.3
+
   "@humanfs/core@0.19.1": {}
 
   "@humanfs/node@0.16.7":
@@ -9179,7 +9205,7 @@ snapshots:
       std-env: 3.10.0
       test-exclude: 7.0.2
       tinyrainbow: 1.2.0
-      vitest: 2.1.9(@types/node@22.19.11)(@vitest/ui@2.1.9)(jsdom@25.0.1)(lightningcss@1.30.2)
+      vitest: 2.1.9(@types/node@20.19.33)(@vitest/ui@2.1.9)(jsdom@25.0.1)(lightningcss@1.30.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -9234,7 +9260,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 1.2.0
-      vitest: 2.1.9(@types/node@22.19.11)(@vitest/ui@2.1.9)(jsdom@25.0.1)(lightningcss@1.30.2)
+      vitest: 2.1.9(@types/node@20.19.33)(@vitest/ui@2.1.9)(jsdom@25.0.1)(lightningcss@1.30.2)
 
   "@vitest/utils@2.1.9":
     dependencies:
@@ -10019,7 +10045,7 @@ snapshots:
       "@next/eslint-plugin-next": 16.1.6
       eslint: 9.39.2(jiti@2.7.0)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import-x@4.16.2(eslint-import-resolver-node@0.3.9)(eslint@9.39.2(jiti@2.7.0)))(eslint-plugin-import@2.32.0(eslint@9.39.2(jiti@2.7.0)))(eslint@9.39.2(jiti@2.7.0))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import-x@4.16.2(eslint-import-resolver-node@0.3.9)(eslint@9.39.2(jiti@2.7.0)))(eslint-plugin-import@2.32.0)(eslint@9.39.2(jiti@2.7.0))
       eslint-plugin-import: 2.32.0(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@2.7.0))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.39.2(jiti@2.7.0))
       eslint-plugin-react: 7.37.5(eslint@9.39.2(jiti@2.7.0))
@@ -10053,22 +10079,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import-x@4.16.2(eslint-import-resolver-node@0.3.9)(eslint@9.39.2(jiti@2.7.0)))(eslint-plugin-import@2.32.0(eslint@9.39.2(jiti@2.7.0)))(eslint@9.39.2(jiti@2.7.0)):
-    dependencies:
-      "@nolyfill/is-core-module": 1.0.39
-      debug: 4.4.3(supports-color@8.1.1)
-      eslint: 9.39.2(jiti@2.7.0)
-      get-tsconfig: 4.13.6
-      is-bun-module: 2.0.0
-      stable-hash: 0.0.5
-      tinyglobby: 0.2.15
-      unrs-resolver: 1.11.1
-    optionalDependencies:
-      eslint-plugin-import: 2.32.0(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@2.7.0))
-      eslint-plugin-import-x: 4.16.2(eslint-import-resolver-node@0.3.9)(eslint@9.39.2(jiti@2.7.0))
-    transitivePeerDependencies:
-      - supports-color
-
   eslint-import-resolver-typescript@3.10.1(eslint-plugin-import-x@4.16.2(eslint-import-resolver-node@0.3.9)(eslint@9.39.2(jiti@2.7.0)))(eslint-plugin-import@2.32.0)(eslint@9.39.2(jiti@2.7.0)):
     dependencies:
       "@nolyfill/is-core-module": 1.0.39
@@ -10093,17 +10103,6 @@ snapshots:
       eslint: 9.39.2(jiti@2.7.0)
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import-x@4.16.2(eslint-import-resolver-node@0.3.9)(eslint@9.39.2(jiti@2.7.0)))(eslint-plugin-import@2.32.0)(eslint@9.39.2(jiti@2.7.0))
-    transitivePeerDependencies:
-      - supports-color
-    optional: true
-
-  eslint-module-utils@2.12.1(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@2.7.0)):
-    dependencies:
-      debug: 3.2.7(supports-color@8.1.1)
-    optionalDependencies:
-      eslint: 9.39.2(jiti@2.7.0)
-      eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import-x@4.16.2(eslint-import-resolver-node@0.3.9)(eslint@9.39.2(jiti@2.7.0)))(eslint-plugin-import@2.32.0(eslint@9.39.2(jiti@2.7.0)))(eslint@9.39.2(jiti@2.7.0))
     transitivePeerDependencies:
       - supports-color
 
@@ -10166,7 +10165,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.39.2(jiti@2.7.0)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.1(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@2.7.0))
+      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.55.0(eslint@9.39.2(jiti@2.7.0))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@2.7.0))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -10618,6 +10617,8 @@ snapshots:
   gopd@1.2.0: {}
 
   graceful-fs@4.2.11: {}
+
+  gsap@3.15.0: {}
 
   gzip-size@6.0.0:
     dependencies:
