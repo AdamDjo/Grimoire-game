@@ -1,149 +1,131 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* ─── Design tokens ─────────────────────────────────────────────────────────── */
 :root {
   /* Backgrounds */
-  --bg:   #0B0805;
-  --bg-2: #14100A;
-  --bg-3: #211B14;
-  --bg-4: #2B2319;
-
-  /* Parchment */
-  --parchment:   #E7D9BA;
-  --parchment-3: #B6A17C;
+  --bg-2: #14100a;
 
   /* Text on dark */
-  --ink:   #D8C8AC;
-  --ink-2: #AB9C80;
-  --ink-3: #9C8D75;
-  --ink-4: #7C6F5B;
+  --ink: #d8c8ac;
+  --ink-2: #ab9c80;
+  --ink-3: #9c8d75;
 
   /* Text on parchment */
-  --text-parch:   #2B2014;
-  --text-parch-3: #6B573B;
+  --text-parch-3: #6b573b;
 
   /* Gold */
-  --gold:        #C4A468;
-  --gold-light:  #E0C489;
-  --gold-dark:   #9C7F4E;
-  --gold-hover:  #F4DCA8;
+  --gold: #c4a468;
+  --gold-light: #e0c489;
+  --gold-dark: #9c7f4e;
+  --gold-hover: #f4dca8;
 
   /* Gold avec alpha */
-  --gold-08: rgba(196, 164, 104, 0.08);
   --gold-15: rgba(196, 164, 104, 0.15);
-  --gold-20: rgba(196, 164, 104, 0.20);
-  --gold-30: rgba(196, 164, 104, 0.30);
-  --gold-50: rgba(196, 164, 104, 0.50);
+  --gold-50: rgba(196, 164, 104, 0.5);
 
   /* Ruby */
-  --ruby: #7C241A;
+  --ruby: #7c241a;
 
   /* Borders */
-  --border:        rgba(196, 164, 104, 0.22);
-  --border-parch:  #B29A6A;
-  --border-choice: #6E5A3C;
+  --border: rgba(196, 164, 104, 0.22);
+  --border-choice: #6e5a3c;
 
   /* Radius */
-  --radius:      4px;
-  --radius-full: 9999px;
+  --radius: 4px;
 
   /* Polices */
-  --font-disp:  'Cinzel', Georgia, serif;
+  --font-disp: 'Cinzel', Georgia, serif;
   --font-serif: 'EB Garamond', Georgia, serif;
 
-  /* Overlay fond sombre */
-  --bg-overlay-15: rgba(5, 5, 6, 0.15);
-  --bg-overlay-25: rgba(5, 5, 6, 0.25);
-  --bg-overlay-50: rgba(5, 5, 6, 0.50);
+  /* Overlays sombres (lisibilité texte sur média) */
+  --bg-overlay-50: rgba(5, 5, 6, 0.5);
   --bg-overlay-55: rgba(5, 5, 6, 0.55);
-  --bg-overlay-70: rgba(5, 5, 6, 0.70);
-  --bg-overlay-92: rgba(5, 5, 6, 0.92);
+  --bg-overlay-70: rgba(5, 5, 6, 0.7);
   --bg-overlay-95: rgba(5, 5, 6, 0.95);
   --bg-overlay-97: rgba(5, 5, 6, 0.97);
 
-  /* Gradients */
-  --gradient-heading:      linear-gradient(180deg, #e8d4a0 0%, #c4a468 100%);
-  --gradient-surface:      linear-gradient(160deg, var(--bg-3), var(--bg-2));
-  --gradient-surface-warm: linear-gradient(160deg, #2c2217, #1a130c);
+  /* Gradient titre doré */
+  --gradient-heading: linear-gradient(180deg, #e8d4a0 0%, #c4a468 100%);
 }
 
 /* ─── Tailwind theme bridge ─────────────────────────────────────────────────── */
 /*
   Expose les tokens au système de classes Tailwind.
-  Permet d'écrire text-gold, bg-bg-2, font-display au lieu de style={{ color: 'var(--gold)' }}.
+  Permet d'écrire text-gold-light, font-display, border-gold au lieu de var(--…).
 */
 @theme inline {
-  --color-background: var(--bg);
-  --color-foreground: var(--ink);
-  --color-gold:        var(--gold);
-  --color-gold-light:  var(--gold-light);
-  --color-gold-dark:   var(--gold-dark);
-  --color-gold-hover:  var(--gold-hover);
-  --color-ink:   var(--ink);
-  --color-ink-2: var(--ink-2);
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
   --color-ink-3: var(--ink-3);
-  --color-ink-4: var(--ink-4);
-  --color-bg:   var(--bg);
-  --color-bg-2: var(--bg-2);
-  --color-bg-3: var(--bg-3);
-  --color-bg-4: var(--bg-4);
-  --color-ruby:      var(--ruby);
-  --font-serif:      var(--font-serif);
-  --font-display:    var(--font-disp);
+  --font-display: var(--font-disp);
+  --font-serif: var(--font-serif);
+
+  --animate-shiny-text-multi: shiny-text-multi 14s ease-in-out infinite;
+  @keyframes shiny-text-multi {
+    0% {
+      background-position: calc(-100% - var(--shiny-width)) 0, 0 0;
+    }
+    25%,
+    40% {
+      background-position: calc(100% + var(--shiny-width)) 0, 0 0;
+    }
+    65%,
+    100% {
+      background-position: calc(-100% - var(--shiny-width)) 0, 0 0;
+    }
+  }
 }
 
 /* ─── Utility classes ───────────────────────────────────────────────────────── */
-/*
-  Règle : une utility class = combo de 3+ propriétés statiques répétées 3+ fois dans le code.
-  Utiliser Tailwind natif pour layout/couleurs seules, inline style pour valeurs JS dynamiques.
-*/
 @layer utilities {
-
-  /* ── Cinzel (display) ───────────────────────────────────────────────────── */
-  /* Base commune : évite de répéter font-family + text-transform dans chaque variante */
+  /* Cinzel (display) */
   .text-disp-xs,
-  .text-disp-sm,
-  .text-disp-md,
-  .text-disp-lg {
+  .text-disp-sm {
     font-family: var(--font-disp);
     text-transform: uppercase;
   }
+  .text-disp-xs {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    color: var(--ink-3);
+  }
+  .text-disp-sm {
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+  }
 
-  .text-disp-xs { font-size: 11px; letter-spacing: 0.22em; color: var(--ink-3); }
-  .text-disp-sm { font-size: 12px; letter-spacing: 0.30em; color: var(--gold); }
-  .text-disp-md { font-size: 16px; letter-spacing: 0.12em; color: var(--ink); }
-  .text-disp-lg { font-size: clamp(28px, 3vw, 42px); letter-spacing: 0.06em; font-weight: 700; color: var(--ink); }
-
-  /* ── EB Garamond (serif) ────────────────────────────────────────────────── */
-  .text-serif-sm,
+  /* EB Garamond (serif) */
   .text-serif-md {
     font-family: var(--font-serif);
     line-height: 1.8;
     color: var(--ink-2);
+    font-size: clamp(16px, 1.4vw, 21px);
   }
 
-  .text-serif-sm { font-size: clamp(14px, 1.1vw, 17px); }
-  .text-serif-md { font-size: clamp(16px, 1.4vw, 21px); }
-
-  /* ── Gradient doré ──────────────────────────────────────────────────────── */
+  /* Gradient doré pour les titres */
   .text-gradient-gold {
     background: var(--gradient-heading);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-
-  /* ── Surfaces ───────────────────────────────────────────────────────────── */
-  .bg-surface-dark { background: var(--gradient-surface); }
-  .bg-surface-warm { background: var(--gradient-surface-warm); }
 }
 
 /* ─── Base reset ────────────────────────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
 
 ::selection {
-  background: var(--gold-30);
+  background: var(--gold-50);
   color: #f0e4c8;
 }
 
@@ -162,96 +144,42 @@ body {
 
 /* Grain bois */
 body::before {
-  content: "";
+  content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
   opacity: 0.4;
   z-index: 0;
   background:
-    repeating-linear-gradient(90deg, transparent 0, transparent 38px, rgba(0,0,0,.25) 39px, transparent 42px),
-    repeating-linear-gradient(90deg, rgba(120,90,50,.04) 0, transparent 7px);
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 38px,
+      rgba(0, 0, 0, 0.25) 39px,
+      transparent 42px
+    ),
+    repeating-linear-gradient(90deg, rgba(120, 90, 50, 0.04) 0, transparent 7px);
 }
 
 /* ─── Scrollbar ─────────────────────────────────────────────────────────────── */
-::-webkit-scrollbar              { width: 6px; height: 6px; }
-::-webkit-scrollbar-track        { background: var(--bg-2); }
-::-webkit-scrollbar-thumb        { background: var(--border); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover  { background: var(--gold-dark); }
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-2);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-dark);
+}
 
 /* ─── Focus ring ────────────────────────────────────────────────────────────── */
 :focus-visible {
   outline: 2px solid var(--gold);
   outline-offset: 2px;
   border-radius: var(--radius);
-}
-
-/* ─── Animations ────────────────────────────────────────────────────────────── */
-@keyframes glowPulse {
-  0%, 100% { opacity: .55; transform: scale(.92); }
-  50%       { opacity: 1;   transform: scale(1.08); }
-}
-
-@keyframes auraBreathe {
-  0%, 100% { opacity: .5; }
-  50%       { opacity: .85; }
-}
-
-@keyframes rise {
-  from { opacity: 0; transform: translateY(10px); filter: blur(3px); }
-  to   { opacity: 1; transform: none; filter: none; }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .animate-rise         { animation: rise .45s cubic-bezier(.2,.8,.2,1) both; }
-  .animate-glow-pulse   { animation: glowPulse 3.5s ease-in-out infinite; }
-  .animate-aura-breathe { animation: auraBreathe 5s ease-in-out infinite; }
-}
-
-/* ─── Ornement ──────────────────────────────────────────────────────────────── */
-.ornament {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-}
-.ornament::before,
-.ornament::after {
-  content: "";
-  flex: 0 1 160px;
-  height: 1px;
-}
-.ornament::before { background: linear-gradient(90deg,  transparent, var(--gold-dark)); }
-.ornament::after  { background: linear-gradient(270deg, transparent, var(--gold-dark)); }
-
-.ornament-diamond, .ornament-dot { transform: rotate(45deg); }
-.ornament-diamond { width: 8px; height: 8px; border: 1px solid var(--gold); }
-.ornament-dot     { width: 5px; height: 5px; background: var(--gold-dark); }
-
-/* ─── Section header ────────────────────────────────────────────────────────── */
-/* Utiliser : <div class="section-header"><p class="text-disp-sm whitespace-nowrap">…</p><div class="section-rule" /></div> */
-.section-header {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  margin-bottom: 30px;
-}
-.section-rule {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, var(--gold-50), transparent);
-}
-
-/* ─── Aura ──────────────────────────────────────────────────────────────────── */
-.aura-gold, .aura-magic {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-  animation: auraBreathe 5s ease-in-out infinite;
-}
-.aura-gold  { background: radial-gradient(ellipse, var(--gold-50), transparent 65%); }
-.aura-magic {
-  background: radial-gradient(circle, rgba(150, 200, 255, .9), rgba(90, 150, 230, .35) 40%, transparent 70%);
-  filter: blur(2px);
-  animation-duration: 4s;
 }

@@ -32,6 +32,8 @@ src/
 
 **Règle absolue colocation** : `_components/` = privé à sa route. `components/ui/` = réutilisable partout. Ne jamais dupliquer.
 
+**Convention landing — sections numérotées** : chaque section de scroll de `(home)` vit dans `_components/Section<N><Nom>/` avec un `index.tsx` (point d'entrée exporté en `Section<N><Nom>`, ex. `Section1Hero`) et ses sous-composants privés à côté (ex. `HeroContent.tsx`, `SlideTexts.tsx`).
+
 ## Composants `ui/` existants
 
 | Composant    | Props clés                                | Obligatoire          |

@@ -1,29 +1,5 @@
-'use client'
+import { Section1Hero } from './_components/Section1Hero'
 
-import { useState } from 'react'
-
-import {
-  LandingShell,
-  NavigationBar,
-  HeroSection,
-  UniversSection,
-  PersonnageSection,
-  CommunauteSection,
-} from './_components'
-
-export default function LandingPage() {
-  const [selectedPortrait, setSelectedPortrait] = useState(3)
-
-  return (
-    <LandingShell>
-      <NavigationBar />
-      <HeroSection />
-      <UniversSection />
-      <PersonnageSection
-        selectedPortrait={selectedPortrait}
-        onSelectPortrait={setSelectedPortrait}
-      />
-      <CommunauteSection />
-    </LandingShell>
-  )
+export default function HomePage() {
+  return <Section1Hero />
 }

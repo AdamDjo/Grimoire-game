@@ -2,6 +2,8 @@
 
 import { type ButtonHTMLAttributes, forwardRef, useState } from 'react'
 
+import { AnimatedShinyText } from '@/components/ui/animated-shiny-text'
+
 type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'choice'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -107,6 +109,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       ...style,
     }
 
+    const content =
+      variant === 'primary' || variant === 'secondary' || variant === 'choice' ? (
+        <AnimatedShinyText variant="gold-strong" shimmerWidth={200}>
+          {children}
+        </AnimatedShinyText>
+      ) : (
+        children
+      )
+
     return (
       <button
         ref={ref}
@@ -116,7 +127,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         onMouseLeave={() => setHovered(false)}
         {...props}
       >
-        {children}
+        {content}
       </button>
     )
   }
