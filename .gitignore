@@ -54,21 +54,5 @@ apps/frontend/cypress/videos
 
 # Design files (local, not tracked)
 docs/Design/
-
-# docs — track only the curated structure, ignore assets (PNG, MP4, etc.)
+# docs private
 /docs/*
-/docs/02-design/mockup/
-!/docs/*.md
-!/docs/01-current-state/
-!/docs/02-design/
-!/docs/03-tech/
-!/docs/wiki/
-
-# GDD canon (gitignored — physiquement dans le repo, jamais commité)
-docs/raw/
-
-# Archive locale (gitignored — historique, pas de valeur à versionner)
-docs/_archive/
-
-# Obsidian vault config
-.obsidian/

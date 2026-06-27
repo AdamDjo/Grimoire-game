@@ -35,7 +35,19 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${cinzel.variable} ${ebGaramond.variable} ${outfit.variable}`}>
-      <body>{children}</body>
+      <body>
+        {/* Fond global du site : motif géométrique doré sur cosmos noir.
+            Posé en -z-10 pour ne jamais laisser apparaître le noir du <body>
+            entre les sections. Section1/Section2 le masquent avec leurs propres
+            visuels (vidéo, canvas, frame_096) ; les sections suivantes s'en
+            servent comme ambiance commune. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: 'url(/home/background.jpg)' }}
+        />
+        {children}
+      </body>
     </html>
   )
 }

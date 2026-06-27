@@ -1,13 +1,12 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 
 import { CompassRose } from '@/components/ui/CompassRose'
 import { NavBar } from '@/components/ui/NavBar'
 import { ScrollHint } from '@/components/ui/ScrollHint'
-import { SidePagination } from '@/components/ui/SidePagination'
 
-import { NAV_LINKS, SECTION_IDS } from '../../_data/home-data'
+import { NAV_LINKS } from '../../_data/home-data'
 import { useCanvasScrollSequence } from '../../_hooks/use-canvas-scroll-sequence'
 
 import { HeroContent } from './HeroContent'
@@ -15,14 +14,13 @@ import { HeroContent } from './HeroContent'
 /**
  * Section1Hero — première section de la landing, hero "méthode Apple".
  *
- * Une séquence de 96 frames WebP est dessinée dans un <canvas> en fonction de
- * la progression du scroll (scrub GSAP). Le bloc central (HeroContent) fait un
- * fade-out vers ~30 % du scroll pour laisser apprécier l'animation seule.
- *
- * Ce composant se limite à la composition + wiring du hook de séquence.
+ * Intro : Hero.mp4 plein écran en loop, sans texte. Dès le premier scroll,
+ * la vidéo s'efface, la séquence de 96 frames WebP prend le relais (scrub
+ * GSAP) et le texte central se révèle en cascade (CompassRose → slide → CTA).
+ * Le texte ressort symétriquement à la fin du scroll, et la dernière frame
+ * reste à l'écran pour assurer la continuité visuelle avec Section2Seuil.
  */
 
-/** Logo identique à la landing (CompassRose + "Grimoire"). */
 const navLogo = (
   <>
     <CompassRose size={28} />
@@ -39,50 +37,76 @@ export function Section1Hero() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const textRef = useRef<HTMLDivElement>(null)
   const scrollHintRef = useRef<HTMLDivElement>(null)
-
-  // Section active pour la pagination (le hero correspond à l'index 0).
-  const [activeSection] = useState(0)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const compassRoseRef = useRef<HTMLDivElement>(null)
+  const slideTextsRef = useRef<HTMLDivElement>(null)
+  const ctaRef = useRef<HTMLDivElement>(null)
 
   useCanvasScrollSequence({
     containerRef,
     canvasRef,
-    fadeTargetRefs: [textRef, scrollHintRef],
+    videoRef,
+    textRef,
+    scrollHintRef,
+    textChildRefs: { compassRose: compassRoseRef, slideTexts: slideTextsRef, cta: ctaRef },
   })
 
   return (
-    <section ref={containerRef} aria-label="Accueil" className="relative h-[300vh]">
-      {/* Couche fond : séquence d'images (décorative).
-          z-[1] : au-dessus de la texture "grain bois" globale (body::before, z-0). */}
+    <section
+      ref={containerRef}
+      data-section-id="hero"
+      aria-label="Accueil"
+      className="relative h-[300vh]"
+    >
+      {/* Vidéo d'accueil : autoplay loop muet, visible uniquement à l'arrivée,
+          puis crossfade vers le canvas dès le premier scroll. */}
+      <video
+        ref={videoRef}
+        src="/home/Hero.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        poster="/home/frames_transition/frame_001.webp"
+        aria-hidden="true"
+        className="fixed left-0 top-0 z-[2] h-screen w-full object-cover will-change-[opacity]"
+      />
+
+      {/* Canvas frame-by-frame : opacity 0 au départ, fade-in pendant l'intro. */}
       <canvas
         ref={canvasRef}
         aria-hidden="true"
-        className="fixed left-0 top-0 z-[1] h-screen w-full"
+        className="fixed left-0 top-0 z-[3] h-screen w-full"
+        style={{ opacity: 0 }}
       />
 
-      {/* Overlay dégradé linéaire pour la lisibilité du texte. */}
+      {/* Overlay dégradé pour la lisibilité du texte. */}
       <div
-        className="pointer-events-none fixed inset-0 z-[2]"
+        className="pointer-events-none fixed inset-0 z-[4]"
         style={{
           background:
-            'linear-gradient(180deg, var(--bg-overlay-55) 0%, transparent 18%, transparent 68%, var(--bg-overlay-95) 100%)',
+            'linear-gradient(180deg, var(--bg-overlay-55) 0%, transparent 18%, transparent 80%, var(--bg-overlay-50) 100%)',
         }}
       />
 
-      {/* Header — logo + nav. */}
       <NavBar logo={navLogo} links={navLinks} />
 
-      {/* Pagination latérale. */}
-      <SidePagination sections={SECTION_IDS} activeIndex={activeSection} />
-
-      {/* Bloc central : fade-out au scroll (ref transmise au hook via textRef). */}
+      {/* Bloc central : caché à l'arrivée (opacity 0 + blur), révélé au scroll. */}
       <div
         ref={textRef}
         className="pointer-events-none fixed inset-0 z-10 flex flex-col items-center justify-center px-6 text-center"
+        style={{ opacity: 0, filter: 'blur(10px)', transform: 'translateY(24px)' }}
       >
-        <HeroContent />
+        <HeroContent
+          childRefs={{
+            compassRose: compassRoseRef,
+            slideTexts: slideTextsRef,
+            cta: ctaRef,
+          }}
+        />
       </div>
 
-      {/* Scroll hint : disparaît avec le texte (ref transmise au hook). */}
       <ScrollHint ref={scrollHintRef} />
     </section>
   )

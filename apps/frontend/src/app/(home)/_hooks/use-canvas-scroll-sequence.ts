@@ -25,7 +25,6 @@ function drawImageCover(canvas: HTMLCanvasElement, img: HTMLImageElement | undef
   const ctx = canvas.getContext('2d')
   if (!ctx) return
 
-  // Lissage haute qualité : atténue les artefacts de compression JPEG.
   ctx.imageSmoothingEnabled = true
   ctx.imageSmoothingQuality = 'high'
 
@@ -34,7 +33,6 @@ function drawImageCover(canvas: HTMLCanvasElement, img: HTMLImageElement | undef
   const iw = img.naturalWidth
   const ih = img.naturalHeight
 
-  // Échelle "cover" : on prend le ratio le plus grand pour couvrir tout le canvas.
   const ratio = Math.max(cw / iw, ch / ih)
   const dw = iw * ratio
   const dh = ih * ratio
@@ -46,37 +44,59 @@ function drawImageCover(canvas: HTMLCanvasElement, img: HTMLImageElement | undef
 }
 
 interface UseCanvasScrollSequenceOptions {
-  /** Ref sur le <section> conteneur (ScrollTrigger trigger). */
   containerRef: React.RefObject<HTMLElement | null>
-  /** Ref sur le <canvas> cible. */
   canvasRef: React.RefObject<HTMLCanvasElement | null>
-  /** Éléments qui font un fade-out dès le premier scroll. */
-  fadeTargetRefs: React.RefObject<HTMLElement | null>[]
+  /** Vidéo Hero.mp4 affichée à l'arrivée puis fade-out à l'intro. */
+  videoRef: React.RefObject<HTMLVideoElement | null>
+  /** Wrapper du bloc texte central (HeroContent). */
+  textRef: React.RefObject<HTMLElement | null>
+  /** Flèche/label « Défiler » en bas — fade-out à l'intro. */
+  scrollHintRef: React.RefObject<HTMLElement | null>
+  /** Sous-éléments du bloc texte, révélés en cascade pendant l'intro. */
+  textChildRefs: {
+    compassRose: React.RefObject<HTMLElement | null>
+    slideTexts: React.RefObject<HTMLElement | null>
+    cta: React.RefObject<HTMLElement | null>
+  }
 }
 
 /**
- * useCanvasScrollSequence — encapsule :
- * 1) Le dimensionnement Retina-aware du canvas (resize inclus).
- * 2) Le préchargement des 96 frames WebP.
- * 3) L'animation GSAP scrub (frames pilotées par le scroll).
- * 4) Le fade-out GSAP des éléments texte/hint au premier scroll.
+ * useCanvasScrollSequence — orchestre toute la chorégraphie de la Section1Hero
+ * via une timeline GSAP unique scrubbée par le scroll (`scrub: 1`) :
+ *
+ *   Phase A · Intro            [0 → 0.08]
+ *     · Vidéo Hero.mp4 fade-out
+ *     · Canvas frame-by-frame fade-in (opacité)
+ *     · Texte révélé en cascade : CompassRose → slide → CTA (fade + blur)
+ *     · ScrollHint fade-out
+ *
+ *   Phase B · Frame scrub      [0.08 → 0.70]
+ *     · Frame index 0 → 95 (logique existante préservée)
+ *
+ *   Phase C · Sortie texte     [0.80 → 0.90]
+ *     · CompassRose / slide / CTA fade-up + blur (symétrique de l'entrée)
+ *     · La dernière frame (96) reste à l'écran jusqu'à la fin du scroll,
+ *       assurant la continuité visuelle avec Section2Seuil qui réutilise
+ *       cette même frame comme fond.
+ *
+ * Respecte `prefers-reduced-motion` : pas de vidéo, pas de blur, état final
+ * appliqué immédiatement.
  */
 export function useCanvasScrollSequence({
   containerRef,
   canvasRef,
-  fadeTargetRefs,
+  videoRef,
+  textRef,
+  scrollHintRef,
+  textChildRefs,
 }: UseCanvasScrollSequenceOptions): void {
   const imagesRef = useRef<HTMLImageElement[]>([])
   const frameStateRef = useRef({ index: 0 })
 
-  /**
-   * Dimensionne le canvas (Retina-aware) puis redessine la frame courante.
-   */
   function resizeCanvas() {
     const canvas = canvasRef.current
     if (!canvas) return
 
-    // DPR plafonné à 2 ET à la résolution native des frames (1280×720).
     const rawDpr = Math.min(window.devicePixelRatio || 1, 2)
     const maxScale = SOURCE_HEIGHT / window.innerHeight
     const dpr = Math.min(rawDpr, Math.max(1, maxScale))
@@ -87,7 +107,6 @@ export function useCanvasScrollSequence({
     drawImageCover(canvas, imagesRef.current[Math.round(frameStateRef.current.index)])
   }
 
-  // Dimensionnement initial + gestion du redimensionnement de la fenêtre.
   useEffect(() => {
     resizeCanvas()
     window.addEventListener('resize', resizeCanvas)
@@ -95,14 +114,12 @@ export function useCanvasScrollSequence({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Préchargement des frames (évite tout écran noir pendant le scroll).
   useEffect(() => {
     const images: HTMLImageElement[] = []
 
     for (let i = 1; i <= FRAME_COUNT; i++) {
       const img = new Image()
       img.src = frameSrc(i)
-      // Dessiner la frame 1 dès qu'elle est prête : premier rendu immédiat.
       if (i === 1) {
         img.onload = () => {
           resizeCanvas()
@@ -120,46 +137,148 @@ export function useCanvasScrollSequence({
     () => {
       gsap.registerPlugin(ScrollTrigger)
 
-      // 1) Frames pilotées par le scroll (scrub).
-      gsap.to(frameStateRef.current, {
-        index: FRAME_COUNT - 1,
-        ease: 'none',
-        snap: 'index',
+      const prefersReducedMotion =
+        typeof window !== 'undefined' &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+      const video = videoRef.current
+      const canvas = canvasRef.current
+      const text = textRef.current
+      const scrollHint = scrollHintRef.current
+      const compass = textChildRefs.compassRose.current
+      const slides = textChildRefs.slideTexts.current
+      const cta = textChildRefs.cta.current
+
+      // Reduced motion : afficher l'état final immédiatement, pas d'animation
+      // d'intro. Le pull-back vers la carte reste actif (informationnel).
+      if (prefersReducedMotion) {
+        if (video) {
+          video.pause()
+          gsap.set(video, { opacity: 0 })
+        }
+        if (canvas) gsap.set(canvas, { opacity: 1 })
+        if (text) gsap.set(text, { opacity: 1, filter: 'blur(0px)', y: 0 })
+        if (scrollHint) gsap.set(scrollHint, { opacity: 1 })
+
+        // Frame scrub pleine course (0 → 95).
+        gsap.to(frameStateRef.current, {
+          index: FRAME_COUNT - 1,
+          ease: 'none',
+          snap: 'index',
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: true,
+          },
+          onUpdate: () => {
+            requestAnimationFrame(() => {
+              if (canvasRef.current) {
+                drawImageCover(
+                  canvasRef.current,
+                  imagesRef.current[Math.round(frameStateRef.current.index)]
+                )
+              }
+            })
+          },
+        })
+
+        return
+      }
+
+      // État initial : wrapper texte caché, canvas invisible, vidéo pleine
+      // opacité (l'attribut autoplay s'occupe de la lecture).
+      if (text) gsap.set(text, { opacity: 0, y: 24, filter: 'blur(10px)' })
+      const children = [compass, slides, cta].filter(Boolean) as HTMLElement[]
+      if (children.length > 0) {
+        gsap.set(children, { opacity: 0, y: 24, filter: 'blur(10px)' })
+      }
+      if (canvas) gsap.set(canvas, { opacity: 0 })
+      if (video) gsap.set(video, { opacity: 1 })
+
+      // Timeline maîtresse : une seule ScrollTrigger sur toute la section,
+      // scrubbée à 1 (lerp léger) pour un rendu velouté.
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: 'top top',
           end: 'bottom bottom',
-          scrub: true,
-        },
-        onUpdate: () => {
-          requestAnimationFrame(() => {
-            if (canvasRef.current) {
-              drawImageCover(
-                canvasRef.current,
-                imagesRef.current[Math.round(frameStateRef.current.index)]
-              )
-            }
-          })
+          scrub: 1,
         },
       })
 
-      // 2) Fade-out du texte d'intro + flèche, déclenché au premier scroll.
-      //    Non scrubbé : animation autonome, indépendante de la vitesse de molette.
-      const fadeTargets = fadeTargetRefs.map((r) => r.current).filter(Boolean)
-      if (fadeTargets.length > 0) {
-        gsap.to(fadeTargets, {
-          opacity: 0,
-          y: -40,
-          filter: 'blur(8px)',
-          duration: 0.6,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top+=4% top',
-            toggleActions: 'play none none reverse',
+      // ───────── Phase A · Intro [0 → 0.08]
+      if (video) tl.to(video, { opacity: 0, ease: 'power3.out', duration: 0.08 }, 0)
+      if (canvas) tl.to(canvas, { opacity: 1, ease: 'power3.out', duration: 0.08 }, 0)
+      if (text)
+        tl.to(
+          text,
+          { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'power3.out', duration: 0.06 },
+          0.01
+        )
+      if (compass)
+        tl.to(
+          compass,
+          { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'power3.out', duration: 0.05 },
+          0.01
+        )
+      if (slides)
+        tl.to(
+          slides,
+          { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'power3.out', duration: 0.05 },
+          0.025
+        )
+      if (cta)
+        tl.to(
+          cta,
+          { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'power3.out', duration: 0.05 },
+          0.04
+        )
+      if (scrollHint)
+        tl.to(scrollHint, { opacity: 0, y: -20, ease: 'power2.out', duration: 0.06 }, 0)
+
+      // ───────── Phase B · Frame scrub [0.08 → 0.70]
+      tl.to(
+        frameStateRef.current,
+        {
+          index: FRAME_COUNT - 1,
+          ease: 'none',
+          snap: 'index',
+          duration: 0.62,
+          onUpdate: () => {
+            requestAnimationFrame(() => {
+              if (canvasRef.current) {
+                drawImageCover(
+                  canvasRef.current,
+                  imagesRef.current[Math.round(frameStateRef.current.index)]
+                )
+              }
+            })
           },
-        })
+        },
+        0.08
+      )
+
+      // ───────── Phase C · Sortie texte [0.80 → 0.90]
+      const exitTargets = [compass, slides, cta].filter(Boolean) as HTMLElement[]
+      if (exitTargets.length > 0) {
+        tl.to(
+          exitTargets,
+          {
+            opacity: 0,
+            y: -24,
+            filter: 'blur(10px)',
+            ease: 'power2.inOut',
+            duration: 0.1,
+            stagger: 0.01,
+          },
+          0.8
+        )
       }
+      // Le canvas reste à opacity 1 jusqu'à la fin de Section 1 : la frame_096
+      // (dernière image) demeure visible derrière les sections suivantes via
+      // son `position: fixed`. C'est Section2 qui crossfade par-dessus avec un
+      // voile noir scrubbé, garantissant zéro coupure visuelle.
     },
     { scope: containerRef }
   )

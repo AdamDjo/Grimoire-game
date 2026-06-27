@@ -87,7 +87,61 @@ export const MAP_LABELS = [
 
 export const NAV_LINKS = ['Accueil', 'Univers', 'Règles', 'Communauté', 'FAQ'] as const
 
-export const SECTION_IDS = ['hero', 'univers', 'personnage', 'communaute'] as const
+export const SECTION_IDS = ['hero', 'seuil', 'aveugle', 'pacte'] as const
+
+/**
+ * Manifeste révélé ligne par ligne dans Section2Seuil (mask-reveal scrubbé).
+ * Typo Cinzel gradient gold, posé sur le fond cosmique.
+ */
+export const MANIFESTO_LINES = [
+  'Aux Cendres de Valorain,',
+  'là où les dieux se sont tus,',
+  'un monde se souvient',
+  'de chacun de tes pas.',
+] as const
+
+/**
+ * Citations diégétiques posées en sous-titre cinéma au-dessus du diptyque
+ * "l'aveugle" dans Section3Aveugle (paliers de scroll 0% / 40% / 80%).
+ */
+export const AVEUGLE_QUOTES = [
+  {
+    text: 'On ne choisit pas son rôle. On le devient.',
+    align: 'left',
+  },
+  {
+    text: 'Le sang séché est un serment qui ne s’efface pas.',
+    align: 'right',
+  },
+  {
+    text: 'À la fin, il ne reste que ce dont on se souvient.',
+    align: 'left',
+  },
+] as const
+
+/**
+ * Piliers présentés en Section4Pacte — première rupture UI après le cinématique.
+ */
+export const PILLARS = [
+  {
+    eyebrow: 'I',
+    title: 'Le Monde',
+    description:
+      'Valorain n’est pas une carte. C’est un théâtre de cendres qui se souvient des âmes qui le traversent.',
+  },
+  {
+    eyebrow: 'II',
+    title: 'Les Personnages',
+    description:
+      'Chaque visage porte un passé. Chaque PNJ se souvient de ce que tu lui as dit — et te le rendra, un jour.',
+  },
+  {
+    eyebrow: 'III',
+    title: 'La Mémoire',
+    description:
+      'Tes choix ne disparaissent pas. Ils deviennent légende, rumeur, malédiction. Le monde garde tout.',
+  },
+] as const
 
 export function generateParticles() {
   return Array.from({ length: 40 }, (_, i) => ({

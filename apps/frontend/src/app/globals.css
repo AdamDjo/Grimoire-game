@@ -60,18 +60,37 @@
   --font-display: var(--font-disp);
   --font-serif: var(--font-serif);
 
+  --animate-cosmic-pulse: cosmic-pulse 8s ease-in-out infinite;
+  @keyframes cosmic-pulse {
+    0%,
+    100% {
+      opacity: 0.7;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.06);
+    }
+  }
+
   --animate-shiny-text-multi: shiny-text-multi 14s ease-in-out infinite;
   @keyframes shiny-text-multi {
     0% {
-      background-position: calc(-100% - var(--shiny-width)) 0, 0 0;
+      background-position:
+        calc(-100% - var(--shiny-width)) 0,
+        0 0;
     }
     25%,
     40% {
-      background-position: calc(100% + var(--shiny-width)) 0, 0 0;
+      background-position:
+        calc(100% + var(--shiny-width)) 0,
+        0 0;
     }
     65%,
     100% {
-      background-position: calc(-100% - var(--shiny-width)) 0, 0 0;
+      background-position:
+        calc(-100% - var(--shiny-width)) 0,
+        0 0;
     }
   }
 }
@@ -130,35 +149,14 @@ body {
 }
 
 body {
-  background:
-    radial-gradient(ellipse 90% 50% at 50% -5%, rgba(120, 84, 40, 0.22), transparent 55%),
-    radial-gradient(ellipse 120% 90% at 50% 40%, rgba(40, 28, 16, 0.5), transparent 70%),
-    linear-gradient(180deg, #0d0a06, #080604 60%, #0a0705);
+  background-image: url('/assets/images/background.jpg');
+  background-size: cover;
   background-color: #0a0705;
   color: var(--ink);
   font-family: var(--font-serif);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
-}
-
-/* Grain bois */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.4;
-  z-index: 0;
-  background:
-    repeating-linear-gradient(
-      90deg,
-      transparent 0,
-      transparent 38px,
-      rgba(0, 0, 0, 0.25) 39px,
-      transparent 42px
-    ),
-    repeating-linear-gradient(90deg, rgba(120, 90, 50, 0.04) 0, transparent 7px);
 }
 
 /* ─── Scrollbar ─────────────────────────────────────────────────────────────── */
