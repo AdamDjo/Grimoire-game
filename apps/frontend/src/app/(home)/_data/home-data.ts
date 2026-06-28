@@ -202,3 +202,15 @@ export const heroSlideReveal: Variants = {
   visible: { opacity: 1, y: 0, filter: 'blur(0px)' },
   exit: { opacity: 0, y: -18, filter: 'blur(8px)' },
 }
+
+export const FOOTER_LINKS = [
+  { label: 'Mentions', href: '#' },
+  { label: 'FAQ', href: '#' },
+  { label: 'Contact', href: '#' },
+] as const
+
+export const SOCIAL_LINKS = [
+  { key: 'discord', label: 'Discord', href: '#' },
+  { key: 'twitter', label: 'Twitter / X', href: '#' },
+  { key: 'instagram', label: 'Instagram', href: '#' },
+] as const

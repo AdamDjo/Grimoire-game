@@ -96,7 +96,7 @@ export function Section1Hero() {
       <div
         ref={textRef}
         className="pointer-events-none fixed inset-0 z-10 flex flex-col items-center justify-center px-6 text-center"
-        style={{ opacity: 0, filter: 'blur(10px)', transform: 'translateY(24px)' }}
+        style={{ opacity: 0, filter: 'blur(8px)', transform: 'translateY(24px)' }}
       >
         <HeroContent
           childRefs={{

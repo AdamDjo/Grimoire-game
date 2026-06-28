@@ -60,12 +60,12 @@ export function Section2Seuil() {
       // Phase 2 — Card manifeste remonte (translateY + opacity + blur).
       gsap.fromTo(
         cardRef.current,
-        { opacity: 0, y: 80, filter: 'blur(8px)' },
+        { opacity: 0, y: 24, filter: 'blur(8px)' },
         {
           opacity: 1,
           y: 0,
           filter: 'blur(0px)',
-          ease: 'power3.out',
+          ease: 'power2.out',
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top 50%',
@@ -81,9 +81,9 @@ export function Section2Seuil() {
       // la card s'efface dans le flou, pas dans le vide.
       gsap.to(cardRef.current, {
         opacity: 0,
-        y: -80,
+        y: -24,
         filter: 'blur(8px)',
-        ease: 'power3.in',
+        ease: 'power2.in',
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'bottom 60%',

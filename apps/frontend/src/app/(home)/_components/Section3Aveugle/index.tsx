@@ -5,8 +5,11 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useRef } from 'react'
 
+import { Button } from '@/components/ui/Button'
+
 import { useClipReveal } from '../../_hooks/use-scroll-reveal'
 
+import { OutroFooter } from './OutroFooter'
 import { QuoteOverlay } from './QuoteOverlay'
 
 /**
@@ -21,6 +24,9 @@ export function Section3Aveugle() {
   const sectionRef = useRef<HTMLElement>(null)
   const stickyRef = useRef<HTMLDivElement>(null)
   const crossfadeRef = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const ctaRef = useRef<HTMLDivElement>(null)
+  const footerRef = useRef<HTMLElement>(null)
 
   useClipReveal({
     containerRef: sectionRef,
@@ -60,6 +66,10 @@ export function Section3Aveugle() {
       if (prefersReducedMotion) {
         gsap.set(stickyRef.current, { opacity: 1, autoAlpha: 1 })
         if (crossfadeRef.current) gsap.set(crossfadeRef.current, { autoAlpha: 0 })
+        if (videoRef.current) gsap.set(videoRef.current, { opacity: 1 })
+        if (ctaRef.current) gsap.set(ctaRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
+        if (footerRef.current)
+          gsap.set(footerRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
       } else if (crossfadeRef.current) {
         // Séquence Apple/Rockstar :
         // - L'auberge monte en opacité TOUT EN ÉTANT FLOUE (filter blur 32px)
@@ -124,6 +134,70 @@ export function Section3Aveugle() {
         })
       }
 
+      // Vidéo auberge — fondu d'entrée sur la toute fin du scroll.
+      // Calibré sur l'axe `bottom bottom` pour rester atteignable (section
+      // h-[300vh] > viewport : `top+=100% top` n'est jamais atteint).
+      // Démarre quand il reste 25% de scroll utile, plein écran à 5% de la fin.
+      if (!prefersReducedMotion && videoRef.current) {
+        gsap.fromTo(
+          videoRef.current,
+          { opacity: 0 },
+          {
+            opacity: 1,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'bottom-=25% bottom',
+              end: 'bottom-=5% bottom',
+              scrub: true,
+            },
+          }
+        )
+      }
+
+      // CTA "Entrer dans l'auberge" — apparaît juste après la vidéo,
+      // dans la dernière fenêtre de scroll. Pleinement visible à la fin.
+      if (!prefersReducedMotion && ctaRef.current) {
+        gsap.fromTo(
+          ctaRef.current,
+          { opacity: 0, y: 24, filter: 'blur(8px)' },
+          {
+            opacity: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'bottom-=18% bottom',
+              end: 'bottom bottom',
+              scrub: true,
+            },
+          }
+        )
+      }
+
+      // OutroFooter — dernier accord, juste après le CTA, sur la même
+      // signature cinéma. Pas de sortie : c'est le tout dernier élément, il
+      // doit rester cliquable au repos final.
+      if (!prefersReducedMotion && footerRef.current) {
+        gsap.fromTo(
+          footerRef.current,
+          { opacity: 0, y: 24, filter: 'blur(8px)' },
+          {
+            opacity: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'bottom-=10% bottom',
+              end: 'bottom-=2% bottom',
+              scrub: true,
+            },
+          }
+        )
+      }
+
       // Refresh après le prochain frame pour laisser useClipReveal (hook séparé)
       // s'enregistrer avant le recalcul des positions — sinon le clip-path
       // gauche → droite des deux images du diptyque n'est pas pris en compte.
@@ -178,7 +252,23 @@ export function Section3Aveugle() {
           style={{ clipPath: 'inset(0 100% 0 0)' }}
         />
 
-        {/* Vignette + dégradé bas pour lisibilité des citations. */}
+        {/* Vidéo auberge — scène finale, prend le relais de l'image cendres
+            en fondu sur 85% → 95% du scroll. Loop muet, autoplay-safe iOS. */}
+        <video
+          ref={videoRef}
+          src="/home/auberge-scene.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster="/home/Auberge.jpg"
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{ opacity: 0 }}
+        />
+
+        {/* Vignette + dégradé bas pour lisibilité des citations + CTA. */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0"
@@ -189,6 +279,33 @@ export function Section3Aveugle() {
         />
 
         <QuoteOverlay containerRef={sectionRef} />
+
+        {/* CTA final — phrase serif + bouton, posés bas pour laisser la vidéo
+            cadrer la scène. Outro cinéma, pas page marketing. */}
+        <div
+          ref={ctaRef}
+          className="pointer-events-auto absolute inset-x-0 bottom-[8%] z-[3] flex flex-col items-center px-6 text-center"
+          style={{ opacity: 0 }}
+        >
+          <p
+            className="font-serif italic"
+            style={{
+              color: 'var(--gold-light)',
+              fontSize: 'clamp(17px, 1.3vw, 21px)',
+              lineHeight: 1.5,
+              maxWidth: '38ch',
+              marginBottom: 28,
+              textShadow: '0 2px 16px rgba(0,0,0,.85)',
+            }}
+          >
+            Le feu crépite. Une chandelle attend. Le reste du monde patientera.
+          </p>
+          <Button variant="primary" style={{ fontSize: 13, letterSpacing: '0.24em' }}>
+            Entrer dans l’auberge
+          </Button>
+        </div>
+
+        <OutroFooter ref={footerRef} />
       </div>
     </section>
   )

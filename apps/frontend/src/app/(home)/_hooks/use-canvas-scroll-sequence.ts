@@ -188,10 +188,10 @@ export function useCanvasScrollSequence({
 
       // État initial : wrapper texte caché, canvas invisible, vidéo pleine
       // opacité (l'attribut autoplay s'occupe de la lecture).
-      if (text) gsap.set(text, { opacity: 0, y: 24, filter: 'blur(10px)' })
+      if (text) gsap.set(text, { opacity: 0, y: 24, filter: 'blur(8px)' })
       const children = [compass, slides, cta].filter(Boolean) as HTMLElement[]
       if (children.length > 0) {
-        gsap.set(children, { opacity: 0, y: 24, filter: 'blur(10px)' })
+        gsap.set(children, { opacity: 0, y: 24, filter: 'blur(8px)' })
       }
       if (canvas) gsap.set(canvas, { opacity: 0 })
       if (video) gsap.set(video, { opacity: 1 })
@@ -213,25 +213,25 @@ export function useCanvasScrollSequence({
       if (text)
         tl.to(
           text,
-          { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'power3.out', duration: 0.06 },
+          { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'power2.out', duration: 0.06 },
           0.01
         )
       if (compass)
         tl.to(
           compass,
-          { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'power3.out', duration: 0.05 },
+          { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'power2.out', duration: 0.05 },
           0.01
         )
       if (slides)
         tl.to(
           slides,
-          { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'power3.out', duration: 0.05 },
+          { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'power2.out', duration: 0.05 },
           0.025
         )
       if (cta)
         tl.to(
           cta,
-          { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'power3.out', duration: 0.05 },
+          { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'power2.out', duration: 0.05 },
           0.04
         )
       if (scrollHint)
@@ -267,8 +267,8 @@ export function useCanvasScrollSequence({
           {
             opacity: 0,
             y: -24,
-            filter: 'blur(10px)',
-            ease: 'power2.inOut',
+            filter: 'blur(8px)',
+            ease: 'power2.in',
             duration: 0.1,
             stagger: 0.01,
           },

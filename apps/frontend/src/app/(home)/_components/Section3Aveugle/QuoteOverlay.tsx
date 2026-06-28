@@ -26,11 +26,14 @@ export function QuoteOverlay({ containerRef }: QuoteOverlayProps) {
       const quotes = wrapperRef.current?.querySelectorAll<HTMLElement>('.aveugle-quote')
       if (!quotes || quotes.length === 0) return
 
-      const starts = [0.05, 0.4, 0.72]
+      // Les 3 citations doivent toutes disparaître avant `bottom-=25% bottom`
+      // (≈ 75% du scroll de la section h-[300vh]), moment où la vidéo auberge
+      // commence son fade-in. Sinon elles se superposent à la scène finale.
+      const starts = [0.04, 0.28, 0.5]
 
       quotes.forEach((quote, i) => {
         const start = starts[i] ?? 0
-        const end = start + 0.22
+        const end = start + 0.18
 
         gsap.fromTo(
           quote,
