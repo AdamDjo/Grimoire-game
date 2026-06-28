@@ -3,6 +3,8 @@
 import { useRef } from 'react'
 
 import { FilmGrain } from '@/components/ui/FilmGrain'
+import { GoldCursor } from '@/components/ui/GoldCursor'
+import { ScrollProgress } from '@/components/ui/ScrollProgress'
 import { SidePagination } from '@/components/ui/SidePagination'
 
 import { AmbientAudio } from './_components/AmbientAudio'
@@ -21,6 +23,8 @@ export default function HomePage() {
     <main ref={mainRef} className="relative">
       <IntroLoader />
       <FilmGrain />
+      <ScrollProgress />
+      <GoldCursor />
       <AmbientAudio />
       <SidePagination sections={SECTION_IDS} activeIndex={activeIndex} />
       <Section1Hero />

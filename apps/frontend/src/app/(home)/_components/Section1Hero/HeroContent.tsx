@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/Button'
 import { CompassRose } from '@/components/ui/CompassRose'
+import { MagneticButton } from '@/components/ui/MagneticButton'
 
 import { SlideTexts } from './SlideTexts'
 
@@ -49,9 +50,11 @@ export function HeroContent({ childRefs }: HeroContentProps) {
         </div>
 
         <div ref={childRefs?.cta} className="pointer-events-auto" style={{ marginTop: 36 }}>
-          <Button variant="primary" style={{ fontSize: 13, letterSpacing: '0.22em' }}>
-            Entrer dans l&apos;Univers
-          </Button>
+          <MagneticButton pulse strength={8}>
+            <Button variant="primary" style={{ fontSize: 13, letterSpacing: '0.22em' }}>
+              Entrer dans l&apos;Univers
+            </Button>
+          </MagneticButton>
         </div>
       </div>
     </>

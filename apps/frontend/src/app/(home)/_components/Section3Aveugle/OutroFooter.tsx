@@ -3,6 +3,8 @@
 import { Instagram, MessageCircle, Twitter } from 'lucide-react'
 import { forwardRef, type ComponentType } from 'react'
 
+import { MagneticButton } from '@/components/ui/MagneticButton'
+
 import { FOOTER_LINKS, SOCIAL_LINKS } from '../../_data/home-data'
 
 const ICON_BY_KEY: Record<
@@ -54,17 +56,18 @@ export const OutroFooter = forwardRef<HTMLElement>(function OutroFooter(_, ref) 
 
         <nav aria-label="Liens utiles" className="hidden items-center gap-6 md:flex">
           {FOOTER_LINKS.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="rounded-sm font-serif italic text-[13px] transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)]"
-              style={{
-                color: 'var(--gold-light)',
-                textShadow: '0 2px 12px rgba(0,0,0,.85)',
-              }}
-            >
-              {link.label}
-            </a>
+            <MagneticButton key={link.label} strength={4}>
+              <a
+                href={link.href}
+                className="rounded-sm font-serif italic text-[13px] transition-colors duration-300 hover:[color:var(--gold-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)]"
+                style={{
+                  color: 'var(--gold-light)',
+                  textShadow: '0 2px 12px rgba(0,0,0,.85)',
+                }}
+              >
+                {link.label}
+              </a>
+            </MagneticButton>
           ))}
         </nav>
 
@@ -72,17 +75,18 @@ export const OutroFooter = forwardRef<HTMLElement>(function OutroFooter(_, ref) 
           {SOCIAL_LINKS.map((social) => {
             const Icon = ICON_BY_KEY[social.key]
             return (
-              <a
-                key={social.key}
-                href={social.href}
-                aria-label={social.label}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-sm transition-colors hover:[color:var(--gold)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)]"
-                style={{ color: 'var(--gold-light)' }}
-              >
-                <Icon size={18} strokeWidth={1.5} aria-hidden />
-              </a>
+              <MagneticButton key={social.key} strength={5}>
+                <a
+                  href={social.href}
+                  aria-label={social.label}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-sm transition-colors duration-300 hover:[color:var(--gold-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gold)]"
+                  style={{ color: 'var(--gold-light)' }}
+                >
+                  <Icon size={18} strokeWidth={1.5} aria-hidden />
+                </a>
+              </MagneticButton>
             )
           })}
         </div>
