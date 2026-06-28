@@ -1,6 +1,7 @@
 export { Button } from './Button'
 export { CompassRose } from './CompassRose'
 export { DustReveal } from './DustReveal'
+export { EmberGlow } from './EmberGlow'
 export { FilmGrain } from './FilmGrain'
 export { GoldCursor } from './GoldCursor'
 export { MagneticButton } from './MagneticButton'

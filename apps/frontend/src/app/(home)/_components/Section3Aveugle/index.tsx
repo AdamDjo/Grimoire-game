@@ -6,6 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useRef } from 'react'
 
 import { Button } from '@/components/ui/Button'
+import { EmberGlow } from '@/components/ui/EmberGlow'
 import { MagneticButton } from '@/components/ui/MagneticButton'
 
 import { useClipReveal } from '../../_hooks/use-scroll-reveal'
@@ -308,10 +309,12 @@ export function Section3Aveugle() {
           >
             Le feu crépite. Une chandelle attend. Le reste du monde patientera.
           </p>
-          <MagneticButton pulse strength={8}>
-            <Button variant="primary" style={{ fontSize: 13, letterSpacing: '0.24em' }}>
-              Entrer dans l’auberge
-            </Button>
+          <MagneticButton strength={8}>
+            <EmberGlow radius={240}>
+              <Button variant="primary" style={{ fontSize: 13, letterSpacing: '0.24em' }}>
+                Entrer dans l’auberge
+              </Button>
+            </EmberGlow>
           </MagneticButton>
         </div>
 

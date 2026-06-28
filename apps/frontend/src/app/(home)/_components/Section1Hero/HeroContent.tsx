@@ -42,19 +42,40 @@ export function HeroContent({ childRefs }: HeroContentProps) {
 
       <div className="flex flex-col items-center">
         <div ref={childRefs?.compassRose} style={{ marginBottom: 20 }}>
-          <CompassRose size={36} />
+          <div
+            style={{
+              transform: 'translate3d(calc(var(--mx, 0) * 6px), calc(var(--my, 0) * 6px), 0)',
+              willChange: 'transform',
+            }}
+          >
+            <CompassRose size={36} />
+          </div>
         </div>
 
         <div ref={childRefs?.slideTexts} className="w-full">
-          <SlideTexts align="center" />
+          <div
+            style={{
+              transform: 'translate3d(calc(var(--mx, 0) * 8px), calc(var(--my, 0) * 8px), 0)',
+              willChange: 'transform',
+            }}
+          >
+            <SlideTexts align="center" />
+          </div>
         </div>
 
         <div ref={childRefs?.cta} className="pointer-events-auto" style={{ marginTop: 36 }}>
-          <MagneticButton pulse strength={8}>
-            <Button variant="primary" style={{ fontSize: 13, letterSpacing: '0.22em' }}>
-              Entrer dans l&apos;Univers
-            </Button>
-          </MagneticButton>
+          <div
+            style={{
+              transform: 'translate3d(calc(var(--mx, 0) * 12px), calc(var(--my, 0) * 12px), 0)',
+              willChange: 'transform',
+            }}
+          >
+            <MagneticButton pulse strength={8}>
+              <Button variant="primary" style={{ fontSize: 13, letterSpacing: '0.22em' }}>
+                Entrer dans l&apos;Univers
+              </Button>
+            </MagneticButton>
+          </div>
         </div>
       </div>
     </>

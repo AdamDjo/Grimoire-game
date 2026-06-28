@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { FilmGrain } from '@/components/ui/FilmGrain'
 import { GoldCursor } from '@/components/ui/GoldCursor'
@@ -18,6 +18,16 @@ import { useActiveSection } from './_hooks/use-active-section'
 export default function HomePage() {
   const mainRef = useRef<HTMLElement>(null)
   const activeIndex = useActiveSection(SECTION_IDS)
+
+  // Empêche le navigateur de restaurer la position de scroll au refresh —
+  // la landing est cinématique, on doit toujours repartir du Hero pour que
+  // la timeline GSAP joue dans l'ordre (vidéo Hero → canvas → S2 → S3).
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual'
+    }
+    window.scrollTo(0, 0)
+  }, [])
 
   return (
     <main ref={mainRef} className="relative">

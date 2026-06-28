@@ -8,6 +8,7 @@ import { ScrollHint } from '@/components/ui/ScrollHint'
 
 import { NAV_LINKS } from '../../_data/home-data'
 import { useCanvasScrollSequence } from '../../_hooks/use-canvas-scroll-sequence'
+import { useMouseParallax } from '../../_hooks/use-mouse-parallax'
 import { EmberParticles } from '../EmberParticles'
 
 import { HeroContent } from './HeroContent'
@@ -52,9 +53,19 @@ export function Section1Hero() {
     textChildRefs: { compassRose: compassRoseRef, slideTexts: slideTextsRef, cta: ctaRef },
   })
 
+  // Parallax souris — écrit --mx/--my sur le container racine. Les couches
+  // enfants utilisent ces vars pour translater à des intensités différentes.
+  const parallaxRef = useMouseParallax({ lerp: 0.08 })
+
+  // Compose containerRef (GSAP scrub) + parallaxRef (CSS vars) sur la section.
+  const setSectionRef = (el: HTMLElement | null) => {
+    containerRef.current = el
+    parallaxRef.current = el as HTMLDivElement | null
+  }
+
   return (
     <section
-      ref={containerRef}
+      ref={setSectionRef}
       data-section-id="hero"
       aria-label="Accueil"
       className="relative h-[300vh]"
@@ -72,6 +83,10 @@ export function Section1Hero() {
         poster="/home/frames_transition/frame_001.webp"
         aria-hidden="true"
         className="fixed left-0 top-0 z-[2] h-screen w-full object-cover will-change-[opacity]"
+        style={{
+          transform:
+            'translate3d(calc(var(--mx, 0) * -3px), calc(var(--my, 0) * -3px), 0) scale(1.02)',
+        }}
       />
 
       {/* Canvas frame-by-frame : opacity 0 au départ, fade-in pendant l'intro. */}
@@ -79,7 +94,11 @@ export function Section1Hero() {
         ref={canvasRef}
         aria-hidden="true"
         className="fixed left-0 top-0 z-[3] h-screen w-full"
-        style={{ opacity: 0 }}
+        style={{
+          opacity: 0,
+          transform:
+            'translate3d(calc(var(--mx, 0) * -3px), calc(var(--my, 0) * -3px), 0) scale(1.02)',
+        }}
       />
 
       {/* Braises dorées flottantes — couche atmosphérique sous l'overlay. */}
