@@ -5,6 +5,8 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useRef } from 'react'
 
+import { DustReveal } from '@/components/ui/DustReveal'
+
 import { AVEUGLE_QUOTES } from '../../_data/home-data'
 
 interface QuoteOverlayProps {
@@ -90,7 +92,13 @@ export function QuoteOverlay({ containerRef }: QuoteOverlayProps) {
               textShadow: '0 2px 18px rgba(0,0,0,0.85)',
             }}
           >
-            « {quote.text} »
+            <DustReveal
+              text={quote.text}
+              startDelay={0.15}
+              wordStagger={0.1}
+              duration={1.5}
+              withQuotes
+            />
           </p>
         )
       })}
