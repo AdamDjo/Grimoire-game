@@ -8,6 +8,7 @@ import { ScrollHint } from '@/components/ui/ScrollHint'
 
 import { NAV_LINKS } from '../../_data/home-data'
 import { useCanvasScrollSequence } from '../../_hooks/use-canvas-scroll-sequence'
+import { EmberParticles } from '../EmberParticles'
 
 import { HeroContent } from './HeroContent'
 
@@ -81,9 +82,12 @@ export function Section1Hero() {
         style={{ opacity: 0 }}
       />
 
+      {/* Braises dorées flottantes — couche atmosphérique sous l'overlay. */}
+      <EmberParticles variant="gold" count={40} position="fixed" zIndex={4} />
+
       {/* Overlay dégradé pour la lisibilité du texte. */}
       <div
-        className="pointer-events-none fixed inset-0 z-[4]"
+        className="pointer-events-none fixed inset-0 z-[5]"
         style={{
           background:
             'linear-gradient(180deg, var(--bg-overlay-55) 0%, transparent 18%, transparent 80%, var(--bg-overlay-50) 100%)',

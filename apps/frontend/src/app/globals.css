@@ -73,6 +73,72 @@
     }
   }
 
+  --animate-ember-rise: ember-rise var(--ember-dur, 8s) ease-in-out var(--ember-delay, 0s) infinite;
+  @keyframes ember-rise {
+    0% {
+      transform: translate3d(0, 0, 0) translateX(0);
+      opacity: 0;
+    }
+    8% {
+      opacity: var(--ember-opacity, 0.6);
+    }
+    50% {
+      transform: translate3d(0, -55vh, 0) translateX(var(--ember-drift, 12px));
+      opacity: var(--ember-opacity, 0.6);
+    }
+    92% {
+      opacity: var(--ember-opacity, 0.6);
+    }
+    100% {
+      transform: translate3d(0, -110vh, 0) translateX(calc(var(--ember-drift, 12px) * -0.4));
+      opacity: 0;
+    }
+  }
+
+  --animate-vignette-breathe: vignette-breathe 6s ease-in-out infinite;
+  @keyframes vignette-breathe {
+    0%,
+    100% {
+      opacity: 0.82;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  --animate-grain-shift: grain-shift 0.4s steps(2) infinite;
+  @keyframes grain-shift {
+    0% {
+      transform: translate(0, 0);
+    }
+    25% {
+      transform: translate(-2%, 1%);
+    }
+    50% {
+      transform: translate(1%, -2%);
+    }
+    75% {
+      transform: translate(-1%, -1%);
+    }
+    100% {
+      transform: translate(0, 0);
+    }
+  }
+
+  --animate-intro-fade: intro-fade 0.9s ease-out forwards;
+  @keyframes intro-fade {
+    0% {
+      opacity: 1;
+    }
+    70% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
   --animate-shiny-text-multi: shiny-text-multi 14s ease-in-out infinite;
   @keyframes shiny-text-multi {
     0% {

@@ -8,6 +8,7 @@ import { useRef } from 'react'
 import { Button } from '@/components/ui/Button'
 
 import { useClipReveal } from '../../_hooks/use-scroll-reveal'
+import { EmberParticles } from '../EmberParticles'
 
 import { OutroFooter } from './OutroFooter'
 import { QuoteOverlay } from './QuoteOverlay'
@@ -268,10 +269,16 @@ export function Section3Aveugle() {
           style={{ opacity: 0 }}
         />
 
-        {/* Vignette + dégradé bas pour lisibilité des citations + CTA. */}
+        {/* Étincelles d'auberge — cendres orangées erratiques au-dessus du
+            diptyque, sous la vignette pour rester atmosphérique. */}
+        <EmberParticles variant="ember" count={32} position="absolute" zIndex={2} />
+
+        {/* Vignette + dégradé bas pour lisibilité des citations + CTA.
+            Animation `vignette-breathe` : l'opacité respire (0.82↔1, 6s)
+            pour donner vie à l'image fixe. */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0"
+          className="pointer-events-none absolute inset-0 motion-safe:animate-vignette-breathe"
           style={{
             background:
               'linear-gradient(180deg, var(--bg-overlay-70) 0%, transparent 25%, transparent 55%, var(--bg-overlay-95) 100%)',

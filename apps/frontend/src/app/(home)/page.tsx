@@ -2,8 +2,11 @@
 
 import { useRef } from 'react'
 
+import { FilmGrain } from '@/components/ui/FilmGrain'
 import { SidePagination } from '@/components/ui/SidePagination'
 
+import { AmbientAudio } from './_components/AmbientAudio'
+import { IntroLoader } from './_components/IntroLoader'
 import { Section1Hero } from './_components/Section1Hero'
 import { Section2Seuil } from './_components/Section2Seuil'
 import { Section3Aveugle } from './_components/Section3Aveugle'
@@ -16,6 +19,9 @@ export default function HomePage() {
 
   return (
     <main ref={mainRef} className="relative">
+      <IntroLoader />
+      <FilmGrain />
+      <AmbientAudio />
       <SidePagination sections={SECTION_IDS} activeIndex={activeIndex} />
       <Section1Hero />
       <Section2Seuil />

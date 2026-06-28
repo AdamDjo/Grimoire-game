@@ -1,5 +1,6 @@
 export { Button } from './Button'
 export { CompassRose } from './CompassRose'
+export { FilmGrain } from './FilmGrain'
 export { NavBar } from './NavBar'
 export { NavLink } from './NavLink'
 export { PaginationDot } from './PaginationDot'
