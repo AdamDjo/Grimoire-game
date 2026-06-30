@@ -5,22 +5,35 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useRef } from 'react'
 
+import { UNIVERS_CARDS } from '../../_data/home-data'
+
 import { CosmicGlow } from './CosmicGlow'
 import { ManifestoReveal } from './ManifestoReveal'
+import { UniversCard } from './UniversCard'
 
 /**
- * Section2Seuil — "Le Seuil"
+ * Section2Seuil — "Le Seuil → Univers"
  *
- * Overlay sticky 100% transparent au départ. Le canvas fixed de Section1Hero
- * (qui affiche frame_096) reste visible derrière toute la traversée. Un voile
- * noir scrubbé monte progressivement par-dessus → crossfade continu, zéro coupure.
- * La card manifeste remonte au scroll façon Rockstar VI.
+ * Section pinned : le scroll vertical fait défiler horizontalement 3 cards
+ * glassmorphiques (card 1 = manifeste, cards 2 & 3 = lore Velkhar).
+ *
+ * Transitions portées par les éléments eux-mêmes, sans overlay global :
+ *  - Entrée  : card 1 émerge floue/transparente (scrub `top bottom → top top`)
+ *              et atteint son état net pile à l'activation du pin.
+ *  - Sortie  : card 3 se dissout (blur + opacity + y) sur le dernier quart du
+ *              pin, avant que S3 prenne le relais.
  */
 export function Section2Seuil() {
   const sectionRef = useRef<HTMLElement>(null)
-  const veilRef = useRef<HTMLDivElement>(null)
-  const cardRef = useRef<HTMLDivElement>(null)
-  const blurRef = useRef<HTMLDivElement>(null)
+  const trackRef = useRef<HTMLDivElement>(null)
+  const cardsRef = useRef<HTMLDivElement[]>([])
+
+  const setCardRef = (i: number) => (el: HTMLDivElement | null) => {
+    if (el) cardsRef.current[i] = el
+  }
+
+  // 3 cards : 1 manifeste + 2 paliers lore (UNIVERS_CARDS).
+  const totalCards = 1 + UNIVERS_CARDS.length
 
   useGSAP(
     () => {
@@ -30,154 +43,138 @@ export function Section2Seuil() {
         typeof window !== 'undefined' &&
         window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-      if (!veilRef.current || !cardRef.current || !blurRef.current) return
+      if (!trackRef.current) return
 
       if (prefersReducedMotion) {
-        gsap.set(veilRef.current, { opacity: 0.5 })
-        gsap.set(cardRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
-        gsap.set(blurRef.current, { opacity: 0 })
+        gsap.set(trackRef.current, { x: 0 })
+        gsap.set(cardsRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
         return
       }
 
-      // Phase 1 — Voile noir : 0 → 0.5. Démarre AVANT que Section2 soit
-      // visible (top bottom) pour crossfader sur la frame_096 sans coupure.
-      // Plafond modéré (0.5) : la frame_096 reste lisible derrière la card.
-      gsap.fromTo(
-        veilRef.current,
-        { opacity: 0 },
-        {
-          opacity: 0.5,
-          ease: 'power2.inOut',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top bottom',
-            end: 'top top',
-            scrub: 1,
-          },
-        }
-      )
+      const firstCard = cardsRef.current[0]
+      const lastCard = cardsRef.current[totalCards - 1]
 
-      // Phase 2 — Card manifeste remonte (translateY + opacity + blur).
-      gsap.fromTo(
-        cardRef.current,
-        { opacity: 0, y: 24, filter: 'blur(8px)' },
-        {
-          opacity: 1,
-          y: 0,
-          filter: 'blur(0px)',
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 50%',
-            end: 'center center',
-            scrub: 1,
-          },
-        }
-      )
+      // Phase 1 — Reveal scrubbé de la card 1 PENDANT que la section entre
+      // dans le viewport en flow normal (avant le pin). La card 1 est floue
+      // et transparente pendant qu'elle monte ; elle atteint son état net pile
+      // quand la section devient pinned. Pas de bord visible, pas de panneau.
+      if (firstCard) {
+        gsap.fromTo(
+          firstCard,
+          { opacity: 0, y: 60, filter: 'blur(24px)' },
+          {
+            opacity: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            ease: 'none',
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top bottom',
+              end: 'top top',
+              scrub: true,
+            },
+          }
+        )
+      }
 
-      // Sortie de la card — la card reste lisible toute la durée de S2,
-      // puis disparaît sur les tout derniers % (miroir de l'entrée).
-      // Pendant ce temps un overlay de flou monte simultanément →
-      // la card s'efface dans le flou, pas dans le vide.
-      gsap.to(cardRef.current, {
-        opacity: 0,
-        y: -24,
-        filter: 'blur(8px)',
-        ease: 'power2.in',
+      // Cards 2 & 3 — opacity 1 d'office (le scroll horizontal s'occupe de
+      // les amener au centre une par une, elles sont hors-viewport tant que
+      // ce n'est pas leur tour).
+      cardsRef.current.slice(1).forEach((c) => {
+        if (c) gsap.set(c, { opacity: 1, y: 0, filter: 'blur(0px)' })
+      })
+
+      // Phase 2 — Scroll-jacking horizontal pinned, dans une timeline pour
+      // pouvoir y ajouter le fadeout de la card 3 sur le dernier quart.
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: 'bottom 60%',
-          end: 'bottom 10%',
+          start: 'top top',
+          end: () => `+=${window.innerHeight * totalCards}`,
           scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
         },
       })
 
-      // Phase 3 — Voile redescend 0.5 → 0.35 sur la même fenêtre que la
-      // sortie de la card. Pas de coupure visuelle.
-      gsap.to(veilRef.current, {
-        opacity: 0.35,
-        ease: 'power2.inOut',
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'bottom 60%',
-          end: 'bottom 10%',
-          scrub: 1,
-        },
-      })
-
-      // Overlay de flou — monte en fin de S2 (même fenêtre que la sortie
-      // card), continue à exister sur le début de S3, puis s'atténue
-      // (descente gérée côté Section3Aveugle). Garantit qu'on ne voit
-      // jamais l'auberge nette pendant la jonction : flou maximal au
-      // moment du passage, image nette uniquement quand le sticky est
-      // pleinement installé.
-      gsap.fromTo(
-        blurRef.current,
-        { opacity: 0 },
+      // Le défilement horizontal occupe 0 → 0.75 de la timeline. La card 3
+      // est ainsi centrée à ~0.66 et a un quart de scroll pour être lue.
+      tl.to(
+        trackRef.current,
         {
-          opacity: 1,
+          x: () => -(totalCards - 1) * window.innerWidth,
           ease: 'none',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'bottom 60%',
-            end: 'bottom 10%',
-            scrub: true,
-          },
-        }
+          duration: 0.75,
+        },
+        0
       )
+
+      // Phase 3 — Fadeout de la card 3 sur les derniers 25% du pin.
+      // Quand le pin se relâche, la card est déjà dissoute → S3 prend le
+      // relais sur un vide propre.
+      if (lastCard) {
+        tl.to(
+          lastCard,
+          {
+            opacity: 0,
+            y: -40,
+            filter: 'blur(24px)',
+            ease: 'power2.in',
+            duration: 0.25,
+          },
+          0.75
+        )
+      }
     },
-    { scope: sectionRef }
+    { scope: sectionRef, dependencies: [totalCards] }
   )
 
   return (
     <section
       ref={sectionRef}
       data-section-id="seuil"
-      aria-label="Le Seuil — manifeste"
-      className="relative z-10 h-[250vh]"
+      aria-label="Le Seuil — univers de Velkhar"
+      className="relative z-10"
     >
-      {/* Voile noir scrubbé — fixed pour couvrir TOUT le viewport (pas juste
-          le sticky), sinon une bande horizontale apparaît à la jonction
-          Section1/Section2 (canvas fixed visible sans voile au-dessus). */}
-      <div
-        ref={veilRef}
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-0 bg-black"
-        style={{ opacity: 0 }}
-      />
-
-      {/* Marqueur invisible pour Section3 — l'amplitude réelle du flou est
-          appliquée directement sur le crossfade auberge via `filter` (voir
-          Section3Aveugle). Ici on n'a besoin que de l'opacité scrubbée
-          comme proxy : 0 = pas de transition, 1 = pleine intensité. */}
-      <div
-        ref={blurRef}
-        data-transition-blur
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-0"
-        style={{ opacity: 0, visibility: 'hidden' }}
-      />
-
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
+      <div className="relative h-screen w-full overflow-hidden">
         <CosmicGlow />
 
-        {/* Card manifeste — un seul bloc qui remonte au scroll. */}
+        {/* Track horizontal — 3 cards côte à côte, déplacé via GSAP. */}
         <div
-          ref={cardRef}
-          className="absolute inset-0 flex items-center justify-center px-6"
-          style={{ willChange: 'transform, opacity, filter' }}
+          ref={trackRef}
+          className="absolute inset-0 flex items-center"
+          style={{
+            width: `${totalCards * 100}vw`,
+            willChange: 'transform',
+          }}
         >
+          {/* Card 1 — Manifeste */}
           <div
-            className="relative rounded-2xl border border-white/10 px-8 py-10 md:px-14 md:py-14"
-            style={{
-              backgroundColor: 'rgba(0, 0, 0, 0.18)',
-              backdropFilter: 'blur(14px)',
-              WebkitBackdropFilter: 'blur(14px)',
-              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08), 0 30px 80px rgba(0,0,0,0.45)',
-            }}
+            ref={setCardRef(0)}
+            className="flex h-full items-center justify-center px-6"
+            style={{ width: '100vw', willChange: 'transform, opacity, filter' }}
           >
-            <ManifestoReveal />
+            <UniversCard>
+              <ManifestoReveal />
+            </UniversCard>
           </div>
+
+          {/* Cards 2 & 3 — Lore Velkhar */}
+          {UNIVERS_CARDS.map((slide, i) => (
+            <div
+              key={slide.title}
+              ref={setCardRef(i + 1)}
+              className="flex h-full items-center justify-center px-6"
+              style={{ width: '100vw', willChange: 'transform, opacity, filter' }}
+            >
+              <UniversCard
+                tagline={slide.tagline}
+                title={slide.title}
+                description={slide.description}
+              />
+            </div>
+          ))}
         </div>
       </div>
     </section>

@@ -87,7 +87,7 @@ export const MAP_LABELS = [
 
 export const NAV_LINKS = ['Accueil', 'Univers', 'Règles', 'Communauté', 'FAQ'] as const
 
-export const SECTION_IDS = ['hero', 'seuil', 'aveugle', 'pacte'] as const
+export const SECTION_IDS = ['hero', 'seuil', 'aveugle'] as const
 
 /**
  * Manifeste révélé ligne par ligne dans Section2Seuil (mask-reveal scrubbé).
@@ -190,8 +190,11 @@ export const HERO_SLIDES = [
   },
 ] as const
 
-/** Durée d'affichage de chaque palier du carrousel hero (ms). */
-export const HERO_SLIDE_DURATION_MS = 5000
+/**
+ * Cards de la Section 2 (Univers) — paliers 2 & 3 du lore initialement dans le
+ * carrousel hero, désormais révélés un par un au scroll horizontal scrubbé.
+ */
+export const UNIVERS_CARDS = HERO_SLIDES.slice(1)
 
 /**
  * Révélation « fondu + brume » d'un palier : le texte entre/sort avec un léger

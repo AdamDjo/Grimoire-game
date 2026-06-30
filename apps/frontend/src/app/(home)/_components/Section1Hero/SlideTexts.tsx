@@ -1,11 +1,10 @@
 'use client'
 
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
 
 import { AnimatedShinyText } from '@/components/ui/animated-shiny-text'
 
-import { HERO_SLIDES, HERO_SLIDE_DURATION_MS, heroSlideReveal } from '../../_data/home-data'
+import { HERO_SLIDES, heroSlideReveal } from '../../_data/home-data'
 
 type Slide = (typeof HERO_SLIDES)[number]
 
@@ -53,68 +52,28 @@ function SlideContent({ slide, align }: { slide: Slide; align: Align }) {
 }
 
 /**
- * SlideTexts — fait défiler en boucle les paliers de texte du hero
- * (tagline + titre doré + description). Le CompassRose et le CTA restent hors
- * de ce composant, donc fixes.
+ * SlideTexts — affiche le premier palier du hero (tagline + titre doré +
+ * description) avec son animation d'entrée « fondu + brume » jouée une fois
+ * au mount. Les autres paliers du carrousel ont migré dans Section2Seuil
+ * (cards horizontales scrubbées).
  *
- * - Rotation auto toutes les HERO_SLIDE_DURATION_MS, en pause au survol/focus.
- * - Transition « fondu + brume » via AnimatePresence (heroSlideReveal).
- * - Respecte prefers-reduced-motion : pas de rotation, palier 1 figé.
- * - Hauteur stabilisée : tous les paliers sont empilés (grid 1×1) en
- *   « fantômes » invisibles → le conteneur prend la hauteur du plus long et le
- *   titre/CTA ne sautent pas entre les transitions. Responsive, sans px fixe.
+ * Respecte prefers-reduced-motion : palier figé sans animation.
  */
 export function SlideTexts({ align = 'center' }: { align?: Align }) {
   const prefersReducedMotion = useReducedMotion()
-  const [index, setIndex] = useState(0)
-  const [paused, setPaused] = useState(false)
-
-  useEffect(() => {
-    if (prefersReducedMotion || paused) return
-
-    const id = setInterval(() => {
-      setIndex((prev) => (prev + 1) % HERO_SLIDES.length)
-    }, HERO_SLIDE_DURATION_MS)
-
-    return () => clearInterval(id)
-  }, [prefersReducedMotion, paused])
-
-  const slide = HERO_SLIDES[index]
+  const slide = HERO_SLIDES[0]
   const transition = { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const }
 
   return (
-    <div
-      className="grid w-full"
-      aria-roledescription="carrousel"
-      aria-label="Présentation de l’univers"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={() => setPaused(false)}
-    >
-      {/* Fantômes : réservent la hauteur du plus grand palier (sans saut). */}
-      {HERO_SLIDES.map((s) => (
-        <div key={s.title} aria-hidden="true" className="invisible" style={{ gridArea: '1 / 1' }}>
-          <SlideContent slide={s} align={align} />
-        </div>
-      ))}
-
-      {/* Palier visible animé, superposé dans la même cellule de grille. */}
-      <div style={{ gridArea: '1 / 1' }}>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={index}
-            variants={prefersReducedMotion ? undefined : heroSlideReveal}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            transition={transition}
-            aria-live="polite"
-          >
-            <SlideContent slide={slide} align={align} />
-          </motion.div>
-        </AnimatePresence>
-      </div>
+    <div className="w-full">
+      <motion.div
+        variants={prefersReducedMotion ? undefined : heroSlideReveal}
+        initial="hidden"
+        animate="visible"
+        transition={transition}
+      >
+        <SlideContent slide={slide} align={align} />
+      </motion.div>
     </div>
   )
 }
