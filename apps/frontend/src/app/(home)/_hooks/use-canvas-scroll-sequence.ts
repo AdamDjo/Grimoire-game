@@ -1,9 +1,8 @@
 'use client'
 
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useEffect, useRef } from 'react'
+
+import { gsap, ScrollTrigger, useGSAP } from '@/lib/gsap-init'
 
 const FRAME_COUNT = 96
 
@@ -109,8 +108,21 @@ export function useCanvasScrollSequence({
 
   useEffect(() => {
     resizeCanvas()
-    window.addEventListener('resize', resizeCanvas)
-    return () => window.removeEventListener('resize', resizeCanvas)
+
+    let timeoutId: number | undefined
+    const debouncedResize = () => {
+      if (timeoutId !== undefined) window.clearTimeout(timeoutId)
+      timeoutId = window.setTimeout(() => {
+        resizeCanvas()
+        ScrollTrigger.refresh()
+      }, 120)
+    }
+
+    window.addEventListener('resize', debouncedResize)
+    return () => {
+      if (timeoutId !== undefined) window.clearTimeout(timeoutId)
+      window.removeEventListener('resize', debouncedResize)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -135,8 +147,6 @@ export function useCanvasScrollSequence({
 
   useGSAP(
     () => {
-      gsap.registerPlugin(ScrollTrigger)
-
       const prefersReducedMotion =
         typeof window !== 'undefined' &&
         window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -172,14 +182,12 @@ export function useCanvasScrollSequence({
             scrub: true,
           },
           onUpdate: () => {
-            requestAnimationFrame(() => {
-              if (canvasRef.current) {
-                drawImageCover(
-                  canvasRef.current,
-                  imagesRef.current[Math.round(frameStateRef.current.index)]
-                )
-              }
-            })
+            if (canvasRef.current) {
+              drawImageCover(
+                canvasRef.current,
+                imagesRef.current[Math.round(frameStateRef.current.index)]
+              )
+            }
           },
         })
 
@@ -246,14 +254,12 @@ export function useCanvasScrollSequence({
           snap: 'index',
           duration: 0.62,
           onUpdate: () => {
-            requestAnimationFrame(() => {
-              if (canvasRef.current) {
-                drawImageCover(
-                  canvasRef.current,
-                  imagesRef.current[Math.round(frameStateRef.current.index)]
-                )
-              }
-            })
+            if (canvasRef.current) {
+              drawImageCover(
+                canvasRef.current,
+                imagesRef.current[Math.round(frameStateRef.current.index)]
+              )
+            }
           },
         },
         0.08

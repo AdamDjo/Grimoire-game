@@ -1,8 +1,6 @@
 'use client'
 
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { gsap, useGSAP } from '@/lib/gsap-init'
 
 import type React from 'react'
 
@@ -33,8 +31,6 @@ export function useMaskReveal({
 }: UseMaskRevealOptions): void {
   useGSAP(
     () => {
-      gsap.registerPlugin(ScrollTrigger)
-
       gsap.to(targets, {
         clipPath: 'inset(0 0% 0 0)',
         ease: 'power2.out',
@@ -72,8 +68,6 @@ export function useClipReveal({
 }: UseClipRevealOptions): void {
   useGSAP(
     () => {
-      gsap.registerPlugin(ScrollTrigger)
-
       gsap.fromTo(
         target,
         { clipPath: 'inset(0 100% 0 0)' },

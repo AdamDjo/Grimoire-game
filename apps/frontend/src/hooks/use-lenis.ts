@@ -1,9 +1,9 @@
 'use client'
 
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
 import { useEffect } from 'react'
+
+import { gsap, ScrollTrigger } from '@/lib/gsap-init'
 
 interface UseLenisOptions {
   /** Désactive Lenis complètement (par ex. sur pages hors landing). */
@@ -31,8 +31,6 @@ export function useLenis({ enabled = true }: UseLenisOptions = {}): void {
       window.matchMedia('(max-width: 639px)').matches
 
     if (prefersReducedMotion || isCoarseSmall) return
-
-    gsap.registerPlugin(ScrollTrigger)
 
     const lenis = new Lenis({
       lerp: 0.09,

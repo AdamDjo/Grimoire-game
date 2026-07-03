@@ -1,11 +1,9 @@
 'use client'
 
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useRef } from 'react'
 
 import { AnimatedShinyText } from '@/components/ui/animated-shiny-text'
+import { gsap, useGSAP } from '@/lib/gsap-init'
 
 import { AVEUGLE_QUOTES } from '../../_data/home-data'
 
@@ -27,8 +25,6 @@ export function QuoteOverlay({ containerRef }: QuoteOverlayProps) {
 
   useGSAP(
     () => {
-      gsap.registerPlugin(ScrollTrigger)
-
       const quotes = wrapperRef.current?.querySelectorAll<HTMLElement>('.aveugle-quote')
       if (!quotes || quotes.length === 0) return
 

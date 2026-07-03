@@ -1,10 +1,9 @@
 'use client'
 
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 import { useRef, type CSSProperties, type ElementType } from 'react'
+
+import { gsap, useGSAP } from '@/lib/gsap-init'
 
 interface KineticTextProps {
   text: string
@@ -45,7 +44,7 @@ export function KineticText({
 
   useGSAP(
     () => {
-      gsap.registerPlugin(SplitText, ScrollTrigger)
+      gsap.registerPlugin(SplitText)
       if (!ref.current) return
 
       const prefersReducedMotion =

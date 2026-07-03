@@ -1,9 +1,8 @@
 'use client'
 
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useEffect, useRef, type RefObject } from 'react'
+
+import { gsap, ScrollTrigger, useGSAP } from '@/lib/gsap-init'
 
 type Tier = 'desktop' | 'tablet' | 'mobile'
 
@@ -96,8 +95,21 @@ export function useFrameSequenceScrub({
 
   useEffect(() => {
     resizeCanvas()
-    window.addEventListener('resize', resizeCanvas)
-    return () => window.removeEventListener('resize', resizeCanvas)
+
+    let timeoutId: number | undefined
+    const debouncedResize = () => {
+      if (timeoutId !== undefined) window.clearTimeout(timeoutId)
+      timeoutId = window.setTimeout(() => {
+        resizeCanvas()
+        ScrollTrigger.refresh()
+      }, 120)
+    }
+
+    window.addEventListener('resize', debouncedResize)
+    return () => {
+      if (timeoutId !== undefined) window.clearTimeout(timeoutId)
+      window.removeEventListener('resize', debouncedResize)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -147,8 +159,6 @@ export function useFrameSequenceScrub({
 
   useGSAP(
     () => {
-      gsap.registerPlugin(ScrollTrigger)
-
       const prefersReducedMotion =
         typeof window !== 'undefined' &&
         window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -174,15 +184,14 @@ export function useFrameSequenceScrub({
           scrub: 1,
         },
         onUpdate: () => {
-          requestAnimationFrame(() => {
-            if (canvasRef.current) {
-              drawImageCover(
-                canvasRef.current,
-                imagesRef.current[Math.round(frameStateRef.current.index)]
-              )
-            }
-          })
+          if (canvasRef.current) {
+            drawImageCover(
+              canvasRef.current,
+              imagesRef.current[Math.round(frameStateRef.current.index)]
+            )
+          }
         },
+        invalidateOnRefresh: true,
       })
 
       return () => {
