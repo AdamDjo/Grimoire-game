@@ -1,3 +1,8 @@
+# ARCHIVE — Ancienne vision RP générique
+
+> Ce document est conservé pour historique seulement. La direction produit active est **GRIMOIRE — Of Ash and Salt / Velkhar**, définie dans `docs/02-design/GAME_DESIGN.md`, `docs/01-current-state/MEMORY.md` et `docs/wiki/index.md`.
+> Ne pas l'utiliser comme source de vérité pour le scope, le lore, les routes ou la roadmap.
+
 # Vision Produit — Plateforme de Roleplay IA Persistante
 
 ## Concept Principal

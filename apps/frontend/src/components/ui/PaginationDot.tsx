@@ -4,9 +4,10 @@ import { motion } from 'framer-motion'
 
 const SECTION_LABELS: Record<string, string> = {
   hero: 'Accueil',
-  univers: 'Univers',
-  personnage: 'Personnage',
-  communaute: 'Communauté',
+  cendres: 'Cendres',
+  artefact: 'Artefact',
+  nuit: 'Nuit',
+  auberge: 'Auberge',
 }
 
 export function PaginationDot({

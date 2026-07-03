@@ -5,7 +5,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useRef } from 'react'
 
-import { DustReveal } from '@/components/ui/DustReveal'
+import { AnimatedShinyText } from '@/components/ui/animated-shiny-text'
 
 import { AVEUGLE_QUOTES } from '../../_data/home-data'
 
@@ -17,6 +17,10 @@ interface QuoteOverlayProps {
  * QuoteOverlay — 3 citations diégétiques en sous-titre cinéma, posées en bord
  * d'écran (left/right alterné). Apparaissent à des paliers de scroll distincts
  * (≈ 5%, 40%, 75% de la section), restent à l'écran ~25%, disparaissent.
+ *
+ * Animation : le parent pilote opacité + y de chaque `.aveugle-quote` en scrub.
+ * KineticText (char-by-char, power3.out) anime les chars à l'intérieur dès que
+ * la citation entre dans le viewport — les deux couches s'additionnent proprement.
  */
 export function QuoteOverlay({ containerRef }: QuoteOverlayProps) {
   const wrapperRef = useRef<HTMLDivElement>(null)
@@ -28,9 +32,6 @@ export function QuoteOverlay({ containerRef }: QuoteOverlayProps) {
       const quotes = wrapperRef.current?.querySelectorAll<HTMLElement>('.aveugle-quote')
       if (!quotes || quotes.length === 0) return
 
-      // Les 3 citations doivent toutes disparaître avant `bottom-=25% bottom`
-      // (≈ 75% du scroll de la section h-[300vh]), moment où la vidéo auberge
-      // commence son fade-in. Sinon elles se superposent à la scène finale.
       const starts = [0.04, 0.28, 0.5]
 
       quotes.forEach((quote, i) => {
@@ -86,19 +87,16 @@ export function QuoteOverlay({ containerRef }: QuoteOverlayProps) {
               [isLeft ? 'left' : 'right']: '8%',
               maxWidth: 'min(520px, 42vw)',
               textAlign: isLeft ? 'left' : 'right',
-              fontSize: 'clamp(18px, 2vw, 26px)',
+              fontSize: 'clamp(20px, 2vw, 30px)',
               lineHeight: 1.4,
               color: 'var(--gold-light)',
               textShadow: '0 2px 18px rgba(0,0,0,0.85)',
             }}
+            aria-label={`« ${quote.text} »`}
           >
-            <DustReveal
-              text={quote.text}
-              startDelay={0.15}
-              wordStagger={0.1}
-              duration={1.5}
-              withQuotes
-            />
+            <AnimatedShinyText variant="gold-soft" shimmerWidth={240}>
+              {`« ${quote.text} »`}
+            </AnimatedShinyText>
           </p>
         )
       })}

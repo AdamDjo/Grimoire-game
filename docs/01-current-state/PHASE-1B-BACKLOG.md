@@ -1,7 +1,14 @@
 # Phase 1B — Backlog
 
-> Phase 1A (landing) ✅ terminée. Phase 1B = brancher le **backend Game Master** + finir les **écrans frontend restants**.
+> Phase 1A (landing) est en finalisation sur `feature/88-landing-page-redesign`. Phase 1B = brancher le **backend Game Master** + finir les **écrans frontend restants**.
 > Pré-requis : merger `feature/88-landing-page-redesign` sur `develop`.
+
+## Garde-fous produit
+
+- **Velkhar only** : ne pas pivoter vers D&D comme univers. On peut reprendre des conventions lisibles de JdR (d20, archétypes, difficulté claire), mais pas remplacer Cendre/Calamine/Souvenirs/vocations.
+- **MVP court** : viser une vertical slice 45-70 min qui prouve la mémoire, les conséquences et L'Aveugle. Les runs 3-15h sont une vision post-MVP.
+- **Lore progressif** : scène 1 = L'Aveugle, Cendre, Calamine, Souvenirs. Les Archontes, factions, régions et secrets se débloquent par jeu.
+- **Moat d'abord** : memory/world-state/validation backend avant cosmétiques, régions premium, bestiaire étendu, 3D dice ou leaderboard.
 
 ---
 

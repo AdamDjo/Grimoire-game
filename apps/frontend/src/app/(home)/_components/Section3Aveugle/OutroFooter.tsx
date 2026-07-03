@@ -3,6 +3,7 @@
 import { Instagram, MessageCircle, Twitter } from 'lucide-react'
 import { forwardRef, type ComponentType } from 'react'
 
+import { KineticText } from '@/components/ui/KineticText'
 import { MagneticButton } from '@/components/ui/MagneticButton'
 
 import { FOOTER_LINKS, SOCIAL_LINKS } from '../../_data/home-data'
@@ -41,7 +42,15 @@ export const OutroFooter = forwardRef<HTMLElement>(function OutroFooter(_, ref) 
               textShadow: '0 2px 12px rgba(0,0,0,.85)',
             }}
           >
-            Grimoire
+            <KineticText
+              text="Grimoire"
+              as="span"
+              trigger="scroll"
+              start="bottom 98%"
+              duration={1.1}
+              stagger={0.06}
+              style={{ color: 'inherit', fontSize: 'inherit', letterSpacing: 'inherit' }}
+            />
           </span>
           <span
             className="font-serif italic text-[11px]"
@@ -50,7 +59,7 @@ export const OutroFooter = forwardRef<HTMLElement>(function OutroFooter(_, ref) 
               textShadow: '0 2px 12px rgba(0,0,0,.7)',
             }}
           >
-            Valorain · Édition I
+            Velkhar · Édition I
           </span>
         </div>
 

@@ -43,6 +43,8 @@ const VARIANTS: Record<ButtonVariant, StyleMap> = {
     hover: {
       color: 'var(--gold-hover)',
       borderColor: 'var(--gold-light)',
+      textShadow:
+        '0 0 8px rgba(244,220,168,.9), 0 0 20px rgba(224,196,137,.6), 0 0 40px rgba(196,164,104,.35)',
       boxShadow:
         'inset 0 1px 0 rgba(224,196,137,.4), 0 0 30px rgba(224,196,137,.5), 0 0 70px rgba(196,164,104,.22), 0 6px 18px rgba(0,0,0,.4)',
     },

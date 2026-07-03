@@ -15,7 +15,7 @@
 > **GRIMOIRE — Of Ash and Salt. Des Cendres et du Sel.**
 > _A narrative roguelike where every run is a complete story — and the world remembers._
 
-GRIMOIRE is an AI-powered narrative roguelike set in **Velkhar**, a dark fantasy desert continent. The player picks a **vocation** (Marcheur-du-Sel, Lame-Ombre, Veilleur, or Tisse-Verbe) and lives a complete adventure (3–15 hours). Death is permanent — but it is never sterile. A Chronicle is generated, the meta-world changes, and the next run tells a different story.
+GRIMOIRE is an AI-powered narrative roguelike set in **Velkhar**, a dark fantasy desert continent. The player picks a **vocation** (Marcheur-du-Sel, Lame-Ombre, Veilleur, or Tisse-Verbe) and lives a complete adventure. MVP target: a 45-70 min vertical slice that proves memory, consequences, and L'Aveugle. Long-term target: full 3-15h runs. Death is permanent — but it is never sterile. A Chronicle is generated, the meta-world changes, and the next run tells a different story.
 
 **Every run begins in the same place** : the Auberge de **L'Aveugle**, the keeper of thresholds, who sells lore for **Souvenirs** (meta-currency). From there, the player leaves into the world.
 
@@ -68,6 +68,9 @@ GRIMOIRE wins on **depth in one direction**, not breadth. Temptation = build wid
 **Therefore:**
 
 - **Velkhar only.** One desert world, deep, with 4 vocations that each see the world differently.
+- **D&D is a readability reference, not the product.** Use familiar tabletop conventions when useful (d20, clear archetypes, visible stakes), but never replace Velkhar's IP, vocations, triptyque, Cendre/Calamine, Souvenirs, or L'Aveugle.
+- **MVP proves memory in 45-70 min.** Full 3-15h runs are the long-term promise, not the first shippable proof.
+- **Lore is introduced by play.** First exposure: L'Aveugle, Cendre, Calamine, Souvenirs. Archontes, factions, regions, and deep secrets unlock through discovery.
 - **Memory & world-state come first**, before cosmetics like 3D dice.
 - **Streamer/Twitch voting is cut.** A chat poll deciding A/B/C/D is anti-RP.
 - **Multi-univers is cut.** No Valorain, no Apocalypse, no Sci-Fi. **GRIMOIRE = Velkhar.** The architecture stays clean for one world.
@@ -499,14 +502,14 @@ Aucune quête n'est assignée par le MJ. Elles **émergent** des choix accumulé
 
 ## 9. Phases & Timeline
 
-| Phase                          | Weeks         | Deliverable                                                                                                                                                |
-| ------------------------------ | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **0 — Sync docs GDD**          | ✅ 2026-06-28 | Documentation alignée Velkhar (passe sync + migration GDD dans `docs/raw/`)                                                                                |
-| **1A — Frontend UI (Velkhar)** | 1-5           | Pages désertiques : landing, forge (4 vocations), **Auberge L'Aveugle**, campagne, Makhzen, session. Pas d'API encore.                                     |
-| **1B — Backend Foundation**    | 4-6           | DB Velkhar + artefacts + Calamine, auth, **lore/velkhar/ canon**, **OpenRouter provider**, hub L'Aveugle                                                   |
-| **2 — MVP Roguelike**          | 7-12          | Run 3-15h playable end-to-end + Free Action + IC/OOC + **d20 aux pivots** + **Souvenirs + L'Aveugle** + persistent NPCs + world-state + Chronicle markdown |
-| **2B — Méta-monde & Héritage** | 13-18         | Méta-monde vivant entre runs, héritage artefact (3-4 transmissions), ancêtre cité, vocations V2, co-op V2                                                  |
-| **3 — Polish**                 | 19+           | 3D D20, PDF parchemin, per-seed leaderboard, Lines & Veils, animations                                                                                     |
+| Phase                          | Weeks         | Deliverable                                                                                                                                                      |
+| ------------------------------ | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **0 — Sync docs GDD**          | ✅ 2026-06-28 | Documentation alignée Velkhar (passe sync + migration GDD dans `docs/raw/`)                                                                                      |
+| **1A — Frontend UI (Velkhar)** | 1-5           | Pages désertiques : landing, forge (4 vocations), **Auberge L'Aveugle**, campagne, Makhzen, session. Pas d'API encore.                                           |
+| **1B — Backend Foundation**    | 4-6           | DB Velkhar + artefacts + Calamine, auth, **lore/velkhar/ canon**, **OpenRouter provider**, hub L'Aveugle                                                         |
+| **2 — MVP Roguelike**          | 7-12          | Vertical slice 45-70 min end-to-end + Free Action + IC/OOC + **d20 aux pivots** + **Souvenirs + L'Aveugle** + persistent NPCs + world-state + Chronicle markdown |
+| **2B — Méta-monde & Héritage** | 13-18         | Méta-monde vivant entre runs, héritage artefact (3-4 transmissions), ancêtre cité, vocations V2, co-op V2                                                        |
+| **3 — Polish / Full Runs**     | 19+           | Full 3-15h runs, 3D D20, PDF parchemin, per-seed leaderboard, Lines & Veils, animations                                                                          |
 
 > The MVP timeline is deliberately longer than a typical hackathon: persistent memory, world-state, and free action are the product. Better to ship the thing that beats AI Dungeon than to ship fast and shallow.
 
@@ -516,7 +519,7 @@ Aucune quête n'est assignée par le MJ. Elles **émergent** des choix accumulé
 
 ### MVP (end of Phase 2)
 
-- ✅ Les Cendres de Velkhar fully playable; 4 vocations + concept libre
+- ✅ Les Cendres de Velkhar playable as a 45-70 min vertical slice; 4 vocations + concept libre
 - ✅ **Every run opens at L'Aveugle** (image plein écran, dialogue IA, achat Souvenirs)
 - ✅ **Free Action is the primary interface and works reliably**
 - ✅ **NPCs persist and remember across a full run (tested 30+ scenes)**

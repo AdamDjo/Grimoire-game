@@ -37,3 +37,16 @@ Suite à la revue DA des mockups Hub L'Aveugle et Session (`docs/_archive/DA-REV
 - `docs/01-current-state/plan-sync-gdd.md` supprimé (sync terminée, contenu repris)
 - `docs/02-design/animation.md` archivé dans `docs/_archive/` (items restants → issues GitHub)
 - `docs/02-design/GAME_DESIGN.md` : chirurgie (§3 + §11 supprimés, §4 compressé, §7.1/§7.6 → pointeur DESIGN_TOKENS.md, §8.4 corrigé)
+
+---
+
+## 2026-07-03 — Décision stratégie produit : garder Velkhar, réduire le MVP
+
+Revue PM du lore et du positionnement. Décision : **garder Velkhar comme IP principale** et ne pas pivoter vers Dungeons & Dragons comme univers. D&D reste seulement une référence de lisibilité JdR (d20, archétypes, enjeux visibles), pas une direction de contenu.
+
+Changements de plan :
+
+- MVP Phase 2 = vertical slice 45-70 min qui prouve mémoire, conséquences, L'Aveugle et Chronique texte.
+- Runs complets 3-15h = objectif post-MVP / Phase 3+.
+- Lore exposé par paliers : L'Aveugle, Cendre, Calamine, Souvenirs d'abord ; Archontes, factions, régions et secrets par découverte.
+- Priorité produit confirmée : memory/world-state/validation backend avant extension de régions, vocations, bestiaire, 3D dice ou leaderboard.

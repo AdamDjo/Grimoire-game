@@ -8,7 +8,7 @@
 ## Projet
 
 **GRIMOIRE — Of Ash and Salt** (Des Cendres et du Sel) — roguelike narratif par IA, monde de **Velkhar** (continent désertique, le _Makhzen_).
-Run 3-15h, 4 vocations, Chronique générée en fin de run, méta-monde vivant entre les runs.
+MVP cible : vertical slice jouable 45-70 min qui prouve la mémoire du MJ. Vision long terme : runs 3-15h, 4 vocations, Chronique générée en fin de run, méta-monde vivant entre les runs.
 **Hub permanent** : l'Auberge de **L'Aveugle** — ouvre chaque run.
 
 **Source de vérité produit** (lore + game design) : `docs/raw/` (GDD Velkhar, 25 fichiers, gitignored) — voir [`wiki/index.md`](wiki/index.md). Toute divergence repo ↔ GDD → `docs/raw/` gagne.
@@ -17,8 +17,9 @@ Run 3-15h, 4 vocations, Chronique générée en fin de run, méta-monde vivant e
 
 ## Où on en est
 
-- **Phase actuelle** : **Phase 1B** (backend Game Master + écrans Phase 1A restants).
-- **Phase 1A** : ✅ landing page terminée (branche `feature/88-landing-page-redesign`).
+- **Phase actuelle** : **Transition Phase 1A → Phase 1B**.
+- **Phase 1A** : landing page sur `feature/88-landing-page-redesign`, à finaliser/merger avant le démarrage réel de 1B.
+- **Phase 1B** : prête en backlog (backend Game Master + écrans gameplay), mais dépend du merge de la landing.
 - **Branche courante** : `feature/88-landing-page-redesign` — à merger sur `develop` avant d'ouvrir 1B.
 - **Détail backlog** : [`01-current-state/PHASE-1B-BACKLOG.md`](01-current-state/PHASE-1B-BACKLOG.md).
 - **État détaillé** : [`01-current-state/MEMORY.md`](01-current-state/MEMORY.md).

@@ -7,10 +7,10 @@
 
 - **Projet** : GRIMOIRE — Of Ash and Salt (Des Cendres et du Sel)
 - **Monde** : **Velkhar** (continent désertique, le _Makhzen_) — solo V1, co-op V2
-- **Genre** : Roguelike narratif (run 3-15h, aventure complète + Chronique + méta-monde)
-- **Branche courante** : `feature/88-landing-page-redesign` (à merger sur `develop`)
-- **Phase actuelle** : **Phase 1B** — backend Game Master + écrans gameplay (Aveugle, Character Create, World Map, Session)
-- **Phase 1A** : ✅ TERMINÉE — landing page (Velkhar)
+- **Genre** : Roguelike narratif (MVP 45-70 min ; vision long terme run 3-15h + Chronique + méta-monde)
+- **Branche courante** : `feature/88-landing-page-redesign` — **transition 1A → 1B** (landing à finaliser/merger avant le démarrage réel de 1B)
+- **Phase actuelle** : **Transition Phase 1A → Phase 1B**
+- **Phase 1B** : prête en backlog, pas encore démarrée en implémentation backend (Game Master + écrans gameplay — Aveugle, Character Create, World Map, Session)
 - **Repo GitHub** : `AdamDjo/Grimoire-game`
 - **Packages npm** : `@grimoire/*` (shared, eslint-config, prettier-config, frontend, backend)
 
@@ -18,9 +18,25 @@
 
 Voir [`PHASE-1B-BACKLOG.md`](PHASE-1B-BACKLOG.md). Bloqueurs transverses à traiter en premier :
 
+0. Finaliser la landing sur `feature/88-landing-page-redesign` puis merger vers `develop`
 1. Refonte triptyque TS dans `packages/shared/`
 2. `openrouter.provider.ts` backend (remplace les 3 providers)
 3. Migration `valorain/` → `velkhar/` (routes + lore)
+
+---
+
+## Décision stratégique produit — 2026-07-03
+
+**On garde Velkhar.** GRIMOIRE ne pivote pas vers Dungeons & Dragons comme univers principal.
+
+Raison : la différenciation du projet vient d'une IP claire et maîtrisable (Velkhar, L'Aveugle, Cendre, Calamine, Souvenirs) combinée à un vrai Game Master backend qui se souvient et ne triche pas. D&D peut inspirer des conventions lisibles (d20, archétypes faciles à comprendre, vocabulaire JdR), mais ne doit pas remplacer l'univers, les vocations, ni le triptyque SANG/SOUFFLE/CENDRE.
+
+Règles de planning qui découlent de cette décision :
+
+- MVP = vertical slice 45-70 min, pas run complet 15h au lancement.
+- Le lore doit être introduit par paliers : L'Aveugle, Cendre, Calamine, Souvenirs d'abord ; le reste par découverte.
+- Chaque élément de lore doit soutenir une boucle gameplay ou rétention : mémoire, corruption, héritage, Chronique, méta-progression.
+- Les mécaniques de mémoire/world-state passent avant les cosmétiques et avant l'extension de régions, vocations ou bestiaire.
 
 ---
 
@@ -32,7 +48,7 @@ Voir [`PHASE-1B-BACKLOG.md`](PHASE-1B-BACKLOG.md). Bloqueurs transverses à trai
 | --- | -------------------- | ---------------------------------------------------------- |
 | 1   | Nom                  | **GRIMOIRE — Of Ash and Salt**                             |
 | 2   | Monde                | **Velkhar** (continent désertique, le _Makhzen_)           |
-| 3   | Genre                | Roguelike narratif (run 3-15h, aventure complète)          |
+| 3   | Genre                | Roguelike narratif (MVP 45-70 min ; run 3-15h post-MVP)    |
 | 4   | Persistance          | Canon fixe + méta-monde vivant + Chronique + écho léger    |
 | 5   | Multijoueur          | Solo V1, co-op V2                                          |
 | 6   | Action               | Choix IA + saisie libre + **dés BG3 aux pivots seulement** |
@@ -193,10 +209,11 @@ La passe doc du 2026-06-28 a aligné la documentation sur le GDD Velkhar. **Aucu
 - [ ] `apps/backend/src/game-rules/dice.ts` — réécriture d20 aux pivots (passe suivante)
 - [ ] Tests dice/validator — réécriture (passe suivante)
 
-### Phase 1A — Frontend UI (Velkhar) ⏳
+### Phase 1A — Frontend UI (Velkhar) ⏳ À FINALISER / MERGER
 
+- [ ] **Landing page redesign** (branche `feature/88-landing-page-redesign`) — base + animations posées (loader, particules, cursor gold, footer/navbar, texte, defiler/parallax, sections), **encore des modifs à faire avant merge**
 - [ ] Routing structure `/(main)/velkhar/`, `/(game)/velkhar/`
-- [ ] Pages : landing · character-create (4 vocations) · campaign hub · world map (Makhzen)
+- [ ] Pages : character-create (4 vocations) · campaign hub · world map (Makhzen)
 - [ ] **Page "Auberge de L'Aveugle"** — main scene d'entrée à chaque run
 - [ ] Composants UI : StatBar (SANG/SOUFFLE/CENDRE), Toast, Stepper, Button, Card, Input, Badge, Modal
 - [ ] Composants L'Aveugle : AubergeScene, AveugleDialogue, VocationPicker, ConceptLibreInput
@@ -212,7 +229,7 @@ La passe doc du 2026-06-28 a aligné la documentation sur le GDD Velkhar. **Aucu
 
 ### Phase 2 — MVP Roguelike ⏳
 
-- [ ] Run complet 3-15h avec Chronique de fin
+- [ ] Vertical slice 45-70 min jouable end-to-end avec Chronique texte
 - [ ] Free Action + IC/OOC + action/dialogue auto-detect
 - [ ] Dés d20 **aux pivots seulement** (BG3-style)
 - [ ] L'Aveugle — dialogue IA + vente lore contre Souvenirs

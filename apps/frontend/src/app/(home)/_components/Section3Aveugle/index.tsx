@@ -5,12 +5,12 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useRef } from 'react'
 
+import { AnimatedShinyText } from '@/components/ui/animated-shiny-text'
 import { Button } from '@/components/ui/Button'
 import { EmberGlow } from '@/components/ui/EmberGlow'
 import { MagneticButton } from '@/components/ui/MagneticButton'
 
 import { useClipReveal } from '../../_hooks/use-scroll-reveal'
-import { EmberParticles } from '../EmberParticles'
 
 import { OutroFooter } from './OutroFooter'
 import { QuoteOverlay } from './QuoteOverlay'
@@ -27,9 +27,9 @@ export function Section3Aveugle() {
   const sectionRef = useRef<HTMLElement>(null)
   const stickyRef = useRef<HTMLDivElement>(null)
   const crossfadeRef = useRef<HTMLDivElement>(null)
-  const videoRef = useRef<HTMLVideoElement>(null)
   const ctaRef = useRef<HTMLDivElement>(null)
   const footerRef = useRef<HTMLElement>(null)
+  const aubergeVideoRef = useRef<HTMLVideoElement>(null)
 
   useClipReveal({
     containerRef: sectionRef,
@@ -69,7 +69,6 @@ export function Section3Aveugle() {
       if (prefersReducedMotion) {
         gsap.set(stickyRef.current, { opacity: 1, autoAlpha: 1 })
         if (crossfadeRef.current) gsap.set(crossfadeRef.current, { autoAlpha: 0 })
-        if (videoRef.current) gsap.set(videoRef.current, { opacity: 1 })
         if (ctaRef.current) gsap.set(ctaRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
         if (footerRef.current)
           gsap.set(footerRef.current, { opacity: 1, y: 0, filter: 'blur(0px)' })
@@ -137,29 +136,8 @@ export function Section3Aveugle() {
         })
       }
 
-      // Vidéo auberge — fondu d'entrée sur la toute fin du scroll.
-      // Calibré sur l'axe `bottom bottom` pour rester atteignable (section
-      // h-[300vh] > viewport : `top+=100% top` n'est jamais atteint).
-      // Démarre quand il reste 25% de scroll utile, plein écran à 5% de la fin.
-      if (!prefersReducedMotion && videoRef.current) {
-        gsap.fromTo(
-          videoRef.current,
-          { opacity: 0 },
-          {
-            opacity: 1,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'bottom-=25% bottom',
-              end: 'bottom-=5% bottom',
-              scrub: true,
-            },
-          }
-        )
-      }
-
-      // CTA "Entrer dans l'auberge" — apparaît juste après la vidéo,
-      // dans la dernière fenêtre de scroll. Pleinement visible à la fin.
+      // CTA "Entrer dans l'auberge" — reveal une fois que le sticky est en
+      // place. Non-scrub : on tween une fois, il reste visible ensuite.
       if (!prefersReducedMotion && ctaRef.current) {
         gsap.fromTo(
           ctaRef.current,
@@ -168,20 +146,18 @@ export function Section3Aveugle() {
             opacity: 1,
             y: 0,
             filter: 'blur(0px)',
+            duration: 0.9,
             ease: 'power2.out',
             scrollTrigger: {
               trigger: sectionRef.current,
-              start: 'bottom-=18% bottom',
-              end: 'bottom bottom',
-              scrub: true,
+              start: 'top top',
+              toggleActions: 'play none none reverse',
             },
           }
         )
       }
 
-      // OutroFooter — dernier accord, juste après le CTA, sur la même
-      // signature cinéma. Pas de sortie : c'est le tout dernier élément, il
-      // doit rester cliquable au repos final.
+      // OutroFooter — révèle juste après le CTA, reste visible ensuite.
       if (!prefersReducedMotion && footerRef.current) {
         gsap.fromTo(
           footerRef.current,
@@ -190,15 +166,46 @@ export function Section3Aveugle() {
             opacity: 1,
             y: 0,
             filter: 'blur(0px)',
+            duration: 0.9,
+            delay: 0.25,
             ease: 'power2.out',
             scrollTrigger: {
               trigger: sectionRef.current,
-              start: 'bottom-=10% bottom',
-              end: 'bottom-=2% bottom',
-              scrub: true,
+              start: 'top top',
+              toggleActions: 'play none none reverse',
             },
           }
         )
+      }
+
+      // Loop vidéo Auberge — démarre en amont de `top top` pour éviter le
+      // gel : le clip-path (useClipReveal) masque la vidéo jusqu'à
+      // `top top`, et Chrome/Safari throttlent le décodage d'un <video>
+      // entièrement clippé. On lance la lecture dès `top 80%` (même moment
+      // que le crossfade Auberge-modern floue) : la vidéo est déjà en cours
+      // quand le clip commence à la révéler → plus de saccade au « mur ».
+      //
+      // Pas de `onLeave` à `bottom bottom` — c'est la fin de la section,
+      // l'utilisateur y reste (CTA + footer). On coupe uniquement au retour
+      // en amont (`onLeaveBack`) pour préserver le match cut avec Auberge.jpg.
+      if (aubergeVideoRef.current) {
+        const video = aubergeVideoRef.current
+        video.load()
+        ScrollTrigger.create({
+          trigger: sectionRef.current,
+          start: 'top 80%',
+          end: 'bottom bottom',
+          onEnter: () => {
+            void video.play().catch(() => undefined)
+          },
+          onEnterBack: () => {
+            void video.play().catch(() => undefined)
+          },
+          onLeaveBack: () => {
+            video.pause()
+            video.currentTime = 0
+          },
+        })
       }
 
       // Refresh après le prochain frame pour laisser useClipReveal (hook séparé)
@@ -212,8 +219,8 @@ export function Section3Aveugle() {
   return (
     <section
       ref={sectionRef}
-      data-section-id="aveugle"
-      aria-label="L’Aveugle — diptyque cinématique"
+      data-section-id="auberge"
+      aria-label="Arrivée devant l’Auberge de l’Aveugle"
       className="relative z-10 h-[300vh]"
     >
       {/* Overlay de crossfade — fixed plein écran avec l'image auberge.
@@ -246,34 +253,25 @@ export function Section3Aveugle() {
           className="aveugle-img absolute inset-0 h-full w-full object-cover"
         />
 
-        {/* Image overlay : version "cendres" révélée par clip-path. */}
-        <img
-          src="/home/Auberge.jpg"
-          alt=""
+        {/* Vidéo overlay : version "cendres" (auberge animée en loop) révélée
+            par clip-path. Poster = Auberge.jpg → zéro flash noir pendant le
+            décodage, match cut préservé avec frame_060 T3. Même pattern que
+            Section1Hero (Hero.mp4 + poster frame_001). */}
+        <video
+          ref={aubergeVideoRef}
+          src="/home/auberge-scene.mp4"
+          poster="/home/Auberge.jpg"
+          muted
+          loop
+          playsInline
+          preload="auto"
           aria-hidden="true"
           className="aveugle-img aveugle-cendres-img absolute inset-0 h-full w-full object-cover"
           style={{ clipPath: 'inset(0 100% 0 0)' }}
         />
 
-        {/* Vidéo auberge — scène finale, prend le relais de l'image cendres
-            en fondu sur 85% → 95% du scroll. Loop muet, autoplay-safe iOS. */}
-        <video
-          ref={videoRef}
-          src="/home/auberge-scene.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          poster="/home/Auberge.jpg"
-          aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover"
-          style={{ opacity: 0 }}
-        />
-
-        {/* Étincelles d'auberge — cendres orangées erratiques au-dessus du
-            diptyque, sous la vignette pour rester atmosphérique. */}
-        <EmberParticles variant="ember" count={32} position="absolute" zIndex={2} />
+        {/* Note : EmberParticles retirée ici — la fixed du Section1Hero (count=40)
+            traverse déjà toutes les sections. Évite le cumul visuel auberge. */}
 
         {/* Vignette + dégradé bas pour lisibilité des citations + CTA.
             Animation `vignette-breathe` : l'opacité respire (0.82↔1, 6s)
@@ -299,7 +297,6 @@ export function Section3Aveugle() {
           <p
             className="font-serif italic"
             style={{
-              color: 'var(--gold-light)',
               fontSize: 'clamp(17px, 1.3vw, 21px)',
               lineHeight: 1.5,
               maxWidth: '38ch',
@@ -307,7 +304,9 @@ export function Section3Aveugle() {
               textShadow: '0 2px 16px rgba(0,0,0,.85)',
             }}
           >
-            Le feu crépite. Une chandelle attend. Le reste du monde patientera.
+            <AnimatedShinyText variant="gold-soft" shimmerWidth={220}>
+              Le feu crépite. Une chandelle attend. Le reste du monde patientera.
+            </AnimatedShinyText>
           </p>
           <MagneticButton strength={8}>
             <EmberGlow radius={240}>

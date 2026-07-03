@@ -95,6 +95,20 @@
     }
   }
 
+  --animate-hero-title-reveal: hero-title-reveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+  @keyframes hero-title-reveal {
+    0% {
+      opacity: 0;
+      transform: translateY(24px);
+      filter: blur(12px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+  }
+
   --animate-vignette-breathe: vignette-breathe 6s ease-in-out infinite;
   @keyframes vignette-breathe {
     0%,
@@ -153,20 +167,19 @@
     }
   }
 
-  --animate-shiny-text-multi: shiny-text-multi 14s ease-in-out infinite;
+  --animate-shiny-text-multi: shiny-text-multi 8s ease-in-out infinite;
   @keyframes shiny-text-multi {
     0% {
       background-position:
         calc(-100% - var(--shiny-width)) 0,
         0 0;
     }
-    25%,
-    40% {
+    45%,
+    55% {
       background-position:
         calc(100% + var(--shiny-width)) 0,
         0 0;
     }
-    65%,
     100% {
       background-position:
         calc(-100% - var(--shiny-width)) 0,

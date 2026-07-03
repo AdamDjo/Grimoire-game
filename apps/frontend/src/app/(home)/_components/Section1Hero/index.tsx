@@ -82,7 +82,7 @@ export function Section1Hero() {
         preload="auto"
         poster="/home/frames_transition/frame_001.webp"
         aria-hidden="true"
-        className="fixed left-0 top-0 z-[2] h-screen w-full object-cover will-change-[opacity]"
+        className="pointer-events-none fixed left-0 top-0 z-[2] h-screen w-full object-cover will-change-[opacity]"
         style={{
           transform:
             'translate3d(calc(var(--mx, 0) * -3px), calc(var(--my, 0) * -3px), 0) scale(1.02)',
@@ -93,7 +93,7 @@ export function Section1Hero() {
       <canvas
         ref={canvasRef}
         aria-hidden="true"
-        className="fixed left-0 top-0 z-[3] h-screen w-full"
+        className="pointer-events-none fixed left-0 top-0 z-[3] h-screen w-full"
         style={{
           opacity: 0,
           transform:

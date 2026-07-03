@@ -10,8 +10,6 @@ import {
   HelpCircle,
 } from 'lucide-react'
 
-import type { Variants } from 'framer-motion'
-
 export const HERO_IMG = '/illustration-hero.png'
 export const MAP_IMG = '/map.jpeg'
 export const GRIMOIRE_IMG =
@@ -87,18 +85,17 @@ export const MAP_LABELS = [
 
 export const NAV_LINKS = ['Accueil', 'Univers', 'Règles', 'Communauté', 'FAQ'] as const
 
-export const SECTION_IDS = ['hero', 'seuil', 'aveugle'] as const
+export const SECTION_IDS = ['hero', 'cendres', 'artefact', 'nuit', 'auberge'] as const
 
 /**
- * Manifeste révélé ligne par ligne dans Section2Seuil (mask-reveal scrubbé).
- * Typo Cinzel gradient gold, posé sur le fond cosmique.
+ * Phrases kinetic révélées char-by-char (KineticText) au centre de chaque
+ * tableau cinématique. Une phrase par section, canon Velkhar.
  */
-export const MANIFESTO_LINES = [
-  'Aux Cendres de Valorain,',
-  'là où les dieux se sont tus,',
-  'un monde se souvient',
-  'de chacun de tes pas.',
-] as const
+export const KINETIC_LINES = {
+  cendres: 'Ici, le silence a la couleur de l’or.',
+  artefact: 'Les Archontes ont laissé des mots dans la pierre.',
+  nuit: 'Le vent porte une odeur de feu.',
+} as const
 
 /**
  * Citations diégétiques posées en sous-titre cinéma au-dessus du diptyque
@@ -125,21 +122,21 @@ export const AVEUGLE_QUOTES = [
 export const PILLARS = [
   {
     eyebrow: 'I',
-    title: 'Le Monde',
+    title: 'Velkhar',
     description:
-      'Valorain n’est pas une carte. C’est un théâtre de cendres qui se souvient des âmes qui le traversent.',
+      'Velkhar n’est pas une carte. C’est un désert qui se souvient des âmes qui le traversent.',
   },
   {
     eyebrow: 'II',
-    title: 'Les Personnages',
+    title: 'Les Visages',
     description:
-      'Chaque visage porte un passé. Chaque PNJ se souvient de ce que tu lui as dit — et te le rendra, un jour.',
+      'Chaque visage porte une Calamine. Chaque PNJ se souvient de ce que tu lui as dit — et te le rendra, un jour.',
   },
   {
     eyebrow: 'III',
-    title: 'La Mémoire',
+    title: 'Les Cendres',
     description:
-      'Tes choix ne disparaissent pas. Ils deviennent légende, rumeur, malédiction. Le monde garde tout.',
+      'Tes choix ne s’effacent pas. Ils deviennent rumeur, serment, malédiction. Les Cendres gardent tout.',
   },
 ] as const
 
@@ -155,56 +152,31 @@ export function generateParticles() {
   }))
 }
 
-export const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 32 },
-  visible: (i = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] },
-  }),
-}
-
 /**
  * Paliers du carrousel de texte du hero (auto en boucle).
- * Textes diégétiques tirés du lore Valorain (cf. docs/GAME_DESIGN.md) :
- * 1) l'invitation · 2) la menace (la Corruption) · 3) le poids des choix.
+ * Textes diégétiques canon Velkhar (cf. docs/02-design/GAME_DESIGN.md) :
+ * 1) l'invitation · 2) la menace (la Brume Dorée) · 3) le poids des choix.
  */
 export const HERO_SLIDES = [
   {
-    tagline: 'Un monde. Des âmes. Une infinité de rôles.',
+    tagline: 'Un monde. Des Cendres. Un million de destins.',
     title: 'ÉCRIS TON HISTOIRE',
     description:
-      'Un monde vivant. Des personnages qui se souviennent. Des conséquences qui traversent le temps.',
+      'Un monde vivant. Des visages qui se souviennent. Des conséquences qui traversent le temps.',
   },
   {
-    tagline: "Aux Cendres de Valorain, l'ombre avance.",
-    title: "L'OMBRE AVANCE",
+    tagline: "Aux Cendres de Velkhar, l'or brûle encore.",
+    title: "L'OR AVANCE",
     description:
-      'La Corruption ronge les villages tandis que les vivants hésitent. Chaque heure compte. Chaque silence se paie.',
+      'La Brume Dorée dévore les caravanes tandis que les vivants s’accrochent. Chaque heure a un prix. Chaque silence en réclame un autre.',
   },
   {
     tagline: 'Ici, nul dieu ne vient te sauver.',
     title: "RIEN NE S'OUBLIE",
     description:
-      'Un mensonge qu’on n’oublie pas. Un serment qui revient. Le monde garde mémoire de tes pas — et te répond, longtemps après.',
+      'Un serment qu’on n’oublie pas. Une main qui revient. Le monde garde mémoire de tes pas — et te répond, longtemps après.',
   },
 ] as const
-
-/**
- * Cards de la Section 2 (Univers) — paliers 2 & 3 du lore initialement dans le
- * carrousel hero, désormais révélés un par un au scroll horizontal scrubbé.
- */
-export const UNIVERS_CARDS = HERO_SLIDES.slice(1)
-
-/**
- * Révélation « fondu + brume » d'un palier : le texte entre/sort avec un léger
- * flou qui se dissipe, cohérent avec le thème sable/cendres/gold.
- */
-export const heroSlideReveal: Variants = {
-  hidden: { opacity: 0, y: 18, filter: 'blur(8px)' },
-  visible: { opacity: 1, y: 0, filter: 'blur(0px)' },
-  exit: { opacity: 0, y: -18, filter: 'blur(8px)' },
-}
 
 export const FOOTER_LINKS = [
   { label: 'Mentions', href: '#' },

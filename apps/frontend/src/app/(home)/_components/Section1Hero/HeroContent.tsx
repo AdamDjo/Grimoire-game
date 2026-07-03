@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/Button'
 import { CompassRose } from '@/components/ui/CompassRose'
+import { EmberGlow } from '@/components/ui/EmberGlow'
 import { MagneticButton } from '@/components/ui/MagneticButton'
 
 import { SlideTexts } from './SlideTexts'
@@ -71,9 +72,11 @@ export function HeroContent({ childRefs }: HeroContentProps) {
             }}
           >
             <MagneticButton pulse strength={8}>
-              <Button variant="primary" style={{ fontSize: 13, letterSpacing: '0.22em' }}>
-                Entrer dans l&apos;Univers
-              </Button>
+              <EmberGlow radius={240}>
+                <Button variant="primary" style={{ fontSize: 13, letterSpacing: '0.22em' }}>
+                  Entrer dans l&apos;Univers
+                </Button>
+              </EmberGlow>
             </MagneticButton>
           </div>
         </div>

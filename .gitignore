@@ -1,58 +1,146 @@
+# ─────────────────────────────────────────────────────────────
 # Dependencies
-node_modules/
+# ─────────────────────────────────────────────────────────────
+**/node_modules/
 .pnp
 .pnp.js
+.pnpm-store/
 
-# Build
-.next/
-out/
-dist/
-build/
-.turbo/
+# ─────────────────────────────────────────────────────────────
+# Build outputs (monorepo — récursif)
+# ─────────────────────────────────────────────────────────────
+**/.next/
+**/out/
+**/dist/
+**/build/
+**/.turbo/
+**/.vercel/
+**/.cache/
+*.tsbuildinfo
+tsconfig.tsbuildinfo
 
-# Environment
+# ─────────────────────────────────────────────────────────────
+# Environment / secrets
+# ─────────────────────────────────────────────────────────────
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-apps/backend/.env
-apps/frontend/.env.local
+.env.*
+!.env.example
 !**/.env.example
 
-# IDE
-.vscode/
+# Clés & certificats
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+secrets/
+
+# MCP config (contient des tokens)
+.mcp.json
+!.mcp.json.example
+
+# ─────────────────────────────────────────────────────────────
+# Éditeurs / IDE
+# ─────────────────────────────────────────────────────────────
+.vscode/*
+!.vscode/settings.example.json
+!.vscode/extensions.json
 .idea/
 *.swp
 *.swo
+*.sublime-project
+*.sublime-workspace
+.history/
 
+# ─────────────────────────────────────────────────────────────
 # OS
-.DS_Store
+# ─────────────────────────────────────────────────────────────
+**/.DS_Store
 Thumbs.db
+ehthumbs.db
+Desktop.ini
 
+# ─────────────────────────────────────────────────────────────
 # Logs
+# ─────────────────────────────────────────────────────────────
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+lerna-debug.log*
 
-# Testing
+# ─────────────────────────────────────────────────────────────
+# Tests
+# ─────────────────────────────────────────────────────────────
 coverage/
+.nyc_output/
+apps/frontend/cypress/screenshots/
+apps/frontend/cypress/videos/
+apps/frontend/cypress/downloads/
+playwright-report/
+test-results/
 
-# Misc
-*.tsbuildinfo
+# ─────────────────────────────────────────────────────────────
+# Lint / typecheck caches
+# ─────────────────────────────────────────────────────────────
+.eslintcache
+.stylelintcache
 
-# MCP config (contains secrets)
-.mcp.json
-
-# Claude Code local settings
+# ─────────────────────────────────────────────────────────────
+# Claude Code / agents / skills (config locale)
+# ─────────────────────────────────────────────────────────────
 .claude/settings.local.json
+.claude/plans/
+skills-lock.json
 
-# Cypress
-apps/frontend/cypress/screenshots
-apps/frontend/cypress/videos
+# Skills installées localement via `npx skills add` (gsap-*, etc.)
+# On ne track QUE les skills projet (workflow d'équipe).
+.agents/skills/*
+!.agents/skills/design-taste-frontend/
+.claude/skills/*
+!.claude/skills/bug/
+!.claude/skills/check/
+!.claude/skills/design-taste-frontend/
+!.claude/skills/feature/
+!.claude/skills/hotfix/
+!.claude/skills/implement/
+!.claude/skills/pr/
+!.claude/skills/release/
+!.claude/skills/status/
+!.claude/skills/sync/
+
+# Codex (config locale outil externe)
+.codex/
+
+# Obsidian vault config
+.obsidian/
+
+# ─────────────────────────────────────────────────────────────
+# Docs — track only the curated structure, ignore assets (PNG, MP4, etc.)
+# ─────────────────────────────────────────────────────────────
+/docs/*
+/docs/02-design/
+!/docs/*.md
+!/docs/01-current-state/
+!/docs/02-design/
+!/docs/03-tech/
+!/docs/wiki/
 
 # Design files (local, not tracked)
 docs/Design/
-# docs private
-/docs/*
+
+# GDD canon (physiquement dans le repo, jamais commité)
+docs/raw/
+
+# Archive locale (historique, pas de valeur à versionner)
+docs/_archive/
+
+# Mockups design (lourds, itératifs — pas versionnés)
+docs/02-design/mockup/
+
+# ─────────────────────────────────────────────────────────────
+# Landing assets sources (keyframes PNG + vidéos brutes Higgsfield)
+# Lourds et régénérables — cf. docs/02-design/LANDING_ASSET_PROMPTS.md
+# ─────────────────────────────────────────────────────────────
+apps/frontend/public/home/_sources/
