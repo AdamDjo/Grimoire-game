@@ -117,30 +117,21 @@ skills-lock.json
 .obsidian/
 
 # ─────────────────────────────────────────────────────────────
-# Docs — track only the curated structure, ignore assets (PNG, MP4, etc.)
+# Docs — track only the public vault, keep canon and plans private
 # ─────────────────────────────────────────────────────────────
 /docs/*
-/docs/02-design/
-!/docs/*.md
-!/docs/01-current-state/
-!/docs/02-design/
-!/docs/03-tech/
-!/docs/wiki/
+!/docs/00-START-HERE.md
+!/docs/public/
+!/docs/public/**
 
 # Design files (local, not tracked)
 docs/Design/
 
-# GDD canon (physiquement dans le repo, jamais commité)
-docs/raw/
-
-# Archive locale (historique, pas de valeur à versionner)
-docs/_archive/
-
-# Mockups design (lourds, itératifs — pas versionnés)
-docs/02-design/mockup/
+# GDD canon Velkhar + plans internes (privés, lisibles localement par les IA, jamais publiés)
+docs/private/
 
 # ─────────────────────────────────────────────────────────────
 # Landing assets sources (keyframes PNG + vidéos brutes Higgsfield)
-# Lourds et régénérables — cf. docs/02-design/LANDING_ASSET_PROMPTS.md
+# Lourds et régénérables — cf. docs/private/plans/landing/LANDING_ASSET_PROMPTS.md
 # ─────────────────────────────────────────────────────────────
 apps/frontend/public/home/_sources/

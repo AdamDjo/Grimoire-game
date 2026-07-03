@@ -1,122 +1,80 @@
-# Frontend — Règles spécifiques Next.js 15
+# Frontend — Next.js App Router
 
-> Règles globales : `~/.claude/CLAUDE.md`. Architecture et composants : `docs/TECH_STACK.md`. Designs de référence : `docs/Grimoire/`.
+> Lire d'abord : `../../docs/00-START-HERE.md`, puis `../../docs/public/current-state/PROJECT_STATUS.md`.
+> Statut vivant : `../../docs/public/current-state/PROJECT_STATUS.md`.
+> Design/gameplay : `../../docs/public/design/GAME_DESIGN.md`.
+> Tokens UI : `../../docs/public/design/DESIGN_TOKENS.md`.
+> Architecture/API : `../../docs/public/tech/ARCHITECTURE_RULES.md`.
 
 ## Scope
 
-Travailler UNIQUEMENT dans `apps/frontend/`. Ne jamais modifier de fichiers en dehors sauf `packages/shared/` pour les types (ajouter d'abord là-bas).
+Travailler uniquement dans `apps/frontend/`, sauf changement de contrat partagé dans `packages/shared/`.
 
-## Architecture — Colocation Next.js 15
+## Architecture — colocation
 
-```
+```txt
 src/
 ├── app/
 │   ├── (home)/
-│   │   ├── page.tsx                  # ~70 lignes, composition only
-│   │   └── _components/             # privé à la route (underscore = exclu du routing)
-│   ├── (auth)/login, signup/
-│   │   └── _components/
-│   ├── (main)/valorain/
-│   │   ├── world/, character-create/, campaign/[id]/
-│   │   └── _components/
-│   ├── (game)/valorain/session/[id]/
-│   │   └── _components/
-│   └── api/[...path]/route.ts       # proxy → backend
-├── components/
-│   └── ui/                          # UNIQUEMENT composants réutilisables multi-routes
-├── hooks/                           # custom hooks (use-game-session, use-character…)
-├── stores/                          # Zustand stores (ui-store, universe-store)
+│   ├── (auth)/
+│   ├── (main)/velkhar/
+│   ├── (game)/velkhar/
+│   └── api/[...path]/route.ts
+├── components/ui/
+├── hooks/
+├── stores/
 └── lib/
-    └── home-data.ts                 # constantes statiques landing
 ```
 
-**Règle absolue colocation** : `_components/` = privé à sa route. `components/ui/` = réutilisable partout. Ne jamais dupliquer.
+- `_components/` = privé à une route.
+- `components/ui/` = réutilisable multi-routes.
+- Les pages doivent composer des composants, pas contenir toute la logique.
+- Toutes les API frontend passent par `app/api/[...path]/route.ts`.
 
-**Convention landing — sections numérotées** : chaque section de scroll de `(home)` vit dans `_components/Section<N><Nom>/` avec un `index.tsx` (point d'entrée exporté en `Section<N><Nom>`, ex. `Section1Hero`) et ses sous-composants privés à côté (ex. `HeroContent.tsx`, `SlideTexts.tsx`).
+## Landing
 
-## Composants `ui/` existants
+- Sections scroll de `(home)` dans `_components/Section<N><Nom>/`.
+- Contenu/copy à garder cohérent avec `../../docs/public/design/GAME_DESIGN.md`.
+- Plan landing visuel actif : `../../docs/private/plans/landing/PLAN-LANDING-CUBERTO-LEVEL.md`.
+- Plan landing SEO/copy : `../../docs/private/plans/landing/LANDING_SEO_BILINGUAL_PLAN.md`.
 
-| Composant    | Props clés                                | Obligatoire          |
-| ------------ | ----------------------------------------- | -------------------- |
-| `Heading`    | `{ title, level?, size? }`                | —                    |
-| `StatItem`   | `{ icon, value, label, iconLabel }`       | `iconLabel` (aria)   |
-| `NavLink`    | `{ label, href, active?, small? }`        | —                    |
-| `IconButton` | `{ icon, label, onClick? }`               | `label` (aria-label) |
-| `Section`    | `{ id?, snap?, 'aria-label'?, children }` | —                    |
-| `PageShell`  | `{ children, scrollSnap? }`               | —                    |
-| `NavBar`     | `{ logo, links[] }`                       | —                    |
-| `Footer`     | `{ copyright, links[], actions? }`        | —                    |
+## UI
 
-## Design de référence — Règle absolue
+- Ne jamais hardcoder couleur ou police.
+- Utiliser les tokens de `../../docs/public/design/DESIGN_TOKENS.md` et les variables CSS existantes.
+- Pas de logique de jeu critique côté client.
+- Textes UI/code en anglais, conversation utilisateur en français.
 
-Avant toute page, ouvrir le HTML correspondant dans `docs/Grimoire/` et le suivre exactement :
+## Accessibilité
 
-| Page             | Design                                                      |
-| ---------------- | ----------------------------------------------------------- |
-| Landing `/`      | `Grimoire - Accueil.html`                                   |
-| Session          | `Grimoire - Session.html` + `grimoire-session.js`           |
-| Character create | `Grimoire - Creation Personnage.html` + `grimoire-forge.js` |
-| Campaign         | `Grimoire - Campagne.html`                                  |
-| World map        | `Grimoire - Carte de Valorain.html` + `grimoire-carte.js`   |
+- `IconButton.label` obligatoire.
+- `StatItem.iconLabel` obligatoire.
+- Navigation sémantique : `header`, `nav`, `footer`.
+- `aria-current="page"` sur le lien actif.
+- Utiliser `<button>`, jamais `<div onClick>`.
 
-## CSS — Design tokens OKLCH
+## State
 
-Ne jamais hard-coder couleur ou police. Utiliser uniquement :
-
-- Couleurs : `var(--gold)`, `var(--gold-light)`, `var(--gold-dark)`, `var(--ink-1)` à `var(--ink-4)`
-- Polices : `var(--font-disp)` (Cinzel), `var(--font-serif)` (EB Garamond), `var(--font-body)` (Outfit)
-- Définis dans `src/app/globals.css`
+- Zustand : UI state uniquement.
+- React Query : server state.
+- Ne pas dupliquer l'état serveur dans Zustand.
 
 ## SSR Hydration
 
 ```tsx
-// ✅ Correct
 const [particles, setParticles] = useState<Particle[]>([])
+
 useEffect(() => {
   setParticles(generate())
 }, [])
-
-// ❌ Faux — divergence server/client
-const particles = useRef(generate())
 ```
 
-## Accessibilité — 100% obligatoire
+Éviter tout `Math.random()` rendu directement côté serveur.
 
-- `IconButton.label` → `aria-label` sur le `<button>` (obligatoire)
-- `StatItem.iconLabel` → `aria-label` sur `<span role="img">` (obligatoire)
-- `NavBar` → `<header role="banner">` + `<nav aria-label="Navigation principale">`
-- `Footer` → `<footer role="contentinfo">`
-- `aria-current="page"` sur le lien actif
-- HTML sémantique : `<button>` jamais `<div onClick>`
-
-## State Management
-
-- **Zustand** : UI state uniquement (sidebar, theme, modals, `currentUniverse`)
-- **React Query** : toutes les données serveur (sessions, characters, scenes)
-- Ne jamais dupliquer l'état serveur dans Zustand
-
-## Tests — Stratégie
-
-### Quoi tester (Vitest + Testing Library)
-
-- **Composants `ui/`** : render correct, props obligatoires, aria attributes présents
-- **Hooks custom** : logique métier (use-universe-store, use-game-session)
-- **Utilitaires `lib/`** : fonctions pures
-
-### Quoi tester (Cypress E2E)
-
-- Golden path : landing → login → character create → session
-- Interactions critiques : scroll-snap, sélection portrait, navigation sections
-
-### Quoi ne PAS tester
-
-- Composants `_components/` spécifiques à une page (couverts par E2E)
-- Composants purement visuels sans logique
-
-### Commandes
+## Tests
 
 ```bash
-pnpm test --filter @grimoire/frontend
 pnpm type-check --filter @grimoire/frontend
+pnpm test --filter @grimoire/frontend
 pnpm cypress open
 ```

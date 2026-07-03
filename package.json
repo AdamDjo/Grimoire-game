@@ -6,6 +6,7 @@
     "build": "turbo build",
     "lint": "turbo lint",
     "type-check": "turbo type-check",
+    "check:canon": "bash scripts/check-canon.sh",
     "prepare": "husky",
     "knip": "knip",
     "test": "turbo test",

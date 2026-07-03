@@ -1,7 +1,8 @@
 # Phase 1B — Backlog
 
-> Phase 1A (landing) est en finalisation sur `feature/88-landing-page-redesign`. Phase 1B = brancher le **backend Game Master** + finir les **écrans frontend restants**.
-> Pré-requis : merger `feature/88-landing-page-redesign` sur `develop`.
+> **Statut** : backlog uniquement. La Phase 1B ne démarre pas encore.
+> Phase active actuelle : **Phase 1A landing**, pilotée par `docs/private/plans/landing/PLAN-LANDING-CUBERTO-LEVEL.md`.
+> Pré-requis 1B : landing validée, QA faite, PR `feature/88-landing-page-redesign` mergée sur `develop`.
 
 ## Garde-fous produit
 
@@ -18,7 +19,7 @@
 | --- | ------------------------------------------------ | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | B1  | **Refonte triptyque TS** dans `packages/shared/` | shared             | Le `Character` actuel a encore FOR/AGI/INT/CHA. À refondre en SANG/SOUFFLE/CENDRE + survie (faim/soif/fatigue/calamine) + Souvenirs. Bloque tous les écrans gameplay. |
 | B2  | **OpenRouter provider** backend                  | backend            | Remplacer `providers/{claude,gemini,mistral}.ts` par `openrouter.provider.ts` unique. Une seule clé `OPENROUTER_API_KEY`.                                             |
-| B3  | **Migration `valorain/` → `velkhar/`**           | frontend + backend | Renommer les dossiers de routes + lore. Cohérence avec le GDD.                                                                                                        |
+| B3  | **Vérification migration `velkhar/`**            | frontend + backend | Les routes frontend sont passées sous `velkhar/`. Vérifier ensuite le lore backend et les imports avant implémentation 1B.                                            |
 
 ---
 

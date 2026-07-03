@@ -12,9 +12,11 @@ You are a senior backend engineer on **Grimoire**, an AI-powered narrative RPG.
 
 Read these files in order — they contain all the rules, don't re-derive them:
 
-1. `docs/MEMORY.md` — current branch, phase, what's done
-2. `apps/backend/CLAUDE.md` — all backend rules (Game Master concept, architecture, tests, coverage targets)
-3. `docs/TECH_STACK.md` §3-9 — lore engine, AI fallback chain, database schema, API endpoints, security
+1. `docs/00-START-HERE.md` — project entrypoint
+2. `docs/public/current-state/PROJECT_STATUS.md` — current branch, phase, active priority
+3. `apps/backend/CLAUDE.md` — all backend rules
+4. `docs/public/tech/ARCHITECTURE_RULES.md` — backend/AI/frontend invariants
+5. `docs/public/wiki/task-router.md` — targeted docs and canon routing
 
 ## Scope
 

@@ -18,53 +18,53 @@ export const GRIMOIRE_IMG =
 export const PORTRAITS = [
   {
     id: 1,
-    role: 'Guerrier',
+    role: 'Marcheur-du-Sel',
     img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80&fit=crop&crop=face',
   },
   {
     id: 2,
-    role: 'Mage',
+    role: 'Tisse-Verbe',
     img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80&fit=crop&crop=face',
   },
   {
     id: 3,
-    role: 'Rôdeur',
+    role: 'Veilleur',
     img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80&fit=crop&crop=face',
   },
   {
     id: 4,
-    role: 'Poète',
+    role: 'Lame-Ombre',
     img: 'https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=200&q=80&fit=crop&crop=face',
   },
   {
     id: 5,
-    role: 'Négociant',
+    role: 'Sahélin',
     img: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=200&q=80&fit=crop&crop=face',
   },
   {
     id: 6,
-    role: 'Cupidon',
+    role: 'Rivain',
     img: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80&fit=crop&crop=face',
   },
   {
     id: 7,
-    role: 'Voleur',
+    role: 'Cendreur',
     img: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80&fit=crop&crop=face',
   },
   {
     id: 8,
-    role: 'Alchimiste',
+    role: 'Changepeau',
     img: 'https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?w=200&q=80&fit=crop&crop=face',
   },
 ] as const
 
 export const ROLES = [
-  { icon: Sword, label: 'Cupidon' },
-  { icon: Star, label: 'Mage' },
-  { icon: Feather, label: 'Voleur' },
-  { icon: BookOpen, label: 'Poète' },
-  { icon: ShoppingBag, label: 'Négociant' },
-  { icon: HelpCircle, label: 'Autre' },
+  { icon: Sword, label: 'Marcheur-du-Sel' },
+  { icon: Star, label: 'Tisse-Verbe' },
+  { icon: Feather, label: 'Lame-Ombre' },
+  { icon: BookOpen, label: 'Veilleur' },
+  { icon: ShoppingBag, label: 'Sahélin' },
+  { icon: HelpCircle, label: 'Concept libre' },
 ] as const
 
 export const UNIVERS_PILLS = [
@@ -75,15 +75,15 @@ export const UNIVERS_PILLS = [
 ] as const
 
 export const MAP_LABELS = [
-  { label: 'NORDALIS', top: '8%', left: '52%' },
-  { label: 'FORGOTTEN\nLANDS', top: '22%', left: '68%' },
-  { label: 'FURELIA', top: '42%', left: '42%' },
-  { label: 'EASTERN\nREALMS', top: '46%', left: '72%' },
-  { label: 'SEA OF FOAM', top: '60%', left: '52%' },
-  { label: 'SANDS OF ORION', top: '78%', left: '55%' },
+  { label: 'LES DOIGTS', top: '8%', left: '52%' },
+  { label: 'LES CATACOMBES', top: '22%', left: '68%' },
+  { label: 'CENDRES\nDE VELKHAR', top: '42%', left: '42%' },
+  { label: 'ROUTE\nDU SEL', top: '46%', left: '72%' },
+  { label: 'BASSIN\nDES SOUVENIRS', top: '60%', left: '52%' },
+  { label: 'MAKHZEN', top: '78%', left: '55%' },
 ] as const
 
-export const NAV_LINKS = ['Accueil', 'Univers', 'Règles', 'Communauté', 'FAQ'] as const
+export const NAV_LINKS = ['Accueil', 'Velkhar', 'Mémoire', 'Règles', 'Auberge'] as const
 
 export const SECTION_IDS = ['hero', 'cendres', 'artefact', 'nuit', 'auberge'] as const
 
@@ -154,7 +154,7 @@ export function generateParticles() {
 
 /**
  * Paliers du carrousel de texte du hero (auto en boucle).
- * Textes diégétiques canon Velkhar (cf. docs/02-design/GAME_DESIGN.md) :
+ * Textes diégétiques canon Velkhar (cf. docs/public/design/GAME_DESIGN.md) :
  * 1) l'invitation · 2) la menace (la Brume Dorée) · 3) le poids des choix.
  */
 export const HERO_SLIDES = [

@@ -26,10 +26,10 @@ const outfit = Outfit({
 })
 
 export const metadata: Metadata = {
-  title: 'Grimoire — The Game Master That Remembers',
+  title: 'GRIMOIRE - Jeu de role IA narratif dans le monde de Velkhar',
   description:
-    'An AI narrative RPG where your choices change the world for good. Total freedom, real memory, lasting consequences.',
-  keywords: ['RPG', 'tabletop', 'AI', 'narrative', 'Valorain', 'Grimoire'],
+    'GRIMOIRE est un roguelike narratif par IA. Explore Velkhar, fais des choix libres, lance les des aux pivots et laisse une trace dans un monde qui se souvient.',
+  keywords: ['RPG', 'tabletop', 'AI', 'narrative', 'Velkhar', 'Grimoire'],
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
