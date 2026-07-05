@@ -4,7 +4,9 @@ import { useEffect, useRef } from 'react'
 
 import { gsap, ScrollTrigger, useGSAP } from '@/lib/gsap-init'
 
-const FRAME_COUNT = 96
+const SECTION_FRAME_COUNT = 60
+const END_T1_IMAGE_INDEX = SECTION_FRAME_COUNT
+const END_T1_IMAGE_SRC = '/home/frames_transition/end_T1.png'
 
 /** Hauteur native des frames sources (1280×720) — borne l'upscale en cover. */
 const SOURCE_HEIGHT = 720
@@ -66,17 +68,15 @@ interface UseCanvasScrollSequenceOptions {
  *   Phase A · Intro            [0 → 0.08]
  *     · Vidéo Hero.mp4 fade-out
  *     · Canvas frame-by-frame fade-in (opacité)
- *     · Texte révélé en cascade : CompassRose → slide → CTA (fade + blur)
  *     · ScrollHint fade-out
  *
- *   Phase B · Frame scrub      [0.08 → 0.70]
- *     · Frame index 0 → 95 (logique existante préservée)
+ *   Phase B · Transition T1    [0.08 → 0.72]
+ *     · Frame 001 → frame 060
+ *     · Bascule sur end_T1.png, keyframe nette qui clôt la section 1
  *
- *   Phase C · Sortie texte     [0.80 → 0.90]
- *     · CompassRose / slide / CTA fade-up + blur (symétrique de l'entrée)
- *     · La dernière frame (96) reste à l'écran jusqu'à la fin du scroll,
- *       assurant la continuité visuelle avec Section2Seuil qui réutilise
- *       cette même frame comme fond.
+ *   Phase C · Stop section     [0.74 → 1]
+ *     · Texte 1 révélé à gauche
+ *     · ScrollTrigger snap à 1 pour imposer l'arrêt sur end_T1
  *
  * Respecte `prefers-reduced-motion` : pas de vidéo, pas de blur, état final
  * appliqué immédiatement.
@@ -129,7 +129,7 @@ export function useCanvasScrollSequence({
   useEffect(() => {
     const images: HTMLImageElement[] = []
 
-    for (let i = 1; i <= FRAME_COUNT; i++) {
+    for (let i = 1; i <= SECTION_FRAME_COUNT; i++) {
       const img = new Image()
       img.src = frameSrc(i)
       if (i === 1) {
@@ -140,6 +140,10 @@ export function useCanvasScrollSequence({
       }
       images.push(img)
     }
+
+    const endT1 = new Image()
+    endT1.src = END_T1_IMAGE_SRC
+    images.push(endT1)
 
     imagesRef.current = images
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -167,29 +171,10 @@ export function useCanvasScrollSequence({
           gsap.set(video, { opacity: 0 })
         }
         if (canvas) gsap.set(canvas, { opacity: 1 })
+        frameStateRef.current.index = END_T1_IMAGE_INDEX
+        if (canvas) drawImageCover(canvas, imagesRef.current[END_T1_IMAGE_INDEX])
         if (text) gsap.set(text, { opacity: 1, filter: 'blur(0px)', y: 0 })
         if (scrollHint) gsap.set(scrollHint, { opacity: 1 })
-
-        // Frame scrub pleine course (0 → 95).
-        gsap.to(frameStateRef.current, {
-          index: FRAME_COUNT - 1,
-          ease: 'none',
-          snap: 'index',
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top top',
-            end: 'bottom bottom',
-            scrub: true,
-          },
-          onUpdate: () => {
-            if (canvasRef.current) {
-              drawImageCover(
-                canvasRef.current,
-                imagesRef.current[Math.round(frameStateRef.current.index)]
-              )
-            }
-          },
-        })
 
         return
       }
@@ -212,79 +197,78 @@ export function useCanvasScrollSequence({
           start: 'top top',
           end: 'bottom bottom',
           scrub: 1,
+          snap: {
+            snapTo: [0, 1],
+            duration: { min: 0.35, max: 0.7 },
+            delay: 0.08,
+            ease: 'power2.inOut',
+          },
         },
       })
 
       // ───────── Phase A · Intro [0 → 0.08]
       if (video) tl.to(video, { opacity: 0, ease: 'power3.out', duration: 0.08 }, 0)
       if (canvas) tl.to(canvas, { opacity: 1, ease: 'power3.out', duration: 0.08 }, 0)
-      if (text)
-        tl.to(
-          text,
-          { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'power2.out', duration: 0.06 },
-          0.01
-        )
-      if (compass)
-        tl.to(
-          compass,
-          { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'power2.out', duration: 0.05 },
-          0.01
-        )
-      if (slides)
-        tl.to(
-          slides,
-          { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'power2.out', duration: 0.05 },
-          0.025
-        )
-      if (cta)
-        tl.to(
-          cta,
-          { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'power2.out', duration: 0.05 },
-          0.04
-        )
-      if (scrollHint)
-        tl.to(scrollHint, { opacity: 0, y: -20, ease: 'power2.out', duration: 0.06 }, 0)
 
-      // ───────── Phase B · Frame scrub [0.08 → 0.70]
+      // ───────── Phase B · Transition T1 [0.08 → 0.72]
+      // La section 1 s'arrête sur frame_060, puis bascule sur end_T1.png :
+      // ce keyframe net est son état final avant l'entrée en section 2.
       tl.to(
         frameStateRef.current,
         {
-          index: FRAME_COUNT - 1,
+          index: SECTION_FRAME_COUNT - 1,
           ease: 'none',
           snap: 'index',
-          duration: 0.62,
+          duration: 0.64,
           onUpdate: () => {
             if (canvasRef.current) {
-              drawImageCover(
-                canvasRef.current,
-                imagesRef.current[Math.round(frameStateRef.current.index)]
-              )
+              const frameIndex = Math.round(frameStateRef.current.index)
+              drawImageCover(canvasRef.current, imagesRef.current[frameIndex])
             }
           },
         },
         0.08
       )
-
-      // ───────── Phase C · Sortie texte [0.80 → 0.90]
-      const exitTargets = [compass, slides, cta].filter(Boolean) as HTMLElement[]
-      if (exitTargets.length > 0) {
-        tl.to(
-          exitTargets,
-          {
-            opacity: 0,
-            y: -24,
-            filter: 'blur(8px)',
-            ease: 'power2.in',
-            duration: 0.1,
-            stagger: 0.01,
+      tl.set(
+        frameStateRef.current,
+        {
+          index: END_T1_IMAGE_INDEX,
+          onComplete: () => {
+            if (canvasRef.current) {
+              drawImageCover(canvasRef.current, imagesRef.current[END_T1_IMAGE_INDEX])
+            }
           },
+        },
+        0.72
+      )
+
+      // ───────── Phase C · Texte gauche [0.74 → 1]
+      if (text)
+        tl.to(
+          text,
+          { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'power2.out', duration: 0.12 },
+          0.74
+        )
+      if (compass)
+        tl.to(
+          compass,
+          { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'power2.out', duration: 0.1 },
+          0.74
+        )
+      if (slides)
+        tl.to(
+          slides,
+          { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'power2.out', duration: 0.1 },
+          0.77
+        )
+      if (cta)
+        tl.to(
+          cta,
+          { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'power2.out', duration: 0.1 },
           0.8
         )
-      }
-      // Le canvas reste à opacity 1 jusqu'à la fin de Section 1 : la frame_096
-      // (dernière image) demeure visible derrière les sections suivantes via
-      // son `position: fixed`. C'est Section2 qui crossfade par-dessus avec un
-      // voile noir scrubbé, garantissant zéro coupure visuelle.
+      if (scrollHint)
+        tl.to(scrollHint, { opacity: 0, y: -20, ease: 'power2.out', duration: 0.06 }, 0)
     },
     { scope: containerRef }
   )

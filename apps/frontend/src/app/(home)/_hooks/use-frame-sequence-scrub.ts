@@ -53,6 +53,10 @@ interface UseFrameSequenceScrubOptions {
   framesDir: string
   /** Nombre total de frames (1-indexé). */
   frameCount: number
+  /** Image affichée comme première frame avant la séquence numérotée. */
+  introFrameSrc?: string
+  /** Numéro de la première frame source. Défaut 1. */
+  frameStart?: number
   /** Si true, cherche les frames dans `framesDir/{tier}/`. Sinon flat dans `framesDir/`. */
   multiTier?: boolean
   /** Phase de scrub sur la timeline scrub 0-1. */
@@ -75,6 +79,8 @@ export function useFrameSequenceScrub({
   canvasRef,
   framesDir,
   frameCount,
+  introFrameSrc,
+  frameStart = 1,
   multiTier = true,
   scrubStart = 0.1,
   scrubEnd = 0.75,
@@ -123,11 +129,22 @@ export function useFrameSequenceScrub({
       const tier = multiTier ? pickTier() : null
       const images: HTMLImageElement[] = []
 
-      for (let i = 1; i <= frameCount; i++) {
+      if (introFrameSrc) {
         const img = new Image()
         img.decoding = 'async'
-        img.src = frameSrc(framesDir, i, tier)
-        if (i === 1) {
+        img.src = introFrameSrc
+        img.onload = () => {
+          resizeCanvas()
+          if (canvasRef.current) drawImageCover(canvasRef.current, img)
+        }
+        images.push(img)
+      }
+
+      for (let i = 0; i < frameCount; i++) {
+        const img = new Image()
+        img.decoding = 'async'
+        img.src = frameSrc(framesDir, frameStart + i, tier)
+        if (i === 0 && !introFrameSrc) {
           img.onload = () => {
             resizeCanvas()
             if (canvasRef.current) drawImageCover(canvasRef.current, img)
@@ -135,6 +152,7 @@ export function useFrameSequenceScrub({
         }
         images.push(img)
       }
+
       imagesRef.current = images
     }
 
@@ -155,7 +173,7 @@ export function useFrameSequenceScrub({
     observer.observe(containerRef.current)
     return () => observer.disconnect()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [framesDir, frameCount, multiTier, lazyPreload])
+  }, [framesDir, frameCount, introFrameSrc, frameStart, multiTier, lazyPreload])
 
   useGSAP(
     () => {
@@ -163,18 +181,20 @@ export function useFrameSequenceScrub({
         typeof window !== 'undefined' &&
         window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
+      const lastFrameIndex = frameCount + (introFrameSrc ? 1 : 0) - 1
+
       if (prefersReducedMotion) {
-        frameStateRef.current.index = frameCount - 1
+        frameStateRef.current.index = lastFrameIndex
         requestAnimationFrame(() => {
           if (canvasRef.current) {
-            drawImageCover(canvasRef.current, imagesRef.current[frameCount - 1])
+            drawImageCover(canvasRef.current, imagesRef.current[lastFrameIndex])
           }
         })
         return
       }
 
       const tween = gsap.to(frameStateRef.current, {
-        index: frameCount - 1,
+        index: lastFrameIndex,
         ease: 'none',
         snap: 'index',
         scrollTrigger: {
@@ -182,6 +202,7 @@ export function useFrameSequenceScrub({
           start: `top+=${scrubStart * 100}% top`,
           end: `top+=${scrubEnd * 100}% top`,
           scrub: 1,
+          invalidateOnRefresh: true,
         },
         onUpdate: () => {
           if (canvasRef.current) {
@@ -191,13 +212,15 @@ export function useFrameSequenceScrub({
             )
           }
         },
-        invalidateOnRefresh: true,
       })
 
       return () => {
         tween.kill()
       }
     },
-    { scope: containerRef, dependencies: [frameCount, scrubStart, scrubEnd] }
+    {
+      scope: containerRef,
+      dependencies: [frameCount, introFrameSrc, frameStart, scrubStart, scrubEnd],
+    }
   )
 }

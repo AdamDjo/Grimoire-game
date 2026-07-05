@@ -17,10 +17,8 @@ import { HeroContent } from './HeroContent'
  * Section1Hero — première section de la landing, hero "méthode Apple".
  *
  * Intro : Hero.mp4 plein écran en loop, sans texte. Dès le premier scroll,
- * la vidéo s'efface, la séquence de 96 frames WebP prend le relais (scrub
- * GSAP) et le texte central se révèle en cascade (CompassRose → slide → CTA).
- * Le texte ressort symétriquement à la fin du scroll, et la dernière frame
- * reste à l'écran pour assurer la continuité visuelle avec Section2Seuil.
+ * la vidéo s'efface, les frames 001 → 060 prennent le relais, puis la section
+ * s'arrête sur end_T1.png avec le slide 1 à gauche.
  */
 
 const navLogo = (
@@ -115,13 +113,14 @@ export function Section1Hero() {
 
       <NavBar logo={navLogo} links={navLinks} />
 
-      {/* Bloc central : caché à l'arrivée (opacity 0 + blur), révélé au scroll. */}
+      {/* Slide 1 : révélé à gauche sur le keyframe net end_T1. */}
       <div
         ref={textRef}
-        className="pointer-events-none fixed inset-0 z-10 flex flex-col items-center justify-center px-6 text-center"
+        className="pointer-events-none fixed left-0 top-0 z-10 flex h-screen w-full max-w-[680px] flex-col items-start justify-center px-6 text-left md:px-16 lg:px-24"
         style={{ opacity: 0, filter: 'blur(8px)', transform: 'translateY(24px)' }}
       >
         <HeroContent
+          align="start"
           childRefs={{
             compassRose: compassRoseRef,
             slideTexts: slideTextsRef,

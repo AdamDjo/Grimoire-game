@@ -19,6 +19,7 @@ interface HeroContentProps {
     slideTexts: RefObject<HTMLDivElement | null>
     cta: RefObject<HTMLDivElement | null>
   }
+  align?: 'center' | 'start'
 }
 
 /**
@@ -28,7 +29,7 @@ interface HeroContentProps {
  * Caché à l'arrivée, révélé en cascade dès le premier scroll (orchestration
  * GSAP via les refs exposées par `childRefs`).
  */
-export function HeroContent({ childRefs }: HeroContentProps) {
+export function HeroContent({ childRefs, align = 'center' }: HeroContentProps) {
   return (
     <>
       {/* Scrim radial : assombrit le centre derrière le texte pour le contraste. */}
@@ -41,7 +42,7 @@ export function HeroContent({ childRefs }: HeroContentProps) {
         }}
       />
 
-      <div className="flex flex-col items-center">
+      <div className={`flex flex-col ${align === 'start' ? 'items-start' : 'items-center'}`}>
         <div ref={childRefs?.compassRose} style={{ marginBottom: 20 }}>
           <div
             style={{
@@ -60,7 +61,7 @@ export function HeroContent({ childRefs }: HeroContentProps) {
               willChange: 'transform',
             }}
           >
-            <SlideTexts align="center" />
+            <SlideTexts align={align} />
           </div>
         </div>
 
