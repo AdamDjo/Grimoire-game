@@ -186,6 +186,44 @@
         0 0;
     }
   }
+
+  /* Section 2 — Triptyque : glyphes qui respirent (drop-shadow en boucle). */
+  --animate-glyph-pulse: glyph-pulse 4.2s ease-in-out infinite;
+  @keyframes glyph-pulse {
+    0%,
+    100% {
+      filter: drop-shadow(0 0 3px rgba(196, 164, 104, 0.25));
+      opacity: 0.62;
+    }
+    50% {
+      filter: drop-shadow(0 0 13px rgba(224, 196, 137, 0.75));
+      opacity: 1;
+    }
+  }
+
+  /* Section 2 — Triptyque : balayage doré (sheen) sur la plaque active. */
+  --animate-plate-sheen: plate-sheen 4.5s ease-in-out infinite;
+  @keyframes plate-sheen {
+    0% {
+      background-position: 180% 0;
+    }
+    55%,
+    100% {
+      background-position: -80% 0;
+    }
+  }
+
+  /* Section 2 — Triptyque : filet doré du bandeau de promesse. */
+  --animate-hairline-pulse: hairline-pulse 4s ease-in-out infinite;
+  @keyframes hairline-pulse {
+    0%,
+    100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
 }
 
 /* ─── Utility classes ───────────────────────────────────────────────────────── */

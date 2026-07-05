@@ -85,7 +85,7 @@ export const MAP_LABELS = [
 
 export const NAV_LINKS = ['Accueil', 'Velkhar', 'Mémoire', 'Règles', 'Auberge'] as const
 
-export const SECTION_IDS = ['hero', 'cendres', 'artefact', 'nuit', 'auberge'] as const
+export const SECTION_IDS = ['hero', 'triptyque', 'auberge'] as const
 
 /**
  * Phrases kinetic révélées char-by-char (KineticText) au centre de chaque
@@ -95,6 +95,59 @@ export const KINETIC_LINES = {
   cendres: 'Ici, le silence a la couleur de l’or.',
   artefact: 'Les Archontes ont laissé des mots dans la pierre.',
   nuit: 'Le vent porte une odeur de feu.',
+} as const
+
+/**
+ * Section 2 — Le Triptyque. Trois plaques en accordéon horizontal révélées au
+ * scroll (Mémoire / Maître du Jeu / Velkhar), calquées sur le plan SEO
+ * bilingue (`docs/private/plans/landing/LANDING_SEO_BILINGUAL_PLAN.md`).
+ *
+ * Règle éditoriale du plan : une phrase `lore` (poétique, posée sur l'image) +
+ * une phrase `product` (bénéfice concret, posée sur une plaque grimoire lisible).
+ * La plaque Velkhar porte le message rejouabilité + partage.
+ *
+ * `glyph` référence un des glyphes de `TriptychGlyphs` (mémoire = horloge,
+ * mj = dé, velkhar = dune).
+ */
+export const TRIPTYCH_EYEBROW = 'II · Le monde se souvient'
+
+export const TRIPTYCH_PANELS = [
+  {
+    id: 'memoire',
+    kicker: 'I · Mémoire',
+    glyph: 'memoire',
+    frame: 'frame_005',
+    title: 'Le monde n’oublie rien.',
+    lore: 'Une promesse, une dette, une trahison peut resurgir bien des scènes plus tard.',
+    product: 'Le Maître du Jeu garde la trace de chacun de tes actes.',
+  },
+  {
+    id: 'mj',
+    kicker: 'II · Maître du Jeu',
+    glyph: 'mj',
+    frame: 'frame_030',
+    title: 'L’IA écrit. Le jeu décide.',
+    lore: 'La prose vient de l’IA — mais le monde ne triche jamais.',
+    product: 'Règles, dés, inventaire et conséquences vivent dans le backend.',
+  },
+  {
+    id: 'velkhar',
+    kicker: 'III · Velkhar',
+    glyph: 'velkhar',
+    frame: 'frame_060',
+    title: 'Velkhar, désert de Cendre.',
+    lore: 'Artefacts, Calamine, Calcinés et factions rivales — un monde sombre mais lisible.',
+    product: 'Chaque partie écrit ta propre chronologie — que tu peux partager comme une légende.',
+  },
+] as const
+
+/**
+ * Bandeau de conclusion posé sous les trois plaques — martèle le bénéfice
+ * global (rejouabilité infinie) sans casser le triptyque.
+ */
+export const TRIPTYCH_PROMISE = {
+  lead: 'Trois piliers, une seule promesse —',
+  emphasis: 'aucune partie ne se ressemble.',
 } as const
 
 /**

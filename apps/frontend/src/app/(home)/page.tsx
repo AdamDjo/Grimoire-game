@@ -9,9 +9,9 @@ import { SidePagination } from '@/components/ui/SidePagination'
 import { useLenis } from '@/hooks/use-lenis'
 
 import { AmbientAudio } from './_components/AmbientAudio'
-import { CinematicChapterRail } from './_components/CinematicChapterRail'
 import { IntroLoader } from './_components/IntroLoader'
 import { Section1Hero } from './_components/Section1Hero'
+import { Section2Triptyque } from './_components/Section2Triptyque'
 import { Section3Aveugle } from './_components/Section3Aveugle'
 import { SECTION_IDS } from './_data/home-data'
 import { useActiveSection } from './_hooks/use-active-section'
@@ -43,9 +43,10 @@ export default function HomePage() {
 
       <Section1Hero />
 
-      {/* Rail unique — Cendres → Artefact → Nuit.
-          Un seul stage fixed + un seul snap : chaque scroll retombe sur un texte. */}
-      <CinematicChapterRail />
+      {/* Section 2 — Le Triptyque. Trois plaques en accordéon (Mémoire / MJ /
+          Velkhar) révélées au scroll sur frame_060 + bandeau de promesse.
+          Remplace l'ancien carrousel cinématique (CinematicChapterRail). */}
+      <Section2Triptyque />
 
       {/* Section 5 — Arrivée devant l'Auberge (ex-Section3Aveugle).
           Le composant garde son nom historique mais data-section-id="auberge". */}
