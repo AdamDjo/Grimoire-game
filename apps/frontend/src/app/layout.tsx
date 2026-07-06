@@ -1,4 +1,5 @@
 import { Cinzel, EB_Garamond, Outfit } from 'next/font/google'
+import localFont from 'next/font/local'
 
 import type { Metadata } from 'next'
 import './globals.css'
@@ -25,6 +26,12 @@ const outfit = Outfit({
   display: 'swap',
 })
 
+const brookleigh = localFont({
+  src: './_fonts/tc-brookleigh-rough.ttf',
+  variable: '--next-font-hero',
+  display: 'swap',
+})
+
 export const metadata: Metadata = {
   title: 'GRIMOIRE - Of Ash and Salt',
   description:
@@ -34,7 +41,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="fr" className={`${cinzel.variable} ${ebGaramond.variable} ${outfit.variable}`}>
+    <html
+      lang="fr"
+      className={`${cinzel.variable} ${ebGaramond.variable} ${outfit.variable} ${brookleigh.variable}`}
+    >
       <body>{children}</body>
     </html>
   )
