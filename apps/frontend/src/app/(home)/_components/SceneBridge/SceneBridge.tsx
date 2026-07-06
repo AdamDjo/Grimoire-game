@@ -1,5 +1,7 @@
 import { FrameSequenceCanvas } from './FrameSequenceCanvas'
 
+import './scene-bridge.css'
+
 interface SceneBridgeProps {
   bridgeLength?: number
   fallbackSrc: string
@@ -35,6 +37,8 @@ export function SceneBridge({
         data-bridge-next
         style={{ backgroundImage: `url(${nextBackgroundSrc})` }}
       />
+      <div className="scene-bridge__veil" data-bridge-veil aria-hidden="true" />
+      <div className="scene-bridge__smoke" data-bridge-smoke aria-hidden="true" />
       <div className="scene-bridge__glow" data-bridge-glow aria-hidden="true" />
       <div className="media-vignette" aria-hidden="true" />
     </section>

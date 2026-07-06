@@ -1,0 +1,60 @@
+.media-layer,
+.media-layer__video,
+.media-layer__fallback,
+.media-vignette {
+  inset: 0;
+  position: absolute;
+}
+
+.media-layer {
+  background: var(--void);
+  z-index: -2;
+}
+
+.media-layer__video,
+.media-layer__fallback {
+  background-position: center;
+  background-size: cover;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.media-layer__video {
+  position: absolute;
+  z-index: 1;
+}
+
+.media-layer__fallback {
+  z-index: 0;
+}
+
+.media-layer__fallback {
+  background:
+    radial-gradient(circle at 72% 42%, rgba(198, 154, 67, 0.2), transparent 26rem),
+    linear-gradient(90deg, rgba(3, 3, 2, 0.94), rgba(12, 10, 7, 0.72));
+}
+
+.media-layer__video + .media-layer__fallback {
+  opacity: 0.82;
+}
+
+.media-vignette {
+  background:
+    radial-gradient(circle at 74% 50%, rgba(239, 212, 141, 0.12), transparent 19rem),
+    radial-gradient(
+      circle at 61% 56%,
+      transparent 0,
+      rgba(3, 3, 2, 0.34) 43%,
+      rgba(3, 3, 2, 0.94) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(3, 3, 2, 0.94) 0%,
+      rgba(3, 3, 2, 0.55) 38%,
+      rgba(3, 3, 2, 0.46) 62%,
+      rgba(3, 3, 2, 0.76) 100%
+    ),
+    linear-gradient(180deg, rgba(3, 3, 2, 0.7), transparent 30%, rgba(3, 3, 2, 0.82));
+  pointer-events: none;
+}

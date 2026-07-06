@@ -6,11 +6,11 @@ import { useLenis } from '@/hooks/use-lenis'
 import { ScrollTrigger, gsap, useGSAP } from '@/lib/gsap-init'
 
 import { LANDING_MEDIA } from '../../_data/landing-content'
-import { LandingChrome } from '../LandingChrome'
-import { SceneBridge } from '../SceneBridge'
-import { Section2GameplayProof } from '../Section2GameplayProof'
-import { SectionAubergeCta } from '../SectionAubergeCta'
-import { SectionHero } from '../SectionHero'
+import { LandingChrome } from '../LandingChrome/LandingChrome'
+import { SceneBridge } from '../SceneBridge/SceneBridge'
+import { Section2GameplayProof } from '../Section2GameplayProof/Section2GameplayProof'
+import { SectionAubergeCta } from '../SectionAubergeCta/SectionAubergeCta'
+import { SectionHero } from '../SectionHero/SectionHero'
 
 export function LandingExperience() {
   const rootRef = useRef<HTMLDivElement>(null)
@@ -167,6 +167,7 @@ export function LandingExperience() {
 
       gsap.utils.toArray<HTMLElement>('[data-motion="bridge"]').forEach((bridge) => {
         const bridgeLength = Number(bridge.dataset.bridgeLength) || 145
+        const isEmber = bridge.classList.contains('scene-bridge--ember')
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: bridge,
@@ -177,22 +178,62 @@ export function LandingExperience() {
           },
         })
 
+        gsap.set(bridge.querySelector('[data-bridge-veil]'), { autoAlpha: 0 })
+        gsap.set(bridge.querySelector('[data-bridge-smoke]'), { autoAlpha: 0, xPercent: -4 })
+        gsap.set(bridge.querySelector('[data-bridge-glow]'), {
+          autoAlpha: 0,
+          scale: isEmber ? 0.8 : 0.72,
+        })
+        gsap.set(bridge.querySelector('[data-bridge-next]'), { autoAlpha: 0, scale: 1.035 })
+
         tl.fromTo(
-          bridge.querySelector('[data-bridge-glow]'),
-          { autoAlpha: 0, scale: 0.72 },
-          { autoAlpha: 1, scale: 1.12, duration: 0.28, ease: 'power2.out' },
-          0.62
+          bridge.querySelector('[data-bridge-veil]'),
+          { autoAlpha: 0 },
+          { autoAlpha: 0.94, duration: 0.3, ease: 'power2.out' },
+          0.12
         )
           .fromTo(
+            bridge.querySelector('[data-bridge-smoke]'),
+            { autoAlpha: 0, xPercent: -4 },
+            { autoAlpha: isEmber ? 0.72 : 0.58, xPercent: 3, duration: 0.5, ease: 'none' },
+            0.18
+          )
+          .fromTo(
+            bridge.querySelector('[data-bridge-glow]'),
+            { autoAlpha: 0, scale: isEmber ? 0.8 : 0.72 },
+            {
+              autoAlpha: isEmber ? 0.78 : 0.9,
+              scale: isEmber ? 1.14 : 1.18,
+              duration: 0.34,
+              ease: 'power2.out',
+            },
+            isEmber ? 0.36 : 0.22
+          )
+          .fromTo(
             bridge.querySelector('[data-bridge-next]'),
-            { autoAlpha: 0, scale: 1.04 },
+            { autoAlpha: 0, scale: 1.035 },
             { autoAlpha: 1, scale: 1, duration: 0.28, ease: 'none' },
-            0.72
+            isEmber ? 0.52 : 0.46
+          )
+          .to(
+            bridge.querySelector('[data-bridge-veil]'),
+            { autoAlpha: 0.18, duration: 0.22, ease: 'power2.inOut' },
+            isEmber ? 0.76 : 0.7
+          )
+          .to(
+            bridge.querySelector('[data-bridge-glow]'),
+            { autoAlpha: isEmber ? 0.22 : 0.18, scale: 1, duration: 0.18, ease: 'power2.inOut' },
+            isEmber ? 0.88 : 0.86
+          )
+          .to(
+            bridge.querySelector('[data-bridge-smoke]'),
+            { autoAlpha: 0.2, duration: 0.24, ease: 'power2.inOut' },
+            0.76
           )
           .to(
             bridge.querySelector('.frame-sequence'),
-            { autoAlpha: 0, duration: 0.18, ease: 'none' },
-            0.84
+            { autoAlpha: 0, duration: 0.28, ease: 'none' },
+            0.22
           )
       })
 

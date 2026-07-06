@@ -1,0 +1,98 @@
+.scene-bridge {
+  background: var(--void);
+  min-height: 100dvh;
+  overflow: hidden;
+  position: relative;
+}
+
+.frame-sequence,
+.frame-sequence canvas,
+.scene-bridge__next,
+.scene-bridge__veil,
+.scene-bridge__smoke,
+.scene-bridge__glow {
+  inset: 0;
+  position: absolute;
+}
+
+.frame-sequence {
+  background-color: #050403;
+  background-position: center;
+  background-size: cover;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.34;
+  width: 100%;
+  z-index: 1;
+}
+
+.frame-sequence canvas {
+  height: 100%;
+  width: 100%;
+}
+
+.scene-bridge__next {
+  background-position: center;
+  background-size: cover;
+  opacity: 0;
+  transform: scale(1.04);
+  z-index: 2;
+}
+
+.scene-bridge__veil {
+  background:
+    radial-gradient(circle at 52% 52%, rgba(18, 13, 7, 0.32), rgba(4, 3, 2, 0.82) 44%, #030201 100%),
+    linear-gradient(180deg, rgba(3, 2, 1, 0.72), #030201 72%);
+  opacity: 0;
+  z-index: 4;
+}
+
+.scene-bridge__smoke {
+  background:
+    radial-gradient(ellipse at 24% 54%, rgba(231, 205, 142, 0.08), transparent 34%),
+    radial-gradient(ellipse at 68% 45%, rgba(121, 87, 42, 0.14), transparent 36%),
+    linear-gradient(100deg, transparent 0%, rgba(193, 163, 101, 0.1) 28%, rgba(10, 8, 5, 0.2) 48%, rgba(229, 186, 98, 0.08) 66%, transparent 100%);
+  filter: blur(22px);
+  opacity: 0;
+  transform: scale(1.08);
+  z-index: 5;
+}
+
+.scene-bridge__glow {
+  background:
+    radial-gradient(
+      circle at 50% 54%,
+      rgba(255, 218, 119, 0.82),
+      rgba(198, 133, 35, 0.28) 24%,
+      transparent 48%
+    ),
+    radial-gradient(circle at 50% 64%, rgba(255, 179, 70, 0.28), transparent 42%);
+  filter: blur(2px);
+  opacity: 0;
+  transform: scale(0.72);
+  z-index: 6;
+}
+
+.scene-bridge--ember .scene-bridge__glow {
+  background:
+    radial-gradient(
+      circle at 50% 58%,
+      rgba(255, 159, 70, 0.66),
+      rgba(126, 70, 25, 0.24) 25%,
+      transparent 50%
+    ),
+    radial-gradient(circle at 47% 72%, rgba(255, 212, 118, 0.22), transparent 45%);
+}
+
+.scene-bridge--ember .scene-bridge__veil {
+  background:
+    radial-gradient(circle at 58% 58%, rgba(42, 20, 8, 0.42), rgba(4, 3, 2, 0.84) 46%, #030201 100%),
+    linear-gradient(180deg, rgba(3, 2, 1, 0.76), #030201 72%);
+}
+
+.scene-bridge--ember .scene-bridge__smoke {
+  background:
+    radial-gradient(ellipse at 58% 62%, rgba(255, 164, 77, 0.14), transparent 34%),
+    radial-gradient(ellipse at 32% 44%, rgba(97, 62, 31, 0.2), transparent 38%),
+    linear-gradient(105deg, transparent 0%, rgba(75, 48, 26, 0.2) 26%, rgba(10, 8, 5, 0.28) 50%, rgba(230, 151, 71, 0.1) 70%, transparent 100%);
+}

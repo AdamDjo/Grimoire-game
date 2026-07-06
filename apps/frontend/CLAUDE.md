@@ -31,6 +31,16 @@ src/
 - Les pages doivent composer des composants, pas contenir toute la logique.
 - Toutes les API frontend passent par `app/api/[...path]/route.ts`.
 
+## Nommage des fichiers
+
+- `components/ui/` : fichiers plats kebab-case (`media-layer.tsx`), toujours exportés
+  depuis `components/ui/index.ts`. Réutilisable multi-routes, jamais de copy hardcodée.
+- `app/(route)/_components/NomDuComposant/` : dossier PascalCase + fichier principal
+  `NomDuComposant.tsx` (jamais `index.tsx`) + sous-composants privés colocalisés en
+  PascalCase.tsx + CSS colocalisé `nom-du-composant.css`.
+- Un composant sans sous-composants ni CSS dédié reste un fichier plat
+  `app/(route)/_components/nom-du-composant.tsx`.
+
 ## Landing
 
 - Sections scroll de `(home)` dans `_components/Section<N><Nom>/`.

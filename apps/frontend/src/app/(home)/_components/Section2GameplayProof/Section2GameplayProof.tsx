@@ -1,36 +1,23 @@
-import { GAMEPLAY_CARDS, GAMEPLAY_COPY, LANDING_MEDIA } from '../../_data/landing-content'
-import { LandingButton } from '../LandingButton'
+import { Button, Card, MediaLayer } from '@/components/ui'
 
-import { GameplayCard } from './GameplayCard'
+import { GAMEPLAY_CARDS, GAMEPLAY_COPY, LANDING_MEDIA } from '../../_data/landing-content'
+
 import { GameplayStatsBar } from './GameplayStatsBar'
+
+import './section-gameplay.css'
 
 export function Section2GameplayProof() {
   return (
     <section className="landing-section gameplay-section" id="gameplay" data-motion="gameplay">
-      <div className="media-layer" aria-hidden="true">
-        {LANDING_MEDIA.gameplayVideo ? (
-          <video
-            className="media-layer__video"
-            poster={LANDING_MEDIA.gameplayPlate}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-          >
-            <source src={LANDING_MEDIA.gameplayVideo} type="video/mp4" />
-          </video>
-        ) : null}
-        <div
-          className="media-layer__fallback"
-          style={{ backgroundImage: `url(${LANDING_MEDIA.gameplayPlate})` }}
-        />
-        <div className="media-vignette" />
-      </div>
+      <MediaLayer
+        fallbackSrc={LANDING_MEDIA.gameplayPlate}
+        poster={LANDING_MEDIA.gameplayPlate}
+        videoSrc={LANDING_MEDIA.gameplayVideo ?? undefined}
+      />
 
       <div className="gameplay-section__cards">
         {GAMEPLAY_CARDS.map((card) => (
-          <GameplayCard key={card.index} card={card} />
+          <Card key={card.index} {...card} />
         ))}
       </div>
 
@@ -55,9 +42,9 @@ export function Section2GameplayProof() {
           ))}
         </div>
         <div data-motion="reveal">
-          <LandingButton className="landing-button--gameplay" href="/signup">
+          <Button className="button--gameplay" href="/signup">
             {GAMEPLAY_COPY.cta}
-          </LandingButton>
+          </Button>
         </div>
       </div>
 

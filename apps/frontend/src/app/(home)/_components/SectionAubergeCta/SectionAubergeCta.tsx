@@ -1,31 +1,19 @@
 import Link from 'next/link'
 
+import { Button, MediaLayer } from '@/components/ui'
+
 import { AUBERGE_COPY, LANDING_MEDIA } from '../../_data/landing-content'
-import { LandingButton } from '../LandingButton'
+
+import './section-auberge.css'
 
 export function SectionAubergeCta() {
   return (
     <section className="landing-section auberge-section" id="auberge" data-motion="auberge">
-      <div className="media-layer" aria-hidden="true">
-        {LANDING_MEDIA.aubergeVideo ? (
-          <video
-            className="media-layer__video"
-            poster={LANDING_MEDIA.aubergePlate}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-          >
-            <source src={LANDING_MEDIA.aubergeVideo} type="video/mp4" />
-          </video>
-        ) : null}
-        <div
-          className="media-layer__fallback"
-          style={{ backgroundImage: `url(${LANDING_MEDIA.aubergePlate})` }}
-        />
-        <div className="media-vignette" />
-      </div>
+      <MediaLayer
+        fallbackSrc={LANDING_MEDIA.aubergePlate}
+        poster={LANDING_MEDIA.aubergePlate}
+        videoSrc={LANDING_MEDIA.aubergeVideo ?? undefined}
+      />
 
       <blockquote className="auberge-quote" data-motion="reveal">
         {AUBERGE_COPY.quote.map((line) => (
@@ -40,7 +28,7 @@ export function SectionAubergeCta() {
         <h2 data-motion="title">{AUBERGE_COPY.title}</h2>
         <p data-motion="reveal">{AUBERGE_COPY.body}</p>
         <div data-motion="reveal">
-          <LandingButton href="/signup">{AUBERGE_COPY.cta}</LandingButton>
+          <Button href="/signup">{AUBERGE_COPY.cta}</Button>
         </div>
       </div>
 

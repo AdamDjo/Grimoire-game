@@ -1,27 +1,17 @@
+import { Button, MediaLayer } from '@/components/ui'
+
 import { HERO_COPY, LANDING_MEDIA } from '../../_data/landing-content'
-import { LandingButton } from '../LandingButton'
+
+import './section-hero.css'
 
 export function SectionHero() {
   return (
     <section className="landing-section hero-section" id="velkhar" data-motion="hero">
-      <div className="media-layer" aria-hidden="true">
-        <video
-          className="media-layer__video"
-          poster={LANDING_MEDIA.heroPlate}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-        >
-          <source src={LANDING_MEDIA.heroVideo} type="video/mp4" />
-        </video>
-        <div
-          className="media-layer__fallback"
-          style={{ backgroundImage: `url(${LANDING_MEDIA.heroPlate})` }}
-        />
-        <div className="media-vignette" />
-      </div>
+      <MediaLayer
+        fallbackSrc={LANDING_MEDIA.heroPlate}
+        poster={LANDING_MEDIA.heroPlate}
+        videoSrc={LANDING_MEDIA.heroVideo}
+      />
 
       <div className="hero-section__content">
         <p className="section-eyebrow" data-motion="reveal">
@@ -38,10 +28,10 @@ export function SectionHero() {
           ))}
         </div>
         <div className="hero-actions" data-motion="hero-actions">
-          <LandingButton href="#auberge">{HERO_COPY.primaryCta}</LandingButton>
-          <LandingButton href="#gameplay" variant="ghost">
+          <Button href="#auberge">{HERO_COPY.primaryCta}</Button>
+          <Button href="#gameplay" variant="ghost">
             {HERO_COPY.secondaryCta}
-          </LandingButton>
+          </Button>
         </div>
       </div>
     </section>

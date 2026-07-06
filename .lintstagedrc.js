@@ -27,9 +27,9 @@ module.exports = {
     ]
   },
   'packages/**/*.{ts,tsx,js}': (files) => {
-    return [`prettier --write ${files.join(' ')}`]
+    return [`pnpm --filter frontend exec prettier --write ${files.join(' ')}`]
   },
   '*.{json,md,yml,yaml}': (files) => {
-    return [`prettier --write ${files.join(' ')}`]
+    return [`pnpm --filter frontend exec prettier --write ${files.join(' ')}`]
   },
 }

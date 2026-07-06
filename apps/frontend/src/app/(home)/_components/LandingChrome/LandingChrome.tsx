@@ -2,6 +2,8 @@ import Link from 'next/link'
 
 import { LANDING_NAV_LINKS } from '../../_data/landing-content'
 
+import './landing-chrome.css'
+
 interface LandingChromeProps {
   activeIndex?: number
 }

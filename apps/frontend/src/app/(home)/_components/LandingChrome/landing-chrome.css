@@ -1,0 +1,210 @@
+.landing-chrome {
+  align-items: center;
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto minmax(80px, 1fr);
+  left: 0;
+  opacity: 0;
+  padding: 32px clamp(28px, 4.8vw, 82px);
+  position: fixed;
+  right: 0;
+  top: 0;
+  transform: translateY(-16px);
+  z-index: 40;
+}
+
+.brand-mark {
+  align-items: center;
+  display: inline-flex;
+  gap: 20px;
+  justify-self: start;
+  position: relative;
+}
+
+.brand-mark::after {
+  display: none;
+}
+
+.brand-mark__logo {
+  background: url('/landing/ui/brand-logo-grimoire.png') center / contain no-repeat;
+  display: block;
+  height: 94px;
+  width: 252px;
+}
+
+.brand-mark__sigil {
+  aspect-ratio: 1;
+  background: url('/landing/ui/brand-sigil-trimmed.png') center / contain no-repeat;
+  border: 0;
+  box-shadow:
+    0 0 0 1px rgba(239, 212, 141, 0.1),
+    0 0 22px rgba(218, 170, 74, 0.18);
+  color: rgba(239, 212, 141, 0.82);
+  display: inline-block;
+  position: relative;
+  width: 46px;
+}
+
+.brand-mark__sigil::before,
+.brand-mark__sigil::after {
+  display: none;
+}
+
+.brand-mark__text {
+  background:
+    linear-gradient(180deg, #ffe7ac 0%, #d9a84e 54%, #8b5d25 100%),
+    repeating-linear-gradient(92deg, rgba(255, 255, 255, 0.18) 0 1px, transparent 1px 4px);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-family: var(--font-display);
+  font-size: clamp(31px, 2.22vw, 40px);
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  line-height: 1;
+  text-shadow: 0 0 22px rgba(198, 154, 67, 0.18);
+  text-transform: uppercase;
+}
+
+.landing-chrome__nav {
+  align-items: center;
+  display: flex;
+  gap: clamp(44px, 4.1vw, 70px);
+  justify-self: center;
+}
+
+.landing-chrome__nav a {
+  color: rgba(239, 225, 194, 0.92);
+  font-family: var(--font-ui);
+  font-size: 15.5px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  position: relative;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.8);
+}
+
+.landing-chrome__nav a + a::before {
+  aspect-ratio: 1;
+  border: 1px solid rgba(218, 170, 74, 0.42);
+  content: '';
+  left: clamp(-36px, -2.1vw, -28px);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  width: 8px;
+}
+
+.landing-chrome__nav a::after {
+  background: var(--gold);
+  content: '';
+  height: 1px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.landing-chrome__nav a:hover::after {
+  transform: scaleX(1);
+}
+
+.landing-menu-button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 42px;
+  justify-self: end;
+  padding: 8px 0;
+  width: 48px;
+}
+
+.landing-menu-button span {
+  background: var(--gold-light);
+  height: 1px;
+  transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+  width: 34px;
+}
+
+.landing-menu-button:hover span:first-child {
+  transform: translateX(-5px);
+}
+
+.landing-menu-button:hover span:last-child {
+  transform: translateX(5px);
+}
+
+.landing-pagination {
+  display: grid;
+  gap: 28px;
+  position: fixed;
+  right: clamp(28px, 4.7vw, 86px);
+  top: 44%;
+  z-index: 36;
+}
+
+.landing-pagination span {
+  color: rgba(239, 225, 194, 0.48);
+  font-family: var(--font-serif);
+  font-size: 18px;
+  line-height: 1;
+  position: relative;
+}
+
+.landing-pagination span::before {
+  aspect-ratio: 1;
+  border: 1px solid rgba(218, 170, 74, 0.42);
+  content: '';
+  position: absolute;
+  right: calc(100% + 18px);
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  width: 12px;
+}
+
+.landing-pagination span.is-active {
+  color: var(--gold-light);
+}
+
+.landing-pagination span.is-active::before {
+  background: var(--gold-light);
+  box-shadow: 0 0 20px rgba(218, 170, 74, 0.85);
+}
+
+@media (max-width: 1100px) {
+  .landing-chrome {
+    grid-template-columns: 1fr auto;
+  }
+
+  .landing-chrome__nav {
+    display: none;
+  }
+
+  .landing-pagination {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .landing-chrome {
+    padding: 22px 20px;
+  }
+
+  .brand-mark__sigil {
+    width: 28px;
+  }
+
+  .brand-mark__text {
+    font-size: 23px;
+  }
+
+  .brand-mark__logo {
+    height: 62px;
+    width: 166px;
+  }
+}

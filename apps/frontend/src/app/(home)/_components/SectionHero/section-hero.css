@@ -1,0 +1,97 @@
+.hero-section {
+  align-items: center;
+  display: grid;
+  padding: 13vh clamp(30px, 5.25vw, 88px) 8vh;
+}
+
+.hero-section__content {
+  max-width: min(52vw, 820px);
+  padding-top: 22vh;
+  position: relative;
+  z-index: 2;
+}
+
+.section-eyebrow {
+  color: #f2cf72;
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 1.55vw, 30px);
+  font-style: italic;
+  line-height: 1.2;
+  margin: 0 0 42px;
+  position: relative;
+  text-shadow:
+    0 0 24px rgba(198, 154, 67, 0.28),
+    0 2px 16px rgba(0, 0, 0, 0.74);
+}
+
+.section-eyebrow::after {
+  background: url('/landing/ui/ornament-divider-trimmed.png') left center / contain no-repeat;
+  bottom: -28px;
+  content: '';
+  height: 24px;
+  left: 0;
+  position: absolute;
+  width: min(100%, 270px);
+}
+
+.hero-title {
+  color: #ead9b4;
+  font-family: var(--font-hero);
+  font-size: clamp(88px, 8.45vw, 158px);
+  font-weight: 400;
+  letter-spacing: 0.012em;
+  line-height: 0.82;
+  margin: 0;
+  text-shadow:
+    0 4px 1px rgba(0, 0, 0, 0.48),
+    0 0 18px rgba(239, 212, 141, 0.1);
+  text-transform: none;
+}
+
+.hero-title span {
+  color: inherit;
+  display: block;
+  white-space: nowrap;
+}
+
+.hero-copy {
+  color: rgba(222, 211, 190, 0.74);
+  font-family: var(--font-ui);
+  font-size: clamp(18px, 1.18vw, 21px);
+  line-height: 1.5;
+  margin-top: 30px;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.72);
+}
+
+.hero-copy p {
+  margin: 0;
+}
+
+.hero-actions {
+  align-items: center;
+  display: flex;
+  gap: 62px;
+  margin-top: 36px;
+}
+
+@media (max-width: 720px) {
+  .hero-section {
+    align-items: end;
+    padding: 22vh 20px 8vh;
+  }
+
+  .hero-section__content {
+    max-width: 100%;
+    padding-top: 0;
+  }
+
+  .hero-title {
+    font-size: clamp(60px, 17vw, 86px);
+  }
+
+  .hero-actions {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 18px;
+  }
+}
