@@ -3,7 +3,7 @@ type: status
 visibility: public
 rag: true
 source_of_truth: true
-updated: 2026-07-04
+updated: 2026-07-06
 ---
 
 # Project Status
@@ -12,11 +12,11 @@ updated: 2026-07-04
 
 - Projet : **GRIMOIRE — Of Ash and Salt**
 - Phase actuelle : **Phase 1A — Landing en cours**
-- Branche active : `feature/88-landing-page-redesign`
-- Priorité active : finir la landing avec le plan Cuberto-level.
-- Étape actuelle : **préparation des frames landing / génération T1 Cendres**.
-- Plan actif : `docs/private/plans/landing/PLAN-LANDING-CUBERTO-LEVEL.md`
-- Source opérationnelle frames : `docs/private/plans/landing/LANDING_ASSET_PROMPTS.md`
+- Branche active : `feature/92-landing-page`
+- Priorité active : reconstruire la landing sur une base frontend propre avec le plan pixel-perfect VEO3.
+- Étape actuelle : **socle frontend nettoyé, prêt pour intégration des plates statiques puis des animations**.
+- Plan actif : `docs/private/plans/landing/PLAN-LANDING-PIXEL-PERFECT-VEO3.md`
+- Source opérationnelle frames : `docs/private/assets/landing/generated/`
 - Plan secondaire : `docs/private/plans/landing/LANDING_SEO_BILINGUAL_PLAN.md`
 - Phase 1B : **backlog uniquement**, à ne pas démarrer avant landing validée + merge.
 

@@ -1,171 +1,29 @@
 @import 'tailwindcss';
 
-/* ─── Design tokens ─────────────────────────────────────────────────────────── */
 :root {
-  /* Backgrounds */
-  --bg-2: #14100a;
-
-  /* Text on dark */
-  --ink: #d8c8ac;
-  --ink-2: #ab9c80;
-  --ink-3: #9c8d75;
-
-  /* Text on parchment */
-  --text-parch-3: #6b573b;
-
-  /* Gold */
-  --gold: #c4a468;
-  --gold-light: #e0c489;
-  --gold-dark: #9c7f4e;
-  --gold-hover: #f4dca8;
-
-  /* Gold avec alpha */
-  --gold-15: rgba(196, 164, 104, 0.15);
-  --gold-50: rgba(196, 164, 104, 0.5);
-
-  /* Ruby */
-  --ruby: #7c241a;
-
-  /* Borders */
-  --border: rgba(196, 164, 104, 0.22);
-  --border-choice: #6e5a3c;
-
-  /* Radius */
-  --radius: 4px;
-
-  /* Polices */
-  --font-disp: 'Cinzel', Georgia, serif;
-  --font-serif: 'EB Garamond', Georgia, serif;
-
-  /* Overlays sombres (lisibilité texte sur média) */
-  --bg-overlay-50: rgba(5, 5, 6, 0.5);
-  --bg-overlay-55: rgba(5, 5, 6, 0.55);
-  --bg-overlay-70: rgba(5, 5, 6, 0.7);
-  --bg-overlay-95: rgba(5, 5, 6, 0.95);
-  --bg-overlay-97: rgba(5, 5, 6, 0.97);
-
-  /* Gradient titre doré */
-  --gradient-heading: linear-gradient(180deg, #e8d4a0 0%, #c4a468 100%);
+  --color-void: #050505;
+  --color-ash: #12100d;
+  --color-ink: #eee2c8;
+  --color-muted: #a99b83;
+  --color-gold: #c7a461;
+  --color-gold-soft: #ead49a;
+  --color-border: rgba(199, 164, 97, 0.24);
+  --font-display: var(--next-font-disp), Georgia, serif;
+  --font-serif: var(--next-font-serif), Georgia, serif;
+  --font-ui: var(--next-font-ui), Arial, sans-serif;
+  --focus-ring: 0 0 0 3px rgba(199, 164, 97, 0.28);
 }
 
-/* ─── Tailwind theme bridge ─────────────────────────────────────────────────── */
-/*
-  Expose les tokens au système de classes Tailwind.
-  Permet d'écrire text-gold-light, font-display, border-gold au lieu de var(--…).
-*/
 @theme inline {
-  --color-gold: var(--gold);
-  --color-gold-light: var(--gold-light);
-  --color-ink-3: var(--ink-3);
-  --font-display: var(--font-disp);
+  --color-void: var(--color-void);
+  --color-ash: var(--color-ash);
+  --color-ink: var(--color-ink);
+  --color-muted: var(--color-muted);
+  --color-gold: var(--color-gold);
+  --color-gold-soft: var(--color-gold-soft);
+  --font-display: var(--font-display);
   --font-serif: var(--font-serif);
-
-  --animate-cosmic-pulse: cosmic-pulse 8s ease-in-out infinite;
-  @keyframes cosmic-pulse {
-    0%,
-    100% {
-      opacity: 0.7;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 1;
-      transform: scale(1.06);
-    }
-  }
-
-  --animate-ember-rise: ember-rise var(--ember-dur, 8s) ease-in-out var(--ember-delay, 0s) infinite;
-  @keyframes ember-rise {
-    0% {
-      transform: translate3d(0, 0, 0) translateX(0);
-      opacity: 0;
-    }
-    8% {
-      opacity: var(--ember-opacity, 0.6);
-    }
-    50% {
-      transform: translate3d(0, -55vh, 0) translateX(var(--ember-drift, 12px));
-      opacity: var(--ember-opacity, 0.6);
-    }
-    92% {
-      opacity: var(--ember-opacity, 0.6);
-    }
-    100% {
-      transform: translate3d(0, -110vh, 0) translateX(calc(var(--ember-drift, 12px) * -0.4));
-      opacity: 0;
-    }
-  }
-
-  --animate-hero-title-reveal: hero-title-reveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
-  @keyframes hero-title-reveal {
-    0% {
-      opacity: 0;
-      transform: translateY(24px);
-      filter: blur(12px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-      filter: blur(0);
-    }
-  }
-
-  --animate-vignette-breathe: vignette-breathe 6s ease-in-out infinite;
-  @keyframes vignette-breathe {
-    0%,
-    100% {
-      opacity: 0.82;
-    }
-    50% {
-      opacity: 1;
-    }
-  }
-
-  --animate-grain-shift: grain-shift 0.4s steps(2) infinite;
-  @keyframes grain-shift {
-    0% {
-      transform: translate(0, 0);
-    }
-    25% {
-      transform: translate(-2%, 1%);
-    }
-    50% {
-      transform: translate(1%, -2%);
-    }
-    75% {
-      transform: translate(-1%, -1%);
-    }
-    100% {
-      transform: translate(0, 0);
-    }
-  }
-
-  --animate-glow-pulse: glow-pulse 2.4s ease-in-out infinite alternate;
-  @keyframes glow-pulse {
-    0% {
-      box-shadow:
-        0 0 0 0 rgba(224, 196, 137, 0),
-        0 0 18px 2px rgba(224, 196, 137, 0.18);
-    }
-    100% {
-      box-shadow:
-        0 0 0 0 rgba(224, 196, 137, 0),
-        0 0 32px 6px rgba(224, 196, 137, 0.42);
-    }
-  }
-
-  --animate-intro-fade: intro-fade 0.9s ease-out forwards;
-  @keyframes intro-fade {
-    0% {
-      opacity: 1;
-    }
-    70% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-      visibility: hidden;
-    }
-  }
+  --font-ui: var(--font-ui);
 
   --animate-shiny-text-multi: shiny-text-multi 8s ease-in-out infinite;
   @keyframes shiny-text-multi {
@@ -186,129 +44,162 @@
         0 0;
     }
   }
-
-  /* Section 2 — Triptyque : glyphes qui respirent (drop-shadow en boucle). */
-  --animate-glyph-pulse: glyph-pulse 4.2s ease-in-out infinite;
-  @keyframes glyph-pulse {
-    0%,
-    100% {
-      filter: drop-shadow(0 0 3px rgba(196, 164, 104, 0.25));
-      opacity: 0.62;
-    }
-    50% {
-      filter: drop-shadow(0 0 13px rgba(224, 196, 137, 0.75));
-      opacity: 1;
-    }
-  }
-
-  /* Section 2 — Triptyque : balayage doré (sheen) sur la plaque active. */
-  --animate-plate-sheen: plate-sheen 4.5s ease-in-out infinite;
-  @keyframes plate-sheen {
-    0% {
-      background-position: 180% 0;
-    }
-    55%,
-    100% {
-      background-position: -80% 0;
-    }
-  }
-
-  /* Section 2 — Triptyque : filet doré du bandeau de promesse. */
-  --animate-hairline-pulse: hairline-pulse 4s ease-in-out infinite;
-  @keyframes hairline-pulse {
-    0%,
-    100% {
-      opacity: 0.5;
-    }
-    50% {
-      opacity: 1;
-    }
-  }
 }
 
-/* ─── Utility classes ───────────────────────────────────────────────────────── */
-@layer utilities {
-  /* Cinzel (display) */
-  .text-disp-xs,
-  .text-disp-sm {
-    font-family: var(--font-disp);
-    text-transform: uppercase;
-  }
-  .text-disp-xs {
-    font-size: 11px;
-    letter-spacing: 0.22em;
-    color: var(--ink-3);
-  }
-  .text-disp-sm {
-    font-size: 12px;
-    letter-spacing: 0.3em;
-    color: var(--gold);
-  }
-
-  /* EB Garamond (serif) */
-  .text-serif-md {
-    font-family: var(--font-serif);
-    line-height: 1.8;
-    color: var(--ink-2);
-    font-size: clamp(16px, 1.4vw, 21px);
-  }
-
-  /* Gradient doré pour les titres */
-  .text-gradient-gold {
-    background: var(--gradient-heading);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-}
-
-/* ─── Base reset ────────────────────────────────────────────────────────────── */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
 
-::selection {
-  background: var(--gold-50);
-  color: #f0e4c8;
+html {
+  min-height: 100%;
+  background: var(--color-void);
+  color-scheme: dark;
 }
 
 body {
-  background-image: url('/assets/images/background.jpg');
-  background-size: cover;
-  background-color: #0a0705;
-  color: var(--ink);
-  font-family: var(--font-serif);
   min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at 76% 18%, rgba(199, 164, 97, 0.12), transparent 28rem),
+    linear-gradient(135deg, var(--color-void), var(--color-ash) 62%, #070604);
+  color: var(--color-ink);
+  font-family: var(--font-serif);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
-/* ─── Scrollbar ─────────────────────────────────────────────────────────────── */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: var(--bg-2);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--gold-dark);
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
-/* ─── Focus ring ────────────────────────────────────────────────────────────── */
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(199, 164, 97, 0.45);
+  color: #fff8e6;
+}
+
 :focus-visible {
-  outline: 2px solid var(--gold);
+  border-radius: 4px;
+  box-shadow: var(--focus-ring);
+  outline: 1px solid var(--color-gold);
   outline-offset: 2px;
-  border-radius: var(--radius);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-void);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(199, 164, 97, 0.32);
+  border-radius: 999px;
+}
+
+.landing-shell {
+  min-height: 100vh;
+  position: relative;
+  isolation: isolate;
+}
+
+.landing-nav {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  left: 0;
+  padding: 24px clamp(20px, 5vw, 72px);
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 10;
+}
+
+.landing-brand,
+.landing-nav-link,
+.landing-kicker,
+.landing-moments {
+  font-family: var(--font-ui);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.landing-brand {
+  color: var(--color-gold-soft);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.landing-nav-link {
+  border: 1px solid var(--color-border);
+  color: var(--color-ink);
+  font-size: 11px;
+  padding: 11px 16px;
+}
+
+.landing-reset {
+  display: grid;
+  min-height: 100vh;
+  padding: clamp(120px, 16vh, 180px) clamp(20px, 8vw, 112px) clamp(48px, 8vh, 96px);
+  place-content: center start;
+  row-gap: 24px;
+}
+
+.landing-kicker {
+  color: var(--color-gold);
+  font-size: 12px;
+  margin: 0;
+}
+
+.landing-reset h1 {
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: clamp(54px, 11vw, 156px);
+  font-weight: 700;
+  line-height: 0.9;
+  margin: 0;
+  max-width: 960px;
+}
+
+.landing-copy {
+  color: var(--color-muted);
+  font-size: clamp(18px, 2vw, 25px);
+  line-height: 1.55;
+  margin: 0;
+  max-width: 720px;
+}
+
+.landing-moments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.landing-moments span {
+  border: 1px solid var(--color-border);
+  color: var(--color-gold-soft);
+  font-size: 10px;
+  padding: 9px 12px;
+}
+
+@media (max-width: 720px) {
+  .landing-nav {
+    padding: 18px 20px;
+  }
+
+  .landing-reset {
+    place-content: end start;
+  }
 }

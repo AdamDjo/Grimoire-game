@@ -2,14 +2,14 @@
 type: actions
 visibility: public
 rag: true
-updated: 2026-07-04
+updated: 2026-07-06
 ---
 
 # Next Actions
 
-1. Préparer/générer les frames **T1 Cendres** avec `docs/private/plans/landing/LANDING_ASSET_PROMPTS.md`.
-2. Vérifier le raccord visuel `frame_096.webp` → T1.
-3. Valider l'END frame T1 : elle devient la START frame T2.
-4. Extraire et optimiser les frames webp avant intégration frontend.
-5. Reprendre ensuite T2 Artefact puis T3 Auberge.
+1. Intégrer les plates statiques du plan `PLAN-LANDING-PIXEL-PERFECT-VEO3`.
+2. Coder la section **Gameplay proof** en HTML/CSS/React sans animation.
+3. Comparer les screenshots aux mockups cibles et ajuster composition, tailles et hiérarchie.
+4. Ajouter progressivement les animations cards, puis remplacer les fonds statiques par vidéo/frames.
+5. Ajouter les transitions grimoire/quill, puis polish Lenis/GSAP.
 6. Garder la Phase 1B en attente jusqu'à landing validée + merge.
