@@ -1,89 +1,79 @@
-# Design Tokens — Velkhar (palette désertique)
+# Design Tokens — Grimoire (or/parchemin)
 
 > Extrait condensé de [`GAME_DESIGN.md`](GAME_DESIGN.md) §7. Pour le détail complet (justifications, exemples étendus, références visuelles), lire le fichier source.
 > **Règle absolue** : ne jamais hard-coder couleur ou police. Toujours utiliser ces tokens (CSS vars ou Tailwind).
 
 ---
 
-## Palette OKLCH
+## Palette
 
 Implémentée dans `apps/frontend/src/app/globals.css` :
 
 ```css
 :root {
-  /* Backgrounds — sable noir / panel */
-  --bg: oklch(0.15 0.013 52);
-  --bg-2: oklch(0.2 0.015 54);
-  --bg-3: oklch(0.255 0.016 56);
-  --panel-edge: oklch(0.34 0.018 58 / 0.7);
-  --line: oklch(0.32 0.014 58 / 0.55);
-
-  /* Text — sable brûlé */
-  --ink-1: oklch(0.93 0.02 78); /* primary */
-  --ink-2: oklch(0.74 0.018 72); /* secondary */
-  --ink-3: oklch(0.56 0.015 66); /* muted */
-  --ink-4: oklch(0.42 0.012 60); /* disabled */
-
-  /* Accents — or brûlé, ocre, Cendre */
-  --gold: oklch(0.78 0.13 75); /* or brûlé — CTA principal */
-  --gold-light: oklch(0.88 0.1 80); /* hover, sable au soleil */
-  --gold-dark: oklch(0.62 0.12 70); /* borders, bronze ancien */
-  --ember: oklch(0.72 0.135 55); /* ocre — CTA, loot, danger */
-  --ember-deep: oklch(0.58 0.14 45);
-  --arcane: oklch(0.68 0.09 290); /* violet brume dorée — magie, IA */
-  --arcane-2: oklch(0.58 0.11 292);
-  --steel: oklch(0.66 0.06 225); /* OOC mode, neutre */
-
-  /* Triptyque stats */
-  --sang: oklch(0.6 0.17 28); /* rouge combat */
-  --souffle: oklch(0.74 0.1 200); /* turquoise désert nuit */
-  --cendre: oklch(0.7 0.12 60); /* doré cendre */
-
-  /* Survie */
-  --pv: oklch(0.6 0.17 28);
-  --calamine: oklch(0.7 0.14 75);
-  --soif: oklch(0.7 0.1 220);
-  --faim: oklch(0.68 0.12 50);
-  --fatigue: oklch(0.5 0.05 280);
+  --void: #0a0806; /* Encre — fond principal */
+  --ash: #171208; /* Fumée — fond secondaire, panels */
+  --parchment: #e8dcc0; /* Parchemin — texte primaire */
+  --parchment-dim: #c8b894; /* Parchemin atténué — texte secondaire */
+  --muted: #9b8d74; /* Texte muted / disabled */
+  --gold: #d9a441; /* Or — accent principal, CTA */
+  --gold-light: #f0d48a; /* Or clair — hover, lueur */
+  --gold-hover: #f0d48a; /* Alias de --gold-light */
+  --gold-dark: #7d5521; /* Or foncé — bordures, bronze ancien */
+  --blood: #c0392b; /* Sang — stat combat */
+  --soul: #35c4ac; /* Souffle — stat magie/soul */
+  --cendre: #e3b341; /* Cendre — stat ressource */
+  --border-gold: rgba(217, 164, 65, 0.34);
+  --shadow-gold: rgba(217, 164, 65, 0.28);
+  --ink: var(--parchment);
+  --ink-2: var(--parchment-dim);
+  --focus-ring: 0 0 0 3px rgba(217, 164, 65, 0.3);
 }
 ```
+
+Exposées comme utilities Tailwind via `@theme inline` : `bg-void`, `bg-ash`, `text-ink`, `text-muted`, `text-gold`, `text-gold-soft`, `text-gold-dark`, `text-parchment`, `text-blood`, `text-soul`, `text-cendre` (et leurs équivalents `bg-*`/`border-*`).
 
 ---
 
 ## Typographie
 
-Chargées dans `app/layout.tsx` via `next/font/google` :
+Chargées dans `app/layout.tsx` via `next/font/google` (+ 1 police locale) :
 
-| Variable CSS   | Font                                 | Usage                                   |
-| -------------- | ------------------------------------ | --------------------------------------- |
-| `--font-disp`  | **Cinzel** 500/600/700/800           | Titres, chapitres, logo, héros          |
-| `--font-serif` | **EB Garamond** 400/500/600 + italic | Narration MJ, prose, dialogue           |
-| `--font-body`  | **Outfit** 300/400/500/600/700       | UI chrome (boutons, stats, nav, labels) |
+| Variable CSS        | Font                                    | Usage                                   |
+| ------------------- | --------------------------------------- | --------------------------------------- |
+| `--font-display`    | **Cinzel** 500/600/700                  | Titres, chapitres, logo                 |
+| `--font-hero`       | **TC Brookleigh** (local) + Cinzel      | Grand titre héros landing               |
+| `--font-serif`      | **EB Garamond** 400/500/600 + italic    | Narration MJ, prose, dialogue           |
+| `--font-accent`     | **Cormorant Garamond** 400-700 + italic | Accents éditoriaux, citations           |
+| `--font-ui`         | **Alegreya Sans** 300/400/500/700       | UI chrome (boutons, stats, nav, labels) |
+| `--font-manuscript` | **Caveat** 400/500                      | Notes manuscrites, touches "grimoire"   |
+
+Exposées en Tailwind : `font-display`, `font-hero`, `font-serif`, `font-accent`, `font-ui`, `font-manuscript`.
 
 ---
 
 ## Atmosphère désertique (à répliquer sur tout PageShell)
 
-- `body::before` → radial gradients : or brûlé en haut + arcane bas
-- `body::after` → SVG fractalNoise grain (5 % opacity, `mix-blend-mode: overlay`)
-- Particules ocre flottantes — Phase 1A : CSS animation ; Phase 3 : canvas
+- `.landing-experience` → radial + linear gradients sombres (encre/fumée), `isolation: isolate`
+- `.landing-experience::after` → grain de bruit (gradient + grille 3px), `mix-blend-mode: soft-light`, 38 % opacity
+- Particules dorées flottantes — Phase 1A : CSS animation ; Phase 3 : canvas
 
 ---
 
 ## Exemples Tailwind récurrents
 
 ```tsx
-// Titre section gradient doré
-<h2 className="font-disp bg-gradient-to-b from-[--gold-light] to-[--gold] bg-clip-text text-transparent">
+// Titre en police display, couleur or
+<h2 className="font-display text-gold">
 
 // CTA principal
-<button className="bg-[--ember] hover:bg-[--ember-deep] text-[--bg] font-body font-medium">
+<button className="bg-gold hover:bg-gold-soft text-void font-ui font-medium">
 
 // Texte secondaire muted
-<p className="font-serif text-[--ink-2] italic">
+<p className="font-serif text-muted italic">
 
-// StatBar SANG
-<div className="bg-[--sang] h-2 rounded" style={{ width: `${pct}%` }}>
+// Stat combat (Sang)
+<div className="bg-blood h-2 rounded" style={{ width: `${pct}%` }}>
 ```
 
 ---
