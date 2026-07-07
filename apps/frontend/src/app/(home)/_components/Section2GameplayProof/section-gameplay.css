@@ -89,7 +89,13 @@
 
 .gameplay-stats {
   align-items: stretch;
-  background: url('/landing/ui/gameplay-stats-frame-trimmed.png') center / 100% 100% no-repeat;
+  background-image: image-set(
+    url('/landing/ui/gameplay-stats-frame-trimmed.webp') type('image/webp'),
+    url('/landing/ui/gameplay-stats-frame-trimmed.png') type('image/png')
+  );
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   border: 0;
   bottom: 4vh;
   box-shadow: 0 18px 55px rgba(0, 0, 0, 0.5);

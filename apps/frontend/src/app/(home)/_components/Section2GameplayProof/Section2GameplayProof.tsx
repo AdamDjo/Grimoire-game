@@ -11,6 +11,7 @@ export function Section2GameplayProof() {
     <section className="landing-section gameplay-section" id="gameplay" data-motion="gameplay">
       <MediaLayer
         fallbackSrc={LANDING_MEDIA.gameplayPlate}
+        fallbackSrcWebp={LANDING_MEDIA.gameplayPlateWebp}
         poster={LANDING_MEDIA.gameplayPlate}
         videoSrc={LANDING_MEDIA.gameplayVideo ?? undefined}
       />

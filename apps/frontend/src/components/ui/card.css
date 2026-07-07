@@ -1,5 +1,11 @@
 .card {
-  background: url('/landing/ui/gameplay-card-frame-trimmed.png') center / 100% 100% no-repeat;
+  background-image: image-set(
+    url('/landing/ui/gameplay-card-frame-trimmed.webp') type('image/webp'),
+    url('/landing/ui/gameplay-card-frame-trimmed.png') type('image/png')
+  );
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   border: 0;
   box-shadow:
     0 22px 70px rgba(0, 0, 0, 0.62),
@@ -63,7 +69,13 @@
 
 .card p {
   align-items: center;
-  background: url('/landing/ui/gameplay-card-note-trimmed.png') center / 100% 100% no-repeat;
+  background-image: image-set(
+    url('/landing/ui/gameplay-card-note-trimmed.webp') type('image/webp'),
+    url('/landing/ui/gameplay-card-note-trimmed.png') type('image/png')
+  );
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   border: 0;
   box-shadow: none;
   color: #1d150c;

@@ -19,7 +19,13 @@
 }
 
 .button--primary {
-  background: url('/landing/ui/cta-gold-texture-trimmed.png') center / 100% 100% no-repeat;
+  background-image: image-set(
+    url('/landing/ui/cta-gold-texture-trimmed.webp') type('image/webp'),
+    url('/landing/ui/cta-gold-texture-trimmed.png') type('image/png')
+  );
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   border-color: transparent;
   box-shadow:
     0 17px 0 rgba(30, 18, 7, 0.2),
@@ -30,7 +36,13 @@
 }
 
 .button--gameplay {
-  background: url('/landing/ui/gameplay-cta-texture-trimmed.png') center / 100% 100% no-repeat;
+  background-image: image-set(
+    url('/landing/ui/gameplay-cta-texture-trimmed.webp') type('image/webp'),
+    url('/landing/ui/gameplay-cta-texture-trimmed.png') type('image/png')
+  );
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   color: var(--gold-light);
   font-size: clamp(24px, 1.55vw, 31px);
   min-height: 88px;

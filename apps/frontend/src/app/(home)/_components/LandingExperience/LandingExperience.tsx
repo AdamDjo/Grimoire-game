@@ -250,22 +250,26 @@ export function LandingExperience() {
       <SectionHero />
       <SceneBridge
         fallbackSrc={LANDING_MEDIA.grimoireFallback}
+        fallbackSrcWebp={LANDING_MEDIA.grimoireFallbackWebp}
         frameCount={LANDING_MEDIA.grimoireFrameCount}
         frameDir={LANDING_MEDIA.grimoireFrames}
         id="memoire"
         label="Transition grimoire vers gameplay"
         nextBackgroundSrc={LANDING_MEDIA.gameplayPlate}
+        nextBackgroundSrcWebp={LANDING_MEDIA.gameplayPlateWebp}
         tone="gold"
       />
       <Section2GameplayProof />
       <SceneBridge
         bridgeLength={115}
         fallbackSrc={LANDING_MEDIA.quillFallback}
+        fallbackSrcWebp={LANDING_MEDIA.quillFallbackWebp}
         frameCount={LANDING_MEDIA.quillFrameCount}
         frameDir={LANDING_MEDIA.quillFrames}
         id="regles"
         label="Transition carte vers auberge"
         nextBackgroundSrc={LANDING_MEDIA.aubergePlate}
+        nextBackgroundSrcWebp={LANDING_MEDIA.aubergePlateWebp}
         tone="ember"
       />
       <SectionAubergeCta />

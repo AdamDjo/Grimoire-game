@@ -11,6 +11,7 @@ export function SectionAubergeCta() {
     <section className="landing-section auberge-section" id="auberge" data-motion="auberge">
       <MediaLayer
         fallbackSrc={LANDING_MEDIA.aubergePlate}
+        fallbackSrcWebp={LANDING_MEDIA.aubergePlateWebp}
         poster={LANDING_MEDIA.aubergePlate}
         videoSrc={LANDING_MEDIA.aubergeVideo ?? undefined}
       />

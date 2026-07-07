@@ -9,6 +9,7 @@ export function SectionHero() {
     <section className="landing-section hero-section" id="velkhar" data-motion="hero">
       <MediaLayer
         fallbackSrc={LANDING_MEDIA.heroPlate}
+        fallbackSrcWebp={LANDING_MEDIA.heroPlateWebp}
         poster={LANDING_MEDIA.heroPlate}
         videoSrc={LANDING_MEDIA.heroVideo}
       />

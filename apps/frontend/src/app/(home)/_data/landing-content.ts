@@ -7,17 +7,22 @@ export const LANDING_NAV_LINKS = [
 
 export const LANDING_MEDIA = {
   heroPlate: '/landing/plates/plate-01-hero-clean.png',
+  heroPlateWebp: '/landing/plates/plate-01-hero-clean.webp',
   heroVideo: '/landing/video/hero-ambient.mp4',
   gameplayPlate: '/landing/plates/plate-02-gameplay-clean.png',
+  gameplayPlateWebp: '/landing/plates/plate-02-gameplay-clean.webp',
   gameplayVideo: null,
   aubergePlate: '/landing/plates/plate-03-auberge-clean.png',
+  aubergePlateWebp: '/landing/plates/plate-03-auberge-clean.webp',
   aubergeVideo: null,
   grimoireFrames: '/landing/frames/grimoire-open',
   grimoireFrameCount: 0,
   grimoireFallback: '/landing/transitions/grimoire-open-keyart.png',
+  grimoireFallbackWebp: '/landing/transitions/grimoire-open-keyart.webp',
   quillFrames: '/landing/frames/quill-map',
   quillFrameCount: 0,
   quillFallback: '/landing/transitions/quill-map-transition.png',
+  quillFallbackWebp: '/landing/transitions/quill-map-transition.webp',
 } as const
 
 export const HERO_COPY = {

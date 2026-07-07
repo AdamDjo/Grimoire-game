@@ -7,6 +7,7 @@ import { ScrollTrigger, gsap } from '@/lib/gsap-init'
 interface FrameSequenceCanvasProps {
   className?: string
   fallbackSrc: string
+  fallbackSrcWebp?: string
   frameCount?: number
   frameDir: string
 }
@@ -18,6 +19,7 @@ function buildFramePath(frameDir: string, index: number) {
 export function FrameSequenceCanvas({
   className = '',
   fallbackSrc,
+  fallbackSrcWebp,
   frameCount = 0,
   frameDir,
 }: FrameSequenceCanvasProps) {
@@ -104,11 +106,12 @@ export function FrameSequenceCanvas({
     }
   }, [fallbackSrc, frameCount, frameDir])
 
+  const fallbackImage = fallbackSrcWebp
+    ? `image-set(url(${fallbackSrcWebp}) type('image/webp'), url(${fallbackSrc}) type('image/png'))`
+    : `url(${fallbackSrc})`
+
   return (
-    <div
-      className={`frame-sequence ${className}`}
-      style={{ backgroundImage: `url(${fallbackSrc})` }}
-    >
+    <div className={`frame-sequence ${className}`} style={{ backgroundImage: fallbackImage }}>
       <canvas ref={canvasRef} aria-hidden="true" />
     </div>
   )
