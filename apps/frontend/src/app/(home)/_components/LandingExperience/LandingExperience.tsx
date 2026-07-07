@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react'
 
+import { CustomCursor } from '@/components/ui'
 import { useLenis } from '@/hooks/use-lenis'
 import { ScrollTrigger, gsap, useGSAP } from '@/lib/gsap-init'
 
@@ -246,6 +247,7 @@ export function LandingExperience() {
 
   return (
     <div ref={rootRef} className="landing-experience">
+      <CustomCursor />
       <LandingChrome activeIndex={activeIndex} />
       <SectionHero />
       <SceneBridge

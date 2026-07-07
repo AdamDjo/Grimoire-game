@@ -1,4 +1,5 @@
 export { AnimatedShinyText } from './animated-shiny-text'
 export { Button } from './button'
 export { Card } from './card'
+export { CustomCursor } from './custom-cursor'
 export { MediaLayer } from './media-layer'

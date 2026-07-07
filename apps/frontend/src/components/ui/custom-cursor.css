@@ -1,0 +1,86 @@
+.has-custom-cursor,
+.has-custom-cursor a,
+.has-custom-cursor button,
+.has-custom-cursor [role='button'],
+.has-custom-cursor input,
+.has-custom-cursor textarea,
+.has-custom-cursor select,
+.has-custom-cursor label {
+  cursor: none;
+}
+
+.custom-cursor {
+  height: 0;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 0;
+  z-index: 200;
+}
+
+.custom-cursor__arrow {
+  left: 0;
+  opacity: 1;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  transition: opacity 250ms ease;
+  will-change: transform;
+}
+
+.custom-cursor__arrow.is-hidden {
+  opacity: 0;
+}
+
+.custom-cursor__arrow-inner {
+  filter: drop-shadow(0 0 8px rgba(239, 212, 141, 0.85))
+    drop-shadow(0 0 18px rgba(218, 170, 74, 0.5));
+  height: 26px;
+  margin: -2px 0 0 -2px;
+  transform: scale(1);
+  transition: transform 250ms cubic-bezier(0.22, 1, 0.36, 1);
+  width: 26px;
+}
+
+.custom-cursor__arrow-inner svg {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.custom-cursor__arrow.is-hovering .custom-cursor__arrow-inner {
+  transform: scale(1.25);
+}
+
+.custom-cursor__arrow.is-pressing .custom-cursor__arrow-inner {
+  transform: scale(0.88);
+}
+
+.custom-cursor__ember-layer {
+  height: 0;
+  left: 0;
+  position: fixed;
+  top: 0;
+  transition: opacity 250ms ease;
+  width: 0;
+}
+
+.custom-cursor__ember-layer.is-hidden {
+  opacity: 0;
+}
+
+.custom-cursor__ember {
+  background: radial-gradient(circle, var(--gold-light) 0%, var(--cendre) 55%, transparent 100%);
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(239, 212, 141, 0.9);
+  left: 0;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+}
+
+@media (max-width: 1100px), (pointer: coarse) {
+  .custom-cursor {
+    display: none;
+  }
+}
