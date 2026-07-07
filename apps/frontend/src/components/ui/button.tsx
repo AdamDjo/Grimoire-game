@@ -20,7 +20,11 @@ export function Button({
   ...props
 }: ButtonProps) {
   return (
-    <Link className={`button button--${variant} ${className}`} href={href} {...props}>
+    <Link
+      className={`button button--${variant} relative inline-flex items-center justify-center gap-4 leading-none ${className}`}
+      href={href}
+      {...props}
+    >
       <span className="button__corner button__corner--top-left" aria-hidden="true" />
       <span className="button__corner button__corner--top-right" aria-hidden="true" />
       <span className="button__corner button__corner--bottom-left" aria-hidden="true" />
