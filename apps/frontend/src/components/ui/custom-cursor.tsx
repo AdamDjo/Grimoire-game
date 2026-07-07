@@ -131,11 +131,25 @@ export function CustomCursor() {
   }, [])
 
   return (
-    <div className="custom-cursor" aria-hidden="true">
-      <div ref={emberLayerRef} className="custom-cursor__ember-layer is-hidden" />
-      <div ref={arrowRef} className="custom-cursor__arrow is-hidden">
-        <div className="custom-cursor__arrow-inner">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <div
+      className="custom-cursor pointer-events-none fixed left-0 top-0 z-[200] h-0 w-0"
+      aria-hidden="true"
+    >
+      <div
+        ref={emberLayerRef}
+        className="custom-cursor__ember-layer is-hidden fixed left-0 top-0 h-0 w-0"
+      />
+      <div
+        ref={arrowRef}
+        className="custom-cursor__arrow is-hidden pointer-events-none fixed left-0 top-0 opacity-100"
+      >
+        <div className="custom-cursor__arrow-inner h-[26px] w-[26px]">
+          <svg
+            className="block h-full w-full"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <path
               d="M3 2L21 12.5L12.7 14L9.5 22L3 2Z"
               fill="url(#cursor-gold-gradient)"
