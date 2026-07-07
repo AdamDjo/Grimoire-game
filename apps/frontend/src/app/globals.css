@@ -1,29 +1,29 @@
 @import 'tailwindcss';
 
 :root {
-  --void: #030302;
-  --black: #070604;
-  --ash: #12100d;
-  --charcoal: #1a1712;
-  --parchment: #efe1c2;
+  --void: #0a0806;
+  --ash: #171208;
+  --parchment: #e8dcc0;
   --parchment-dim: #c8b894;
   --muted: #9b8d74;
-  --gold: #c69a43;
-  --gold-light: #efd48d;
-  --gold-hover: #ffe8a8;
+  --gold: #d9a441;
+  --gold-light: #f0d48a;
+  --gold-hover: #f0d48a;
   --gold-dark: #7d5521;
-  --blood: #b73728;
-  --soul: #5bc8c0;
-  --cendre: #d6a950;
-  --border-gold: rgba(218, 170, 74, 0.34);
-  --shadow-gold: rgba(214, 158, 58, 0.28);
+  --blood: #c0392b;
+  --soul: #35c4ac;
+  --cendre: #e3b341;
+  --border-gold: rgba(217, 164, 65, 0.34);
+  --shadow-gold: rgba(217, 164, 65, 0.28);
   --font-display: var(--next-font-disp), Georgia, serif;
   --font-hero: var(--next-font-hero), var(--next-font-disp), Georgia, serif;
   --font-serif: var(--next-font-serif), Georgia, serif;
+  --font-accent: var(--next-font-accent), Georgia, serif;
   --font-ui: var(--next-font-ui), Arial, sans-serif;
+  --font-manuscript: var(--next-font-manuscript), cursive;
   --ink: var(--parchment);
   --ink-2: var(--parchment-dim);
-  --focus-ring: 0 0 0 3px rgba(218, 170, 74, 0.3);
+  --focus-ring: 0 0 0 3px rgba(217, 164, 65, 0.3);
 }
 
 @theme inline {
@@ -33,10 +33,17 @@
   --color-muted: var(--muted);
   --color-gold: var(--gold);
   --color-gold-soft: var(--gold-light);
+  --color-gold-dark: var(--gold-dark);
+  --color-parchment: var(--parchment);
+  --color-blood: var(--blood);
+  --color-soul: var(--soul);
+  --color-cendre: var(--cendre);
   --font-display: var(--font-display);
   --font-hero: var(--font-hero);
   --font-serif: var(--font-serif);
   --font-ui: var(--font-ui);
+  --font-accent: var(--font-accent);
+  --font-manuscript: var(--font-manuscript);
 
   --animate-shiny-text-multi: shiny-text-multi 8s ease-in-out infinite;
   @keyframes shiny-text-multi {

@@ -1,4 +1,4 @@
-import { Cinzel, EB_Garamond, Outfit } from 'next/font/google'
+import { Alegreya_Sans, Caveat, Cinzel, Cormorant_Garamond, EB_Garamond } from 'next/font/google'
 import localFont from 'next/font/local'
 
 import type { Metadata } from 'next'
@@ -7,7 +7,15 @@ import './globals.css'
 const cinzel = Cinzel({
   variable: '--next-font-disp',
   subsets: ['latin'],
-  weight: ['500', '600', '700', '800'],
+  weight: ['500', '600', '700'],
+  display: 'swap',
+})
+
+const cormorantGaramond = Cormorant_Garamond({
+  variable: '--next-font-accent',
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
   display: 'swap',
 })
 
@@ -19,10 +27,18 @@ const ebGaramond = EB_Garamond({
   display: 'swap',
 })
 
-const outfit = Outfit({
+const alegreyaSans = Alegreya_Sans({
   variable: '--next-font-ui',
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ['300', '400', '500', '700'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+})
+
+const caveat = Caveat({
+  variable: '--next-font-manuscript',
+  subsets: ['latin'],
+  weight: ['400', '500'],
   display: 'swap',
 })
 
@@ -43,7 +59,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html
       lang="fr"
-      className={`${cinzel.variable} ${ebGaramond.variable} ${outfit.variable} ${brookleigh.variable}`}
+      className={`${cinzel.variable} ${cormorantGaramond.variable} ${ebGaramond.variable} ${alegreyaSans.variable} ${caveat.variable} ${brookleigh.variable}`}
     >
       <body>{children}</body>
     </html>
