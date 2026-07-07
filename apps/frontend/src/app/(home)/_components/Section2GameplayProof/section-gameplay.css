@@ -12,49 +12,32 @@
 }
 
 .gameplay-section__cards {
-  align-self: center;
-  display: grid;
-  gap: 18px;
   max-width: 780px;
   padding-left: clamp(10px, 3vw, 54px);
   transform: rotate(-3deg);
   width: min(49vw, 820px);
-  z-index: 2;
 }
 
 .gameplay-section__copy {
-  align-self: center;
   max-width: 640px;
-  opacity: 0;
-  z-index: 3;
 }
 
 .gameplay-section__copy h2 {
-  color: var(--parchment);
   font-family: var(--font-serif);
   font-size: clamp(54px, 3.8vw, 74px);
-  font-weight: 500;
   letter-spacing: 0;
   line-height: 1.02;
-  margin: 0;
   text-transform: none;
 }
 
 .gameplay-section__copy h2 span {
-  display: block;
   white-space: nowrap;
-}
-
-.gameplay-section__copy h2 .is-gold {
-  color: var(--gold-light);
 }
 
 .gameplay-section__label {
   color: rgba(239, 225, 194, 0.72);
-  display: grid;
   font-family: var(--font-display);
   font-size: 17px;
-  gap: 4px;
   letter-spacing: 0.08em;
   margin: 0 0 92px;
   position: relative;
@@ -71,24 +54,13 @@
   width: 220px;
 }
 
-.gameplay-section__label strong {
-  color: var(--parchment);
-  font-weight: 500;
-}
-
 .gameplay-section__body {
-  color: rgba(239, 225, 194, 0.86);
   font-size: clamp(24px, 1.65vw, 31px);
   line-height: 1.38;
   margin: 56px 0 38px;
 }
 
-.gameplay-section__body p {
-  margin: 0;
-}
-
 .gameplay-stats {
-  align-items: stretch;
   background-image: image-set(
     url('/landing/ui/gameplay-stats-frame-trimmed.webp') type('image/webp'),
     url('/landing/ui/gameplay-stats-frame-trimmed.png') type('image/png')
@@ -98,24 +70,14 @@
   background-size: 100% 100%;
   border: 0;
   bottom: 4vh;
-  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.5);
-  display: grid;
   grid-template-columns: repeat(3, 1fr);
   left: clamp(28px, 4.6vw, 78px);
-  max-width: 1040px;
-  opacity: 0;
   padding: 7px 16px;
-  position: absolute;
   width: 59vw;
-  z-index: 4;
 }
 
 .gameplay-stat {
-  align-items: center;
-  display: grid;
-  gap: 12px;
   grid-template-columns: auto auto auto 1fr;
-  min-width: 0;
   padding: 22px 26px;
 }
 
@@ -124,12 +86,7 @@
 }
 
 .gameplay-stat__sigil {
-  aspect-ratio: 1;
   border: 1px solid rgba(218, 170, 74, 0.54);
-  display: inline-block;
-  position: relative;
-  transform: rotate(45deg);
-  width: 32px;
 }
 
 .gameplay-stat__sigil::before {
@@ -153,12 +110,6 @@
   font-size: 20px;
 }
 
-.gameplay-stat__track {
-  display: grid;
-  gap: 4px;
-  grid-template-columns: repeat(6, minmax(10px, 1fr));
-}
-
 .gameplay-stat__track span {
   border: 1px solid currentColor;
   height: 12px;
@@ -169,18 +120,6 @@
   background: currentColor;
   box-shadow: 0 0 12px currentColor;
   opacity: 0.9;
-}
-
-.gameplay-stat--blood {
-  color: var(--blood);
-}
-
-.gameplay-stat--soul {
-  color: var(--soul);
-}
-
-.gameplay-stat--ash {
-  color: var(--cendre);
 }
 
 @media (max-width: 1100px) {
