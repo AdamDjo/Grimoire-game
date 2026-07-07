@@ -112,7 +112,7 @@ export function FrameSequenceCanvas({
 
   return (
     <div className={`frame-sequence ${className}`} style={{ backgroundImage: fallbackImage }}>
-      <canvas ref={canvasRef} aria-hidden="true" />
+      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden="true" />
     </div>
   )
 }

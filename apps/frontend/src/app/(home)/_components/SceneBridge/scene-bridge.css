@@ -1,34 +1,15 @@
 .scene-bridge {
   background: var(--void);
   min-height: 100dvh;
-  overflow: hidden;
-  position: relative;
-}
-
-.frame-sequence,
-.frame-sequence canvas,
-.scene-bridge__next,
-.scene-bridge__veil,
-.scene-bridge__smoke,
-.scene-bridge__glow {
-  inset: 0;
-  position: absolute;
 }
 
 .frame-sequence {
   background-color: #050403;
   background-position: center;
   background-size: cover;
-  height: 100%;
   object-fit: cover;
   opacity: 0.34;
-  width: 100%;
   z-index: 1;
-}
-
-.frame-sequence canvas {
-  height: 100%;
-  width: 100%;
 }
 
 .scene-bridge__next {

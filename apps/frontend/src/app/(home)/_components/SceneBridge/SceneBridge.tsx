@@ -33,26 +33,27 @@ export function SceneBridge({
 
   return (
     <section
-      className={`scene-bridge scene-bridge--${tone}`}
+      className={`scene-bridge scene-bridge--${tone} relative overflow-hidden`}
       id={id}
       aria-label={label}
       data-bridge-length={bridgeLength}
       data-motion="bridge"
     >
       <FrameSequenceCanvas
+        className="absolute inset-0 h-full w-full"
         fallbackSrc={fallbackSrc}
         fallbackSrcWebp={fallbackSrcWebp}
         frameCount={frameCount}
         frameDir={frameDir}
       />
       <div
-        className="scene-bridge__next"
+        className="scene-bridge__next absolute inset-0"
         data-bridge-next
         style={{ backgroundImage: nextBackgroundImage }}
       />
-      <div className="scene-bridge__veil" data-bridge-veil aria-hidden="true" />
-      <div className="scene-bridge__smoke" data-bridge-smoke aria-hidden="true" />
-      <div className="scene-bridge__glow" data-bridge-glow aria-hidden="true" />
+      <div className="scene-bridge__veil absolute inset-0" data-bridge-veil aria-hidden="true" />
+      <div className="scene-bridge__smoke absolute inset-0" data-bridge-smoke aria-hidden="true" />
+      <div className="scene-bridge__glow absolute inset-0" data-bridge-glow aria-hidden="true" />
       <div className="media-vignette" aria-hidden="true" />
     </section>
   )
