@@ -11,12 +11,22 @@ interface LandingChromeProps {
 export function LandingChrome({ activeIndex = 0 }: LandingChromeProps) {
   return (
     <>
-      <header className="landing-chrome" data-motion="chrome">
-        <Link className="brand-mark" href="/" aria-label="GRIMOIRE accueil">
+      <header
+        className="landing-chrome fixed inset-x-0 top-0 z-40 grid translate-y-[-16px] items-center opacity-0"
+        data-motion="chrome"
+      >
+        <Link
+          className="brand-mark relative inline-flex items-center gap-5 justify-self-start"
+          href="/"
+          aria-label="GRIMOIRE accueil"
+        >
           <span className="brand-mark__logo" aria-hidden="true" />
         </Link>
 
-        <nav className="landing-chrome__nav" aria-label="Navigation principale">
+        <nav
+          className="landing-chrome__nav flex items-center justify-self-center"
+          aria-label="Navigation principale"
+        >
           {LANDING_NAV_LINKS.map((link) => (
             <Link key={link.href} href={link.href}>
               {link.label}
@@ -24,13 +34,17 @@ export function LandingChrome({ activeIndex = 0 }: LandingChromeProps) {
           ))}
         </nav>
 
-        <button className="landing-menu-button" type="button" aria-label="Ouvrir le menu">
+        <button
+          className="landing-menu-button inline-flex flex-col items-center justify-self-end"
+          type="button"
+          aria-label="Ouvrir le menu"
+        >
           <span />
           <span />
         </button>
       </header>
 
-      <aside className="landing-pagination" aria-label="Progression landing">
+      <aside className="landing-pagination fixed z-[36] grid" aria-label="Progression landing">
         {[0, 1, 2].map((index) => (
           <span
             key={index}

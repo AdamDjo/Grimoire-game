@@ -1,27 +1,6 @@
 .landing-chrome {
-  align-items: center;
-  display: grid;
   grid-template-columns: minmax(220px, 1fr) auto minmax(80px, 1fr);
-  left: 0;
-  opacity: 0;
   padding: 32px clamp(28px, 4.8vw, 82px);
-  position: fixed;
-  right: 0;
-  top: 0;
-  transform: translateY(-16px);
-  z-index: 40;
-}
-
-.brand-mark {
-  align-items: center;
-  display: inline-flex;
-  gap: 20px;
-  justify-self: start;
-  position: relative;
-}
-
-.brand-mark::after {
-  display: none;
 }
 
 .brand-mark__logo {
@@ -66,10 +45,7 @@
 }
 
 .landing-chrome__nav {
-  align-items: center;
-  display: flex;
   gap: clamp(44px, 4.1vw, 70px);
-  justify-self: center;
 }
 
 .landing-chrome__nav a {
@@ -111,15 +87,11 @@
 }
 
 .landing-menu-button {
-  align-items: center;
   background: transparent;
   border: 0;
   cursor: pointer;
-  display: inline-flex;
-  flex-direction: column;
   gap: 8px;
   height: 42px;
-  justify-self: end;
   padding: 8px 0;
   width: 48px;
 }
@@ -140,12 +112,9 @@
 }
 
 .landing-pagination {
-  display: grid;
   gap: 28px;
-  position: fixed;
   right: clamp(28px, 4.7vw, 86px);
   top: 44%;
-  z-index: 36;
 }
 
 .landing-pagination span {
