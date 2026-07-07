@@ -20,10 +20,10 @@ export function MediaLayer({
     : `url(${fallbackSrc})`
 
   return (
-    <div className={`media-layer ${className}`} aria-hidden="true">
+    <div className={`media-layer absolute inset-0 -z-[2] bg-void ${className}`} aria-hidden="true">
       {videoSrc ? (
         <video
-          className="media-layer__video"
+          className="media-layer__video absolute inset-0 h-full w-full"
           poster={poster}
           autoPlay
           muted
@@ -34,8 +34,11 @@ export function MediaLayer({
           <source src={videoSrc} type="video/mp4" />
         </video>
       ) : null}
-      <div className="media-layer__fallback" style={{ backgroundImage: fallbackImage }} />
-      <div className="media-vignette" />
+      <div
+        className="media-layer__fallback absolute inset-0 h-full w-full"
+        style={{ backgroundImage: fallbackImage }}
+      />
+      <div className="media-vignette absolute inset-0" />
     </div>
   )
 }

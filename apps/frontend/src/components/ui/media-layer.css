@@ -1,27 +1,11 @@
-.media-layer,
-.media-layer__video,
-.media-layer__fallback,
-.media-vignette {
-  inset: 0;
-  position: absolute;
-}
-
-.media-layer {
-  background: var(--void);
-  z-index: -2;
-}
-
 .media-layer__video,
 .media-layer__fallback {
   background-position: center;
   background-size: cover;
-  height: 100%;
   object-fit: cover;
-  width: 100%;
 }
 
 .media-layer__video {
-  position: absolute;
   z-index: 1;
 }
 
