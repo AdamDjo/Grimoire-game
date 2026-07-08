@@ -26,12 +26,7 @@
 
 .card__index {
   font-family: var(--font-display);
-  font-size: clamp(44px, 3.5vw, 64px);
-}
-
-.card h3 {
-  font-family: var(--font-serif);
-  font-size: clamp(25px, 1.9vw, 34px);
+  font-weight: 600;
 }
 
 .card__icon {
@@ -58,12 +53,10 @@
   background-size: 100% 100%;
   border: 0;
   box-shadow: none;
-  color: var(--ash);
+  color: var(--ink-manuscript);
   display: flex;
-  font-family: var(--font-serif);
-  font-size: clamp(22px, 1.55vw, 30px);
-  font-style: italic;
-  line-height: 1.25;
+  font-family: var(--font-manuscript);
+  font-style: normal;
   margin: 16px 0 0;
   min-height: 82px;
   padding: 24px 42px 26px;

@@ -27,7 +27,7 @@ export function Section2GameplayProof() {
           <span>{GAMEPLAY_COPY.section}</span>
           <strong className="font-medium text-parchment">{GAMEPLAY_COPY.label}</strong>
         </p>
-        <h2 className="m-0 font-medium text-parchment" data-motion="title">
+        <h2 className="m-0 font-accent text-h2 font-medium text-parchment" data-motion="title">
           {GAMEPLAY_COPY.titleLines.map((line, index) => (
             <span
               key={line}
@@ -37,7 +37,10 @@ export function Section2GameplayProof() {
             </span>
           ))}
         </h2>
-        <div className="gameplay-section__body text-[rgba(239,225,194,0.86)]" data-motion="reveal">
+        <div
+          className="gameplay-section__body text-body-editorial text-[rgba(239,225,194,0.86)]"
+          data-motion="reveal"
+        >
           {GAMEPLAY_COPY.body.map((line) => (
             <p key={line} className="m-0">
               {line}

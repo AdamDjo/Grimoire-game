@@ -11,10 +11,7 @@
 
 .section-eyebrow {
   color: var(--gold-light);
-  font-family: var(--font-serif);
-  font-size: clamp(22px, 1.55vw, 30px);
   font-style: italic;
-  line-height: 1.2;
   text-shadow:
     0 0 24px rgba(198, 154, 67, 0.28),
     0 2px 16px rgba(0, 0, 0, 0.74);
@@ -32,10 +29,6 @@
 
 .hero-title {
   color: var(--parchment);
-  font-family: var(--font-hero);
-  font-size: clamp(88px, 8.45vw, 158px);
-  letter-spacing: 0.012em;
-  line-height: 0.82;
   text-shadow:
     0 4px 1px rgba(0, 0, 0, 0.48),
     0 0 18px rgba(239, 212, 141, 0.1);
@@ -43,9 +36,6 @@
 
 .hero-copy {
   color: rgba(222, 211, 190, 0.74);
-  font-family: var(--font-ui);
-  font-size: clamp(18px, 1.18vw, 21px);
-  line-height: 1.5;
   text-shadow: 0 2px 14px rgba(0, 0, 0, 0.72);
 }
 
@@ -66,7 +56,7 @@
   }
 
   .hero-title {
-    font-size: clamp(60px, 17vw, 86px);
+    font-size: clamp(44px, 13vw, 72px);
   }
 
   .hero-actions {

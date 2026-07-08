@@ -1,8 +1,8 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 
-import { CustomCursor } from '@/components/ui'
+import { CustomCursor, SectionProgress } from '@/components/ui'
 import { useLenis } from '@/hooks/use-lenis'
 import { ScrollTrigger, gsap, useGSAP } from '@/lib/gsap-init'
 
@@ -15,7 +15,6 @@ import { SectionHero } from '../SectionHero/SectionHero'
 
 export function LandingExperience() {
   const rootRef = useRef<HTMLDivElement>(null)
-  const [activeIndex, setActiveIndex] = useState(0)
 
   useLenis()
 
@@ -64,20 +63,6 @@ export function LandingExperience() {
         delay: 0.62,
         ease: 'expo.out',
       })
-
-      gsap.utils
-        .toArray<HTMLElement>(
-          '[data-motion="hero"], [data-motion="gameplay"], [data-motion="auberge"]'
-        )
-        .forEach((section, index) => {
-          ScrollTrigger.create({
-            trigger: section,
-            start: 'top center',
-            end: 'bottom center',
-            onEnter: () => setActiveIndex(index),
-            onEnterBack: () => setActiveIndex(index),
-          })
-        })
 
       gsap.utils.toArray<HTMLElement>('[data-motion="reveal"]').forEach((element) => {
         gsap.to(element, {
@@ -248,7 +233,11 @@ export function LandingExperience() {
   return (
     <div ref={rootRef} className="landing-experience">
       <CustomCursor />
-      <LandingChrome activeIndex={activeIndex} />
+      <LandingChrome />
+      <SectionProgress
+        sectionCount={3}
+        sectionSelector='[data-motion="hero"], [data-motion="gameplay"], [data-motion="auberge"]'
+      />
       <SectionHero />
       <SceneBridge
         fallbackSrc={LANDING_MEDIA.grimoireFallback}

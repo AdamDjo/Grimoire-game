@@ -22,8 +22,8 @@ export function GameplayStatsBar() {
             className="gameplay-stat__sigil relative inline-block aspect-square w-8 rotate-45"
             aria-hidden="true"
           />
-          <span className="gameplay-stat__label">{stat.label}</span>
-          <span className="gameplay-stat__value">{stat.value}</span>
+          <span className="gameplay-stat__label text-stat-label">{stat.label}</span>
+          <span className="gameplay-stat__value text-stat-value">{stat.value}</span>
           <span
             className="gameplay-stat__track grid grid-cols-[repeat(6,minmax(10px,1fr))] gap-1"
             aria-hidden="true"
