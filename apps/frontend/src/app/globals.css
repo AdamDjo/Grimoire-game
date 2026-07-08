@@ -2,48 +2,57 @@
 
 :root {
   --void: #0a0806;
-  --ash: #171208;
   --parchment: #e8dcc0;
-  --parchment-dim: #c8b894;
-  --muted: #9b8d74;
   --gold: #d9a441;
   --gold-light: #f0d48a;
   --gold-hover: #f0d48a;
-  --gold-dark: #7d5521;
+  --gold-dark: rgba(217, 164, 65, 0.55);
   --blood: #c0392b;
   --soul: #35c4ac;
   --cendre: #e3b341;
   --border-gold: rgba(217, 164, 65, 0.34);
-  --shadow-gold: rgba(217, 164, 65, 0.28);
+  --ink-manuscript: #2a2118;
   --font-display: var(--next-font-disp), Georgia, serif;
-  --font-hero: var(--next-font-hero), var(--next-font-disp), Georgia, serif;
   --font-serif: var(--next-font-serif), Georgia, serif;
   --font-accent: var(--next-font-accent), Georgia, serif;
   --font-ui: var(--next-font-ui), Arial, sans-serif;
   --font-manuscript: var(--next-font-manuscript), cursive;
   --ink: var(--parchment);
-  --ink-2: var(--parchment-dim);
+  --ink-2: rgba(232, 220, 192, 0.75);
   --focus-ring: 0 0 0 3px rgba(217, 164, 65, 0.3);
 }
 
 @theme inline {
   --color-void: var(--void);
-  --color-ash: var(--ash);
-  --color-ink: var(--parchment);
-  --color-muted: var(--muted);
   --color-gold: var(--gold);
   --color-gold-soft: var(--gold-light);
-  --color-gold-dark: var(--gold-dark);
   --color-parchment: var(--parchment);
   --color-blood: var(--blood);
   --color-soul: var(--soul);
   --color-cendre: var(--cendre);
   --font-display: var(--font-display);
-  --font-hero: var(--font-hero);
   --font-serif: var(--font-serif);
   --font-ui: var(--font-ui);
   --font-accent: var(--font-accent);
-  --font-manuscript: var(--font-manuscript);
+
+  --text-h1: 72px;
+  --text-h1--line-height: 1.05;
+  --text-h1--letter-spacing: 0.06em;
+  --text-h2: 44px;
+  --text-h2--line-height: 1.15;
+  --text-accroche: 26px;
+  --text-body-editorial: 20px;
+  --text-body-editorial--line-height: 1.65;
+  --text-ui: 16px;
+  --text-ui--line-height: 1.6;
+  --text-card-num: 40px;
+  --text-card-title: 25px;
+  --text-card-manuscript: 24px;
+  --text-stat-label: 17px;
+  --text-stat-label--letter-spacing: 0.16em;
+  --text-stat-value: 20px;
+  --text-btn-primary: 26px;
+  --text-btn-secondary: 27px;
 
   --animate-shiny-text-multi: shiny-text-multi 8s ease-in-out infinite;
   @keyframes shiny-text-multi {
@@ -62,6 +71,21 @@
       background-position:
         calc(-100% - var(--shiny-width)) 0,
         0 0;
+    }
+  }
+
+  --animate-gold-pulse: gold-pulse 2.4s ease-in-out infinite;
+  @keyframes gold-pulse {
+    0%,
+    100% {
+      box-shadow:
+        0 0 8px rgba(240, 212, 138, 0.7),
+        0 0 20px rgba(217, 164, 65, 0.4);
+    }
+    50% {
+      box-shadow:
+        0 0 14px rgba(240, 212, 138, 0.95),
+        0 0 34px rgba(217, 164, 65, 0.6);
     }
   }
 }

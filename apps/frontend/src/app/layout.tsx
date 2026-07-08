@@ -1,5 +1,4 @@
 import { Alegreya_Sans, Caveat, Cinzel, Cormorant_Garamond, EB_Garamond } from 'next/font/google'
-import localFont from 'next/font/local'
 
 import type { Metadata } from 'next'
 import './globals.css'
@@ -42,12 +41,6 @@ const caveat = Caveat({
   display: 'swap',
 })
 
-const brookleigh = localFont({
-  src: './_fonts/tc-brookleigh-rough.ttf',
-  variable: '--next-font-hero',
-  display: 'swap',
-})
-
 export const metadata: Metadata = {
   title: 'GRIMOIRE - Of Ash and Salt',
   description:
@@ -59,7 +52,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html
       lang="fr"
-      className={`${cinzel.variable} ${cormorantGaramond.variable} ${ebGaramond.variable} ${alegreyaSans.variable} ${caveat.variable} ${brookleigh.variable}`}
+      className={`${cinzel.variable} ${cormorantGaramond.variable} ${ebGaramond.variable} ${alegreyaSans.variable} ${caveat.variable}`}
     >
       <body>{children}</body>
     </html>
