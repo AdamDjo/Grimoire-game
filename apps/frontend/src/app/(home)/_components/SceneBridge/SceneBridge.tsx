@@ -1,4 +1,6 @@
-import { FrameSequenceCanvas } from './FrameSequenceCanvas'
+import { buildImageSet } from '@/lib/image-set'
+
+import { FrameSequenceCanvas } from '../FrameSequenceCanvas/FrameSequenceCanvas'
 
 import './scene-bridge.css'
 
@@ -27,10 +29,6 @@ export function SceneBridge({
   nextBackgroundSrcWebp,
   tone,
 }: SceneBridgeProps) {
-  const nextBackgroundImage = nextBackgroundSrcWebp
-    ? `image-set(url(${nextBackgroundSrcWebp}) type('image/webp'), url(${nextBackgroundSrc}) type('image/png'))`
-    : `url(${nextBackgroundSrc})`
-
   return (
     <section
       className={`scene-bridge scene-bridge--${tone} relative overflow-hidden`}
@@ -49,7 +47,7 @@ export function SceneBridge({
       <div
         className="scene-bridge__next absolute inset-0"
         data-bridge-next
-        style={{ backgroundImage: nextBackgroundImage }}
+        style={{ backgroundImage: buildImageSet(nextBackgroundSrc, nextBackgroundSrcWebp) }}
       />
       <div className="scene-bridge__veil absolute inset-0" data-bridge-veil aria-hidden="true" />
       <div className="scene-bridge__smoke absolute inset-0" data-bridge-smoke aria-hidden="true" />

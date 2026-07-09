@@ -28,56 +28,56 @@ export function SectionProgress({
       if (sections.length === 0 || !fill || markers.length === 0) return
 
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      const first = sections[0]
-      const last = sections[sections.length - 1]
 
-      const setActive = (marker: HTMLElement) => {
-        markers.forEach((otherMarker) => otherMarker.classList.remove('is-active'))
-        marker.classList.remove('is-passed')
-        marker.classList.add('is-active')
+      // Active marker = the section whose box currently owns the viewport centre.
+      // Reading getBoundingClientRect live (rather than caching per-section
+      // ScrollTriggers) is immune to pinned + overlapped sections: pin-spacers
+      // shift the real on-screen position, and only the live rect reflects that.
+      // A small hysteresis toward the top keeps the first dot lit at scroll 0.
+      let currentIndex = -1
+      const resolveActiveIndex = () => {
+        const centre = window.innerHeight / 2
+        let active = 0
+        sections.forEach((section, index) => {
+          if (section.getBoundingClientRect().top - centre <= 0) active = index
+        })
+        return active
       }
 
-      markers.forEach((marker, index) => {
-        const trigger = ScrollTrigger.create({
-          trigger: sections[index],
-          start: 'top center',
-          end: 'bottom center',
-          onEnter: () => setActive(marker),
-          onEnterBack: () => setActive(marker),
-          onLeave: () => {
-            marker.classList.remove('is-active')
-            marker.classList.add('is-passed')
-          },
-          onLeaveBack: () => {
-            marker.classList.remove('is-active')
-            marker.classList.remove('is-passed')
-          },
+      const paintMarkers = () => {
+        const activeIndex = resolveActiveIndex()
+        if (activeIndex === currentIndex) return
+        currentIndex = activeIndex
+        markers.forEach((marker, index) => {
+          marker.classList.toggle('is-active', index === activeIndex)
+          marker.classList.toggle('is-passed', index < activeIndex)
         })
-
-        if (trigger.isActive) {
-          setActive(marker)
-        } else if (trigger.progress >= 1) {
-          marker.classList.add('is-passed')
-        }
-      })
+      }
 
       if (reduceMotion) {
         gsap.set(fill, { scaleY: 1 })
+        paintMarkers()
         return
       }
 
       gsap.set(fill, { scaleY: 0, transformOrigin: 'top' })
 
+      // Single document-level driver for both the fill and the marker state:
+      // 'max' is recomputed on every ScrollTrigger.refresh() (after pin-spacers
+      // are laid out), so the fill reaches 1 exactly at the true bottom and the
+      // markers resolve against live layout on each scroll tick.
       ScrollTrigger.create({
-        trigger: first,
-        start: 'top center',
-        endTrigger: last,
-        end: 'bottom center',
+        start: 0,
+        end: 'max',
         scrub: 0.4,
         onUpdate: (self) => {
           gsap.set(fill, { scaleY: self.progress })
+          paintMarkers()
         },
+        onRefresh: paintMarkers,
       })
+
+      paintMarkers()
     },
     { scope: rootRef, dependencies: [sectionSelector] }
   )

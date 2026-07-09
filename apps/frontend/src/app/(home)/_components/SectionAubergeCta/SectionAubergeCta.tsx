@@ -10,6 +10,7 @@ export function SectionAubergeCta() {
   return (
     <section className="landing-section auberge-section" id="auberge" data-motion="auberge">
       <MediaLayer
+        className="auberge-plate"
         fallbackSrc={LANDING_MEDIA.aubergePlate}
         fallbackSrcWebp={LANDING_MEDIA.aubergePlateWebp}
         poster={LANDING_MEDIA.aubergePlate}
@@ -41,7 +42,9 @@ export function SectionAubergeCta() {
           {AUBERGE_COPY.body}
         </p>
         <div data-motion="reveal">
-          <Button href="/signup">{AUBERGE_COPY.cta}</Button>
+          <Button data-magnetic href="/signup">
+            {AUBERGE_COPY.cta}
+          </Button>
         </div>
       </div>
 

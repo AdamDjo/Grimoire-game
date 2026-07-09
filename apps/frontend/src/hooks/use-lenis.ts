@@ -5,6 +5,16 @@ import { useEffect } from 'react'
 
 import { ScrollTrigger, gsap } from '@/lib/gsap-init'
 
+// Singleton module-level : une seule instance Lenis vit à la fois (le hook n'est
+// monté qu'une fois par LandingExperience). Les consommateurs hors React
+// (MobileMenu, interception d'ancres) lisent l'instance active via getLenis().
+// null en reduced-motion → les appelants retombent sur le scroll natif.
+let activeLenis: Lenis | null = null
+
+export function getLenis(): Lenis | null {
+  return activeLenis
+}
+
 export function useLenis() {
   useEffect(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -20,6 +30,8 @@ export function useLenis() {
       wheelMultiplier: 0.9,
       touchMultiplier: 1.2,
     })
+
+    activeLenis = lenis
 
     const updateScrollTrigger = () => {
       ScrollTrigger.update()
@@ -38,6 +50,9 @@ export function useLenis() {
       gsap.ticker.remove(update)
       lenis.off('scroll', updateScrollTrigger)
       lenis.destroy()
+      if (activeLenis === lenis) {
+        activeLenis = null
+      }
     }
   }, [])
 }

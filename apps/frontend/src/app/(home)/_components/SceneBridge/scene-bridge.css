@@ -3,11 +3,7 @@
   min-height: 100dvh;
 }
 
-.frame-sequence {
-  background-color: #050403;
-  background-position: center;
-  background-size: cover;
-  object-fit: cover;
+.scene-bridge .frame-sequence {
   opacity: 0.34;
   z-index: 1;
 }

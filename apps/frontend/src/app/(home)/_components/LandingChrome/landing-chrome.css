@@ -1,6 +1,20 @@
 .landing-chrome {
   grid-template-columns: minmax(220px, 1fr) auto minmax(80px, 1fr);
   padding: 32px clamp(28px, 4.8vw, 82px);
+  transition:
+    padding 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 500ms ease,
+    backdrop-filter 500ms ease,
+    border-color 500ms ease;
+  border-bottom: 1px solid transparent;
+}
+
+/* État condensé au scroll : fond voilé + blur + hairline or, padding resserré. */
+.landing-chrome.is-scrolled {
+  padding-block: 18px;
+  background: linear-gradient(180deg, rgba(10, 8, 6, 0.82) 0%, rgba(10, 8, 6, 0) 100%);
+  backdrop-filter: blur(14px);
+  border-bottom-color: rgba(217, 164, 65, 0.14);
 }
 
 .brand-mark__logo {
@@ -84,6 +98,11 @@
   transform: scaleX(1);
 }
 
+/* Le bloc menu mobile (bouton + overlay) n'existe qu'en deçà de 1100px. */
+.landing-chrome__mobile {
+  display: none;
+}
+
 .landing-menu-button {
   background: transparent;
   border: 0;
@@ -91,13 +110,15 @@
   gap: 8px;
   height: 42px;
   padding: 8px 0;
+  position: relative;
   width: 48px;
+  z-index: 60;
 }
 
 .landing-menu-button span {
   background: var(--gold-light);
   height: 1px;
-  transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
   width: 34px;
 }
 
@@ -109,6 +130,67 @@
   transform: translateX(5px);
 }
 
+/* Burger → X à l'ouverture (les deux barres se croisent au centre). */
+.landing-menu-button.is-open span:first-child {
+  transform: translateY(4px) rotate(45deg);
+}
+
+.landing-menu-button.is-open span:last-child {
+  transform: translateY(-4px) rotate(-45deg);
+}
+
+/* Overlay plein écran : toujours rendu, fermé via visibility (pas de démontage
+   → aucun risque d'hydratation). Fond void + hairline or. GSAP anime le clip. */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(24, 18, 12, 0.96) 0%, rgba(8, 6, 5, 0.99) 62%),
+    var(--void);
+  border-bottom: 1px solid rgba(217, 164, 65, 0.16);
+  visibility: hidden;
+}
+
+.mobile-menu[data-open='true'] {
+  visibility: visible;
+}
+
+.mobile-menu__nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(28px, 6vh, 52px);
+}
+
+.mobile-menu__link {
+  color: rgba(239, 225, 194, 0.94);
+  font-family: var(--font-display);
+  font-size: clamp(30px, 8vw, 46px);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.mobile-menu__link:hover {
+  color: var(--gold-light);
+}
+
+/* Reduced-motion : le JS ne construit pas de timeline → transition CSS simple. */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu {
+    transition: opacity 300ms ease;
+    opacity: 0;
+  }
+
+  .mobile-menu[data-open='true'] {
+    opacity: 1;
+  }
+}
+
 @media (max-width: 1100px) {
   .landing-chrome {
     grid-template-columns: 1fr auto;
@@ -116,6 +198,10 @@
 
   .landing-chrome__nav {
     display: none;
+  }
+
+  .landing-chrome__mobile {
+    display: block;
   }
 }
 

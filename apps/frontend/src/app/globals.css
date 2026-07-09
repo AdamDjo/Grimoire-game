@@ -35,24 +35,26 @@
   --font-ui: var(--font-ui);
   --font-accent: var(--font-accent);
 
-  --text-h1: 72px;
+  /* Type scale fluide : clamp(min mobile, vw + base, max desktop). Évite les
+     paliers px durs (les overrides ≤720px des sections deviennent inutiles). */
+  --text-h1: clamp(44px, 2.6vw + 28px, 72px);
   --text-h1--line-height: 1.05;
   --text-h1--letter-spacing: 0.06em;
-  --text-h2: 44px;
+  --text-h2: clamp(32px, 1.4vw + 22px, 44px);
   --text-h2--line-height: 1.15;
-  --text-accroche: 26px;
-  --text-body-editorial: 20px;
+  --text-accroche: clamp(20px, 0.7vw + 15px, 26px);
+  --text-body-editorial: clamp(17px, 0.4vw + 14px, 20px);
   --text-body-editorial--line-height: 1.65;
   --text-ui: 16px;
   --text-ui--line-height: 1.6;
-  --text-card-num: 40px;
-  --text-card-title: 25px;
-  --text-card-manuscript: 24px;
+  --text-card-num: clamp(32px, 0.9vw + 25px, 40px);
+  --text-card-title: clamp(21px, 0.5vw + 17px, 25px);
+  --text-card-manuscript: clamp(20px, 0.5vw + 16px, 24px);
   --text-stat-label: 17px;
   --text-stat-label--letter-spacing: 0.16em;
   --text-stat-value: 20px;
-  --text-btn-primary: 26px;
-  --text-btn-secondary: 27px;
+  --text-btn-primary: clamp(20px, 0.7vw + 15px, 26px);
+  --text-btn-secondary: clamp(21px, 0.7vw + 16px, 27px);
 
   --animate-shiny-text-multi: shiny-text-multi 8s ease-in-out infinite;
   @keyframes shiny-text-multi {
@@ -162,10 +164,74 @@ a {
   z-index: 60;
 }
 
+/* Grain animé : une nappe de bruit (feTurbulence SVG en data-URI) dont la
+   position saute en steps(6) — chaque pas repositionne le motif, donc le grain
+   "grouille" comme une pellicule, sans interpolation fluide. Opacité très basse
+   (≤0.06) : présent à la limite du perçu, jamais une texture franche. Distinct
+   du ::after (vignette + grille statiques) pour ne pas les faire scintiller.
+   Coupé en reduced-motion. z-index sous les braises (55) n'a pas d'importance :
+   les deux sont pointer-events:none et se composent visuellement. */
+.landing-experience::before {
+  background-image: url('/landing/textures/grain.svg');
+  background-size: 180px 180px;
+  content: '';
+  inset: -60px;
+  mix-blend-mode: overlay;
+  opacity: 0.05;
+  pointer-events: none;
+  position: fixed;
+  z-index: 59;
+  animation: landing-grain 0.6s steps(6) infinite;
+}
+
+@keyframes landing-grain {
+  0% {
+    transform: translate(0, 0);
+  }
+  16% {
+    transform: translate(-24px, 18px);
+  }
+  33% {
+    transform: translate(20px, -14px);
+  }
+  50% {
+    transform: translate(-16px, -22px);
+  }
+  66% {
+    transform: translate(22px, 16px);
+  }
+  83% {
+    transform: translate(-20px, 12px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-experience::before {
+    animation: none;
+  }
+}
+
 .landing-section {
   min-height: 100dvh;
   overflow: hidden;
   position: relative;
+}
+
+/* SplitText (reveals de titres non-hero) : le masque de ligne clippe le débord
+   vertical de la ligne qui monte. Sur les titres en leading-none/serti, les
+   ascendantes/descendantes (g, p, y, accents) frôlent le bord du masque —
+   on réserve un chouïa de padding pour ne rien couper. La classe -mask est
+   dérivée automatiquement de linesClass par mask:'lines'. */
+.split-line {
+  will-change: transform;
+}
+
+.split-line-mask {
+  padding-block: 0.12em;
+  margin-block: -0.12em;
 }
 
 @media (prefers-reduced-motion: reduce) {

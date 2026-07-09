@@ -2,6 +2,9 @@ import Link from 'next/link'
 
 import { LANDING_NAV_LINKS } from '../../_data/landing-content'
 
+import { MobileMenu } from './MobileMenu'
+import { NavLinks } from './NavLinks'
+
 import './landing-chrome.css'
 
 export function LandingChrome() {
@@ -18,25 +21,9 @@ export function LandingChrome() {
         <span className="brand-mark__logo" aria-hidden="true" />
       </Link>
 
-      <nav
-        className="landing-chrome__nav flex items-center justify-self-center"
-        aria-label="Navigation principale"
-      >
-        {LANDING_NAV_LINKS.map((link) => (
-          <Link key={link.href} href={link.href}>
-            {link.label}
-          </Link>
-        ))}
-      </nav>
+      <NavLinks links={LANDING_NAV_LINKS} />
 
-      <button
-        className="landing-menu-button inline-flex flex-col items-center justify-self-end"
-        type="button"
-        aria-label="Ouvrir le menu"
-      >
-        <span />
-        <span />
-      </button>
+      <MobileMenu links={LANDING_NAV_LINKS} />
     </header>
   )
 }

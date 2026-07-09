@@ -1,6 +1,7 @@
 .media-layer__video,
 .media-layer__fallback {
   background-position: center;
+  background-repeat: no-repeat;
   background-size: cover;
   object-fit: cover;
 }
@@ -13,16 +14,10 @@
   z-index: 0;
 }
 
-.media-layer__fallback {
-  background:
-    radial-gradient(circle at 72% 42%, rgba(198, 154, 67, 0.2), transparent 26rem),
-    linear-gradient(90deg, rgba(3, 3, 2, 0.94), rgba(12, 10, 7, 0.72));
-}
-
 .media-layer__video + .media-layer__fallback {
   opacity: 0.82;
 }
-
+/* TODO: Assombrir un peu plus le vignette */
 .media-vignette {
   background:
     radial-gradient(circle at 74% 50%, rgba(239, 212, 141, 0.12), transparent 19rem),

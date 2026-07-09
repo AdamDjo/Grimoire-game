@@ -1,3 +1,5 @@
+import { buildImageSet } from '@/lib/image-set'
+
 import './media-layer.css'
 
 interface MediaLayerProps {
@@ -15,9 +17,7 @@ export function MediaLayer({
   fallbackSrcWebp,
   className = '',
 }: MediaLayerProps) {
-  const fallbackImage = fallbackSrcWebp
-    ? `image-set(url(${fallbackSrcWebp}) type('image/webp'), url(${fallbackSrc}) type('image/png'))`
-    : `url(${fallbackSrc})`
+  const fallbackImage = buildImageSet(fallbackSrc, fallbackSrcWebp)
 
   return (
     <div className={`media-layer absolute inset-0 -z-[2] bg-void ${className}`} aria-hidden="true">

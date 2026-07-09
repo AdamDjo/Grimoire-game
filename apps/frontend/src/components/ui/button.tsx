@@ -29,6 +29,7 @@ export function Button({
       <span className="button__corner button__corner--top-right" aria-hidden="true" />
       <span className="button__corner button__corner--bottom-left" aria-hidden="true" />
       <span className="button__corner button__corner--bottom-right" aria-hidden="true" />
+      {variant !== 'ghost' ? <span className="button__sheen" aria-hidden="true" /> : null}
       <span className="button__sigil" aria-hidden="true" />
       <span>{children}</span>
       {variant === 'primary' ? <span className="button__spark" aria-hidden="true" /> : null}

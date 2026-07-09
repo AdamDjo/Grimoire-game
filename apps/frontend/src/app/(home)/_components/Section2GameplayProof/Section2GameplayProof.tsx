@@ -15,6 +15,11 @@ export function Section2GameplayProof() {
         poster={LANDING_MEDIA.gameplayPlate}
         videoSrc={LANDING_MEDIA.gameplayVideo ?? undefined}
       />
+      <div
+        className="gameplay-section__veil absolute inset-0 z-[5]"
+        data-gameplay-veil
+        aria-hidden="true"
+      />
 
       <div className="gameplay-section__cards relative z-[2] grid gap-[18px] self-center">
         {GAMEPLAY_CARDS.map((card) => (
@@ -48,7 +53,7 @@ export function Section2GameplayProof() {
           ))}
         </div>
         <div data-motion="reveal">
-          <Button className="button--gameplay" href="/signup">
+          <Button className="button--gameplay" data-magnetic href="/signup">
             {GAMEPLAY_COPY.cta}
           </Button>
         </div>

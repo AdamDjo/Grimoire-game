@@ -1,0 +1,76 @@
+/* Voile de preload : au-dessus de tout (chrome z-60, grain z-60), verrouille la
+   première impression sur le sigil doré le temps que le contexte se décode. */
+.landing-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  pointer-events: none;
+}
+
+.landing-preloader__veil {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(120% 90% at 50% 42%, rgba(24, 18, 11, 0.9) 0%, rgba(6, 5, 4, 1) 70%),
+    var(--void);
+  /* Sortie en fondu + léger scale depuis le centre (GSAP), pas un wipe. */
+  transform-origin: center;
+  pointer-events: auto;
+}
+
+.landing-preloader__core {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 34px;
+}
+
+.landing-preloader__sigil {
+  aspect-ratio: 1;
+  background: url('/landing/ui/brand-sigil-trimmed.png') center / contain no-repeat;
+  filter: drop-shadow(0 0 22px rgba(218, 170, 74, 0.32));
+  height: clamp(74px, 12vw, 104px);
+  width: clamp(74px, 12vw, 104px);
+  /* Respiration lente tant que le voile est là. Neutralisée en reduced-motion. */
+  animation: preloader-breathe 2.6s ease-in-out infinite;
+}
+
+@keyframes preloader-breathe {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 18px rgba(218, 170, 74, 0.28));
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 32px rgba(240, 212, 138, 0.55));
+    transform: scale(1.04);
+  }
+}
+
+.landing-preloader__count {
+  align-items: baseline;
+  color: rgba(239, 225, 194, 0.86);
+  display: flex;
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.4vw, 26px);
+  font-weight: 500;
+  gap: 2px;
+  letter-spacing: 0.32em;
+  margin: 0;
+  /* Compense le letter-spacing pour rester optiquement centré. */
+  padding-left: 0.32em;
+}
+
+.landing-preloader__percent {
+  color: rgba(218, 170, 74, 0.7);
+  font-size: 0.62em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-preloader__sigil {
+    animation: none;
+  }
+}

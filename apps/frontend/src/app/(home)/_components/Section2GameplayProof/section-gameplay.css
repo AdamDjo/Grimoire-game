@@ -4,6 +4,14 @@
   padding: 9vh clamp(28px, 4.6vw, 78px) 7vh;
 }
 
+/* Voile du dip-to-dark : plein noir quand le pin démarre (posé par GSAP en
+   motion normale), se lève sur les premiers % du pin. Inerte en reduced motion. */
+.gameplay-section__veil {
+  background: var(--void);
+  opacity: 0;
+  pointer-events: none;
+}
+
 .gameplay-section .media-vignette {
   background:
     radial-gradient(circle at 28% 48%, rgba(3, 3, 2, 0.12), rgba(3, 3, 2, 0.82) 72%),
@@ -120,11 +128,11 @@
 @media (max-width: 1100px) {
   .gameplay-section {
     grid-template-columns: 1fr;
-    padding-bottom: 18vh;
+    padding-bottom: 7vh;
   }
 
   .gameplay-section__cards {
-    width: min(82vw, 760px);
+    width: min(70vw, 620px);
   }
 
   .gameplay-section__copy {
@@ -132,8 +140,14 @@
     margin-top: 52px;
   }
 
+  /* Stats bar en flux plutôt qu'absolute : en colonne, l'ancrage bottom
+     chevaucherait le copy. On la remet dans le flux sous le texte. */
   .gameplay-stats {
-    width: calc(100% - 56px);
+    position: static;
+    inset: auto;
+    margin: 48px auto 0;
+    width: 100%;
+    max-width: 640px;
   }
 }
 

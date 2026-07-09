@@ -1,28 +1,25 @@
 export const LANDING_NAV_LINKS = [
   { label: 'Velkhar', href: '#velkhar' },
-  { label: 'Mémoire', href: '#memoire' },
-  { label: 'Règles', href: '#regles' },
+  { label: 'Mémoire', href: '#gameplay' },
   { label: 'Auberge', href: '#auberge' },
 ] as const
 
 export const LANDING_MEDIA = {
-  heroPlate: '/landing/plates/plate-01-hero-clean.png',
-  heroPlateWebp: '/landing/plates/plate-01-hero-clean.webp',
-  heroVideo: '/landing/video/hero-ambient.mp4',
-  gameplayPlate: '/landing/plates/plate-02-gameplay-clean.png',
-  gameplayPlateWebp: '/landing/plates/plate-02-gameplay-clean.webp',
+  heroPlate: '/landing/plates/new-hero.png',
+  heroPlateWebp: '/landing/plates/new-hero.webp',
+  heroIdleVideo: '/landing/video/hero-ambient.mp4',
+  heroFrames: '/landing/frames/hero-gameplay',
+  heroFrameCount: 96,
+  heroScrubLength: 260,
+  gameplayPlate: '/landing/plates/new-gameplay.jpg',
+  gameplayPlateWebp: '/landing/plates/new-gameplay.webp',
   gameplayVideo: null,
   aubergePlate: '/landing/plates/plate-03-auberge-clean.png',
   aubergePlateWebp: '/landing/plates/plate-03-auberge-clean.webp',
   aubergeVideo: null,
-  grimoireFrames: '/landing/frames/grimoire-open',
-  grimoireFrameCount: 0,
-  grimoireFallback: '/landing/transitions/grimoire-open-keyart.png',
-  grimoireFallbackWebp: '/landing/transitions/grimoire-open-keyart.webp',
   quillFrames: '/landing/frames/quill-map',
   quillFrameCount: 0,
-  quillFallback: '/landing/transitions/quill-map-transition.png',
-  quillFallbackWebp: '/landing/transitions/quill-map-transition.webp',
+  quillFallback: '/landing/transitions/quill-map-transition.webp',
 } as const
 
 export const HERO_COPY = {
@@ -31,6 +28,7 @@ export const HERO_COPY = {
   body: ['Agis librement. Le Maître du Jeu répond.', 'Velkhar garde les traces.'],
   primaryCta: 'Entrer dans l’auberge',
   secondaryCta: 'Voir le gameplay',
+  scrollHint: 'Défiler',
 } as const
 
 export const GAMEPLAY_CARDS = [
