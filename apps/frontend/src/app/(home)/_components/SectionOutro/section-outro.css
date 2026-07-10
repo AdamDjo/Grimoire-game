@@ -211,14 +211,28 @@
     padding: 130px 20px 110px;
   }
 
+  /* En flux normal, le blockquote est étiré sur toute la largeur utile (padding
+     20px de part et d'autre) et son texte est centré. Pas de `left` : un décalage
+     positionnel pousserait le bloc — et le divider `::after` centré dessus — hors
+     de l'axe de l'écran. `margin-top` : dégage l'espace sous le logo absolu (la
+     section est `align-items:end`, le padding-top ne repousse pas ce premier
+     enfant grid). */
+  /* `margin-bottom` : le divider `::after` déborde 28px sous le bloc citation ;
+     sans marge, le titre `L'Aveugle t'attend.` remontait dessus (chevauchement).
+     On dégage la hauteur du divider (28px de débord + ~18px de trait) plus une
+     respiration. `margin-top` réduit pour remonter le bloc sous le logo. */
   .outro-quote {
-    left: 20px;
+    left: auto;
+    margin-bottom: 64px;
+    margin-top: 48px;
     position: relative;
     top: auto;
   }
 
+  /* Sous le header sticky (~85px) : à 40px le logo passait derrière le header et
+     se superposait à son propre lockup pendant le pin outro. */
   .outro-logo {
-    top: 40px;
+    top: 100px;
   }
 
   .outro-footer {

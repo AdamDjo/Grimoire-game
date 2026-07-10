@@ -62,6 +62,13 @@
   padding: 24px 42px 26px;
 }
 
+/* Wrapper unique du contenu manuscrit : reste l'unique flex item de `.card p`
+   pour éviter que l'accent et le corps ne se flexifient en items séparés. Son
+   contenu coule en flux normal. */
+.card__manuscript {
+  display: block;
+}
+
 /* Carte « Le jet de dé » : le body garde l'encre foncée lisible du parchemin
    (comme les autres cartes). Seul le segment en tête (« Jet de SOUFFLE ») est
    coloré en accent via `.card__accent`. */
@@ -77,8 +84,22 @@
     margin-left: 0;
   }
 
+  /* Le body repasse en flux bloc sur mobile : le `display:flex` du desktop
+     (centrage vertical du manuscrit) empilerait l'accent-block et le corps côte
+     à côte au lieu de les stacker. En block, l'accent en tête tombe bien sur sa
+     propre ligne, le corps suit dessous. */
   .card p {
+    display: block;
     font-size: 21px;
     padding: 18px;
+  }
+
+  /* Carte « Le jet de dé » : sur mobile, le segment accent (« Jet de SOUFFLE »)
+     passe sur sa propre ligne au-dessus du corps, qui suit en dessous. Sur le
+     parchemin étroit, l'accent inline se collait au body — mieux vaut le poser
+     en tête comme une étiquette. Espace sous l'accent pour aérer les deux blocs. */
+  .card__accent {
+    display: block;
+    margin-bottom: 6px;
   }
 }

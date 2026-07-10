@@ -57,7 +57,7 @@ export const GAMEPLAY_CARDS = [
     index: '2',
     title: 'Le jet de dé',
     accent: 'Jet de SOUFFLE',
-    body: ' (ta finesse, ta perception) — réussite partielle : la porte cède, mais quelque chose t’a entendu.',
+    body: '(ta finesse, ta perception) — réussite partielle : la porte cède, mais quelque chose t’a entendu.',
     tone: 'soul',
   },
   {

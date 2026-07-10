@@ -189,6 +189,25 @@
     padding: 120px 18px 170px;
   }
 
+  /* Plate gameplay (gros plan de grimoire) trop claire et chargée derrière le
+     copy sur écran étroit : sans le dip-to-dark du pin desktop, le texte perdait
+     son contraste. On empile un voile noir permanent SOUS le contenu (la vignette
+     vit dans `.media-layer` en `-z-2`, donc sous les cartes/copy en z-2/z-3) :
+     dense en haut/bas où court le texte, un peu plus clair au centre pour garder
+     la profondeur de la plate. Résultat : fond sombre lisible, sans écraser
+     totalement l'image. */
+  .gameplay-section .media-vignette {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(3, 3, 2, 0.9) 0%,
+        rgba(3, 3, 2, 0.7) 32%,
+        rgba(3, 3, 2, 0.72) 60%,
+        rgba(3, 3, 2, 0.92) 100%
+      ),
+      radial-gradient(circle at 50% 42%, rgba(3, 3, 2, 0.36), rgba(3, 3, 2, 0.72) 78%);
+  }
+
   .gameplay-section__cards {
     padding-left: 0;
     transform: none;

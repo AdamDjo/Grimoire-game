@@ -205,4 +205,11 @@
     flex-direction: column;
     gap: 18px;
   }
+
+  /* Sur mobile, les CTA empilés remontent près du bas de l'écran : le « Défiler »
+     ancré en bas (`bottom: clamp(20px,4vh,40px)`) chevauchait le second bouton.
+     L'indice de scroll est superflu tactile — on le masque sous 720px. */
+  .hero-scroll-hint {
+    display: none;
+  }
 }
