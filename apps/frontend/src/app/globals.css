@@ -43,8 +43,8 @@
   --text-h2: clamp(32px, 1.4vw + 22px, 44px);
   --text-h2--line-height: 1.15;
   --text-accroche: clamp(20px, 0.7vw + 15px, 26px);
-  --text-body-editorial: clamp(17px, 0.4vw + 14px, 20px);
-  --text-body-editorial--line-height: 1.65;
+  --text-body-editorial: clamp(18px, 0.5vw + 15px, 24px);
+  --text-body-editorial--line-height: 1.6;
   --text-ui: 16px;
   --text-ui--line-height: 1.6;
   --text-card-num: clamp(32px, 0.9vw + 25px, 40px);
@@ -123,18 +123,16 @@ a {
   outline-offset: 3px;
 }
 
+/* Scrollbar native masquée : l'indicateur de progression est repris par la
+   fine barre dorée en haut (`ScrollProgressBar`). Le scroll reste fonctionnel
+   (molette, trackpad, clavier), seul le rail visuel disparaît. */
+html {
+  scrollbar-width: none;
+}
+
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--void);
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(218, 170, 74, 0.32);
-  border-radius: 999px;
+  width: 0;
+  height: 0;
 }
 
 .landing-experience {
@@ -158,7 +156,7 @@ a {
   content: '';
   inset: 0;
   mix-blend-mode: soft-light;
-  opacity: 0.38;
+  opacity: 0.28;
   pointer-events: none;
   position: fixed;
   z-index: 60;

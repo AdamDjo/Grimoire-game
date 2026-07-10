@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { LANDING_NAV_LINKS } from '../../_data/landing-content'
+import { LANDING_AUTH_LINK, LANDING_NAV_LINKS } from '../../_data/landing-content'
 
 import { MobileMenu } from './MobileMenu'
 import { NavLinks } from './NavLinks'
@@ -23,7 +23,13 @@ export function LandingChrome() {
 
       <NavLinks links={LANDING_NAV_LINKS} />
 
-      <MobileMenu links={LANDING_NAV_LINKS} />
+      <div className="landing-chrome__actions justify-self-end">
+        <Link className="landing-auth-link" href={LANDING_AUTH_LINK.href}>
+          {LANDING_AUTH_LINK.label}
+        </Link>
+      </div>
+
+      <MobileMenu authLink={LANDING_AUTH_LINK} links={LANDING_NAV_LINKS} />
     </header>
   )
 }

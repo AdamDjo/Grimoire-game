@@ -1,6 +1,6 @@
 .gameplay-section {
   display: grid;
-  grid-template-columns: minmax(0, 62vw) minmax(340px, 1fr);
+  grid-template-columns: minmax(0, 56vw) minmax(380px, 1fr);
   padding: 9vh clamp(28px, 4.6vw, 78px) 7vh;
 }
 
@@ -14,9 +14,9 @@
 
 .gameplay-section .media-vignette {
   background:
-    radial-gradient(circle at 28% 48%, rgba(3, 3, 2, 0.12), rgba(3, 3, 2, 0.82) 72%),
-    linear-gradient(90deg, rgba(3, 3, 2, 0.1), rgba(3, 3, 2, 0.22) 46%, rgba(3, 3, 2, 0.9) 100%),
-    linear-gradient(180deg, rgba(3, 3, 2, 0.62), transparent 35%, rgba(3, 3, 2, 0.72));
+    radial-gradient(circle at 28% 48%, rgba(3, 3, 2, 0.09), rgba(3, 3, 2, 0.62) 72%),
+    linear-gradient(90deg, rgba(3, 3, 2, 0.08), rgba(3, 3, 2, 0.17) 46%, rgba(3, 3, 2, 0.68) 100%),
+    linear-gradient(180deg, rgba(3, 3, 2, 0.47), transparent 35%, rgba(3, 3, 2, 0.54));
 }
 
 .gameplay-section__cards {
@@ -44,7 +44,7 @@
   font-family: var(--font-display);
   font-size: 17px;
   letter-spacing: 0.08em;
-  margin: 0 0 92px;
+  margin: 0 0 clamp(40px, 6vh, 64px);
   position: relative;
   text-transform: uppercase;
 }
@@ -76,6 +76,21 @@
   grid-template-columns: repeat(3, 1fr);
   left: clamp(28px, 4.6vw, 78px);
   padding: 7px 16px;
+  width: 59vw;
+}
+
+/* Légende du triptyque de ressources : posée juste au-dessus du cadre art
+   (le cadre .gameplay-stats est ancré bottom:4vh, l'espace libre est au-dessus).
+   Discrète : couleur/spacing ici, prose serif. */
+.gameplay-stats__caption {
+  bottom: calc(4vh + 128px);
+  color: rgba(239, 225, 194, 0.6);
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-style: italic;
+  left: clamp(28px, 4.6vw, 78px);
+  margin: 0;
+  max-width: min(59vw, 620px);
   width: 59vw;
 }
 
@@ -149,6 +164,16 @@
     width: 100%;
     max-width: 640px;
   }
+
+  /* Légende suit le cadre en flux (au-dessus de lui, avant la barre). */
+  .gameplay-stats__caption {
+    position: static;
+    inset: auto;
+    margin: 44px auto 0;
+    max-width: 640px;
+    text-align: center;
+    width: 100%;
+  }
 }
 
 @media (max-width: 720px) {
@@ -173,7 +198,7 @@
   }
 
   .gameplay-section__copy h2 {
-    font-size: clamp(48px, 14vw, 68px);
+    font-size: clamp(34px, 9vw, 44px);
   }
 
   .gameplay-section__copy h2 span {

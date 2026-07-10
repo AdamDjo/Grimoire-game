@@ -55,7 +55,7 @@ export function SectionHero() {
             </span>
           ))}
         </h1>
-        <div className="hero-copy mt-[30px] font-ui text-ui" data-motion="reveal">
+        <div className="hero-copy mt-[30px] font-serif text-body-editorial" data-motion="reveal">
           {HERO_COPY.body.map((line) => (
             <p key={line} className="m-0">
               {line}
@@ -63,8 +63,8 @@ export function SectionHero() {
           ))}
         </div>
         <div className="hero-actions mt-9 flex" data-motion="hero-actions">
-          <Button href="#auberge">{HERO_COPY.primaryCta}</Button>
-          <Button href="#gameplay" variant="ghost">
+          <Button href="#outro">{HERO_COPY.primaryCta}</Button>
+          <Button href="#gameplay" variant="ghost" disabled>
             {HERO_COPY.secondaryCta}
           </Button>
         </div>

@@ -2,16 +2,17 @@
 
 import { useCallback, useRef, useState } from 'react'
 
-import { AmbientEmbers, CustomCursor, SectionProgress } from '@/components/ui'
+import { AmbientEmbers, CustomCursor, ScrollProgressBar, SectionProgress } from '@/components/ui'
 import { useLenis } from '@/hooks/use-lenis'
 import { ScrollTrigger, SplitText, gsap, useGSAP } from '@/lib/gsap-init'
 
 import { renderFrameSequence } from '../FrameSequenceCanvas/FrameSequenceCanvas'
 import { LandingChrome } from '../LandingChrome/LandingChrome'
 import { LandingPreloader } from '../LandingPreloader/LandingPreloader'
-import { Section2GameplayProof } from '../Section2GameplayProof/Section2GameplayProof'
-import { SectionAubergeCta } from '../SectionAubergeCta/SectionAubergeCta'
+import { SectionGameplay } from '../SectionGameplay/SectionGameplay'
 import { SectionHero } from '../SectionHero/SectionHero'
+import { SectionOutro } from '../SectionOutro/SectionOutro'
+import { SectionWorld } from '../SectionWorld/SectionWorld'
 
 export function LandingExperience() {
   const rootRef = useRef<HTMLDivElement>(null)
@@ -266,77 +267,77 @@ export function LandingExperience() {
           0.72
         )
 
-      gsap.utils.toArray<HTMLElement>('[data-motion="bridge"]').forEach((bridge) => {
-        const bridgeLength = Number(bridge.dataset.bridgeLength) || 145
-        const isEmber = bridge.classList.contains('scene-bridge--ember')
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: bridge,
-            start: 'top top',
-            end: `+=${bridgeLength}%`,
-            pin: true,
-            scrub: 0.7,
-          },
-        })
+      // Section 3 (world) : même grammaire que la gameplay. Démarre sous un
+      // voile noir plein (couture invisible avec la gameplay pinnée au-dessus),
+      // lève le voile puis révèle eyebrow → titre → lore → piliers en cascade.
+      // Le titre profite déjà du SplitText global via data-motion="title".
+      gsap.set('[data-world-veil]', { opacity: 1 })
 
-        gsap.set(bridge.querySelector('[data-bridge-veil]'), { autoAlpha: 0 })
-        gsap.set(bridge.querySelector('[data-bridge-smoke]'), { autoAlpha: 0, xPercent: -4 })
-        gsap.set(bridge.querySelector('[data-bridge-glow]'), {
-          autoAlpha: 0,
-          scale: isEmber ? 0.8 : 0.72,
-        })
-        gsap.set(bridge.querySelector('[data-bridge-next]'), { autoAlpha: 0, scale: 1.035 })
-
-        tl.fromTo(
-          bridge.querySelector('[data-bridge-veil]'),
-          { autoAlpha: 0 },
-          { autoAlpha: 0.94, duration: 0.3, ease: 'power2.out' },
-          0.12
-        )
-          .fromTo(
-            bridge.querySelector('[data-bridge-smoke]'),
-            { autoAlpha: 0, xPercent: -4 },
-            { autoAlpha: isEmber ? 0.72 : 0.58, xPercent: 3, duration: 0.5, ease: 'none' },
-            0.18
-          )
-          .fromTo(
-            bridge.querySelector('[data-bridge-glow]'),
-            { autoAlpha: 0, scale: isEmber ? 0.8 : 0.72 },
-            {
-              autoAlpha: isEmber ? 0.78 : 0.9,
-              scale: isEmber ? 1.14 : 1.18,
-              duration: 0.34,
-              ease: 'power2.out',
-            },
-            isEmber ? 0.36 : 0.22
-          )
-          .fromTo(
-            bridge.querySelector('[data-bridge-next]'),
-            { autoAlpha: 0, scale: 1.035 },
-            { autoAlpha: 1, scale: 1, duration: 0.28, ease: 'none' },
-            isEmber ? 0.52 : 0.46
-          )
-          .to(
-            bridge.querySelector('[data-bridge-veil]'),
-            { autoAlpha: 0.18, duration: 0.22, ease: 'power2.inOut' },
-            isEmber ? 0.76 : 0.7
-          )
-          .to(
-            bridge.querySelector('[data-bridge-glow]'),
-            { autoAlpha: isEmber ? 0.22 : 0.18, scale: 1, duration: 0.18, ease: 'power2.inOut' },
-            isEmber ? 0.88 : 0.86
-          )
-          .to(
-            bridge.querySelector('[data-bridge-smoke]'),
-            { autoAlpha: 0.2, duration: 0.24, ease: 'power2.inOut' },
-            0.76
-          )
-          .to(
-            bridge.querySelector('.frame-sequence'),
-            { autoAlpha: 0, duration: 0.28, ease: 'none' },
-            0.22
-          )
+      const worldTimeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: '[data-motion="world"]',
+          start: 'top top',
+          end: '+=185%',
+          pin: true,
+          scrub: 0.85,
+        },
       })
+
+      worldTimeline
+        .to('[data-world-veil]', { opacity: 0, duration: 0.16, ease: 'power1.out' }, 0)
+        .fromTo(
+          '[data-motion="world"] [data-motion="reveal"]',
+          { autoAlpha: 0, x: 36, filter: 'blur(12px)' },
+          {
+            autoAlpha: 1,
+            x: 0,
+            filter: 'blur(0px)',
+            stagger: 0.14,
+            duration: 0.42,
+            ease: 'power3.out',
+          },
+          0.14
+        )
+        // Sortie dip-to-dark : en fin de pin, le voile du world remonte au noir
+        // plein. World se dépin dans le noir → l'outro, qui démarre sous le même
+        // voile noir, prend le relais sans couture (aucune plate de transition,
+        // même grammaire que le passage hero → gameplay).
+        .to('[data-world-veil]', { opacity: 1, duration: 0.2, ease: 'power1.in' }, 0.78)
+
+      // Section 4 (outro) : entrée depuis le noir, symétrique de la sortie world.
+      // Elle se pin le temps de lever son voile puis de révéler le logo, la
+      // citation, le titre et le CTA en cascade. La plate d'auberge se dévoile
+      // derrière le voile qui s'efface — l'atterrissage final de la landing.
+      gsap.set('[data-outro-veil]', { opacity: 1 })
+
+      const outroTimeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: '[data-motion="outro"]',
+          start: 'top top',
+          end: '+=150%',
+          pin: true,
+          scrub: 0.85,
+        },
+      })
+
+      // Le titre outro reste piloté par le SplitText global (yPercent) comme les
+      // autres sections : la timeline n'anime que les reveal (logo, citation,
+      // corps, CTA, footer) pour ne pas empiler deux tweens sur le même titre.
+      outroTimeline
+        .to('[data-outro-veil]', { opacity: 0, duration: 0.2, ease: 'power1.out' }, 0)
+        .fromTo(
+          '[data-motion="outro"] [data-motion="reveal"]',
+          { autoAlpha: 0, y: 34, filter: 'blur(12px)' },
+          {
+            autoAlpha: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            stagger: 0.12,
+            duration: 0.5,
+            ease: 'power3.out',
+          },
+          0.16
+        )
 
       // Hover magnétique des CTA : le bouton suit légèrement le curseur puis
       // revient élastiquement. Uniquement sur pointeur fin (souris) et hors
@@ -384,14 +385,18 @@ export function LandingExperience() {
           })
       }
 
-      // Micro-parallax des plates non pinnées (auberge) : la plate de fond se
+      // Micro-parallax des plates de fond (château + outro) : la plate se
       // dézoome doucement (1.06 → 1) et remonte de quelques % pendant que la
       // section traverse le viewport. Transform-only (scale + yPercent) → pas de
-      // reflow, composité GPU. Scrub non pinné : ne perturbe pas les pins voisins.
+      // reflow, composité GPU. Scrub borné au parcours de la section
+      // (`[data-motion]` parent) : ne perturbe pas les pins voisins — même pour la
+      // section world pinnée, le trigger reste la section, pas le pin-spacer.
       // Hors reduced-motion (transform figé). Self-healing au refresh.
       if (!reduceMotion) {
         gsap.utils
-          .toArray<HTMLElement>('.auberge-plate .media-layer__fallback')
+          .toArray<HTMLElement>(
+            '.world-plate .media-layer__fallback, .outro-plate .media-layer__fallback'
+          )
           .forEach((plate) => {
             gsap.fromTo(
               plate,
@@ -401,7 +406,7 @@ export function LandingExperience() {
                 yPercent: 3,
                 ease: 'none',
                 scrollTrigger: {
-                  trigger: plate.closest('[data-motion="auberge"]'),
+                  trigger: plate.closest('[data-motion]'),
                   start: 'top bottom',
                   end: 'bottom top',
                   scrub: 0.6,
@@ -516,25 +521,16 @@ export function LandingExperience() {
       <AmbientEmbers />
       <CustomCursor />
       <LandingChrome />
+      <ScrollProgressBar />
       <SectionProgress
-        sectionCount={3}
-        sectionSelector='[data-motion="hero"], [data-motion="gameplay"], [data-motion="auberge"]'
+        sectionCount={4}
+        sectionSelector='[data-motion="hero"], [data-motion="gameplay"], [data-motion="world"], [data-motion="outro"]'
       />
       <SectionHero />
       <div id="memoire" aria-hidden="true" data-hero-overlap />
-      <Section2GameplayProof />
-      {/* <SceneBridge
-        bridgeLength={115}
-        fallbackSrc={LANDING_MEDIA.quillFallback}
-        frameCount={LANDING_MEDIA.quillFrameCount}
-        frameDir={LANDING_MEDIA.quillFrames}
-        id="regles"
-        label="Transition carte vers auberge"
-        nextBackgroundSrc={LANDING_MEDIA.aubergePlate}
-        nextBackgroundSrcWebp={LANDING_MEDIA.aubergePlateWebp}
-        tone="ember"
-      /> */}
-      <SectionAubergeCta />
+      <SectionGameplay />
+      <SectionWorld />
+      <SectionOutro />
     </div>
   )
 }

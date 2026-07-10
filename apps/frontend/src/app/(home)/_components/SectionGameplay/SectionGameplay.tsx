@@ -6,7 +6,7 @@ import { GameplayStatsBar } from './GameplayStatsBar'
 
 import './section-gameplay.css'
 
-export function Section2GameplayProof() {
+export function SectionGameplay() {
   return (
     <section className="landing-section gameplay-section" id="gameplay" data-motion="gameplay">
       <MediaLayer
@@ -43,7 +43,7 @@ export function Section2GameplayProof() {
           ))}
         </h2>
         <div
-          className="gameplay-section__body text-body-editorial text-[rgba(239,225,194,0.86)]"
+          className="gameplay-section__body font-serif text-body-editorial text-[rgba(239,225,194,0.86)]"
           data-motion="reveal"
         >
           {GAMEPLAY_COPY.body.map((line) => (

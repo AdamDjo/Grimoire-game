@@ -68,22 +68,24 @@ Exposées en Tailwind (`@theme inline`) : `font-display`, `font-serif`, `font-ac
 
 Tokens pixel-perfect du Design System, exposés via `@theme inline` dans `globals.css` (syntaxe Tailwind v4 `--text-<name>` + suffixes `--line-height`/`--letter-spacing`) :
 
-| Token Tailwind         | Taille | Line-height | Letter-spacing | Rôle                                        |
-| ---------------------- | -----: | ----------: | -------------: | ------------------------------------------- |
-| `text-h1`              |   72px |        1.05 |         0.06em | Titre héros (H1), `font-display`            |
-| `text-h2`              |   44px |        1.15 |              — | Titres de section, `font-accent`            |
-| `text-accroche`        |   26px |           — |              — | Accroche italique, `font-accent`            |
-| `text-body-editorial`  |   20px |        1.65 |              — | Corps de texte éditorial, `font-serif`      |
-| `text-ui`              |   16px |         1.6 |              — | UI/labels courts, `font-ui`                 |
-| `text-card-num`        |   40px |           — |              — | Numéro de card, `font-display` (600)        |
-| `text-card-title`      |   25px |           — |              — | Titre de card, `font-accent` (500)          |
-| `text-card-manuscript` |   24px |           — |              — | Insert manuscrit de card, `font-manuscript` |
-| `text-stat-label`      |   17px |           — |         0.16em | Label de jauge stat, `font-display`         |
-| `text-stat-value`      |   20px |           — |              — | Valeur de jauge stat, `font-accent`         |
-| `text-btn-primary`     |   26px |           — |              — | Bouton primaire, `font-accent` (500)        |
-| `text-btn-secondary`   |   27px |           — |              — | Bouton secondaire (CTA gameplay)            |
+| Token Tailwind         |  Taille | Line-height | Letter-spacing | Rôle                                         |
+| ---------------------- | ------: | ----------: | -------------: | -------------------------------------------- |
+| `text-h1`              |    72px |        1.05 |         0.06em | Titre héros (H1), `font-display`             |
+| `text-h2`              |    44px |        1.15 |              — | Titres de section, `font-accent`             |
+| `text-accroche`        |    26px |           — |              — | Accroche italique, `font-accent`             |
+| `text-body-editorial`  | 18→24px |         1.6 |              — | Corps de prose (source unique), `font-serif` |
+| `text-ui`              |    16px |         1.6 |              — | UI/labels courts, `font-ui`                  |
+| `text-card-num`        |    40px |           — |              — | Numéro de card, `font-display` (600)         |
+| `text-card-title`      |    25px |           — |              — | Titre de card, `font-accent` (500)           |
+| `text-card-manuscript` |    24px |           — |              — | Insert manuscrit de card, `font-manuscript`  |
+| `text-stat-label`      |    17px |           — |         0.16em | Label de jauge stat, `font-display`          |
+| `text-stat-value`      |    20px |           — |              — | Valeur de jauge stat, `font-accent`          |
+| `text-btn-primary`     |    26px |           — |              — | Bouton primaire, `font-accent` (500)         |
+| `text-btn-secondary`   |    27px |           — |              — | Bouton secondaire (CTA gameplay)             |
 
-Usage : combiner avec le token de police correspondant, ex. `className="font-display text-h1 font-medium"`. Ne jamais utiliser de `clamp()` ou de taille en dur pour ces rôles — le fluide responsif se limite désormais aux breakpoints mobiles explicites en CSS scoped (ex. `.hero-title` en `@media (max-width: 720px)`).
+Usage : combiner avec le token de police correspondant, ex. `className="font-display text-h1 font-medium"`. La plupart des tokens sont fluides (`clamp(min, vw+base, max)`) et portent leur propre responsif — inutile d'ajouter des breakpoints px pour la taille.
+
+**Une utility = un rôle.** Consommer les utilities `text-*` + `font-*` dans le TSX ; ne **jamais** poser de `font-size`/`font-family`/`line-height` de corps en dur dans un CSS de section. Les CSS colocalisés (`section-*.css`) ne portent plus que layout / couleur / spacing pour ces rôles. En particulier, le corps de prose de la landing = **`font-serif text-body-editorial`** partout (Hero, Gameplay, Monde, piliers) — source unique, jamais surchargée.
 
 > **Nettoyage 2026-07** : `text-manuscript`, `text-nav-brand`, `text-nav-item` retirés de `@theme inline` (0 usage réel dans `apps/frontend/src`).
 

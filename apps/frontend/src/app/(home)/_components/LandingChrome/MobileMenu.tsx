@@ -14,10 +14,11 @@ interface NavLink {
 }
 
 interface MobileMenuProps {
+  authLink: NavLink
   links: readonly NavLink[]
 }
 
-export function MobileMenu({ links }: MobileMenuProps) {
+export function MobileMenu({ authLink, links }: MobileMenuProps) {
   const [open, setOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
@@ -147,6 +148,13 @@ export function MobileMenu({ links }: MobileMenuProps) {
             {link.label}
           </a>
         ))}
+        <a
+          href={authLink.href}
+          className="mobile-menu__auth"
+          onClick={(event) => handleLinkClick(event, authLink.href)}
+        >
+          {authLink.label}
+        </a>
       </nav>
     </div>
   )

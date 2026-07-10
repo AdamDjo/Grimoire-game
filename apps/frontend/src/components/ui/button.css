@@ -140,6 +140,21 @@
   transform: translateY(-2px);
 }
 
+/* État inerte (ex. CTA gameplay pas encore jouable) : le bouton reste visible
+   mais grisé et non interactif. Rendu comme un <span role="link"> côté TSX
+   (donc pas de navigation possible). On garde le hit-testing actif pour que le
+   curseur custom détecte le survol et affiche l'état "interdit" ; le natif
+   not-allowed sert de repli quand le curseur custom est off (tactile, reduced
+   motion, mobile). */
+.button--disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+
+.button--disabled:hover {
+  transform: none;
+}
+
 .button__sigil {
   aspect-ratio: 1;
   border: 1px solid rgba(218, 170, 74, 0.54);

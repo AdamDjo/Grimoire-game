@@ -1,0 +1,15 @@
+/* Piste transparente : seul le fill est visible. Hauteur 2px = fine ligne. */
+.scroll-progress-bar {
+  height: 2px;
+  pointer-events: none;
+}
+
+/* Remplissage doré, piloté en scaleX par GSAP (origine gauche). Le dégradé +
+   la lueur donnent un liseré vivant plutôt qu'un trait plat. */
+.scroll-progress-bar__fill {
+  height: 100%;
+  width: 100%;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold) 60%, var(--gold-light));
+  box-shadow: 0 0 8px rgba(217, 164, 65, 0.5);
+}

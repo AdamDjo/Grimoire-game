@@ -7,6 +7,7 @@ import { gsap } from '@/lib/gsap-init'
 import './custom-cursor.css'
 
 const INTERACTIVE_SELECTOR = 'a, button, [role="button"], input, textarea, select, label'
+const DISABLED_SELECTOR = '[aria-disabled="true"], :disabled'
 const EMBER_POOL_SIZE = 14
 const EMBER_SPAWN_INTERVAL_MS = 55
 
@@ -82,7 +83,12 @@ export function CustomCursor() {
 
     const handlePointerOver = (event: PointerEvent) => {
       const target = event.target as HTMLElement | null
-      if (target?.closest(INTERACTIVE_SELECTOR)) {
+      // Un élément inerte (bouton grisé) prime sur l'état interactif : la flèche
+      // passe en curseur "interdit" plutôt que de grossir comme un lien actif.
+      if (target?.closest(DISABLED_SELECTOR)) {
+        arrow.classList.add('is-disabled')
+        arrow.classList.remove('is-hovering')
+      } else if (target?.closest(INTERACTIVE_SELECTOR)) {
         arrow.classList.add('is-hovering')
       }
     }
@@ -90,6 +96,9 @@ export function CustomCursor() {
     const handlePointerOut = (event: PointerEvent) => {
       const target = event.target as HTMLElement | null
       const related = event.relatedTarget as HTMLElement | null
+      if (target?.closest(DISABLED_SELECTOR) && !related?.closest(DISABLED_SELECTOR)) {
+        arrow.classList.remove('is-disabled')
+      }
       if (target?.closest(INTERACTIVE_SELECTOR) && !related?.closest(INTERACTIVE_SELECTOR)) {
         arrow.classList.remove('is-hovering')
       }

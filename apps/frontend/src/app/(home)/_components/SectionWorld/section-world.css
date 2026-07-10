@@ -1,0 +1,133 @@
+.world-section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  padding: 9vh clamp(28px, 4.6vw, 78px) 7vh;
+}
+
+/* Voile du dip-to-dark : plein noir quand le pin démarre (posé par GSAP en
+   motion normale), se lève sur les premiers % du pin. Inerte en reduced motion. */
+.world-section__veil {
+  background: var(--void);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Vignette plus dense à gauche pour garder le texte lisible sur le château,
+   dégagée à droite pour laisser respirer la cité. */
+.world-section .media-vignette {
+  background:
+    radial-gradient(circle at 64% 44%, rgba(3, 3, 2, 0.04), rgba(3, 3, 2, 0.38) 46%, rgba(3, 3, 2, 0.68) 100%),
+    linear-gradient(90deg, rgba(3, 3, 2, 0.7), rgba(3, 3, 2, 0.24) 46%, rgba(3, 3, 2, 0.45)),
+    linear-gradient(180deg, rgba(3, 3, 2, 0.44), transparent 38%, rgba(3, 3, 2, 0.68));
+}
+
+.world-section__content {
+  max-width: 620px;
+}
+
+.world-section__label {
+  color: rgba(240, 212, 138, 0.82);
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  margin: 0 0 26px;
+  text-transform: uppercase;
+}
+
+.world-section__label-rule {
+  background: var(--border-gold);
+  display: inline-block;
+  height: 1px;
+  width: 34px;
+}
+
+.world-section__content h2 {
+  font-family: var(--font-display);
+  line-height: 1.08;
+  text-transform: none;
+}
+
+.world-section__content h2 span {
+  white-space: nowrap;
+}
+
+/* Corps de prose : police + taille + line-height viennent du token
+   `font-serif text-body-editorial` (TSX). Ici on ne pose que couleur/spacing. */
+.world-section__body {
+  color: rgba(232, 220, 192, 0.86);
+  margin: 24px 0 0;
+  max-width: 540px;
+}
+
+.world-section__pillars {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 40px;
+}
+
+.world-pillar {
+  flex: 1;
+  min-width: 150px;
+  padding: 0 22px 4px;
+}
+
+.world-pillar:first-child {
+  padding-left: 0;
+}
+
+.world-pillar:last-child {
+  padding-right: 0;
+}
+
+.world-pillar + .world-pillar {
+  border-left: 1px solid var(--border-gold);
+}
+
+.world-pillar__label {
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+}
+
+/* Corps du pilier : token `font-serif text-body-editorial` (TSX). */
+.world-pillar__body {
+  color: var(--parchment);
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .world-section {
+    display: block;
+    min-height: auto;
+    padding: 120px 18px 150px;
+  }
+
+  .world-section__content h2 {
+    font-size: clamp(32px, 9vw, 44px);
+  }
+
+  .world-section__content h2 span {
+    white-space: normal;
+  }
+
+  /* Piliers empilés : les filets latéraux deviennent des séparateurs
+     horizontaux, chacun reprend toute la largeur. */
+  .world-section__pillars {
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .world-pillar {
+    min-width: 0;
+    padding: 0;
+  }
+
+  .world-pillar + .world-pillar {
+    border-left: 0;
+    border-top: 1px solid var(--border-gold);
+    padding-top: 22px;
+  }
+}

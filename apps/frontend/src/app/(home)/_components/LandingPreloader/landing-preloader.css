@@ -14,63 +14,124 @@
   align-items: center;
   justify-content: center;
   background:
-    radial-gradient(120% 90% at 50% 42%, rgba(24, 18, 11, 0.9) 0%, rgba(6, 5, 4, 1) 70%),
+    radial-gradient(
+      ellipse at 50% 46%,
+      rgba(47, 33, 16, 0.44) 0%,
+      rgba(12, 9, 6, 0.92) 38%,
+      transparent 68%
+    ),
+    radial-gradient(120% 90% at 50% 42%, rgba(18, 14, 9, 0.98) 0%, rgba(4, 3, 3, 1) 72%),
     var(--void);
   /* Sortie en fondu + léger scale depuis le centre (GSAP), pas un wipe. */
   transform-origin: center;
   pointer-events: auto;
+  overflow: hidden;
 }
 
-.landing-preloader__core {
-  display: flex;
-  flex-direction: column;
+.landing-preloader__veil::before {
+  background: url('/landing/textures/grain.svg') center / 180px 180px repeat;
+  content: '';
+  inset: -40px;
+  mix-blend-mode: soft-light;
+  opacity: 0.09;
+  pointer-events: none;
+  position: absolute;
+}
+
+.landing-preloader__veil::after {
+  background: radial-gradient(ellipse at center, transparent 38%, rgba(0, 0, 0, 0.72) 100%);
+  content: '';
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.landing-preloader__stage {
   align-items: center;
-  gap: 34px;
+  display: grid;
+  isolation: isolate;
+  justify-items: center;
+  opacity: 0;
+  position: relative;
+  width: min(88vw, 780px);
+  z-index: 1;
 }
 
-.landing-preloader__sigil {
-  aspect-ratio: 1;
-  background: url('/landing/ui/brand-sigil-trimmed.png') center / contain no-repeat;
-  filter: drop-shadow(0 0 22px rgba(218, 170, 74, 0.32));
-  height: clamp(74px, 12vw, 104px);
-  width: clamp(74px, 12vw, 104px);
-  /* Respiration lente tant que le voile est là. Neutralisée en reduced-motion. */
-  animation: preloader-breathe 2.6s ease-in-out infinite;
+.landing-preloader__logo {
+  filter: drop-shadow(0 12px 34px rgba(0, 0, 0, 0.78));
+  grid-area: 1 / 1;
+  overflow: hidden;
+  position: relative;
+  width: min(72vw, 470px);
+  z-index: 2;
 }
 
-@keyframes preloader-breathe {
-  0%,
-  100% {
-    filter: drop-shadow(0 0 18px rgba(218, 170, 74, 0.28));
-    transform: scale(1);
-  }
-  50% {
-    filter: drop-shadow(0 0 32px rgba(240, 212, 138, 0.55));
-    transform: scale(1.04);
-  }
+.landing-preloader__logo-image {
+  display: block;
+  height: auto;
+  width: 100%;
 }
 
-.landing-preloader__count {
-  align-items: baseline;
-  color: rgba(239, 225, 194, 0.86);
-  display: flex;
-  font-family: var(--font-display);
-  font-size: clamp(20px, 2.4vw, 26px);
-  font-weight: 500;
-  gap: 2px;
-  letter-spacing: 0.32em;
-  margin: 0;
-  /* Compense le letter-spacing pour rester optiquement centré. */
-  padding-left: 0.32em;
+.landing-preloader__glint {
+  background: linear-gradient(
+    100deg,
+    transparent 22%,
+    rgba(255, 239, 191, 0.08) 42%,
+    rgba(255, 244, 208, 0.72) 50%,
+    rgba(255, 225, 147, 0.08) 58%,
+    transparent 78%
+  );
+  inset: -18% -35%;
+  mix-blend-mode: screen;
+  opacity: 0.74;
+  pointer-events: none;
+  position: absolute;
+  transform: skewX(-12deg);
 }
 
-.landing-preloader__percent {
-  color: rgba(218, 170, 74, 0.7);
-  font-size: 0.62em;
+.landing-preloader__rule {
+  background: linear-gradient(90deg, transparent, rgba(217, 164, 65, 0.34));
+  height: 1px;
+  position: absolute;
+  top: 68%;
+  width: min(25vw, 240px);
+}
+
+.landing-preloader__rule--left {
+  right: calc(50% + min(35vw, 275px));
+}
+
+.landing-preloader__rule--right {
+  background: linear-gradient(90deg, rgba(217, 164, 65, 0.34), transparent);
+  left: calc(50% + min(35vw, 275px));
+}
+
+.landing-preloader__diamond {
+  background: var(--gold-light);
+  box-shadow: 0 0 18px rgba(240, 212, 138, 0.46);
+  height: 5px;
+  position: absolute;
+  top: calc(100% + clamp(18px, 3vw, 30px));
+  transform: rotate(45deg);
+  width: 5px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .landing-preloader__sigil {
-    animation: none;
+  .landing-preloader__stage {
+    opacity: 1;
+  }
+
+  .landing-preloader__glint {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .landing-preloader__logo {
+    width: min(72vw, 280px);
+  }
+
+  .landing-preloader__rule {
+    display: none;
   }
 }

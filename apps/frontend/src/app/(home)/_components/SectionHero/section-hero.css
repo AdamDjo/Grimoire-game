@@ -31,17 +31,17 @@
     radial-gradient(
       circle at 58% 52%,
       transparent 0,
-      rgba(3, 3, 2, 0.12) 52%,
-      rgba(3, 3, 2, 0.58) 100%
+      rgba(3, 3, 2, 0.09) 52%,
+      rgba(3, 3, 2, 0.44) 100%
     ),
     linear-gradient(
       90deg,
-      rgba(3, 3, 2, 0.72) 0%,
-      rgba(3, 3, 2, 0.28) 34%,
+      rgba(3, 3, 2, 0.54) 0%,
+      rgba(3, 3, 2, 0.21) 34%,
       transparent 60%,
-      rgba(3, 3, 2, 0.32) 100%
+      rgba(3, 3, 2, 0.24) 100%
     ),
-    linear-gradient(180deg, rgba(3, 3, 2, 0.34), transparent 34%, rgba(3, 3, 2, 0.62));
+    linear-gradient(180deg, rgba(3, 3, 2, 0.26), transparent 34%, rgba(3, 3, 2, 0.47));
   z-index: 4;
 }
 
