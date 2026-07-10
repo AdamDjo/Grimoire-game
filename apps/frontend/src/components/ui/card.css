@@ -62,9 +62,12 @@
   padding: 24px 42px 26px;
 }
 
-.card--soul p {
+/* Carte « Le jet de dé » : le body garde l'encre foncée lisible du parchemin
+   (comme les autres cartes). Seul le segment en tête (« Jet de SOUFFLE ») est
+   coloré en accent via `.card__accent`. */
+.card__accent {
   color: var(--soul);
-  font-style: normal;
+  font-weight: 600;
 }
 
 @media (max-width: 720px) {

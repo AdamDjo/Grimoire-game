@@ -5,9 +5,12 @@ interface CardProps {
   title: string
   body: string
   tone: 'ash' | 'gold' | 'soul'
+  // Segment mis en avant en tête du body (ex. « Jet de SOUFFLE »), coloré en
+  // accent tandis que le reste du texte garde l'encre lisible du parchemin.
+  accent?: string
 }
 
-export function Card({ index, title, body, tone }: CardProps) {
+export function Card({ index, title, body, tone, accent }: CardProps) {
   return (
     <article className={`card card--${tone}`} data-motion="gameplay-card">
       <div className="card__head grid grid-cols-[auto_1fr_auto] items-center gap-[18px]">
@@ -18,7 +21,10 @@ export function Card({ index, title, body, tone }: CardProps) {
           aria-hidden="true"
         />
       </div>
-      <p className="text-card-manuscript">{body}</p>
+      <p className="text-card-manuscript">
+        {accent ? <span className="card__accent">{accent}</span> : null}
+        {body}
+      </p>
     </article>
   )
 }

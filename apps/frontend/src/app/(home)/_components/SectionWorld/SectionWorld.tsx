@@ -22,12 +22,14 @@ export function SectionWorld() {
       />
 
       <div className="world-section__content relative z-[3] self-center">
-        <p className="world-section__label flex items-center gap-[14px]" data-motion="reveal">
-          <span className="world-section__label-rule" aria-hidden="true" />
-          {WORLD_COPY.section} · {WORLD_COPY.label}
+        <p className="world-section__label" data-motion="reveal">
+          {WORLD_COPY.label}
         </p>
 
-        <h2 className="m-0 font-display font-medium text-h2 text-parchment" data-motion="title">
+        <h2
+          className="world-section__title m-0 font-display font-medium text-h2 text-parchment"
+          data-motion="title"
+        >
           {WORLD_COPY.titleLines.map((line, index) => (
             <span key={line} className={`block ${index === lastLine ? 'text-gold-soft' : ''}`}>
               {line}
@@ -35,7 +37,7 @@ export function SectionWorld() {
           ))}
         </h2>
 
-        <p className="world-section__body font-serif text-body-editorial" data-motion="reveal">
+        <p className="world-section__body font-serif text-accroche" data-motion="reveal">
           {WORLD_COPY.body}
         </p>
 

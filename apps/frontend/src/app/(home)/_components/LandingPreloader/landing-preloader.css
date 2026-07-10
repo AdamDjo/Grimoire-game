@@ -58,35 +58,17 @@
 }
 
 .landing-preloader__logo {
-  filter: drop-shadow(0 12px 34px rgba(0, 0, 0, 0.78));
   grid-area: 1 / 1;
-  overflow: hidden;
   position: relative;
-  width: min(72vw, 470px);
+  width: min(66vw, 360px);
   z-index: 2;
 }
 
 .landing-preloader__logo-image {
   display: block;
+  filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.68));
   height: auto;
   width: 100%;
-}
-
-.landing-preloader__glint {
-  background: linear-gradient(
-    100deg,
-    transparent 22%,
-    rgba(255, 239, 191, 0.08) 42%,
-    rgba(255, 244, 208, 0.72) 50%,
-    rgba(255, 225, 147, 0.08) 58%,
-    transparent 78%
-  );
-  inset: -18% -35%;
-  mix-blend-mode: screen;
-  opacity: 0.74;
-  pointer-events: none;
-  position: absolute;
-  transform: skewX(-12deg);
 }
 
 .landing-preloader__rule {
@@ -106,14 +88,63 @@
   left: calc(50% + min(35vw, 275px));
 }
 
-.landing-preloader__diamond {
-  background: var(--gold-light);
-  box-shadow: 0 0 18px rgba(240, 212, 138, 0.46);
-  height: 5px;
+.landing-preloader__status {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   position: absolute;
-  top: calc(100% + clamp(18px, 3vw, 30px));
-  transform: rotate(45deg);
-  width: 5px;
+  top: calc(100% + clamp(18px, 3vw, 28px));
+}
+
+.landing-preloader__status-label {
+  color: var(--gold-light);
+  font-family: var(--font-accent);
+  font-size: clamp(15px, 1.2vw, 18px);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: normal;
+  line-height: 1.2;
+  padding-bottom: 1px;
+  text-shadow:
+    0 0 24px rgba(198, 154, 67, 0.28),
+    0 2px 16px rgba(0, 0, 0, 0.74);
+}
+
+.landing-preloader__status-marks {
+  display: flex;
+  gap: 9px;
+}
+
+.landing-preloader__status-marks span {
+  animation: preloader-status-pulse 1.35s ease-in-out infinite;
+  background: var(--gold-light);
+  height: 4px;
+  opacity: 0.24;
+  transform: rotate(45deg) scale(0.72);
+  width: 4px;
+}
+
+.landing-preloader__status-marks span:nth-child(2) {
+  animation-delay: 150ms;
+}
+
+.landing-preloader__status-marks span:nth-child(3) {
+  animation-delay: 300ms;
+}
+
+@keyframes preloader-status-pulse {
+  0%,
+  60%,
+  100% {
+    opacity: 0.24;
+    transform: rotate(45deg) scale(0.72);
+  }
+
+  30% {
+    opacity: 1;
+    transform: rotate(45deg) scale(1);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -121,14 +152,16 @@
     opacity: 1;
   }
 
-  .landing-preloader__glint {
-    display: none;
+  .landing-preloader__status-marks span {
+    animation: none;
+    opacity: 0.72;
+    transform: rotate(45deg) scale(1);
   }
 }
 
 @media (max-width: 640px) {
   .landing-preloader__logo {
-    width: min(72vw, 280px);
+    width: min(62vw, 220px);
   }
 
   .landing-preloader__rule {

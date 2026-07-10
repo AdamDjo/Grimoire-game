@@ -30,15 +30,8 @@
   font-family: var(--font-display);
   font-size: 14px;
   letter-spacing: 0.2em;
-  margin: 0 0 26px;
+  margin: 0 0 20px;
   text-transform: uppercase;
-}
-
-.world-section__label-rule {
-  background: var(--border-gold);
-  display: inline-block;
-  height: 1px;
-  width: 34px;
 }
 
 .world-section__content h2 {
@@ -47,16 +40,33 @@
   text-transform: none;
 }
 
+/* Ornement de section unifié : même filet décoratif que le Gameplay, posé
+   sous le H2 (même image, mêmes dimensions). */
+.world-section__title {
+  position: relative;
+  padding-bottom: 40px;
+}
+
+.world-section__title::after {
+  background: url('/landing/ui/ornament-divider-trimmed.png') center / contain no-repeat;
+  content: '';
+  height: 26px;
+  left: 0;
+  position: absolute;
+  top: 100%;
+  width: 220px;
+}
+
 .world-section__content h2 span {
   white-space: nowrap;
 }
 
 /* Corps de prose : police + taille + line-height viennent du token
-   `font-serif text-body-editorial` (TSX). Ici on ne pose que couleur/spacing. */
+   `font-serif text-accroche` (TSX). Ici on ne pose que couleur/spacing. */
 .world-section__body {
   color: rgba(232, 220, 192, 0.86);
   margin: 24px 0 0;
-  max-width: 540px;
+  max-width: 600px;
 }
 
 .world-section__pillars {
@@ -86,7 +96,7 @@
 .world-pillar__label {
   color: var(--gold);
   font-family: var(--font-display);
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 0.2em;
   margin: 0 0 10px;
   text-transform: uppercase;

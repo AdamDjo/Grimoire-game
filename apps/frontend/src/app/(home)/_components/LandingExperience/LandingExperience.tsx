@@ -69,7 +69,7 @@ export function LandingExperience() {
       // Chrome caché au départ : son entrée est jouée à la levée du voile de
       // preload (canal `y`, distinct du `yPercent` du hide-on-scroll).
       gsap.set('[data-motion="chrome"]', { autoAlpha: 0, y: -20 })
-      gsap.set('[data-motion="reveal"]', { autoAlpha: 0, y: 26, filter: 'blur(10px)' })
+      gsap.set('[data-motion="reveal"]', { autoAlpha: 0, y: 26, filter: 'blur(8px)' })
       gsap.set('[data-motion="hero-actions"]', { autoAlpha: 0, y: 18, filter: 'blur(8px)' })
       // Le hero garde sa cascade span (jouée à la levée du voile, hors reduced-motion).
       // Les titres non-hero sont animés par SplitText plus bas — on ne les fige pas ici
@@ -102,10 +102,19 @@ export function LandingExperience() {
       // DERRIÈRE le voile, donc "pop" à la levée. On les exclut ici et on les
       // rejoue en fondu synchronisé avec la sortie du preloader.
       const inHero = (element: HTMLElement) => Boolean(element.closest('[data-motion="hero"]'))
+      // Les sections world/outro RE-animent leurs propres reveals via leur timeline
+      // scrubbée (blur + translation) : les laisser au reveal global créerait deux
+      // tweens concurrents sur les mêmes nœuds → fade tantôt net, tantôt flou. On les
+      // exclut donc du global. Gameplay reste inclus : sa timeline anime le conteneur
+      // `.gameplay-section__copy`, pas les reveals internes (label/body/cta).
+      const inPinnedSection = (element: HTMLElement) =>
+        Boolean(
+          element.closest('[data-motion="hero"], [data-motion="world"], [data-motion="outro"]')
+        )
 
       gsap.utils
         .toArray<HTMLElement>('[data-motion="reveal"]')
-        .filter((element) => !inHero(element))
+        .filter((element) => !inPinnedSection(element))
         .forEach((element) => {
           gsap.to(element, {
             autoAlpha: 1,
@@ -152,7 +161,7 @@ export function LandingExperience() {
         })
 
       const heroElement = rootRef.current?.querySelector<HTMLElement>('[data-motion="hero"]')
-      const heroScrubLength = Number(heroElement?.dataset.framesLength) || 260
+      const heroScrubLength = Number(heroElement?.dataset.framesLength) || 140
       const heroFrames = heroElement?.querySelector<HTMLElement>('.frame-sequence') ?? null
       const heroIdle = heroElement?.querySelector<HTMLVideoElement>('[data-hero-idle]') ?? null
       const heroOverlap = rootRef.current?.querySelector<HTMLElement>('[data-hero-overlap]')
@@ -177,7 +186,7 @@ export function LandingExperience() {
           start: 'top top',
           end: `+=${heroScrubLength}%`,
           pin: true,
-          scrub: 0.7,
+          scrub: 0.35,
           anticipatePin: 1,
           // Sur un scroll rapide, le lissage du scrub laisse le hero dépinné
           // encore visible (voile en retard) : on force le scrub à terminer
@@ -242,7 +251,7 @@ export function LandingExperience() {
         .to('[data-gameplay-veil]', { opacity: 0, duration: 0.16, ease: 'power1.out' }, 0)
         .fromTo(
           '[data-motion="gameplay-card"]',
-          { autoAlpha: 0, y: 42, rotate: -9, filter: 'blur(12px)' },
+          { autoAlpha: 0, y: 42, rotate: -9, filter: 'blur(8px)' },
           {
             autoAlpha: 1,
             y: 0,
@@ -256,8 +265,8 @@ export function LandingExperience() {
         )
         .fromTo(
           '.gameplay-section__copy',
-          { autoAlpha: 0, x: 36, filter: 'blur(12px)' },
-          { autoAlpha: 1, x: 0, filter: 'blur(0px)', duration: 0.42, ease: 'power3.out' },
+          { autoAlpha: 0, y: 26, filter: 'blur(8px)' },
+          { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: 0.42, ease: 'power3.out' },
           0.5
         )
         .fromTo(
@@ -287,10 +296,10 @@ export function LandingExperience() {
         .to('[data-world-veil]', { opacity: 0, duration: 0.16, ease: 'power1.out' }, 0)
         .fromTo(
           '[data-motion="world"] [data-motion="reveal"]',
-          { autoAlpha: 0, x: 36, filter: 'blur(12px)' },
+          { autoAlpha: 0, y: 26, filter: 'blur(8px)' },
           {
             autoAlpha: 1,
-            x: 0,
+            y: 0,
             filter: 'blur(0px)',
             stagger: 0.14,
             duration: 0.42,
@@ -327,7 +336,7 @@ export function LandingExperience() {
         .to('[data-outro-veil]', { opacity: 0, duration: 0.2, ease: 'power1.out' }, 0)
         .fromTo(
           '[data-motion="outro"] [data-motion="reveal"]',
-          { autoAlpha: 0, y: 34, filter: 'blur(12px)' },
+          { autoAlpha: 0, y: 26, filter: 'blur(8px)' },
           {
             autoAlpha: 1,
             y: 0,

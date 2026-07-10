@@ -27,7 +27,6 @@ export function LandingPreloader({ onDone }: LandingPreloaderProps) {
   const veilRef = useRef<HTMLDivElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
   const logoRef = useRef<HTMLDivElement>(null)
-  const glintRef = useRef<HTMLDivElement>(null)
   const [hidden, setHidden] = useState(false)
 
   // Verrouille le scroll ET maintient la page en haut tant que le voile est là,
@@ -79,7 +78,6 @@ export function LandingPreloader({ onDone }: LandingPreloaderProps) {
       const veil = veilRef.current
       const stage = stageRef.current
       const logo = logoRef.current
-      const glint = glintRef.current
       if (!veil) return
 
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -87,23 +85,18 @@ export function LandingPreloader({ onDone }: LandingPreloaderProps) {
       let released = false
 
       if (reduceMotion) {
-        gsap.set([stage, logo], { autoAlpha: 1, clearProps: 'transform,filter' })
+        gsap.set([stage, logo], { autoAlpha: 1, clearProps: 'transform' })
       } else {
         gsap.set(stage, { autoAlpha: 0 })
-        gsap.set(logo, { autoAlpha: 0, scale: 0.96, filter: 'blur(8px)' })
-        gsap.set(glint, { xPercent: -170 })
+        gsap.set(logo, { autoAlpha: 0, scale: 0.985 })
 
-        // Entrée de marque : l'espace s'ouvre, le logo prend corps, puis une
-        // lumière très brève révèle la matière dorée sans simuler une jauge.
+        // Entrée volontairement simple : opacité + transform uniquement. Aucun
+        // calque de reflet ni blur animé, pour éviter les textures rectangulaires
+        // et les saccades de composition GPU autour de l'image transparente.
         const intro = gsap.timeline({ defaults: { ease: 'power3.out' } })
         intro
-          .to(stage, { autoAlpha: 1, duration: 0.25 }, 0)
-          .to(
-            logo,
-            { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: 0.82, ease: 'expo.out' },
-            0.08
-          )
-          .to(glint, { xPercent: 170, duration: 0.82, ease: 'power2.inOut' }, 0.36)
+          .to(stage, { autoAlpha: 1, duration: 0.18 }, 0)
+          .to(logo, { autoAlpha: 1, scale: 1, duration: 0.68, ease: 'power2.out' }, 0.04)
       }
 
       // Sortie : même vocabulaire que la section 2 (fondus autoAlpha + blur +
@@ -138,44 +131,30 @@ export function LandingPreloader({ onDone }: LandingPreloaderProps) {
           },
         })
 
-        // La marque culmine puis recule dans la lumière pendant que le hero
-        // apparaît derrière elle. Le mouvement commun garde l'ensemble solide.
+        // La marque se retire sans blur ni variation de filtre : ces effets
+        // forçaient le navigateur à recalculer un grand calque rectangulaire.
         if (logo) {
-          tl.to(
-            logo,
-            {
-              scale: 1.025,
-              filter: 'brightness(1.22) drop-shadow(0 0 28px rgba(240, 212, 138, 0.42))',
-              duration: 0.38,
-              ease: 'power2.out',
-            },
-            0
-          ).to(
-            logo,
-            { autoAlpha: 0, scale: 1.07, filter: 'blur(8px)', duration: 0.72, ease: 'power2.in' },
-            0.28
-          )
+          tl.to(logo, { autoAlpha: 0, scale: 1.015, duration: 0.48, ease: 'power2.in' }, 0)
         }
 
         if (stage) {
-          tl.to(stage, { autoAlpha: 0, duration: 0.62, ease: 'power2.in' }, 0.38)
+          tl.to(stage, { autoAlpha: 0, duration: 0.4, ease: 'power1.in' }, 0.14)
         }
 
-        // Le voile s'estompe en fondu avec un très léger scale (profondeur), pas
-        // un rideau. Chevauche la dissolution du sigil pour un enchaînement fluide.
+        // Le voile s'estompe sans scale plein écran, plus stable sur les GPU
+        // intégrés et les écrans haute densité.
         tl.to(
           veil,
           {
             autoAlpha: 0,
-            scale: 1.045,
-            duration: 1.1,
-            ease: 'power2.inOut',
+            duration: 0.72,
+            ease: 'power1.inOut',
           },
-          0.36
+          0.16
         )
 
         // Révèle le hero pile au moment où le voile commence à s'effacer.
-        tl.add(onDone, 0.36)
+        tl.add(onDone, 0.16)
       }
 
       // Boucle d'attente : lève au premier de {frames suffisantes, fonts prêtes},
@@ -222,11 +201,17 @@ export function LandingPreloader({ onDone }: LandingPreloaderProps) {
               width={720}
               height={336}
               priority
-              sizes="(max-width: 640px) 82vw, 620px"
+              sizes="(max-width: 640px) 220px, 360px"
             />
-            <div ref={glintRef} className="landing-preloader__glint" />
           </div>
-          <span className="landing-preloader__diamond" />
+          <div className="landing-preloader__status">
+            <span className="landing-preloader__status-label">Chargement</span>
+            <span className="landing-preloader__status-marks">
+              <span />
+              <span />
+              <span />
+            </span>
+          </div>
         </div>
         <span className="sr-only">Chargement de l’expérience</span>
       </div>

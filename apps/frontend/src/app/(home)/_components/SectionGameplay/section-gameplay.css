@@ -44,18 +44,24 @@
   font-family: var(--font-display);
   font-size: 17px;
   letter-spacing: 0.08em;
-  margin: 0 0 clamp(40px, 6vh, 64px);
-  position: relative;
+  margin: 0 0 clamp(20px, 3vh, 32px);
   text-transform: uppercase;
 }
 
-.gameplay-section__label::after {
+/* Ornement de section unifié : filet décoratif posé SOUS le H2 (même image et
+   mêmes dimensions que le World). Pseudo-élément sur le titre → position:relative. */
+.gameplay-section__title {
+  position: relative;
+  padding-bottom: 40px;
+}
+
+.gameplay-section__title::after {
   background: url('/landing/ui/ornament-divider-trimmed.png') center / contain no-repeat;
   content: '';
   height: 26px;
   left: 0;
   position: absolute;
-  top: calc(100% + 14px);
+  top: 100%;
   width: 220px;
 }
 

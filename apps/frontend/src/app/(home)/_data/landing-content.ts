@@ -24,7 +24,7 @@ export const LANDING_MEDIA = {
   heroIdleVideo: '/landing/video/hero-ambient.mp4',
   heroFrames: '/landing/frames/hero-gameplay',
   heroFrameCount: 96,
-  heroScrubLength: 260,
+  heroScrubLength: 140,
   gameplayPlate: '/landing/plates/new-gameplay.jpg',
   gameplayPlateWebp: '/landing/plates/new-gameplay.webp',
   gameplayVideo: null,
@@ -35,7 +35,7 @@ export const LANDING_MEDIA = {
 } as const
 
 export const HERO_COPY = {
-  eyebrow: 'Roguelike narratif solo · joué avec une IA maîtresse du jeu',
+  eyebrow: 'Roguelike narratif solo · l’Aveugle, une IA, mène la partie',
   titleLines: ['ÉCRIS TON', 'HISTOIRE'],
   body: [
     'Tu écris ce que tu fais. Une IA raconte la suite, et un monde qui se souvient.',
@@ -56,7 +56,8 @@ export const GAMEPLAY_CARDS = [
   {
     index: '2',
     title: 'Le jet de dé',
-    body: 'Jet de SOUFFLE (ta finesse, ta perception) — réussite partielle : la porte cède, mais quelque chose t’a entendu.',
+    accent: 'Jet de SOUFFLE',
+    body: ' (ta finesse, ta perception) — réussite partielle : la porte cède, mais quelque chose t’a entendu.',
     tone: 'soul',
   },
   {
@@ -68,7 +69,6 @@ export const GAMEPLAY_CARDS = [
 ] as const
 
 export const GAMEPLAY_COPY = {
-  section: 'Section 2/4',
   label: 'Gameplay',
   titleLines: ["Ce n'est pas", 'une cinématique.', "C'est ta partie."],
   body: [
@@ -89,14 +89,13 @@ export const GAMEPLAY_STATS_CAPTION =
   'Tes trois ressources. Elles montent et descendent selon ce que tu oses.'
 
 export const WORLD_COPY = {
-  section: 'Section 3/4',
   label: 'Le monde',
   titleLines: ['Même monde.', 'Mille histoires.'],
-  body: 'Velkhar — le monde où tu joues — se souvient de chaque choix. Une IA joue le maître du jeu : elle improvise avec toi, mais rien de ce que tu fais ne s’efface.',
+  body: 'Velkhar se souvient de tout. L’Aveugle — l’IA qui te sert de maître du jeu — improvise avec toi, mais rien de ce que tu fais ne s’efface.',
   pillars: [
     {
       label: 'Un monde qui retient',
-      body: 'Ton IA-maître du jeu garde la mémoire de chaque partie : tes serments, tes trahisons, tes morts.',
+      body: 'L’Aveugle garde la mémoire de chaque partie : tes serments, tes trahisons, tes morts.',
     },
     {
       label: 'Rejouable à l’infini',

@@ -28,11 +28,13 @@ export function SectionGameplay() {
       </div>
 
       <div className="gameplay-section__copy relative z-[3] self-center opacity-0">
-        <p className="gameplay-section__label grid gap-1" data-motion="reveal">
-          <span>{GAMEPLAY_COPY.section}</span>
+        <p className="gameplay-section__label" data-motion="reveal">
           <strong className="font-medium text-parchment">{GAMEPLAY_COPY.label}</strong>
         </p>
-        <h2 className="m-0 font-accent text-h2 font-medium text-parchment" data-motion="title">
+        <h2
+          className="gameplay-section__title m-0 font-accent text-h2 font-medium text-parchment"
+          data-motion="title"
+        >
           {GAMEPLAY_COPY.titleLines.map((line, index) => (
             <span
               key={line}
