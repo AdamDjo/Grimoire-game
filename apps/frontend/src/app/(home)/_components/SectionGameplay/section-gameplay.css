@@ -26,10 +26,6 @@
   width: min(49vw, 820px);
 }
 
-.gameplay-section__copy {
-  max-width: 640px;
-}
-
 .gameplay-section__copy h2 {
   font-family: var(--font-accent);
   text-transform: none;
@@ -168,7 +164,6 @@
     inset: auto;
     margin: 48px auto 0;
     width: 100%;
-    max-width: 640px;
   }
 
   /* Légende suit le cadre en flux (au-dessus de lui, avant la barre). */
@@ -176,9 +171,25 @@
     position: static;
     inset: auto;
     margin: 44px auto 0;
-    max-width: 640px;
     text-align: center;
     width: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  /* Trois colonnes deviennent illisibles en tablette portrait : les jauges de
+     Souffle et Cendre se chevauchaient. Le cadre horizontal cède la place à un
+     panneau sobre en trois lignes, toujours dans le flux naturel. */
+  .gameplay-stats {
+    background: rgba(7, 6, 5, 0.88);
+    border: 1px solid rgba(218, 170, 74, 0.28);
+    grid-template-columns: 1fr;
+    padding: 0;
+  }
+
+  .gameplay-stat + .gameplay-stat {
+    border-left: 0;
+    border-top: 1px solid rgba(218, 170, 74, 0.18);
   }
 }
 
@@ -231,17 +242,8 @@
   }
 
   .gameplay-stats {
-    background: rgba(7, 6, 5, 0.88);
-    border: 1px solid rgba(218, 170, 74, 0.28);
     bottom: 26px;
-    grid-template-columns: 1fr;
     left: 18px;
-    padding: 0;
     width: calc(100% - 36px);
-  }
-
-  .gameplay-stat + .gameplay-stat {
-    border-left: 0;
-    border-top: 1px solid rgba(218, 170, 74, 0.18);
   }
 }

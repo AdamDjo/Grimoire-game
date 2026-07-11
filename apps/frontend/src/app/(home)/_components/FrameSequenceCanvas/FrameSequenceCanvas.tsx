@@ -25,6 +25,7 @@ const renderers = new WeakMap<HTMLElement, FrameRenderer>()
 const MAX_PIXEL_RATIO = 2
 const PRELOAD_CONCURRENCY = 6
 const REDRAW_EPSILON = 0.002
+const FLOW_QUERY = '(max-width: 1100px)'
 
 export function renderFrameSequence(root: HTMLElement | null, progress: number) {
   if (root) {
@@ -57,6 +58,7 @@ export function FrameSequenceCanvas({
     }
 
     let disposed = false
+    let fullPreloadStarted = false
     let lastProgress = 0
     let lastDrawnFrame = -1
     const images: (HTMLImageElement | null)[] = Array.from({ length: frameCount }, () => null)
@@ -166,9 +168,17 @@ export function FrameSequenceCanvas({
         image.decode().then(finalize).catch(finalize)
       })
 
-    const preload = async () => {
+    const preloadFirstFrame = async () => {
       await loadFrame(0)
+    }
 
+    const preloadRemainingFrames = async () => {
+      if (fullPreloadStarted || disposed) return
+      fullPreloadStarted = true
+
+      if (reportPreload) {
+        setPreloadTotal(frameCount)
+      }
       const queue = Array.from({ length: frameCount - 1 }, (_, index) => index + 1)
       const workers = Array.from({ length: PRELOAD_CONCURRENCY }, async () => {
         while (queue.length > 0 && !disposed) {
@@ -183,18 +193,28 @@ export function FrameSequenceCanvas({
       await Promise.all(workers)
     }
 
-    if (reportPreload) {
-      setPreloadTotal(frameCount)
+    const flowQuery = window.matchMedia(FLOW_QUERY)
+    const handleViewportMode = () => {
+      if (!flowQuery.matches) {
+        void preloadRemainingFrames()
+      }
     }
+
+    // Le flux tablette/mobile n'utilise pas la séquence scrubbée : seule la
+    // première frame est nécessaire comme fallback. Si le viewport repasse en
+    // grand desktop, le reste se charge sans remonter le composant.
+    if (reportPreload) setPreloadTotal(flowQuery.matches ? 1 : frameCount)
 
     const observer = new ResizeObserver(resize)
     observer.observe(root)
     resize()
-    void preload()
+    void preloadFirstFrame().then(handleViewportMode)
+    flowQuery.addEventListener('change', handleViewportMode)
     renderers.set(root, render)
 
     return () => {
       disposed = true
+      flowQuery.removeEventListener('change', handleViewportMode)
       observer.disconnect()
       renderers.delete(root)
     }

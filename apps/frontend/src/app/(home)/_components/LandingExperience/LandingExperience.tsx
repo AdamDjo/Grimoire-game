@@ -14,6 +14,13 @@ import { SectionHero } from '../SectionHero/SectionHero'
 import { SectionOutro } from '../SectionOutro/SectionOutro'
 import { SectionWorld } from '../SectionWorld/SectionWorld'
 
+import { useLandingHeroEntrance } from './use-landing-hero-entrance'
+
+// Un dip cinématique doit assombrir la plate, jamais effacer tout le viewport.
+// Garder une fraction de l'image visible évite aussi l'impression de frame morte
+// lorsque le scrub lissé termine sa course après le changement de section.
+const TRANSITION_VEIL_OPACITY = 0.82
+
 export function LandingExperience() {
   const rootRef = useRef<HTMLDivElement>(null)
   // L'entrée du chrome et des CTA attend la levée du voile de preload.
@@ -21,11 +28,12 @@ export function LandingExperience() {
   const handlePreloaderDone = useCallback(() => setPreloaderDone(true), [])
 
   useLenis()
+  useLandingHeroEntrance(rootRef, preloaderDone)
 
   useGSAP(
     () => {
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      const chrome = document.querySelector<HTMLElement>('[data-motion="chrome"]')
+      const chrome = rootRef.current?.querySelector<HTMLElement>('[data-motion="chrome"]')
 
       // L'état condensé (fond + blur) reste actif même en reduced-motion :
       // c'est de la lisibilité, pas de l'ornement. onUpdate plutôt que
@@ -69,8 +77,8 @@ export function LandingExperience() {
       // Chrome caché au départ : son entrée est jouée à la levée du voile de
       // preload (canal `y`, distinct du `yPercent` du hide-on-scroll).
       gsap.set('[data-motion="chrome"]', { autoAlpha: 0, y: -20 })
-      gsap.set('[data-motion="reveal"]', { autoAlpha: 0, y: 26, filter: 'blur(8px)' })
-      gsap.set('[data-motion="hero-actions"]', { autoAlpha: 0, y: 18, filter: 'blur(8px)' })
+      gsap.set('[data-motion="reveal"]', { autoAlpha: 0, y: 26 })
+      gsap.set('[data-motion="hero-actions"]', { autoAlpha: 0, y: 18 })
       // Le hero garde sa cascade span (jouée à la levée du voile, hors reduced-motion).
       // Les titres non-hero sont animés par SplitText plus bas — on ne les fige pas ici
       // pour ne pas masquer un état pré-split (FOUC) : SplitText pose son propre état.
@@ -78,8 +86,8 @@ export function LandingExperience() {
         '[data-motion="hero"] [data-motion="title"]'
       )
       if (heroTitle) {
-        gsap.set(heroTitle, { autoAlpha: 1, y: 0, filter: 'none' })
-        gsap.set(heroTitle.querySelectorAll('span'), { autoAlpha: 0, y: 34, filter: 'blur(12px)' })
+        gsap.set(heroTitle, { autoAlpha: 1, y: 0 })
+        gsap.set(heroTitle.querySelectorAll('span'), { autoAlpha: 0, y: 34 })
       }
 
       if (reduceMotion) {
@@ -88,7 +96,6 @@ export function LandingExperience() {
           {
             autoAlpha: 1,
             y: 0,
-            filter: 'none',
           }
         )
         gsap.set('[data-hero-idle]', { autoAlpha: 0 })
@@ -119,7 +126,6 @@ export function LandingExperience() {
           gsap.to(element, {
             autoAlpha: 1,
             y: 0,
-            filter: 'blur(0px)',
             duration: 1.15,
             ease: 'expo.out',
             scrollTrigger: {
@@ -182,15 +188,18 @@ export function LandingExperience() {
       const heroIdle = heroElement?.querySelector<HTMLVideoElement>('[data-hero-idle]') ?? null
       const heroOverlap = rootRef.current?.querySelector<HTMLElement>('[data-hero-overlap]')
 
-      // Séparation desktop / mobile façon studio : le pin + scrub long est une
-      // grammaire desktop (souris, molette, grand viewport). Sur mobile on ne
+      // Séparation grand desktop / flux responsive : le pin + scrub long est une
+      // grammaire de grand viewport. Sur tablette et mobile on ne
       // « scroll-jacke » pas — le doigt défile naturellement, chaque section se
       // révèle par un fondu court à l'entrée du viewport, et la hauteur du
       // document tombe à celle du contenu réel (pas ~660vh de scroll de pins).
       // matchMedia gère le cleanup automatique au franchissement du breakpoint.
       const mm = gsap.matchMedia()
-      const DESKTOP_QUERY = '(min-width: 721px)'
-      const MOBILE_QUERY = '(max-width: 720px)'
+      // Le layout Gameplay passe en colonne à 1100 px. Le conserver épinglé dans
+      // cet état produisait une section plus haute que le viewport, donc du contenu
+      // inaccessible et un écran presque vide au début du pin sur tablette.
+      const DESKTOP_QUERY = '(min-width: 1101px)'
+      const FLOW_QUERY = '(max-width: 1100px)'
 
       mm.add(DESKTOP_QUERY, () => {
         // Remonte la section gameplay derrière le hero épinglé, de la hauteur réelle
@@ -250,19 +259,21 @@ export function LandingExperience() {
           )
           .to(
             '.hero-section__content',
-            { autoAlpha: 0, y: -46, filter: 'blur(14px)', duration: 0.12, ease: 'power2.in' },
+            { autoAlpha: 0, y: -46, duration: 0.12, ease: 'power2.in' },
             0.02
           )
           .to('[data-hero-vignette]', { opacity: 0.45, duration: 0.1, ease: 'none' }, 0.08)
-          // Dip-to-dark : le voile atteint le noir complet avant la fin du pin,
-          // puis le hero fond derrière lui — la section 2, encore voilée de noir,
-          // prend le relais sans couture perceptible.
-          .to('[data-hero-veil]', { opacity: 1, duration: 0.18, ease: 'power1.in' }, 0.8)
+          // Dip-to-dark : la plate reste légèrement perceptible. Un noir complet
+          // produirait une frame morte pendant que le scrub rattrape le scroll.
+          .to(
+            '[data-hero-veil]',
+            { opacity: TRANSITION_VEIL_OPACITY, duration: 0.14, ease: 'power1.in' },
+            0.84
+          )
           .to('[data-motion="hero"]', { autoAlpha: 0, duration: 0.02, ease: 'none' }, 0.98)
 
-        // La section 2 démarre sous un voile noir plein : le dip du hero et cette
-        // levée de voile s'enchaînent dans le même noir, la couture est invisible.
-        gsap.set('[data-gameplay-veil]', { opacity: 1 })
+        // Même niveau d'ombre des deux côtés de la couture, sans écran vide.
+        gsap.set('[data-gameplay-veil]', { opacity: TRANSITION_VEIL_OPACITY })
 
         const gameplayTimeline = gsap.timeline({
           scrollTrigger: {
@@ -278,12 +289,11 @@ export function LandingExperience() {
           .to('[data-gameplay-veil]', { opacity: 0, duration: 0.16, ease: 'power1.out' }, 0)
           .fromTo(
             '[data-motion="gameplay-card"]',
-            { autoAlpha: 0, y: 42, rotate: -9, filter: 'blur(8px)' },
+            { autoAlpha: 0, y: 42, rotate: -9 },
             {
               autoAlpha: 1,
               y: 0,
               rotate: (index) => [-4, -2, -5][index] ?? -4,
-              filter: 'blur(0px)',
               stagger: 0.16,
               duration: 0.45,
               ease: 'power3.out',
@@ -292,8 +302,8 @@ export function LandingExperience() {
           )
           .fromTo(
             '.gameplay-section__copy',
-            { autoAlpha: 0, y: 26, filter: 'blur(8px)' },
-            { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: 0.42, ease: 'power3.out' },
+            { autoAlpha: 0, y: 26 },
+            { autoAlpha: 1, y: 0, duration: 0.42, ease: 'power3.out' },
             0.5
           )
           .fromTo(
@@ -304,10 +314,10 @@ export function LandingExperience() {
           )
 
         // Section 3 (world) : même grammaire que la gameplay. Démarre sous un
-        // voile noir plein (couture invisible avec la gameplay pinnée au-dessus),
+        // voile sombre (couture invisible avec la gameplay pinnée au-dessus),
         // lève le voile puis révèle eyebrow → titre → lore → piliers en cascade.
         // Le titre profite déjà du SplitText global via data-motion="title".
-        gsap.set('[data-world-veil]', { opacity: 1 })
+        gsap.set('[data-world-veil]', { opacity: TRANSITION_VEIL_OPACITY })
 
         const worldTimeline = gsap.timeline({
           scrollTrigger: {
@@ -323,28 +333,29 @@ export function LandingExperience() {
           .to('[data-world-veil]', { opacity: 0, duration: 0.16, ease: 'power1.out' }, 0)
           .fromTo(
             '[data-motion="world"] [data-motion="reveal"]',
-            { autoAlpha: 0, y: 26, filter: 'blur(8px)' },
+            { autoAlpha: 0, y: 26 },
             {
               autoAlpha: 1,
               y: 0,
-              filter: 'blur(0px)',
               stagger: 0.14,
               duration: 0.42,
               ease: 'power3.out',
             },
             0.14
           )
-          // Sortie dip-to-dark : en fin de pin, le voile du world remonte au noir
-          // plein. World se dépin dans le noir → l'outro, qui démarre sous le même
-          // voile noir, prend le relais sans couture (aucune plate de transition,
-          // même grammaire que le passage hero → gameplay).
-          .to('[data-world-veil]', { opacity: 1, duration: 0.2, ease: 'power1.in' }, 0.78)
+          // Sortie dip-to-dark : assez dense pour ponctuer la transition, mais la
+          // cité reste visible jusqu'à ce que l'auberge prenne réellement le relais.
+          .to(
+            '[data-world-veil]',
+            { opacity: TRANSITION_VEIL_OPACITY, duration: 0.16, ease: 'power1.in' },
+            0.82
+          )
 
         // Section 4 (outro) : entrée depuis le noir, symétrique de la sortie world.
         // Elle se pin le temps de lever son voile puis de révéler le logo, la
         // citation, le titre et le CTA en cascade. La plate d'auberge se dévoile
         // derrière le voile qui s'efface — l'atterrissage final de la landing.
-        gsap.set('[data-outro-veil]', { opacity: 1 })
+        gsap.set('[data-outro-veil]', { opacity: TRANSITION_VEIL_OPACITY })
 
         const outroTimeline = gsap.timeline({
           scrollTrigger: {
@@ -375,11 +386,10 @@ export function LandingExperience() {
           )
           .fromTo(
             '[data-motion="outro"] [data-motion="reveal"]',
-            { autoAlpha: 0, y: 26, filter: 'blur(8px)' },
+            { autoAlpha: 0, y: 26 },
             {
               autoAlpha: 1,
               y: 0,
-              filter: 'blur(0px)',
               stagger: 0.12,
               duration: 0.5,
               ease: 'power3.out',
@@ -470,15 +480,15 @@ export function LandingExperience() {
         }
       })
 
-      // Branche mobile : aucun pin, aucun scrub, aucun voile. Les 4 sections
+      // Branche tablette/mobile : aucun pin, aucun scrub, aucun voile. Les 4 sections
       // coulent en flux naturel (hauteur = contenu réel), et chaque groupe se
       // révèle par un fondu court à l'entrée du viewport. Le hero reste une plate
       // fixe animée à l'entrée (la vidéo idle boucle) — pas de scrub des 96 frames
       // (desktop-only : coûteux en data et saccadé sans pin). Les voiles noirs
       // dip-to-dark n'ont plus de support (ils dépendaient du scrub synchronisé)
       // → posés à 0 pour révéler chaque plate directement.
-      mm.add(MOBILE_QUERY, () => {
-        // Voiles dip-to-dark neutralisés sur mobile (plus de pin qui les lève).
+      mm.add(FLOW_QUERY, () => {
+        // Voiles dip-to-dark neutralisés en flux responsive (plus de pin qui les lève).
         // L'assombrissement permanent de la plate gameplay (grimoire trop clair
         // derrière le copy) est géré par un renfort de `.media-vignette` en CSS
         // sous 720px — sous le texte —, pas par ce voile.
@@ -491,7 +501,7 @@ export function LandingExperience() {
           // on expose en plus les nœuds animés uniquement par les timelines de pin.
           gsap.set(
             '[data-motion="gameplay-card"], .gameplay-section__copy, [data-motion="stats"]',
-            { autoAlpha: 1, y: 0, rotate: 0, filter: 'none' }
+            { autoAlpha: 1, y: 0, rotate: 0 }
           )
           gsap.set(outroTitleLines, { yPercent: 0, autoAlpha: 1 })
           return
@@ -502,11 +512,10 @@ export function LandingExperience() {
         // animerait de 0 vers la valeur courante (0) et laisserait la carte cachée.
         gsap.fromTo(
           '[data-motion="gameplay-card"]',
-          { autoAlpha: 0, y: 32, filter: 'blur(6px)' },
+          { autoAlpha: 0, y: 32 },
           {
             autoAlpha: 1,
             y: 0,
-            filter: 'blur(0px)',
             stagger: 0.12,
             duration: 0.7,
             ease: 'power3.out',
@@ -520,11 +529,10 @@ export function LandingExperience() {
         // est caché (autoAlpha:0 posé par le set global / la timeline desktop).
         gsap.fromTo(
           ['.gameplay-section__copy', '[data-motion="stats"]'],
-          { autoAlpha: 0, y: 24, filter: 'blur(6px)' },
+          { autoAlpha: 0, y: 24 },
           {
             autoAlpha: 1,
             y: 0,
-            filter: 'blur(0px)',
             stagger: 0.12,
             duration: 0.6,
             ease: 'power3.out',
@@ -536,11 +544,10 @@ export function LandingExperience() {
         // (ils vivaient dans la timeline scrubbée) → fondu court au scroll ici.
         gsap.fromTo(
           '[data-motion="world"] [data-motion="reveal"]',
-          { autoAlpha: 0, y: 24, filter: 'blur(6px)' },
+          { autoAlpha: 0, y: 24 },
           {
             autoAlpha: 1,
             y: 0,
-            filter: 'blur(0px)',
             stagger: 0.12,
             duration: 0.6,
             ease: 'power3.out',
@@ -551,11 +558,10 @@ export function LandingExperience() {
         // Reveals outro (logo, citation, corps, CTA, footer) : même traitement.
         gsap.fromTo(
           '[data-motion="outro"] [data-motion="reveal"]',
-          { autoAlpha: 0, y: 24, filter: 'blur(6px)' },
+          { autoAlpha: 0, y: 24 },
           {
             autoAlpha: 1,
             y: 0,
-            filter: 'blur(0px)',
             stagger: 0.1,
             duration: 0.6,
             ease: 'power3.out',
@@ -564,7 +570,7 @@ export function LandingExperience() {
         )
 
         // Titre outro : ses lignes sont pré-masquées (yPercent:110) par le SplitText
-        // plus haut. Sans voile noir sur mobile, plus de risque de « pop derrière le
+        // plus haut. Sans voile noir en flux responsive, plus de risque de « pop derrière le
         // noir » → un trigger classique suffit à les faire monter au scroll.
         gsap.to(outroTitleLines, {
           yPercent: 0,
@@ -598,7 +604,10 @@ export function LandingExperience() {
       // On force un refresh après le premier paint puis à chaque source de reflow
       // pour resynchroniser tous les triggers (parents + enfants) sur la vraie
       // longueur de scroll.
-      const refresh = () => ScrollTrigger.refresh()
+      let isMounted = true
+      const refresh = () => {
+        if (isMounted) ScrollTrigger.refresh()
+      }
       // Double rAF : le premier laisse React commit le layout des pins, le second
       // s'exécute une fois les pin-spacers réellement insérés dans le flux — c'est
       // seulement là que les positions `top center` des markers enfants sont
@@ -611,71 +620,18 @@ export function LandingExperience() {
       window.addEventListener('load', refresh)
 
       return () => {
+        isMounted = false
         cancelAnimationFrame(outerRaf)
         cancelAnimationFrame(innerRaf)
         window.removeEventListener('load', refresh)
         // mm.revert() rejoue les cleanups de chaque branche (desktop : listener
-        // refreshInit + magnétique ; mobile : ses ScrollTriggers) et restaure les
-        // props inline posées par les branches. Les triggers restants (chrome,
-        // reveals globaux, scroll-hint) sont tués juste après.
+        // refreshInit + magnétique ; flux responsive : ses ScrollTriggers) et restaure les
+        // props inline posées par les branches. Le contexte useGSAP nettoie ses
+        // propres animations et triggers sans toucher à ceux des composants enfants.
         mm.revert()
-        ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
       }
     },
     { scope: rootRef }
-  )
-
-  // Entrée du hero + chrome + CTA, jouée quand le voile de preload s'est levé.
-  // Séparée du useGSAP principal pour se rejouer sur le flanc montant de
-  // preloaderDone. Chorégraphie en cascade (eyebrow → titre par lignes → body →
-  // CTA), même vocabulaire que la section 2 (fondu autoAlpha + blur + expo.out).
-  useGSAP(
-    () => {
-      if (!preloaderDone) return
-
-      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      const hero = rootRef.current?.querySelector<HTMLElement>('[data-motion="hero"]')
-      const heroReveals = hero
-        ? gsap.utils.toArray<HTMLElement>(hero.querySelectorAll('[data-motion="reveal"]'))
-        : []
-      const heroTitleLines = hero
-        ? gsap.utils.toArray<HTMLElement>(hero.querySelectorAll('[data-motion="title"] span'))
-        : []
-
-      if (reduceMotion) {
-        gsap.set(
-          '[data-motion="chrome"], [data-motion="hero-actions"], [data-motion="hero"] [data-motion="reveal"], [data-motion="hero"] [data-motion="title"] span',
-          { autoAlpha: 1, y: 0, filter: 'none' }
-        )
-        return
-      }
-
-      const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
-
-      // Le titre monte ligne par ligne, net→flou inversé — pièce maîtresse.
-      tl.to(
-        heroTitleLines,
-        { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: 1.3, stagger: 0.14 },
-        0
-      )
-        // L'eyebrow et le body (data-motion="reveal") suivent, décalés.
-        .to(
-          heroReveals,
-          { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: 1.15, stagger: 0.12 },
-          0.15
-        )
-        // Le chrome descend en même temps que le titre s'installe.
-        .to('[data-motion="chrome"]', { autoAlpha: 1, y: 0, duration: 1.25 }, 0.1)
-        // Les CTA ferment la marche.
-        .to(
-          '[data-motion="hero-actions"]',
-          { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: 1 },
-          0.55
-        )
-        // L'indicateur de scroll apparaît en dernier, une fois le hero installé.
-        .to('[data-hero-scroll-hint]', { opacity: 1, duration: 0.9 }, 0.9)
-    },
-    { scope: rootRef, dependencies: [preloaderDone] }
   )
 
   return (

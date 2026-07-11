@@ -8,8 +8,8 @@ import './custom-cursor.css'
 
 const INTERACTIVE_SELECTOR = 'a, button, [role="button"], input, textarea, select, label'
 const DISABLED_SELECTOR = '[aria-disabled="true"], :disabled'
-const EMBER_POOL_SIZE = 14
-const EMBER_SPAWN_INTERVAL_MS = 55
+const EMBER_POOL_SIZE = 10
+const EMBER_SPAWN_INTERVAL_MS = 90
 
 export function CustomCursor() {
   const arrowRef = useRef<HTMLDivElement>(null)
@@ -17,9 +17,10 @@ export function CustomCursor() {
 
   useEffect(() => {
     const isTouch = window.matchMedia('(pointer: coarse)').matches
+    const isMobile = window.matchMedia('(max-width: 720px)').matches
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-    if (isTouch || reduceMotion || !arrowRef.current || !emberLayerRef.current) {
+    if (isTouch || isMobile || reduceMotion || !arrowRef.current || !emberLayerRef.current) {
       return
     }
 

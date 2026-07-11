@@ -52,12 +52,14 @@ export function LandingPreloader({ onDone }: LandingPreloaderProps) {
     // suffit donc pas : on ré-ancre à 0 à chaque frame tant que le voile est là,
     // sur window ET Lenis dès qu'il existe. Garantit qu'on atterrit sur le hero.
     let rafId = 0
+    let lockedLenis: ReturnType<typeof getLenis> = null
     const pinTop = () => {
       if (window.scrollY !== 0) {
         window.scrollTo(0, 0)
       }
       const lenis = getLenis()
-      if (lenis) {
+      if (lenis && lenis !== lockedLenis) {
+        lockedLenis = lenis
         lenis.scrollTo(0, { immediate: true, force: true })
         lenis.stop()
       }
@@ -157,15 +159,15 @@ export function LandingPreloader({ onDone }: LandingPreloaderProps) {
         tl.add(onDone, 0.16)
       }
 
-      // Boucle d'attente : lève au premier de {frames suffisantes, fonts prêtes},
-      // borné par le minimum d'affichage et le cap. rAF plutôt qu'un abonnement :
-      // simple, et on veut de toute façon vérifier le cap en continu.
+      // Lève au premier de {frames suffisantes, fonts prêtes}, borné par le
+      // minimum d'affichage et le cap. Une cadence de 20 Hz suffit pour ce statut
+      // et laisse le thread principal disponible pour décoder les images.
       let fontsReady = false
       void document.fonts?.ready.then(() => {
         fontsReady = true
       })
 
-      let rafId = 0
+      let pollId = 0
       const tick = () => {
         const elapsed = performance.now() - startedAt
         const { loaded, total } = getPreloadState()
@@ -176,11 +178,11 @@ export function LandingPreloader({ onDone }: LandingPreloaderProps) {
           release()
           return
         }
-        rafId = requestAnimationFrame(tick)
+        pollId = window.setTimeout(tick, 50)
       }
-      rafId = requestAnimationFrame(tick)
+      pollId = window.setTimeout(tick, 50)
 
-      return () => cancelAnimationFrame(rafId)
+      return () => window.clearTimeout(pollId)
     },
     { scope: rootRef }
   )

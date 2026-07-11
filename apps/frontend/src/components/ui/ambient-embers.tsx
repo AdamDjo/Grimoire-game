@@ -10,7 +10,9 @@ import { gsap } from '@/lib/gsap-init'
 // RAF partagé avec ScrollTrigger). Désactivée sur mobile/coarse et en
 // reduced-motion. Aucun Math.random rendu côté serveur : tout est généré dans
 // l'effet client (règle SSR hydration).
-const EMBER_COUNT = 24
+const EMBER_COUNT = 18
+const TARGET_FRAME_INTERVAL = 1 / 30
+const MAX_PIXEL_RATIO = 1.5
 const RISE_MIN = 12 // px/s
 const RISE_MAX = 30
 
@@ -32,10 +34,11 @@ export function AmbientEmbers() {
 
   useEffect(() => {
     const isCoarse = window.matchMedia('(pointer: coarse)').matches
+    const isMobile = window.matchMedia('(max-width: 720px)').matches
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const canvas = canvasRef.current
 
-    if (isCoarse || reduceMotion || !canvas) {
+    if (isCoarse || isMobile || reduceMotion || !canvas) {
       return
     }
 
@@ -70,7 +73,7 @@ export function AmbientEmbers() {
     })
 
     const resize = () => {
-      dpr = Math.min(window.devicePixelRatio || 1, 2)
+      dpr = Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO)
       width = window.innerWidth
       height = window.innerHeight
       canvas.width = width * dpr
@@ -83,19 +86,32 @@ export function AmbientEmbers() {
     resize()
 
     let lastTime = gsap.ticker.time
+    let accumulatedTime = 0
 
     const tick = () => {
       const now = gsap.ticker.time
       const delta = Math.min(now - lastTime, 0.05)
       lastTime = now
 
+      if (document.hidden) {
+        accumulatedTime = 0
+        return
+      }
+
+      accumulatedTime += delta
+
+      if (accumulatedTime < TARGET_FRAME_INTERVAL) return
+
+      const frameDelta = accumulatedTime
+      accumulatedTime = 0
+
       context.clearRect(0, 0, width, height)
       context.globalCompositeOperation = 'lighter'
 
       for (const ember of embers) {
-        ember.y -= ember.rise * delta
-        ember.driftPhase += ember.driftSpeed * delta
-        ember.flickerPhase += ember.flickerSpeed * delta
+        ember.y -= ember.rise * frameDelta
+        ember.driftPhase += ember.driftSpeed * frameDelta
+        ember.flickerPhase += ember.flickerSpeed * frameDelta
 
         if (ember.y + ember.radius < -20) {
           spawn(ember, true)
