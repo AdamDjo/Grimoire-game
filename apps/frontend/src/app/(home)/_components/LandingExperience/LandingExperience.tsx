@@ -39,6 +39,10 @@ export function LandingExperience() {
       // c'est de la lisibilité, pas de l'ornement. onUpdate plutôt que
       // toggleClass+end car `end:'max'` retirerait la classe pile en bas de page.
       if (chrome) {
+        // État initial posé avant la création des ScrollTriggers : l'entrée dédiée
+        // prend ensuite le relais quand le preloader se lève.
+        gsap.set(chrome, { autoAlpha: 0, y: -20, yPercent: 0 })
+
         ScrollTrigger.create({
           start: 0,
           end: 'max',
@@ -52,23 +56,21 @@ export function LandingExperience() {
         // ne crée pas de pin-spacer, n'interfère pas avec les pins hero/gameplay.
         // Conservé hors reduced-motion (masquer/révéler le header = mouvement).
         if (!reduceMotion) {
-          const hideChrome = gsap.to(chrome, {
-            yPercent: -120,
-            autoAlpha: 0,
+          const setChromeY = gsap.quickTo(chrome, 'yPercent', {
             duration: 0.55,
             ease: 'power3.out',
-            paused: true,
           })
+          let chromeHidden = false
 
           ScrollTrigger.create({
             start: 'top top',
             end: 'max',
             onUpdate: (self) => {
-              if (self.direction === -1) {
-                hideChrome.reverse()
-              } else if (self.scroll() > window.innerHeight * 0.6) {
-                hideChrome.play()
-              }
+              const shouldHide = self.direction === 1 && self.scroll() > window.innerHeight * 0.6
+              if (shouldHide === chromeHidden) return
+
+              chromeHidden = shouldHide
+              setChromeY(shouldHide ? -120 : 0)
             },
           })
         }
@@ -76,9 +78,8 @@ export function LandingExperience() {
 
       // Chrome caché au départ : son entrée est jouée à la levée du voile de
       // preload (canal `y`, distinct du `yPercent` du hide-on-scroll).
-      gsap.set('[data-motion="chrome"]', { autoAlpha: 0, y: -20 })
-      gsap.set('[data-motion="reveal"]', { autoAlpha: 0, y: 26 })
-      gsap.set('[data-motion="hero-actions"]', { autoAlpha: 0, y: 18 })
+      gsap.set('[data-motion="reveal"]', { opacity: 0, y: 26 })
+      gsap.set('[data-motion="hero-actions"]', { opacity: 0, y: 18 })
       // Le hero garde sa cascade span (jouée à la levée du voile, hors reduced-motion).
       // Les titres non-hero sont animés par SplitText plus bas — on ne les fige pas ici
       // pour ne pas masquer un état pré-split (FOUC) : SplitText pose son propre état.
@@ -86,15 +87,16 @@ export function LandingExperience() {
         '[data-motion="hero"] [data-motion="title"]'
       )
       if (heroTitle) {
-        gsap.set(heroTitle, { autoAlpha: 1, y: 0 })
-        gsap.set(heroTitle.querySelectorAll('span'), { autoAlpha: 0, y: 34 })
+        gsap.set(heroTitle, { opacity: 1, y: 0 })
+        gsap.set(heroTitle.querySelectorAll('span'), { opacity: 0, y: 34 })
       }
 
       if (reduceMotion) {
+        gsap.set('[data-motion="chrome"]', { autoAlpha: 1, y: 0 })
         gsap.set(
-          '[data-motion="chrome"], [data-motion="reveal"], [data-motion="hero-actions"], [data-motion="title"] span, [data-motion="title"]',
+          '[data-motion="reveal"], [data-motion="hero-actions"], [data-motion="title"] span, [data-motion="title"]',
           {
-            autoAlpha: 1,
+            opacity: 1,
             y: 0,
           }
         )
@@ -124,7 +126,7 @@ export function LandingExperience() {
         .filter((element) => !inPinnedSection(element))
         .forEach((element) => {
           gsap.to(element, {
-            autoAlpha: 1,
+            opacity: 1,
             y: 0,
             duration: 1.15,
             ease: 'expo.out',
@@ -162,13 +164,13 @@ export function LandingExperience() {
             linesClass: 'split-line',
             onSplit: (self) => {
               if (isOutroTitle) {
-                gsap.set(self.lines, { yPercent: 110, autoAlpha: 0 })
+                gsap.set(self.lines, { yPercent: 110, opacity: 0 })
                 outroTitleLines = self.lines
                 return
               }
               gsap.from(self.lines, {
                 yPercent: 110,
-                autoAlpha: 0,
+                opacity: 0,
                 duration: 1.15,
                 ease: 'expo.out',
                 stagger: 0.14,
@@ -289,9 +291,9 @@ export function LandingExperience() {
           .to('[data-gameplay-veil]', { opacity: 0, duration: 0.16, ease: 'power1.out' }, 0)
           .fromTo(
             '[data-motion="gameplay-card"]',
-            { autoAlpha: 0, y: 42, rotate: -9 },
+            { opacity: 0, y: 42, rotate: -9 },
             {
-              autoAlpha: 1,
+              opacity: 1,
               y: 0,
               rotate: (index) => [-4, -2, -5][index] ?? -4,
               stagger: 0.16,
@@ -302,14 +304,14 @@ export function LandingExperience() {
           )
           .fromTo(
             '.gameplay-section__copy',
-            { autoAlpha: 0, y: 26 },
-            { autoAlpha: 1, y: 0, duration: 0.42, ease: 'power3.out' },
+            { opacity: 0, y: 26 },
+            { opacity: 1, y: 0, duration: 0.42, ease: 'power3.out' },
             0.5
           )
           .fromTo(
             '[data-motion="stats"]',
-            { autoAlpha: 0, y: 22 },
-            { autoAlpha: 1, y: 0, duration: 0.28, ease: 'power3.out' },
+            { opacity: 0, y: 22 },
+            { opacity: 1, y: 0, duration: 0.28, ease: 'power3.out' },
             0.72
           )
 
@@ -333,9 +335,9 @@ export function LandingExperience() {
           .to('[data-world-veil]', { opacity: 0, duration: 0.16, ease: 'power1.out' }, 0)
           .fromTo(
             '[data-motion="world"] [data-motion="reveal"]',
-            { autoAlpha: 0, y: 26 },
+            { opacity: 0, y: 26 },
             {
-              autoAlpha: 1,
+              opacity: 1,
               y: 0,
               stagger: 0.14,
               duration: 0.42,
@@ -377,7 +379,7 @@ export function LandingExperience() {
             outroTitleLines,
             {
               yPercent: 0,
-              autoAlpha: 1,
+              opacity: 1,
               stagger: 0.14,
               duration: 0.5,
               ease: 'power3.out',
@@ -386,9 +388,9 @@ export function LandingExperience() {
           )
           .fromTo(
             '[data-motion="outro"] [data-motion="reveal"]',
-            { autoAlpha: 0, y: 26 },
+            { opacity: 0, y: 26 },
             {
-              autoAlpha: 1,
+              opacity: 1,
               y: 0,
               stagger: 0.12,
               duration: 0.5,
@@ -476,6 +478,7 @@ export function LandingExperience() {
 
         return () => {
           ScrollTrigger.removeEventListener('refreshInit', syncHeroOverlap)
+          if (heroOverlap) heroOverlap.style.marginTop = ''
           magneticCleanups.forEach((cleanup) => cleanup())
         }
       })
@@ -501,9 +504,9 @@ export function LandingExperience() {
           // on expose en plus les nœuds animés uniquement par les timelines de pin.
           gsap.set(
             '[data-motion="gameplay-card"], .gameplay-section__copy, [data-motion="stats"]',
-            { autoAlpha: 1, y: 0, rotate: 0 }
+            { opacity: 1, y: 0, rotate: 0 }
           )
-          gsap.set(outroTitleLines, { yPercent: 0, autoAlpha: 1 })
+          gsap.set(outroTitleLines, { yPercent: 0, opacity: 1 })
           return
         }
 
@@ -512,9 +515,9 @@ export function LandingExperience() {
         // animerait de 0 vers la valeur courante (0) et laisserait la carte cachée.
         gsap.fromTo(
           '[data-motion="gameplay-card"]',
-          { autoAlpha: 0, y: 32 },
+          { opacity: 0, y: 32 },
           {
-            autoAlpha: 1,
+            opacity: 1,
             y: 0,
             stagger: 0.12,
             duration: 0.7,
@@ -526,12 +529,12 @@ export function LandingExperience() {
         // Copy + stats gameplay (le conteneur `.gameplay-section__copy` et les
         // stats sont animés par la timeline pinnée sur desktop, pas par le reveal
         // global — on les rejoue ici en fondu court). `fromTo` : leur état de base
-        // est caché (autoAlpha:0 posé par le set global / la timeline desktop).
+        // est caché (opacity:0 posé par le set global / la timeline desktop).
         gsap.fromTo(
           ['.gameplay-section__copy', '[data-motion="stats"]'],
-          { autoAlpha: 0, y: 24 },
+          { opacity: 0, y: 24 },
           {
-            autoAlpha: 1,
+            opacity: 1,
             y: 0,
             stagger: 0.12,
             duration: 0.6,
@@ -544,9 +547,9 @@ export function LandingExperience() {
         // (ils vivaient dans la timeline scrubbée) → fondu court au scroll ici.
         gsap.fromTo(
           '[data-motion="world"] [data-motion="reveal"]',
-          { autoAlpha: 0, y: 24 },
+          { opacity: 0, y: 24 },
           {
-            autoAlpha: 1,
+            opacity: 1,
             y: 0,
             stagger: 0.12,
             duration: 0.6,
@@ -558,9 +561,9 @@ export function LandingExperience() {
         // Reveals outro (logo, citation, corps, CTA, footer) : même traitement.
         gsap.fromTo(
           '[data-motion="outro"] [data-motion="reveal"]',
-          { autoAlpha: 0, y: 24 },
+          { opacity: 0, y: 24 },
           {
-            autoAlpha: 1,
+            opacity: 1,
             y: 0,
             stagger: 0.1,
             duration: 0.6,
@@ -574,7 +577,7 @@ export function LandingExperience() {
         // noir » → un trigger classique suffit à les faire monter au scroll.
         gsap.to(outroTitleLines, {
           yPercent: 0,
-          autoAlpha: 1,
+          opacity: 1,
           stagger: 0.12,
           duration: 0.7,
           ease: 'power3.out',
@@ -635,7 +638,7 @@ export function LandingExperience() {
   )
 
   return (
-    <div ref={rootRef} className="landing-experience">
+    <main ref={rootRef} className="landing-experience">
       <LandingPreloader onDone={handlePreloaderDone} />
       <AmbientEmbers />
       <CustomCursor />
@@ -650,6 +653,6 @@ export function LandingExperience() {
       <SectionGameplay />
       <SectionWorld />
       <SectionOutro />
-    </div>
+    </main>
   )
 }

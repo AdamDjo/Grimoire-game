@@ -8,7 +8,12 @@ export function SectionWorld() {
   const lastLine = WORLD_COPY.titleLines.length - 1
 
   return (
-    <section className="landing-section world-section" id="world" data-motion="world">
+    <section
+      className="landing-section world-section"
+      id="world"
+      aria-labelledby="world-title"
+      data-motion="world"
+    >
       <MediaLayer
         className="world-plate"
         fallbackSrc={LANDING_MEDIA.castlePlate}
@@ -27,6 +32,7 @@ export function SectionWorld() {
         </p>
 
         <h2
+          id="world-title"
           className="world-section__title m-0 font-display font-medium text-h2 text-parchment"
           data-motion="title"
         >

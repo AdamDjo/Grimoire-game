@@ -45,8 +45,7 @@ export function ScrollProgressBar({ className = '' }: ScrollProgressBarProps) {
   return (
     <div
       className={`scroll-progress-bar fixed inset-x-0 top-0 z-[38] ${className}`}
-      role="progressbar"
-      aria-label="Progression de la page"
+      aria-hidden="true"
     >
       <div ref={fillRef} className="scroll-progress-bar__fill" aria-hidden="true" />
     </div>

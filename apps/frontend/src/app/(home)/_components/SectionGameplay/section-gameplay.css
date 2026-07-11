@@ -86,7 +86,7 @@
    Discrète : couleur/spacing ici, prose serif. */
 .gameplay-stats__caption {
   bottom: calc(4vh + 128px);
-  color: rgba(239, 225, 194, 0.6);
+  color: rgba(239, 225, 194, 0.72);
   font-family: var(--font-serif);
   font-size: 15px;
   font-style: italic;

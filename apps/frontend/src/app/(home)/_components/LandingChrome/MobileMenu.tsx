@@ -23,6 +23,7 @@ export function MobileMenu({ authLink, links }: MobileMenuProps) {
   const [mounted, setMounted] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
   const overlayRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLButtonElement>(null)
   const timeline = useRef<gsap.core.Timeline | null>(null)
 
   // L'overlay est porté dans <body> : le header est fixed ET transformé
@@ -89,6 +90,12 @@ export function MobileMenu({ authLink, links }: MobileMenuProps) {
       if (next) tl.play()
       else tl.reverse()
     }
+
+    if (next) {
+      requestAnimationFrame(() => {
+        overlayRef.current?.querySelector<HTMLAnchorElement>('a[href]')?.focus()
+      })
+    }
   }
 
   const close = () => {
@@ -96,6 +103,7 @@ export function MobileMenu({ authLink, links }: MobileMenuProps) {
     setOpen(false)
     setScrollLock(false)
     timeline.current?.reverse()
+    triggerRef.current?.focus()
   }
 
   const handleLinkClick = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -114,7 +122,27 @@ export function MobileMenu({ authLink, links }: MobileMenuProps) {
   useEffect(() => {
     if (!open) return undefined
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') close()
+      if (event.key === 'Escape') {
+        close()
+        return
+      }
+
+      if (event.key !== 'Tab') return
+
+      const links = Array.from(
+        overlayRef.current?.querySelectorAll<HTMLAnchorElement>('a[href]') ?? []
+      )
+      if (links.length === 0) return
+
+      const firstLink = links[0]
+      const lastLink = links[links.length - 1]
+      if (event.shiftKey && document.activeElement === firstLink) {
+        event.preventDefault()
+        lastLink?.focus()
+      } else if (!event.shiftKey && document.activeElement === lastLink) {
+        event.preventDefault()
+        firstLink?.focus()
+      }
     }
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
@@ -162,6 +190,7 @@ export function MobileMenu({ authLink, links }: MobileMenuProps) {
   return (
     <div ref={rootRef} className="landing-chrome__mobile justify-self-end">
       <button
+        ref={triggerRef}
         type="button"
         className={`landing-menu-button inline-flex flex-col items-center ${open ? 'is-open' : ''}`}
         aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}

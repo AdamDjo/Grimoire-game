@@ -20,9 +20,10 @@ export function useLandingHeroEntrance(
         : []
 
       if (reduceMotion) {
+        gsap.set('[data-motion="chrome"]', { autoAlpha: 1, y: 0 })
         gsap.set(
-          '[data-motion="chrome"], [data-motion="hero-actions"], [data-motion="hero"] [data-motion="reveal"], [data-motion="hero"] [data-motion="title"] span',
-          { autoAlpha: 1, y: 0 }
+          '[data-motion="hero-actions"], [data-motion="hero"] [data-motion="reveal"], [data-motion="hero"] [data-motion="title"] span',
+          { opacity: 1, y: 0 }
         )
         return
       }
@@ -30,10 +31,10 @@ export function useLandingHeroEntrance(
       const timeline = gsap.timeline({ defaults: { ease: 'expo.out' } })
 
       timeline
-        .to(heroTitleLines, { autoAlpha: 1, y: 0, duration: 1.3, stagger: 0.14 }, 0)
-        .to(heroReveals, { autoAlpha: 1, y: 0, duration: 1.15, stagger: 0.12 }, 0.15)
+        .to(heroTitleLines, { opacity: 1, y: 0, duration: 1.3, stagger: 0.14 }, 0)
+        .to(heroReveals, { opacity: 1, y: 0, duration: 1.15, stagger: 0.12 }, 0.15)
         .to('[data-motion="chrome"]', { autoAlpha: 1, y: 0, duration: 1.25 }, 0.1)
-        .to('[data-motion="hero-actions"]', { autoAlpha: 1, y: 0, duration: 1 }, 0.55)
+        .to('[data-motion="hero-actions"]', { opacity: 1, y: 0, duration: 1 }, 0.55)
         .to('[data-hero-scroll-hint]', { opacity: 1, duration: 0.9 }, 0.9)
     },
     { scope: rootRef, dependencies: [preloaderDone], revertOnUpdate: true }

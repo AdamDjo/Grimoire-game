@@ -124,9 +124,9 @@
 }
 
 .outro-footer__copyright {
-  color: rgba(239, 225, 194, 0.42);
+  color: rgba(239, 225, 194, 0.62);
   font-family: var(--font-ui);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }

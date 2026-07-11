@@ -11,7 +11,12 @@ import './section-outro.css'
 
 export function SectionOutro() {
   return (
-    <section className="landing-section outro-section" id="outro" data-motion="outro">
+    <section
+      className="landing-section outro-section"
+      id="outro"
+      aria-labelledby="outro-title"
+      data-motion="outro"
+    >
       <MediaLayer
         className="outro-plate"
         fallbackSrc={LANDING_MEDIA.outroPlate}
@@ -43,6 +48,7 @@ export function SectionOutro() {
 
       <div className="outro-section__content relative z-3 grid justify-items-center text-center">
         <h2
+          id="outro-title"
           className="m-0 font-medium tracking-normal leading-none normal-case"
           data-motion="title"
         >
@@ -61,11 +67,11 @@ export function SectionOutro() {
       <footer className="outro-footer absolute z-4 border-t-0" data-motion="reveal">
         <div className="outro-footer__made">
           <span>
-            Made with{' '}
+            Créé avec{' '}
             <span className="outro-footer__heart" aria-hidden="true">
               ♥
             </span>{' '}
-            love by Adem
+            par Adem
           </span>
           <span className="outro-footer__copyright">© 2026 Grimoire</span>
         </div>

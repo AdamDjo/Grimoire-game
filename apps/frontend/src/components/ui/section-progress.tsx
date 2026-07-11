@@ -86,7 +86,7 @@ export function SectionProgress({
     <aside
       ref={rootRef}
       className={`section-progress fixed z-[36] flex flex-col items-center ${className}`}
-      aria-label="Progression de la page"
+      aria-hidden="true"
     >
       <span className="section-progress__rail" aria-hidden="true">
         <span className="section-progress__fill" aria-hidden="true" />

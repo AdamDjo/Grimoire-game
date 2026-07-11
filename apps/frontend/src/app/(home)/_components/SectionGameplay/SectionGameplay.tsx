@@ -8,7 +8,12 @@ import './section-gameplay.css'
 
 export function SectionGameplay() {
   return (
-    <section className="landing-section gameplay-section" id="gameplay" data-motion="gameplay">
+    <section
+      className="landing-section gameplay-section"
+      id="gameplay"
+      aria-labelledby="gameplay-title"
+      data-motion="gameplay"
+    >
       <MediaLayer
         fallbackSrc={LANDING_MEDIA.gameplayPlate}
         fallbackSrcWebp={LANDING_MEDIA.gameplayPlateWebp}
@@ -32,6 +37,7 @@ export function SectionGameplay() {
           <strong className="font-medium text-parchment">{GAMEPLAY_COPY.label}</strong>
         </p>
         <h2
+          id="gameplay-title"
           className="gameplay-section__title m-0 font-accent text-h2 font-medium text-parchment"
           data-motion="title"
         >

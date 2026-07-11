@@ -10,6 +10,7 @@ export function SectionHero() {
     <section
       className="landing-section hero-section"
       id="velkhar"
+      aria-labelledby="hero-title"
       data-motion="hero"
       data-frames-length={LANDING_MEDIA.heroScrubLength}
     >
@@ -46,6 +47,7 @@ export function SectionHero() {
           {HERO_COPY.eyebrow}
         </p>
         <h1
+          id="hero-title"
           className="hero-title m-0 font-display text-h1 font-medium normal-case"
           data-motion="title"
         >

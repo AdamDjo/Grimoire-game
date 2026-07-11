@@ -11,7 +11,7 @@ export function GameplayStatsBar() {
     <>
       <aside
         className="gameplay-stats absolute z-[4] grid max-w-[1040px] items-stretch opacity-0 shadow-[0_18px_55px_rgba(0,0,0,0.5)]"
-        aria-label="Etat du personnage"
+        aria-label="État du personnage"
         data-motion="stats"
       >
         {GAMEPLAY_STATS.map((stat) => (

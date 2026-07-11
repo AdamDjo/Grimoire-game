@@ -35,11 +35,11 @@ export const LANDING_MEDIA = {
 } as const
 
 export const HERO_COPY = {
-  eyebrow: 'Roguelike narratif solo · l’Aveugle, une IA, mène la partie',
+  eyebrow: 'Roguelike narratif solo · guidé par L’Aveugle, une IA maîtresse du jeu',
   titleLines: ['ÉCRIS TON', 'HISTOIRE'],
   body: [
-    'Tu écris ce que tu fais. Une IA raconte la suite, et un monde qui se souvient.',
-    'Chaque partie est une histoire unique. Aucune ne se ressemble.',
+    'Tu décris chaque action. L’Aveugle improvise la suite, les règles tranchent et Velkhar se souvient.',
+    'Chaque partie devient une histoire unique dont les conséquences persistent.',
   ],
   primaryCta: 'Commencer une partie',
   secondaryCta: 'Voir le gameplay',
@@ -55,26 +55,26 @@ export const GAMEPLAY_CARDS = [
   },
   {
     index: '2',
-    title: 'Le jet de dé',
-    accent: 'Jet de SOUFFLE',
-    body: '(ta finesse, ta perception) — réussite partielle : la porte cède, mais quelque chose t’a entendu.',
+    title: 'L’Aveugle répond',
+    accent: 'Jet de SOUFFLE · d20',
+    body: 'Résultat 12 : réussite partielle. La porte cède, mais quelque chose t’a entendu.',
     tone: 'soul',
   },
   {
     index: '3',
-    title: 'La conséquence, gardée',
-    body: 'Plus tard, un PNJ se souviendra que tu es passé par là. Rien ne s’efface.',
+    title: 'Le monde se souvient',
+    body: 'Plus tard, un témoin te reconnaît. La porte ouverte est devenue un fait de ton histoire.',
     tone: 'ash',
   },
 ] as const
 
 export const GAMEPLAY_COPY = {
-  label: 'Gameplay',
+  label: 'La partie',
   titleLines: ["Ce n'est pas", 'une cinématique.', "C'est ta partie."],
   body: [
-    'Tu écris ce que ton personnage tente — en toutes lettres.',
-    'Aux moments décisifs, un dé (d20, comme au jeu de rôle) tranche : réussite, échec, ou entre-deux.',
-    'Et le monde retient ce que tu as fait — pour la suite de l’histoire.',
+    'Tu écris librement ce que ton personnage tente.',
+    'L’Aveugle raconte la réaction du monde. Aux moments décisifs, un d20 décide de la réussite, de l’échec ou d’un entre-deux.',
+    'Chaque résultat devient un fait que Velkhar peut rappeler plus tard.',
   ],
   cta: 'Tester le seuil',
 } as const
@@ -91,7 +91,7 @@ export const GAMEPLAY_STATS_CAPTION =
 export const WORLD_COPY = {
   label: 'Le monde',
   titleLines: ['Même monde.', 'Mille histoires.'],
-  body: 'Velkhar se souvient de tout. L’Aveugle — l’IA qui te sert de maître du jeu — improvise avec toi, mais rien de ce que tu fais ne s’efface.',
+  body: 'Velkhar se souvient de tout. L’Aveugle improvise chaque scène à partir de tes choix ; les règles tranchent et les conséquences restent.',
   pillars: [
     {
       label: 'Un monde qui retient',
@@ -99,14 +99,14 @@ export const WORLD_COPY = {
     },
     {
       label: 'Rejouable à l’infini',
-      body: '3 à 15 h par run. À la fin, ta Chronique. Puis tu recommences, autrement.',
+      body: 'Une traversée dure 45 à 70 min pendant la bêta. À la fin, ta Chronique. Puis tu recommences, autrement.',
     },
   ],
 } as const
 
 export const OUTRO_COPY = {
-  quote: ['A la fin,', 'il ne reste que ce dont', 'on se souvient.'],
+  quote: ['À la fin,', 'il ne reste que ce dont', 'on se souvient.'],
   title: 'L’Aveugle t’attend.',
-  body: 'Une partie solo, gratuite le temps de la bêta. Tu donnes un nom, tu choisis une vocation — et l’histoire commence.',
+  body: 'Une partie solo, gratuite le temps de la bêta. Tu donnes un nom et choisis ta vocation, comme Marcheur-du-Sel ou Tisse-Verbe. Puis l’histoire commence.',
   cta: 'Rentrer dans l’auberge',
 } as const
