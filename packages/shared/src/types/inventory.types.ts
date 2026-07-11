@@ -1,5 +1,13 @@
-export type ItemType = 'weapon' | 'armor' | 'consumable' | 'quest' | 'material' | 'special';
-export type ItemRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+import type { Attribute } from "./character.types";
+
+export type ItemType =
+  | "weapon"
+  | "armor"
+  | "consumable"
+  | "quest"
+  | "material"
+  | "special";
+export type ItemRarity = "common" | "uncommon" | "rare" | "epic" | "legendary";
 
 export interface Item {
   id: string;
@@ -8,15 +16,17 @@ export interface Item {
   type: ItemType;
   rarity: ItemRarity;
   effects?: ItemEffect;
+  /** Value in iron (fer). */
   value: number;
   stackable: boolean;
   maxStack?: number;
 }
 
 export interface ItemEffect {
-  statModifiers?: Partial<Record<string, number>>;
+  attributeModifiers?: Partial<Record<Attribute, number>>;
   healAmount?: number;
-  manaRestore?: number;
+  /** Reduces the calamine gauge (purifying artefacts, rituals). */
+  calamineReduction?: number;
   damage?: number;
   specialEffect?: string;
 }
@@ -29,6 +39,7 @@ export interface InventoryItem {
 
 export interface Inventory {
   items: InventoryItem[];
-  gold: number;
+  /** Iron (fer), the Velkhar currency. */
+  iron: number;
   maxSlots: number;
 }
