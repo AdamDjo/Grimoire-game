@@ -1,14 +1,19 @@
-export type CombatAction = 'attack' | 'defend' | 'magic' | 'use_item' | 'flee' | 'skill';
+import type { Attributes, Condition } from "./character.types";
+
+export type CombatAction =
+  | "attack"
+  | "defend"
+  | "awaken_artefact"
+  | "use_item"
+  | "flee"
+  | "skill";
 
 export interface CombatParticipant {
   name: string;
   hp: number;
   maxHp: number;
-  mana: number;
-  maxMana: number;
-  strength: number;
-  agility: number;
-  intelligence: number;
+  attributes: Attributes;
+  conditions: Condition[];
   isPlayer: boolean;
 }
 
@@ -17,7 +22,7 @@ export interface CombatState {
   enemies: CombatParticipant[];
   round: number;
   log: CombatLogEntry[];
-  status: 'active' | 'victory' | 'defeat' | 'fled';
+  status: "active" | "victory" | "defeat" | "fled";
 }
 
 export interface CombatLogEntry {
@@ -31,10 +36,9 @@ export interface CombatLogEntry {
 }
 
 export interface CombatResult {
-  status: 'victory' | 'defeat' | 'fled';
-  xpGained: number;
+  status: "victory" | "defeat" | "fled";
   loot: CombatLoot[];
-  goldGained: number;
+  ironGained: number;
   narrative: string;
 }
 

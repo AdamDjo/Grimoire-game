@@ -1,26 +1,36 @@
-export type SceneType = 'exploration' | 'combat' | 'dialogue' | 'event' | 'shop' | 'rest';
+import type { Attribute } from "./character.types";
+
+export type SceneType =
+  | "exploration"
+  | "combat"
+  | "dialog"
+  | "event"
+  | "shop"
+  | "rest";
 
 export interface Choice {
   id: string;
   text: string;
-  type: 'action' | 'dialogue' | 'combat' | 'flee' | 'use_item' | 'skill';
+  type: "action" | "dialog" | "combat" | "flee" | "use_item" | "skill";
   requirements?: ChoiceRequirement;
-  riskLevel?: 'safe' | 'low' | 'medium' | 'high' | 'deadly';
+  riskLevel?: "safe" | "low" | "medium" | "high" | "deadly";
 }
 
 export interface ChoiceRequirement {
-  minStat?: Partial<Record<string, number>>;
+  minAttribute?: Partial<Record<Attribute, number>>;
   requiredItem?: string;
-  requiredLevel?: number;
   requiredSkill?: string;
 }
 
 export interface ChoiceConsequence {
-  statChanges?: Partial<Record<string, number>>;
+  attributeChanges?: Partial<Record<Attribute, number>>;
+  /** Survival gauge deltas (hp/thirst/hunger/energy/calamine). */
+  survivalChanges?: Partial<
+    Record<"hp" | "thirst" | "hunger" | "energy" | "calamine", number>
+  >;
   itemsGained?: string[];
   itemsLost?: string[];
-  xpGained?: number;
-  goldGained?: number;
+  ironGained?: number;
   factionReputation?: Record<string, number>;
   questProgress?: Record<string, string>;
   triggeredEvent?: string;
@@ -56,6 +66,13 @@ export interface InventoryItemRef {
 }
 
 export interface GameNotification {
-  type: 'level_up' | 'item_gained' | 'item_lost' | 'quest_update' | 'stat_change' | 'warning' | 'achievement';
+  type:
+    | "item_gained"
+    | "item_lost"
+    | "quest_update"
+    | "stat_change"
+    | "condition"
+    | "warning"
+    | "memory";
   message: string;
 }

@@ -1,27 +1,39 @@
 import cors from 'cors'
-import dotenv from 'dotenv'
 import express, { type Express } from 'express'
+import rateLimit from 'express-rate-limit'
 
-dotenv.config()
+import { env } from './config/env'
+import { gameRouter } from './routes/game.routes'
 
 const app: Express = express()
-const PORT = process.env.PORT ?? 3001
+const PORT = env.port
 
-// Middleware
+// Minimal public security headers (no extra dependency needed).
+app.use((_req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff')
+  res.setHeader('X-Frame-Options', 'DENY')
+  res.setHeader('Referrer-Policy', 'no-referrer')
+  next()
+})
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL ?? 'http://localhost:3000',
+    origin: env.frontendUrl,
     credentials: true,
   })
 )
-app.use(express.json())
+app.use(express.json({ limit: '64kb' }))
 
-// Routes will be registered here in Phase 2-3
-// app.use('/api/auth', authRoutes);
-// app.use('/api/characters', characterRoutes);
-// app.use('/api/universes', universeRoutes);
-// app.use('/api/sessions', sessionRoutes);
-// app.use('/api/game', gameRoutes);
+// Rate-limit the AI-backed game endpoints to protect the OpenRouter budget.
+const gameLimiter = rateLimit({
+  windowMs: 60_000,
+  limit: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+
+// Routes
+app.use('/api/game', gameLimiter, gameRouter)
 
 // Health check
 app.get('/api/health', (_req, res) => {

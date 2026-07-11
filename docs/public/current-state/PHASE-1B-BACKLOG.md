@@ -1,8 +1,8 @@
 # Phase 1B — Backlog
 
-> **Statut** : backlog uniquement. La Phase 1B ne démarre pas encore.
-> Phase active actuelle : **Phase 1A landing**, pilotée par `docs/private/plans/landing/PLAN-LANDING-CUBERTO-LEVEL.md`.
-> Pré-requis 1B : landing validée, QA faite, PR `feature/88-landing-page-redesign` mergée sur `develop`.
+> **Statut** : Phase 1B **en cours**. Landing (Phase 1A) mergée. Vertical slice gamesession livrée en démo (EPIC #95, PR #102).
+> B1 (triptyque shared) et B2 (OpenRouter provider) sont faits. Prochains écrans : Auberge de L'Aveugle (priorité 1), Character Create, World Map.
+> Source de vérité à jour : [[PROJECT_STATUS]] · [[NEXT_ACTIONS]].
 
 ## Garde-fous produit
 
