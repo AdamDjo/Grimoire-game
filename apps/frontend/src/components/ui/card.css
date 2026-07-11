@@ -1,0 +1,105 @@
+.card {
+  background-image: image-set(
+    url('/landing/ui/gameplay-card-frame-trimmed.webp') type('image/webp'),
+    url('/landing/ui/gameplay-card-frame-trimmed.png') type('image/png')
+  );
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  border: 0;
+  box-shadow:
+    0 22px 70px rgba(0, 0, 0, 0.62),
+    0 0 32px rgba(214, 158, 58, 0.08);
+  min-height: 156px;
+  opacity: 0;
+  padding: 30px 38px 34px;
+  position: relative;
+}
+
+.card:nth-child(2) {
+  margin-left: 3vw;
+}
+
+.card:nth-child(3) {
+  margin-left: 3vw;
+}
+
+.card__index {
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+.card__icon {
+  border: 1px solid rgba(218, 170, 74, 0.54);
+}
+
+.card__icon::before {
+  background: currentColor;
+  content: '';
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.card p {
+  align-items: center;
+  background-image: image-set(
+    url('/landing/ui/gameplay-card-note-trimmed.webp') type('image/webp'),
+    url('/landing/ui/gameplay-card-note-trimmed.png') type('image/png')
+  );
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  border: 0;
+  box-shadow: none;
+  color: var(--ink-manuscript);
+  display: flex;
+  font-family: var(--font-manuscript);
+  font-style: normal;
+  margin: 16px 0 0;
+  min-height: 82px;
+  padding: 24px 42px 26px;
+}
+
+/* Wrapper unique du contenu manuscrit : reste l'unique flex item de `.card p`
+   pour éviter que l'accent et le corps ne se flexifient en items séparés. Son
+   contenu coule en flux normal. */
+.card__manuscript {
+  display: block;
+}
+
+/* Carte « Le jet de dé » : le body garde l'encre foncée lisible du parchemin
+   (comme les autres cartes). Seul le segment en tête (« Jet de SOUFFLE ») est
+   coloré en accent via `.card__accent`. */
+.card__accent {
+  color: var(--soul);
+  font-weight: 600;
+}
+
+@media (max-width: 720px) {
+  .card,
+  .card:nth-child(2),
+  .card:nth-child(3) {
+    margin-left: 0;
+  }
+
+  /* Le body repasse en flux bloc sur mobile : le `display:flex` du desktop
+     (centrage vertical du manuscrit) empilerait l'accent-block et le corps côte
+     à côte au lieu de les stacker. En block, l'accent en tête tombe bien sur sa
+     propre ligne, le corps suit dessous. */
+  .card p {
+    display: block;
+    font-size: 21px;
+    padding: 18px;
+  }
+
+  /* Carte « Le jet de dé » : sur mobile, le segment accent (« Jet de SOUFFLE »)
+     passe sur sa propre ligne au-dessus du corps, qui suit en dessous. Sur le
+     parchemin étroit, l'accent inline se collait au body — mieux vaut le poser
+     en tête comme une étiquette. Espace sous l'accent pour aérer les deux blocs. */
+  .card__accent {
+    display: block;
+    margin-bottom: 6px;
+  }
+}

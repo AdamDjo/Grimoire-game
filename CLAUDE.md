@@ -1,22 +1,20 @@
-# Grimoire — Claude Code (Velkhar)
+# GRIMOIRE — Claude Entry
 
-> Règles Git + TypeScript : `~/.claude/CLAUDE.md`
-> Contexte projet complet (stack, archi, conventions) : **`AGENTS.md`** à la racine.
-> **Lire en début de session : [`docs/00-START-HERE.md`](docs/00-START-HERE.md)** — puis `docs/wiki/index.md` pour naviguer vers le bon fichier GDD ou doc.
->
-> ⚠️ **Source de vérité produit = `docs/raw/`** (GDD Velkhar, gitignored). Toute divergence → `docs/raw/` gagne.
-> Ce repo implémente GRIMOIRE — Of Ash and Salt.
+> Lire d'abord : `docs/00-START-HERE.md`.
+> Ne pas dupliquer les règles : suivre les sources ci-dessous.
 
-## UI — Note
+## Sources
 
-Les designs hi-fi (Valorain-era) **n'existent pas dans ce repo**. Suivre les design tokens désertiques : [`docs/02-design/DESIGN_TOKENS.md`](docs/02-design/DESIGN_TOKENS.md). Détails composant dans `apps/frontend/CLAUDE.md`.
+- Statut : `docs/public/current-state/PROJECT_STATUS.md`
+- Actions : `docs/public/current-state/NEXT_ACTIONS.md`
+- Routeur : `docs/public/wiki/task-router.md`
+- Architecture : `docs/public/tech/ARCHITECTURE_RULES.md`
+- Stack : `docs/public/tech/TECH_STACK.md`
+- Canon : `docs/public/wiki/canon-index.md`
+- RAG : `docs/public/reference/RAG_RULES.md`
 
-Les variables CSS (couleurs, polices, effets atmosphériques) sont documentées dans `GAME_DESIGN.md §7.7`. Ne jamais hard-coder une couleur — toujours utiliser les custom properties.
+## App Docs
 
-## Fichiers clés
-
-Les agents lisent `docs/00-START-HERE.md` + leur `CLAUDE.md` d'app — pas besoin de re-expliquer.
-
-## Skills disponibles
-
-`/feature`, `/bug`, `/hotfix`, `/release`, `/pr`, `/sync`, `/check`, `/status`, `/implement`, `/design-taste-frontend`
+- Frontend : `apps/frontend/CLAUDE.md`
+- Backend : `apps/backend/CLAUDE.md`
+- Shared : `packages/shared/CLAUDE.md`

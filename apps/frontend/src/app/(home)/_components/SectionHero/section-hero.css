@@ -1,0 +1,215 @@
+.hero-section {
+  align-items: center;
+  background: var(--void);
+  display: grid;
+  padding: 13vh clamp(30px, 5.25vw, 88px) 8vh;
+  /* Au-dessus de la section gameplay qui remonte derrière lui en fin de pin. */
+  z-index: 2;
+}
+
+.hero-section__media {
+  z-index: 0;
+}
+
+.hero-section .frame-sequence {
+  z-index: 1;
+}
+
+.hero-section__idle {
+  object-fit: cover;
+  z-index: 2;
+}
+
+/* Vignette du hero allégée : la vignette globale (.media-vignette dans
+   media-layer.css) empile jusqu'à 0.94 de noir → écrase l'image d'ouverture.
+   Le hero est le premier écran : on veut voir la scène. On garde juste assez de
+   vignettage à gauche/bas pour asseoir la lisibilité du texte, sans noyer la
+   plate. Le dip-to-dark de fin de pin reste géré par .hero-section__veil. */
+.hero-section__media .media-vignette {
+  background:
+    radial-gradient(circle at 74% 46%, rgba(239, 212, 141, 0.14), transparent 22rem),
+    radial-gradient(
+      circle at 58% 52%,
+      transparent 0,
+      rgba(3, 3, 2, 0.09) 52%,
+      rgba(3, 3, 2, 0.44) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(3, 3, 2, 0.54) 0%,
+      rgba(3, 3, 2, 0.21) 34%,
+      transparent 60%,
+      rgba(3, 3, 2, 0.24) 100%
+    ),
+    linear-gradient(180deg, rgba(3, 3, 2, 0.26), transparent 34%, rgba(3, 3, 2, 0.47));
+  z-index: 4;
+}
+
+/* Voile du dip-to-dark : monte à 1 en toute fin de pin, la section suivante
+   émerge du même noir — la couture entre les deux sections est invisible. */
+.hero-section__veil {
+  background: var(--void);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.hero-section__content {
+  max-width: min(52vw, 820px);
+  padding-top: 22vh;
+}
+
+.section-eyebrow {
+  color: var(--gold-light);
+  font-style: italic;
+  text-shadow:
+    0 0 24px rgba(198, 154, 67, 0.28),
+    0 2px 16px rgba(0, 0, 0, 0.74);
+}
+
+.section-eyebrow::after {
+  background: url('/landing/ui/ornament-divider-trimmed.png') left center / contain no-repeat;
+  bottom: -28px;
+  content: '';
+  height: 24px;
+  left: 0;
+  position: absolute;
+  width: min(100%, 270px);
+}
+
+.hero-title {
+  color: var(--parchment);
+  text-shadow:
+    0 4px 1px rgba(0, 0, 0, 0.48),
+    0 0 18px rgba(239, 212, 141, 0.1);
+}
+
+.hero-copy {
+  color: rgba(222, 211, 190, 0.74);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.72);
+}
+
+.hero-actions {
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 62px;
+}
+
+/* Indicateur de scroll : label Cinzel + rail vertical fin le long duquel une
+   braise dorée descend en boucle. Caché au départ (autoAlpha via GSAP à la
+   levée du voile), disparaît au premier scroll (GSAP pose data-hidden). */
+.hero-scroll-hint {
+  align-items: center;
+  bottom: clamp(20px, 4vh, 40px);
+  color: rgba(239, 225, 194, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  left: 50%;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  transform: translateX(-50%);
+  transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 3;
+}
+
+.hero-scroll-hint[data-hidden='true'] {
+  opacity: 0 !important;
+}
+
+.hero-scroll-hint__label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.42em;
+  padding-left: 0.42em;
+  text-transform: uppercase;
+}
+
+.hero-scroll-hint__rail {
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(218, 170, 74, 0.4) 20%,
+    rgba(218, 170, 74, 0.4) 80%,
+    transparent
+  );
+  height: 46px;
+  overflow: hidden;
+  position: relative;
+  width: 1px;
+}
+
+.hero-scroll-hint__ember {
+  animation: hero-scroll-ember 2.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  background: rgba(240, 212, 138, 0.95);
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(240, 212, 138, 0.9);
+  height: 5px;
+  left: 50%;
+  margin-left: -2.5px;
+  position: absolute;
+  top: -5px;
+  width: 5px;
+}
+
+@keyframes hero-scroll-ember {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(46px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-scroll-hint__ember {
+    animation: none;
+  }
+}
+
+/* Bande tablette : 52vw devient trop étroit (416px à 800px). On élargit et on
+   resserre l'écart des CTA avant le passage en colonne à 720px. */
+@media (max-width: 1100px) {
+  .hero-section__content {
+    max-width: min(640px, 88vw);
+  }
+
+  .hero-actions {
+    gap: 32px;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero-section {
+    align-items: end;
+    padding: 22vh 20px 8vh;
+  }
+
+  .hero-section__content {
+    max-width: 100%;
+    padding-top: 0;
+  }
+
+  .hero-actions {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  /* Sur mobile, les CTA empilés remontent près du bas de l'écran : le « Défiler »
+     ancré en bas (`bottom: clamp(20px,4vh,40px)`) chevauchait le second bouton.
+     L'indice de scroll est superflu tactile — on le masque sous 720px. */
+  .hero-scroll-hint {
+    display: none;
+  }
+}

@@ -1,227 +1,243 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-/* ─── Google Fonts ─────────────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
-
-/* ─── Design tokens — Grimoire Kit UI ──────────────────────────────────────── */
 :root {
-  /* Backgrounds */
-  --bg:           #0B0805;
-  --bg-2:         #14100A;
-  --bg-3:         #211B14;
-  --bg-4:         #2B2319;
-
-  /* Surfaces / parchment */
-  --parchment:    #E7D9BA;
-  --parchment-2:  #D9C8A6;
-  --parchment-3:  #B6A17C;
-
-  /* Text on dark */
-  --ink:          #D8C8AC;
-  --ink-2:        #AB9C80;
-  --ink-3:        #9C8D75;
-  --ink-4:        #7C6F5B;
-  --ink-5:        #6B5F4C;
-
-  /* Text on parchment */
-  --text-parch:   #2B2014;
-  --text-parch-2: #43331F;
-  --text-parch-3: #6B573B;
-
-  /* Gold — accent principal */
-  --gold:         #C4A468;
-  --gold-light:   #E0C489;
-  --gold-dark:    #9C7F4E;
-  --gold-border:  #8A6F48;
-  --gold-hover:   #F4DCA8;
-
-  /* Ruby — quêtes / danger */
-  --ruby:         #7C241A;
-
-  /* Borders */
-  --border:       rgba(196, 164, 104, 0.22);
-  --border-parch: #B29A6A;
-  --border-choice: #6E5A3C;
-
-  /* Radius */
-  --radius:       4px;
-  --radius-md:    4px;
-  --radius-full:  9999px;
-
-  /* Typography */
-  --font-disp:    'Cinzel', Georgia, serif;
-  --font-serif:   'EB Garamond', Georgia, serif;
+  --void: #0a0806;
+  --parchment: #e8dcc0;
+  --gold: #d9a441;
+  --gold-light: #f0d48a;
+  --gold-hover: #f0d48a;
+  --gold-dark: rgba(217, 164, 65, 0.55);
+  --blood: #c0392b;
+  --soul: #35c4ac;
+  --cendre: #e3b341;
+  --border-gold: rgba(217, 164, 65, 0.34);
+  --ink-manuscript: #2a2118;
+  --font-display: var(--next-font-disp), Georgia, serif;
+  --font-serif: var(--next-font-serif), Georgia, serif;
+  --font-accent: var(--next-font-accent), Georgia, serif;
+  --font-ui: var(--next-font-ui), Arial, sans-serif;
+  --font-manuscript: var(--next-font-manuscript), cursive;
+  --ink: var(--parchment);
+  --ink-2: rgba(232, 220, 192, 0.75);
+  --focus-ring: 0 0 0 3px rgba(217, 164, 65, 0.3);
 }
 
-/* ─── Tailwind theme bridge ─────────────────────────────────────────────────── */
 @theme inline {
-  --color-background: var(--bg);
-  --color-foreground: var(--ink);
-  --font-sans: var(--font-serif);
+  --color-void: var(--void);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-light);
+  --color-parchment: var(--parchment);
+  --color-blood: var(--blood);
+  --color-soul: var(--soul);
+  --color-cendre: var(--cendre);
+  --font-display: var(--font-display);
   --font-serif: var(--font-serif);
-  --font-display: var(--font-disp);
+  --font-ui: var(--font-ui);
+  --font-accent: var(--font-accent);
+
+  /* Type scale fluide : clamp(min mobile, vw + base, max desktop). Évite les
+     paliers px durs (les overrides ≤720px des sections deviennent inutiles). */
+  --text-h1: clamp(44px, 2.6vw + 28px, 72px);
+  --text-h1--line-height: 1.05;
+  --text-h1--letter-spacing: 0.06em;
+  --text-h2: clamp(32px, 1.4vw + 22px, 44px);
+  --text-h2--line-height: 1.15;
+  --text-accroche: clamp(20px, 0.7vw + 15px, 26px);
+  --text-body-editorial: clamp(18px, 0.5vw + 15px, 24px);
+  --text-body-editorial--line-height: 1.6;
+  --text-ui: 16px;
+  --text-ui--line-height: 1.6;
+  --text-card-num: clamp(32px, 0.9vw + 25px, 40px);
+  --text-card-title: clamp(21px, 0.5vw + 17px, 25px);
+  --text-card-manuscript: clamp(20px, 0.5vw + 16px, 24px);
+  --text-stat-label: 17px;
+  --text-stat-label--letter-spacing: 0.16em;
+  --text-stat-value: 20px;
+  --text-btn-primary: clamp(20px, 0.7vw + 15px, 26px);
+  --text-btn-secondary: clamp(21px, 0.7vw + 16px, 27px);
+
+  --animate-shiny-text-multi: shiny-text-multi 8s ease-in-out infinite;
+  @keyframes shiny-text-multi {
+    0% {
+      background-position:
+        calc(-100% - var(--shiny-width)) 0,
+        0 0;
+    }
+    45%,
+    55% {
+      background-position:
+        calc(100% + var(--shiny-width)) 0,
+        0 0;
+    }
+    100% {
+      background-position:
+        calc(-100% - var(--shiny-width)) 0,
+        0 0;
+    }
+  }
+
+  --animate-gold-pulse: gold-pulse 2.4s ease-in-out infinite;
+  @keyframes gold-pulse {
+    0%,
+    100% {
+      box-shadow:
+        0 0 8px rgba(240, 212, 138, 0.7),
+        0 0 20px rgba(217, 164, 65, 0.4);
+    }
+    50% {
+      box-shadow:
+        0 0 14px rgba(240, 212, 138, 0.95),
+        0 0 34px rgba(217, 164, 65, 0.6);
+    }
+  }
 }
 
-/* ─── Base reset ────────────────────────────────────────────────────────────── */
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
-html, body {
-  margin: 0;
-  padding: 0;
-}
-
-::selection {
-  background: rgba(196, 164, 104, 0.3);
-  color: #f0e4c8;
+html {
+  min-height: 100%;
+  background: var(--void);
+  color-scheme: dark;
 }
 
 body {
-  background-color: var(--bg);
-  background:
-    radial-gradient(ellipse 90% 50% at 50% -5%, rgba(120, 84, 40, 0.22), transparent 55%),
-    radial-gradient(ellipse 120% 90% at 50% 40%, rgba(40, 28, 16, 0.5), transparent 70%),
-    linear-gradient(180deg, #0d0a06, #080604 60%, #0a0705);
-  background-color: #0a0705;
-  color: var(--ink);
-  font-family: var(--font-serif);
   min-height: 100vh;
+  background: var(--void);
+  color: var(--parchment);
+  font-family: var(--font-serif);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
-/* Wood grain overlay */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.4;
-  z-index: 0;
-  background:
-    repeating-linear-gradient(90deg, rgba(0,0,0,0) 0, rgba(0,0,0,0) 38px, rgba(0,0,0,.25) 39px, rgba(0,0,0,0) 42px),
-    repeating-linear-gradient(90deg, rgba(120,90,50,.04) 0, rgba(0,0,0,0) 7px);
+a {
+  text-decoration: none;
 }
 
-/* ─── Scrollbar ─────────────────────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-2); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--gold-dark); }
+::selection {
+  background: rgba(218, 170, 74, 0.45);
+  color: #fff7df;
+}
 
-/* ─── Focus ring ────────────────────────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid var(--gold);
-  outline-offset: 2px;
-  border-radius: var(--radius);
+  border-radius: 3px;
+  box-shadow: var(--focus-ring);
+  outline: 1px solid var(--gold-light);
+  outline-offset: 3px;
 }
 
-/* ─── Animations ────────────────────────────────────────────────────────────── */
-@keyframes glowPulse {
-  0%, 100% { opacity: .55; transform: scale(.92); }
-  50%       { opacity: 1;   transform: scale(1.08); }
+/* Scrollbar native masquée : l'indicateur de progression est repris par la
+   fine barre dorée en haut (`ScrollProgressBar`). Le scroll reste fonctionnel
+   (molette, trackpad, clavier), seul le rail visuel disparaît. */
+html {
+  scrollbar-width: none;
 }
 
-@keyframes auraBreathe {
-  0%, 100% { opacity: .5; }
-  50%       { opacity: .85; }
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
-@keyframes rise {
-  from { opacity: 0; transform: translateY(10px); filter: blur(3px); }
-  to   { opacity: 1; transform: none; filter: none; }
+.landing-experience {
+  background:
+    radial-gradient(circle at 70% 12%, rgba(198, 154, 67, 0.11), transparent 30rem),
+    linear-gradient(180deg, #050403, #090806 45%, #030302);
+  isolation: isolate;
+  min-height: 100vh;
+  position: relative;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .animate-rise         { animation: rise .45s cubic-bezier(.2,.8,.2,1) both; }
-  .animate-glow-pulse   { animation: glowPulse 3.5s ease-in-out infinite; }
-  .animate-aura-breathe { animation: auraBreathe 5s ease-in-out infinite; }
-}
-
-/* ─── Typography utilities ──────────────────────────────────────────────────── */
-.font-disp  { font-family: var(--font-disp); }
-.font-serif { font-family: var(--font-serif); }
-
-/* ─── Color utilities ───────────────────────────────────────────────────────── */
-.text-gold        { color: var(--gold); }
-.text-gold-light  { color: var(--gold-light); }
-.text-gold-dark   { color: var(--gold-dark); }
-.text-ink         { color: var(--ink); }
-.text-ink-2       { color: var(--ink-2); }
-.text-ink-3       { color: var(--ink-3); }
-.text-ink-4       { color: var(--ink-4); }
-.text-ruby        { color: var(--ruby); }
-.text-parch       { color: var(--text-parch); }
-.text-parch-2     { color: var(--text-parch-2); }
-.text-parch-3     { color: var(--text-parch-3); }
-
-.bg-base          { background: var(--bg); }
-.bg-surface       { background: var(--bg-3); }
-.bg-parchment     { background: linear-gradient(160deg, var(--parchment), #d2bf99 55%, #c2ad86); }
-
-/* ─── Ornamental divider ────────────────────────────────────────────────────── */
-.ornament {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-}
-.ornament::before,
-.ornament::after {
-  content: "";
-  flex: 0 1 160px;
-  height: 1px;
-}
-.ornament::before { background: linear-gradient(90deg, transparent, var(--gold-dark)); }
-.ornament::after  { background: linear-gradient(270deg, transparent, var(--gold-dark)); }
-.ornament-diamond {
-  width: 8px;
-  height: 8px;
-  border: 1px solid var(--gold);
-  transform: rotate(45deg);
-}
-.ornament-dot {
-  width: 5px;
-  height: 5px;
-  background: var(--gold-dark);
-  transform: rotate(45deg);
-}
-
-/* ─── Section header ────────────────────────────────────────────────────────── */
-.section-header {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  margin-bottom: 30px;
-}
-.section-label {
-  font-family: var(--font-disp);
-  font-size: 12px;
-  letter-spacing: .3em;
-  color: var(--gold);
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-.section-rule {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, rgba(178, 154, 106, .5), rgba(178, 154, 106, 0));
-}
-
-/* ─── Aura / magic light ────────────────────────────────────────────────────── */
-.aura-gold {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(224, 196, 137, 0.5), transparent 65%);
-  animation: auraBreathe 5s ease-in-out infinite;
+.landing-experience::after {
+  background-image:
+    radial-gradient(circle at 18% 52%, rgba(239, 212, 141, 0.045), transparent 16rem),
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+  background-size:
+    auto,
+    3px 3px,
+    3px 3px;
+  content: '';
+  inset: 0;
+  mix-blend-mode: soft-light;
+  opacity: 0.28;
   pointer-events: none;
+  position: fixed;
+  z-index: 60;
 }
-.aura-magic {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(150, 200, 255, .9), rgba(90, 150, 230, .35) 40%, transparent 70%);
-  filter: blur(2px);
-  animation: auraBreathe 4s ease-in-out infinite;
+
+/* Grain animé : une nappe de bruit (feTurbulence SVG en data-URI) dont la
+   position saute en steps(6) — chaque pas repositionne le motif, donc le grain
+   "grouille" comme une pellicule, sans interpolation fluide. Opacité très basse
+   (≤0.06) : présent à la limite du perçu, jamais une texture franche. Distinct
+   du ::after (vignette + grille statiques) pour ne pas les faire scintiller.
+   Coupé en reduced-motion. z-index sous les braises (55) n'a pas d'importance :
+   les deux sont pointer-events:none et se composent visuellement. */
+.landing-experience::before {
+  background-image: url('/landing/textures/grain.svg');
+  background-size: 180px 180px;
+  content: '';
+  inset: -60px;
+  mix-blend-mode: overlay;
+  opacity: 0.05;
   pointer-events: none;
+  position: fixed;
+  z-index: 59;
+  animation: landing-grain 0.6s steps(6) infinite;
+}
+
+@keyframes landing-grain {
+  0% {
+    transform: translate(0, 0);
+  }
+  16% {
+    transform: translate(-24px, 18px);
+  }
+  33% {
+    transform: translate(20px, -14px);
+  }
+  50% {
+    transform: translate(-16px, -22px);
+  }
+  66% {
+    transform: translate(22px, 16px);
+  }
+  83% {
+    transform: translate(-20px, 12px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-experience::before {
+    animation: none;
+  }
+}
+
+.landing-section {
+  min-height: 100dvh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* SplitText (reveals de titres non-hero) : le masque de ligne clippe le débord
+   vertical de la ligne qui monte. Sur les titres en leading-none/serti, les
+   ascendantes/descendantes (g, p, y, accents) frôlent le bord du masque —
+   on réserve un chouïa de padding pour ne rien couper. La classe -mask est
+   dérivée automatiquement de linesClass par mask:'lines'. */
+.split-line {
+  will-change: transform;
+}
+
+.split-line-mask {
+  padding-block: 0.12em;
+  margin-block: -0.12em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
 }

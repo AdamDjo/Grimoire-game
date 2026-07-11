@@ -1,0 +1,319 @@
+.landing-chrome {
+  grid-template-columns: minmax(190px, 1fr) auto minmax(190px, 1fr);
+  padding: 18px clamp(28px, 4.8vw, 82px);
+  transition:
+    padding 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 500ms ease,
+    backdrop-filter 500ms ease,
+    border-color 500ms ease;
+  border-bottom: 1px solid transparent;
+}
+
+/* État condensé au scroll : fond voilé + blur + hairline or, padding resserré. */
+.landing-chrome.is-scrolled {
+  padding-block: 10px;
+  background: linear-gradient(180deg, rgba(10, 8, 6, 0.82) 0%, rgba(10, 8, 6, 0) 100%);
+  backdrop-filter: blur(14px);
+  border-bottom-color: rgba(217, 164, 65, 0.14);
+}
+
+.brand-mark {
+  isolation: isolate;
+}
+
+.brand-mark__logo {
+  aspect-ratio: 1733 / 808;
+  background: url('/landing/ui/brand-lockup-grimoire.webp') center / contain no-repeat;
+  display: block;
+  filter: drop-shadow(0 5px 18px rgba(0, 0, 0, 0.72));
+  transition:
+    filter 500ms ease,
+    width 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  width: clamp(184px, 15vw, 220px);
+}
+
+.brand-mark:hover .brand-mark__logo {
+  filter:
+    drop-shadow(0 5px 18px rgba(0, 0, 0, 0.72))
+    drop-shadow(0 0 12px rgba(217, 164, 65, 0.18));
+}
+
+.landing-chrome.is-scrolled .brand-mark__logo {
+  width: clamp(148px, 12vw, 178px);
+}
+
+.brand-mark__sigil {
+  aspect-ratio: 1;
+  background: url('/landing/ui/brand-sigil-trimmed.png') center / contain no-repeat;
+  border: 0;
+  box-shadow:
+    0 0 0 1px rgba(239, 212, 141, 0.1),
+    0 0 22px rgba(218, 170, 74, 0.18);
+  color: rgba(239, 212, 141, 0.82);
+  display: inline-block;
+  position: relative;
+  width: 46px;
+}
+
+.brand-mark__sigil::before,
+.brand-mark__sigil::after {
+  display: none;
+}
+
+.brand-mark__text {
+  background:
+    linear-gradient(180deg, #ffe7ac 0%, #d9a84e 54%, #8b5d25 100%),
+    repeating-linear-gradient(92deg, rgba(255, 255, 255, 0.18) 0 1px, transparent 1px 4px);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-family: var(--font-display);
+  font-size: clamp(31px, 2.22vw, 40px);
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  line-height: 1;
+  text-shadow: 0 0 22px rgba(198, 154, 67, 0.18);
+  text-transform: uppercase;
+}
+
+.landing-chrome__nav {
+  gap: clamp(38px, 3.5vw, 60px);
+}
+
+.landing-chrome__nav a {
+  color: rgba(239, 225, 194, 0.92);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  position: relative;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.8);
+}
+
+.landing-chrome__nav a + a::before {
+  aspect-ratio: 1;
+  border: 1px solid rgba(218, 170, 74, 0.42);
+  content: '';
+  left: clamp(-36px, -2.1vw, -28px);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  width: 8px;
+}
+
+.landing-chrome__nav a::after {
+  background: var(--gold);
+  content: '';
+  height: 1px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.landing-chrome__nav a:hover::after {
+  transform: scaleX(1);
+}
+
+.landing-chrome__actions {
+  display: flex;
+}
+
+.landing-auth-link {
+  align-items: center;
+  color: rgba(239, 225, 194, 0.92);
+  display: inline-flex;
+  font-family: var(--font-ui);
+  font-size: 15px;
+  gap: 12px;
+  letter-spacing: 0.08em;
+  padding: 11px 2px 11px 20px;
+  position: relative;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.8);
+  transition: color 350ms ease;
+}
+
+.landing-auth-link::before {
+  aspect-ratio: 1;
+  border: 1px solid rgba(217, 164, 65, 0.62);
+  content: '';
+  left: 1px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  transition:
+    background-color 350ms ease,
+    box-shadow 350ms ease;
+  width: 8px;
+}
+
+.landing-auth-link::after {
+  background: linear-gradient(90deg, rgba(217, 164, 65, 0.8), transparent);
+  bottom: 5px;
+  content: '';
+  height: 1px;
+  left: 20px;
+  position: absolute;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  width: calc(100% - 20px);
+}
+
+.landing-auth-link:hover {
+  color: var(--gold-light);
+}
+
+.landing-auth-link:hover::before {
+  background: rgba(217, 164, 65, 0.2);
+  box-shadow: 0 0 14px rgba(217, 164, 65, 0.28);
+}
+
+.landing-auth-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* Le bloc menu mobile (bouton + overlay) n'existe qu'en deçà de 1100px. */
+.landing-chrome__mobile {
+  display: none;
+}
+
+.landing-menu-button {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  gap: 8px;
+  height: 42px;
+  padding: 8px 0;
+  position: relative;
+  width: 48px;
+  z-index: 60;
+}
+
+.landing-menu-button span {
+  background: var(--gold-light);
+  height: 1px;
+  transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  width: 34px;
+}
+
+.landing-menu-button:hover span:first-child {
+  transform: translateX(-5px);
+}
+
+.landing-menu-button:hover span:last-child {
+  transform: translateX(5px);
+}
+
+/* Burger → X à l'ouverture (les deux barres se croisent au centre). */
+.landing-menu-button.is-open span:first-child {
+  transform: translateY(4px) rotate(45deg);
+}
+
+.landing-menu-button.is-open span:last-child {
+  transform: translateY(-4px) rotate(-45deg);
+}
+
+/* Overlay plein écran : toujours rendu, fermé via visibility (pas de démontage
+   → aucun risque d'hydratation). Fond void + hairline or. GSAP anime le clip. */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(24, 18, 12, 0.96) 0%, rgba(8, 6, 5, 0.99) 62%),
+    var(--void);
+  border-bottom: 1px solid rgba(217, 164, 65, 0.16);
+  visibility: hidden;
+}
+
+.mobile-menu[data-open='true'] {
+  visibility: visible;
+}
+
+.mobile-menu__nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(28px, 6vh, 52px);
+}
+
+.mobile-menu__link {
+  color: rgba(239, 225, 194, 0.94);
+  font-family: var(--font-display);
+  font-size: clamp(30px, 8vw, 46px);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.mobile-menu__link:hover {
+  color: var(--gold-light);
+}
+
+.mobile-menu__auth {
+  border-block: 1px solid rgba(217, 164, 65, 0.22);
+  color: var(--gold-light);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  letter-spacing: 0.16em;
+  margin-top: clamp(10px, 2vh, 22px);
+  padding: 16px 32px;
+  text-transform: uppercase;
+}
+
+/* Reduced-motion : le JS ne construit pas de timeline → transition CSS simple. */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu {
+    transition: opacity 300ms ease;
+    opacity: 0;
+  }
+
+  .mobile-menu[data-open='true'] {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1100px) {
+  .landing-chrome {
+    grid-template-columns: 1fr auto;
+  }
+
+  .landing-chrome__nav {
+    display: none;
+  }
+
+  .landing-chrome__actions {
+    display: none;
+  }
+
+  .landing-chrome__mobile {
+    display: block;
+  }
+}
+
+@media (max-width: 720px) {
+  .landing-chrome {
+    padding: 22px 20px;
+  }
+
+  .brand-mark__sigil {
+    width: 28px;
+  }
+
+  .brand-mark__text {
+    font-size: 23px;
+  }
+
+  .brand-mark__logo {
+    width: 154px;
+  }
+
+  .landing-chrome.is-scrolled .brand-mark__logo {
+    width: 138px;
+  }
+}
