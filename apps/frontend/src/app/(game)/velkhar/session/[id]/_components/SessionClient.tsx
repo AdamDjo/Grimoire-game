@@ -3,6 +3,10 @@
 import { getPeople, getVocation, type Character, type Choice, type Locale } from '@grimoire/shared'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+import { SoftSignupPrompt } from '@/components/ui/soft-signup-prompt'
+import { createClient } from '@/lib/supabase/client'
+import { useSessionStore } from '@/stores/session-store'
+
 import { postGameAction, type SceneWithSource } from '../_lib/api'
 import { resolveChoice, type DiceRoll as DiceRollResult } from '../_lib/consequences'
 
@@ -26,17 +30,18 @@ interface SessionClientProps {
  * simulate consequences on the HUD -> fetch the next scene.
  * Disposable — replaced by the real session flow once rules & persistence land.
  */
-export function SessionClient({
-  sessionId,
-  initialCharacter,
-  locale = 'en',
-}: SessionClientProps) {
+export function SessionClient({ sessionId, initialCharacter, locale = 'en' }: SessionClientProps) {
   const [character, setCharacter] = useState<Character>(initialCharacter)
   const [scene, setScene] = useState<SceneWithSource | null>(null)
   const [roll, setRoll] = useState<DiceRollResult | null>(null)
   const [turn, setTurn] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [limitReached, setLimitReached] = useState(false)
+
+  const incrementAnonymousRequestCount = useSessionStore(
+    (state) => state.incrementAnonymousRequestCount
+  )
 
   // Guards React 18 StrictMode's double-mount so the opening scene fetches once.
   const startedRef = useRef(false)
@@ -55,20 +60,37 @@ export function SessionClient({
         })
         setScene(next)
         setTurn((t) => t + 1)
+        incrementAnonymousRequestCount()
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'The Game Master fell silent.')
+        if (err instanceof Error && err.message === 'Anonymous limit reached') {
+          setLimitReached(true)
+        } else {
+          setError(err instanceof Error ? err.message : 'The Game Master fell silent.')
+        }
       } finally {
         setLoading(false)
       }
     },
-    [character, locale, sessionId],
+    [character, locale, sessionId, incrementAnonymousRequestCount]
   )
 
-  // Opening scene on mount.
+  // Ensures an authenticated session (anonymous if none) before the first scene fetch.
   useEffect(() => {
     if (startedRef.current) return
     startedRef.current = true
-    void requestScene()
+
+    void (async () => {
+      const supabase = createClient()
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+
+      if (!session) {
+        await supabase.auth.signInAnonymously()
+      }
+
+      void requestScene()
+    })()
     // requestScene depends on character (stable on mount) — intentional one-shot.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -84,7 +106,7 @@ export function SessionClient({
       setRoll(resolution.roll ?? null)
       void requestScene(choice)
     },
-    [character.stats.survival, requestScene],
+    [character.stats.survival, requestScene]
   )
 
   const people = getPeople(character.people)
@@ -102,7 +124,16 @@ export function SessionClient({
           </div>
         </header>
 
-        {error ? (
+        {limitReached ? (
+          <div className="gs-error" role="alert">
+            You&apos;ve reached the anonymous play limit. Create a free account to keep playing.
+            <div>
+              <a href="/signup" className="gs-retry">
+                Create account
+              </a>
+            </div>
+          </div>
+        ) : error ? (
           <div className="gs-error" role="alert">
             {error}
             <div>
@@ -118,7 +149,7 @@ export function SessionClient({
           />
         )}
 
-        {scene && !error ? (
+        {scene && !error && !limitReached ? (
           <ChoiceList choices={scene.choices} disabled={loading} onChoose={handleChoose} />
         ) : null}
       </main>
@@ -138,6 +169,8 @@ export function SessionClient({
           </section>
         ) : null}
       </aside>
+
+      <SoftSignupPrompt />
     </div>
   )
 }
