@@ -9,7 +9,7 @@
 
 - **Worktree parallèle.** Codex bosse sur le dossier principal (`/Users/adembenmessaoud/dev/EpisodeRPG-game`, branche `feature/93-ui-kit-grimoire-complet` = UI Kit). Claude bosse dans un worktree à côté : `/Users/adembenmessaoud/dev/EpisodeRPG-game-claude`, branche **`feature/95-demo-gamesession-vertical-slice`** (partie de `origin/develop`).
 - ⚠️ **Ne jamais toucher au dossier principal** (c'est celui de Codex). Tout le dev de cet EPIC se fait dans `EpisodeRPG-game-claude`.
-- ⚠️ **Canon gitignored** : `docs/private/raw/*.md` (les GDD) n'existent QUE dans le dossier principal (non transférés au worktree). Pour les relire → les lire depuis `/Users/adembenmessaoud/dev/EpisodeRPG-game/docs/private/raw/` (lecture seule).
+- ⚠️ **Canon gitignored** : `docs/public/raw/*.md` (les GDD) n'existent QUE dans le dossier principal (non transférés au worktree). Pour les relire → les lire depuis `/Users/adembenmessaoud/dev/EpisodeRPG-game/docs/public/raw/` (lecture seule).
 - **Règles git absolues** : issue → branche → PR, jamais de commit sans demande explicite, jamais sur `main`/`develop`, jamais de `Co-Authored-By: Claude`. `feature/*` → `develop`.
 - **Node** : `pnpm install` déjà fait dans le worktree (les `node_modules` ne se transfèrent pas).
 
@@ -86,7 +86,7 @@ export function attributeModifier(value: number): number;
 `vocation`, `people` (peuple), `freeConcept`, `backstory`, `locale` (défaut `'en'`).
 
 - **Peuples** : Sahélin (+1 blood), Rivain (+1 ash), Thérien (+1 blood), Cendreur (+1 breath), Changepeau (+1 breath, −1 ash).
-- **Vocations** : Marcheur-du-Sel, Lame-Ombre, Veilleur, Tisse-Verbe (+ concept libre). Profils stats dans `docs/private/raw/04-ATTRIBUTES.md` (ex. Marcheur-du-Sel : blood 14 / breath 10 / ash 10).
+- **Vocations** : Marcheur-du-Sel, Lame-Ombre, Veilleur, Tisse-Verbe (+ concept libre). Profils stats dans `docs/public/raw/04-ATTRIBUTES.md` (ex. Marcheur-du-Sel : blood 14 / breath 10 / ash 10).
 - **Souvenirs** (méta) : entité séparée (title + ~50 tokens), **PAS** dans `CharacterStats`.
 
 ### ⚠️ Réconciliation à faire en B1
@@ -151,11 +151,11 @@ UI déjà dispo : `Heading`, `NavBar`, `Footer`, `Section`, `PageShell`, `StatIt
 
 ## 6. Sources canon (dossier principal, lecture seule)
 
-- `docs/private/raw/04-ATTRIBUTES.md` — triptyque, modificateurs, dés, profils vocations.
-- `docs/private/raw/06-SURVIVAL.md` — 4 jauges + Calamine + conditions + biomes + équipement.
-- `docs/private/raw/14-META-WORLD.md` §2 — Souvenirs.
+- `docs/public/raw/04-ATTRIBUTES.md` — triptyque, modificateurs, dés, profils vocations.
+- `docs/public/raw/06-SURVIVAL.md` — 4 jauges + Calamine + conditions + biomes + équipement.
+- `docs/public/raw/14-META-WORLD.md` §2 — Souvenirs.
 - `docs/public/tech/TECH_STACK.md` — Express+TS, OpenRouter, Supabase+pgvector, flux de tour.
-- `docs/public/current-state/PHASE-1B-BACKLOG.md` — bloqueurs B1/B2/B3, écrans, tests.
+- `docs/public/plans-actifs/PHASE-1B-BACKLOG.md` — bloqueurs B1/B2/B3, écrans, tests.
 
 ---
 

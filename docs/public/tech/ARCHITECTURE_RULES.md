@@ -23,7 +23,7 @@ source_of_truth: true
 
 ## Canon et mémoire
 
-- Fixed Canon : `docs/private/raw/`, structuré ensuite côté backend.
+- Fixed Canon : `docs/public/raw/`, structuré ensuite côté backend.
 - Emergent Canon : faits de run persistés par le backend.
 - Retrieval : pgvector pour retrouver les faits utiles sans charger toute l'histoire.
 - Le contexte IA est reconstruit par le backend à chaque tour.

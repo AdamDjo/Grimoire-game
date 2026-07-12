@@ -45,8 +45,7 @@ src/
 
 - Sections scroll de `(home)` dans `_components/Section<N><Nom>/`.
 - Contenu/copy à garder cohérent avec `../../docs/public/design/GAME_DESIGN.md`.
-- Plan landing visuel actif : `../../docs/private/plans/landing/PLAN-LANDING-CUBERTO-LEVEL.md`.
-- Plan landing SEO/copy : `../../docs/private/plans/landing/LANDING_SEO_BILINGUAL_PLAN.md`.
+- Phase 1A (landing) livrée — plans landing archivés, pas de plan actif restant.
 
 ## UI
 

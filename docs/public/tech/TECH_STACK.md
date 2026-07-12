@@ -2,7 +2,7 @@
 
 > Architecture active, publique et courte.
 > Détails internes longs archivés : `docs/private/archive/public-long-versions/TECH_STACK.long.md`.
-> Canon produit : `docs/private/raw/` via [`../wiki/canon-index.md`](../wiki/canon-index.md).
+> Canon produit : `docs/public/raw/` via [`../nav/canon-index.md`](../nav/canon-index.md).
 > Invariants d'architecture : [`ARCHITECTURE_RULES.md`](ARCHITECTURE_RULES.md).
 
 ## Stack
@@ -29,7 +29,7 @@
 - Services principaux à construire : game engine, world-state, memory, lore, Aveugle.
 - AI orchestration : provider OpenRouter unique + validation de sortie.
 - Game rules : stats, dice, combat, inventory, survival, consequences.
-- Lore backend : `lore/velkhar/` généré à partir du canon privé ciblé.
+- Lore backend : `lore/velkhar/` généré à partir du canon (`docs/public/raw/`) ciblé.
 
 ## Mémoire et canon
 
@@ -72,8 +72,8 @@
 
 ## Références ciblées
 
-- État projet : [`../current-state/MEMORY.md`](../current-state/MEMORY.md)
-- Backlog : [`../current-state/PHASE-1B-BACKLOG.md`](../current-state/PHASE-1B-BACKLOG.md)
+- État projet : [`../current-state/PROJECT_STATUS.md`](../current-state/PROJECT_STATUS.md)
+- Backlog : [`../plans-actifs/PHASE-1B-BACKLOG.md`](../plans-actifs/PHASE-1B-BACKLOG.md)
 - Design : [`../design/GAME_DESIGN.md`](../design/GAME_DESIGN.md)
 - Architecture : [`ARCHITECTURE_RULES.md`](ARCHITECTURE_RULES.md)
-- Canon : [`../wiki/canon-index.md`](../wiki/canon-index.md)
+- Canon : [`../nav/canon-index.md`](../nav/canon-index.md)

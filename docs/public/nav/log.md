@@ -29,7 +29,7 @@ Suite à la revue DA des mockups Hub L'Aveugle et Session (`docs/private/archive
 
 ## 2026-07-02 — Migration docs/ : GDD rapatrié dans le repo, structure LLM Wiki
 
-- `docs/private/raw/` créé : contient les 25 fichiers GDD Velkhar actifs (gitignoré — physiquement présent, non commité)
+- `docs/public/raw/` créé : contient les 25 fichiers GDD Velkhar actifs (gitignoré — physiquement présent, non commité)
 - `docs/public/wiki/` créé : `index.md` (routeur GDD + doc) + ce `log.md`
 - `ZCodeProject/GDD/_archive-v1/` supprimé (zip backup : `~/Desktop/gdd-archive-v1-backup-2026-07-02.zip`)
 - `AGENTS.md` créé à la racine (standard multi-IA : Cursor, Windsurf, Copilot, etc.)
@@ -40,12 +40,12 @@ Suite à la revue DA des mockups Hub L'Aveugle et Session (`docs/private/archive
 
 ---
 
-## 2026-07-03 — Sync canon : GDD copié dans docs/private/raw
+## 2026-07-03 — Sync canon : GDD copié dans docs/public/raw
 
-Le canon GDD Velkhar a été copié depuis `/Users/adembenmessaoud/ZCodeProject/GDD/` vers `docs/private/raw/` pour que le projet, les agents IA et la documentation partagent le même répertoire de vérité locale.
+Le canon GDD Velkhar a été copié depuis `/Users/adembenmessaoud/ZCodeProject/GDD/` vers `docs/public/raw/` pour que le projet, les agents IA et la documentation partagent le même répertoire de vérité locale.
 
-- `docs/private/raw/` contient désormais les 25 fichiers Markdown canon en local.
-- `docs/private/raw/` est privé et gitignored : il reste lisible par les IA locales, mais ne doit pas être publié.
+- `docs/public/raw/` contient désormais les 25 fichiers Markdown canon en local.
+- `docs/public/raw/` est privé et gitignored : il reste lisible par les IA locales, mais ne doit pas être publié.
 - Les anciens chemins frontend `valorain/` ont été renommés en `velkhar/`.
 
 ---
@@ -68,8 +68,8 @@ Le vault docs est passé à une structure simple :
 - `docs/00-START-HERE.md` reste le point d'entrée unique.
 - `docs/public/` contient les documents trackés et publiables : current-state, design, project, tech, wiki.
 - `docs/private/` contient tout ce qui ne doit pas être publié : canon complet, plans, prompts, assets lourds, archives.
-- Le canon GDD actif vit désormais dans `docs/private/raw/`.
-- `pnpm check:canon` vérifie désormais `docs/private/raw/`.
+- Le canon GDD actif vit désormais dans `docs/public/raw/`.
+- `pnpm check:canon` vérifie désormais `docs/public/raw/`.
 - Lore exposé par paliers : L'Aveugle, Cendre, Calamine, Souvenirs d'abord ; Archontes, factions, régions et secrets par découverte.
 - Priorité produit confirmée : memory/world-state/validation backend avant extension de régions, vocations, bestiaire, 3D dice ou leaderboard.
 
@@ -96,3 +96,46 @@ Réduction des répétitions et séparation des sources de vérité :
 La Phase 1A landing reste active. Le plan principal est `docs/private/plans/landing/PLAN-LANDING-CUBERTO-LEVEL.md`, et l'étape opérationnelle actuelle est la préparation/génération des frames **T1 Cendres** via `docs/private/plans/landing/LANDING_ASSET_PROMPTS.md`.
 
 Phase 1B reste en backlog uniquement jusqu'à validation et merge de la landing.
+
+---
+
+## 2026-07-12 — Fix : trou de canon entre branches/worktrees
+
+`docs/public/raw/` contenait déjà une copie complète et à jour du canon (25 fichiers), mais tous les docs de routage (`00-START-HERE.md`, `task-router.md`, `canon-index.md`, `RAG_RULES.md`, `PRIVATE_CANON_POLICY.md`) pointaient encore vers `docs/private/raw/` (gitignored). Résultat : sur une branche/worktree où `docs/private/` n'était pas recréé localement, une IA suivant ces liens croyait le canon manquant.
+
+- Tous les liens de routage public pointent désormais vers `docs/public/raw/`.
+- `PRIVATE_CANON_POLICY.md` réécrite : le canon est officiellement public et versionné, `docs/private/` ne sert plus qu'aux plans en cours / assets lourds / archives.
+- `scripts/check-canon.sh` et `pnpm check:canon` supprimés (obsolètes : un dossier versionné ne peut pas "manquer" silencieusement, `git status` suffit).
+- L'ancien doublon `docs/private/raw/` (gitignored) a été supprimé — `docs/public/raw/` est l'unique source de vérité.
+
+---
+
+## 2026-07-12 — Réorganisation : `current-state/` allégé, `plans-actifs/` créé
+
+`current-state/` mélangeait statut vivant (`PROJECT_STATUS.md`, `NEXT_ACTIONS.md`), un routeur de compatibilité (`MEMORY.md`) et deux plans de travail actifs — trop chargé, confus à parcourir.
+
+- `docs/public/current-state/MEMORY.md` supprimé après vérification complète : `AGENTS.md` (Codex) ne le référençait pas ; seuls 2 skills Claude Code (`status`, `implement`) pointaient vers un chemin fantôme `docs/MEMORY.md` jamais existant post-reorg — corrigés pour lire directement `PROJECT_STATUS.md`/`NEXT_ACTIONS.md`.
+- `PLAN-GAMESESSION-1B.md` et `PHASE-1B-BACKLOG.md` déplacés dans le nouveau dossier `docs/public/plans-actifs/` (plans de travail en cours, séparés du statut vivant).
+- `current-state/` ne contient plus que `PROJECT_STATUS.md` + `NEXT_ACTIONS.md`.
+- Références croisées corrigées : `DOCS_MAP.md`, `TECH_STACK.md`, `PLAN-GAMESESSION-1B.md`, `AGENTS.md`, `apps/backend/CLAUDE.md`, `README.md`.
+
+---
+
+## 2026-07-12 — Fusion `wiki/` + `reference/` → `nav/`
+
+`wiki/` et `reference/` avaient la même fonction (aider à naviguer le vault) sans frontière claire, et 4 fichiers différents (`00-START-HERE.md`, `docs/public/README.md`, `wiki/index.md`, `reference/DOCS_MAP.md`) redirigeaient tous vers les mêmes cibles — confusion et trou d'hallucination potentiel.
+
+- `wiki/` et `reference/` fusionnés en `docs/public/nav/` (contient `DOCS_MAP.md`, `task-router.md`, `canon-index.md`, `PRIVATE_CANON_POLICY.md`, `RAG_RULES.md`, `log.md`).
+- `docs/public/README.md` et `wiki/index.md` supprimés (pure redite de `00-START-HERE.md` / `DOCS_MAP.md`, aucune info unique).
+- `00-START-HERE.md` reste l'unique point d'entrée IA ; `DOCS_MAP.md` reste la carte exhaustive.
+- Tous les liens (`AGENTS.md`, `CLAUDE.md`, agents Claude Code, docs publiques, `apps/backend/CLAUDE.md`, `packages/shared/CLAUDE.md`) repointés vers `docs/public/nav/`.
+
+---
+
+## 2026-07-12 — Audit complet des liens : 2 chemins fantômes corrigés
+
+Balayage de tous les fichiers contenant des liens markdown/wiki-links (`00-START-HERE.md`, `PROJECT_STATUS.md`, `NEXT_ACTIONS.md`, `DESIGN_TOKENS.md`, `GAME_DESIGN.md`, `PRIVATE_CANON_POLICY.md`, `canon-index.md`, `PHASE-1B-BACKLOG.md`, `TECH_STACK.md`, `ARCHITECTURE_RULES.md`, `DOCS_MAP.md`, `RAG_RULES.md`, `task-router.md`, `AGENTS.md`, `CLAUDE.md` (racine + apps + packages), agents Claude Code).
+
+- `task-router.md` et `apps/frontend/CLAUDE.md` référençaient encore `docs/private/plans/landing/PLAN-LANDING-CUBERTO-LEVEL.md` et `LANDING_SEO_BILINGUAL_PLAN.md` — ces fichiers n'existent plus (Phase 1A livrée, plans landing archivés). Remplacés par les entrées vers les plans actifs réels : `docs/private/plans/gamesession-1b/NOTES-IMPLEMENTATION.md` et `docs/private/plans/ui-kit/PLAN-UI-KIT-PRODUCTION.md`.
+- `TECH_STACK.md` : mention résiduelle "canon privé" corrigée en "canon (`docs/public/raw/`)" — terminologie obsolète depuis que le canon est public.
+- Tous les autres liens vérifiés (contenu lu intégralement, pas juste grep) : corrects.

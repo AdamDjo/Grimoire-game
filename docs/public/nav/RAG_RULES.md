@@ -21,7 +21,7 @@ Objectif : rendre le vault facile à indexer pour une IA sans créer de bruit ni
 
 - `public-core` : `00-START-HERE`, status, actions, task-router, architecture rules.
 - `public-reference` : design, tech stack, docs map, public brief.
-- `private-canon` : `docs/private/raw/`.
+- `public-canon` : `docs/public/raw/`.
 - `private-plans` : plans actifs, prompts, assets, roadmap interne.
 
 ## Frontmatter recommandé
@@ -41,5 +41,5 @@ updated: 2026-07-04
 1. Lire `docs/00-START-HERE.md`.
 2. Lire `docs/public/current-state/PROJECT_STATUS.md`.
 3. Lire `docs/public/current-state/NEXT_ACTIONS.md`.
-4. Utiliser `docs/public/wiki/task-router.md` pour choisir les fichiers ciblés.
-5. Lire le canon privé uniquement si la tâche le demande.
+4. Utiliser `docs/public/nav/task-router.md` pour choisir les fichiers ciblés.
+5. Lire le canon (`docs/public/raw/`) via `task-router.md`, seulement les fichiers ciblés par la tâche.
