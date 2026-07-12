@@ -6,6 +6,7 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsup",
     "start": "node dist/index.mjs",
+    "postinstall": "prisma generate",
     "type-check": "tsc --noEmit",
     "lint": "eslint src/",
     "test": "vitest run",
