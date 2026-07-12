@@ -43,6 +43,6 @@ updated: 2026-07-11
 - Prochaines actions : [[NEXT_ACTIONS]]
 - Backlog Phase 1B : [[PHASE-1B-BACKLOG]]
 - Plan gamesession 1B : [[PLAN-GAMESESSION-1B]]
-- Routeur IA : [[../wiki/task-router]]
-- Canon privé : [[../wiki/canon-index]]
+- Routeur IA : [[../nav/task-router]]
+- Canon : [[../nav/canon-index]]
 - Règles d'architecture : [[../tech/ARCHITECTURE_RULES]]

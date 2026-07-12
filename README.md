@@ -62,9 +62,14 @@ Grimoire-game/
 │   ├── eslint-config/         # Shared ESLint config (@grimoire/eslint-config)
 │   └── prettier-config/       # Shared Prettier config (@grimoire/prettier-config)
 ├── docs/
-│   ├── GAME_DESIGN.md         # The WHAT: vision, universes, classes, UI, narrative, RP features
-│   ├── TECH_STACK.md          # The HOW: stack, architecture, AI prompts, validation, security
-│   └── MEMORY.md              # Current project state (read by Claude each session)
+│   ├── 00-START-HERE.md       # AI entrypoint
+│   └── public/
+│       ├── current-state/     # Live status + next actions
+│       ├── design/            # GAME_DESIGN.md, DESIGN_TOKENS.md
+│       ├── tech/               # TECH_STACK.md, ARCHITECTURE_RULES.md
+│       ├── wiki/               # task-router, canon-index, log
+│       ├── reference/          # canon policy, RAG rules
+│       └── raw/                # Full Velkhar canon (lore + rules)
 ├── .github/
 │   ├── workflows/             # CI (lint, type-check, build) + Release
 │   └── ISSUE_TEMPLATE/        # GitHub issue templates

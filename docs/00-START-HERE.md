@@ -13,17 +13,15 @@ Point d'entrée stable pour tout agent IA. Ne pas y stocker l'état vivant du pr
 
 1. Statut actuel : [[public/current-state/PROJECT_STATUS]]
 2. Prochaines actions : [[public/current-state/NEXT_ACTIONS]]
-3. Routeur de tâche : [[public/wiki/task-router]]
+3. Routeur de tâche : [[public/nav/task-router]]
 4. Règles d'architecture : [[public/tech/ARCHITECTURE_RULES]]
-5. Politique canon privé : [[public/reference/PRIVATE_CANON_POLICY]]
+5. Politique canon privé : [[public/nav/PRIVATE_CANON_POLICY]]
 
 ## Règles absolues
 
 - Ne pas lire tout le vault.
-- Ne pas lire tout `docs/private/raw/`.
-- Passer par [[public/wiki/task-router]] pour choisir les docs nécessaires.
-- Si une doc publique contredit `docs/private/raw/`, le canon privé gagne.
-- Si le canon privé manque localement, lancer `pnpm check:canon`.
+- Ne pas lire tout `docs/public/raw/` d'un coup — passer par [[public/nav/task-router]] pour choisir les fichiers ciblés.
+- Si un doc public résumé contredit `docs/public/raw/`, le canon `raw/` gagne.
 
 ## Structure
 
@@ -31,13 +29,13 @@ Point d'entrée stable pour tout agent IA. Ne pas y stocker l'état vivant du pr
 docs/
 ├── 00-HOME.md              # dashboard Obsidian humain
 ├── 00-START-HERE.md        # point d'entrée IA stable
-├── public/                 # docs partageables et routables
-└── private/                # canon, plans, assets, archives gitignored
+├── public/                 # docs partageables, routables, versionnées (canon inclus)
+└── private/                # plans en cours, assets lourds, archives — gitignored
 ```
 
 ## Raccourcis
 
-- Carte du vault : [[public/reference/DOCS_MAP]]
-- Règles RAG : [[public/reference/RAG_RULES]]
+- Carte du vault : [[public/nav/DOCS_MAP]]
+- Règles RAG : [[public/nav/RAG_RULES]]
 - Brief public : [[public/project/PUBLIC_BRIEF]]
-- Log : [[public/wiki/log]]
+- Log : [[public/nav/log]]

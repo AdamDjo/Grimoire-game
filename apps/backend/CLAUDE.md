@@ -3,8 +3,8 @@
 > Lire d'abord : `../../docs/00-START-HERE.md`, puis `../../docs/public/current-state/PROJECT_STATUS.md`.
 > Statut vivant : `../../docs/public/current-state/PROJECT_STATUS.md`.
 > Architecture active : `../../docs/public/tech/ARCHITECTURE_RULES.md`.
-> Routeur : `../../docs/public/wiki/task-router.md`.
-> Canon ciblé : `../../docs/public/wiki/canon-index.md` → `../../docs/private/raw/*`.
+> Routeur : `../../docs/public/nav/task-router.md`.
+> Canon ciblé : `../../docs/public/nav/canon-index.md` → `../../docs/public/raw/*`.
 
 ## Scope
 
@@ -39,7 +39,7 @@ src/
 
 ## Canon à lire selon tâche
 
-Utiliser `../../docs/public/wiki/task-router.md`.
+Utiliser `../../docs/public/nav/task-router.md`.
 
 ## Tests
 

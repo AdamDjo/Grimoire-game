@@ -13,7 +13,7 @@ Feature to implement: $ARGUMENTS
 
 ### Step 1: Understand
 
-- Read `docs/MEMORY.md` to know current phase and project state
+- Read `docs/public/current-state/PROJECT_STATUS.md` and `docs/public/current-state/NEXT_ACTIONS.md` to know current phase and project state
 - Read relevant CLAUDE.md files for the target workspace
 - Read existing related code to understand patterns
 - Identify which files need to be created or modified
@@ -46,5 +46,5 @@ Feature to implement: $ARGUMENTS
 
 ### Step 6: Update Progress
 
-- Update `docs/MEMORY.md` to reflect completed items and new project state
+- Update `docs/public/current-state/PROJECT_STATUS.md` and `docs/public/current-state/NEXT_ACTIONS.md` to reflect completed items and new project state
 - Report what was done and what's next
