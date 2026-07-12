@@ -3,6 +3,7 @@ import express, { type Express } from 'express'
 import rateLimit from 'express-rate-limit'
 
 import { env } from './config/env'
+import { requireAuth } from './middleware/auth.middleware'
 import { gameRouter } from './routes/game.routes'
 
 const app: Express = express()
@@ -33,7 +34,7 @@ const gameLimiter = rateLimit({
 })
 
 // Routes
-app.use('/api/game', gameLimiter, gameRouter)
+app.use('/api/game', gameLimiter, requireAuth, gameRouter)
 
 // Health check
 app.get('/api/health', (_req, res) => {

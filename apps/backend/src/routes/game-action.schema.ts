@@ -32,7 +32,6 @@ const survivalSchema = z.object({
 
 const characterSchema = z.object({
   id: z.string(),
-  userId: z.string(),
   name: z.string().min(1),
   people: z.string().min(1),
   vocation: z.string().min(1),

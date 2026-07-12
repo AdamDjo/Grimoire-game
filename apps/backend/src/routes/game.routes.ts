@@ -33,8 +33,14 @@ gameRouter.post('/action', async (req: Request, res: Response<ApiResponse<SceneW
   }
 
   const { character, locale, sessionId, choiceId, chosenActionText, freeAction } = parsed.data
+  const userId = req.auth!.userId
 
-  const result = await generateScene({ character, locale, chosenActionText, freeAction })
+  const result = await generateScene({
+    character: { ...character, userId },
+    locale,
+    chosenActionText,
+    freeAction,
+  })
 
   const scene = assembleScene({
     payload: result.scene,
