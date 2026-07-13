@@ -7,6 +7,12 @@ const LOCALE_NAME: Record<Locale, string> = {
   fr: 'French',
 }
 
+/** Narrow projection of a `SceneLog` used for the N1 recent-turns window. */
+export interface RecentTurnSummary {
+  turnNumber: number
+  turnSummary: string | null
+}
+
 /**
  * Builds the N2 memory section: the caller passes at most the 5 most recent
  * chunks (bounded to keep the prompt cheap on long runs — see
@@ -38,6 +44,25 @@ function buildMemorySection(memoryChunks: MemoryChunkModel[]): string[] {
 }
 
 /**
+ * Builds the N1 recent-turns section: the caller passes at most the 5 most
+ * recent scene logs (see `RecentTurnSummary`), already filtered of entries
+ * with no `turnSummary` (older, pre-migration rows). Formats them in
+ * chronological order (oldest first) so the AI reads them like a timeline
+ * leading up to the current turn — distinct from the N2 long-term summaries.
+ */
+function buildRecentTurnsSection(recentTurns: RecentTurnSummary[]): string[] {
+  const withSummary = recentTurns.filter(
+    (turn): turn is RecentTurnSummary & { turnSummary: string } => Boolean(turn.turnSummary)
+  )
+  if (withSummary.length === 0) return []
+
+  const chronological = withSummary.slice().sort((a, b) => a.turnNumber - b.turnNumber)
+  const lines = chronological.map((turn) => `- (turn ${turn.turnNumber}) ${turn.turnSummary}`)
+
+  return ['', 'Recent turns (most recent scenes, in order):', ...lines]
+}
+
+/**
  * Builds the Game Master system prompt.
  * The AI writes narration and choice labels only; the backend owns all rules,
  * dice, stats, and canon consistency. Canon brand terms are NOT re-translated —
@@ -46,7 +71,8 @@ function buildMemorySection(memoryChunks: MemoryChunkModel[]): string[] {
 export function buildSystemPrompt(
   character: Character,
   locale: Locale,
-  memoryChunks: MemoryChunkModel[] = []
+  memoryChunks: MemoryChunkModel[] = [],
+  recentTurns: RecentTurnSummary[] = []
 ): string {
   const languageName = LOCALE_NAME[locale]
 
@@ -64,13 +90,19 @@ export function buildSystemPrompt(
     '',
     `Player character: ${character.name} — people "${character.people}", vocation "${character.vocation}".`,
     ...buildMemorySection(memoryChunks),
+    ...buildRecentTurnsSection(recentTurns),
     '',
     'Respond with a single JSON object and nothing else, matching exactly:',
     '{',
     '  "narrative": string,',
     '  "sceneType": "exploration" | "combat" | "dialog" | "event" | "shop" | "rest",',
     '  "location": string,',
-    '  "choices": [{ "text": string, "type": "action"|"dialog"|"combat"|"flee"|"use_item"|"skill", "riskLevel"?: "safe"|"low"|"medium"|"high"|"deadly" }]',
+    '  "choices": [{ "text": string, "type": "action"|"dialog"|"combat"|"flee"|"use_item"|"skill", "riskLevel"?: "safe"|"low"|"medium"|"high"|"deadly" }],',
+    '  "turnSummary": string',
     '}',
+    '',
+    'turnSummary: a short factual sentence (max 200 characters) condensing what just',
+    'happened THIS turn — not styled narration, a compact fact usable for continuity',
+    '(e.g. "The player fled the oasis after discovering the merchant NPC was lying").',
   ].join('\n')
 }
