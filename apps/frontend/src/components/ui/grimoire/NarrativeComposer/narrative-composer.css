@@ -1,0 +1,24 @@
+.narrative-composer {
+  isolation: isolate;
+  position: relative;
+  width: 100%;
+}
+
+.narrative-composer__icon {
+  left: 1.1rem;
+  position: absolute;
+  top: 1.1rem;
+  z-index: 2;
+}
+
+.narrative-composer .narrative-composer__control {
+  padding-left: 4.25rem;
+  padding-right: 5rem;
+}
+
+.narrative-composer__action {
+  position: absolute;
+  right: 0.75rem;
+  top: 0.75rem;
+  z-index: 2;
+}

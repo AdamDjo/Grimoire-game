@@ -1,0 +1,111 @@
+.game-textarea {
+  --game-field-border: rgba(218, 170, 74, 0.56);
+  --game-field-corner: rgba(218, 170, 74, 0.72);
+  --game-field-inset: rgba(38, 27, 16, 0.72);
+  --game-field-glow: rgba(217, 164, 65, 0);
+
+  background: rgba(9, 8, 6, 0.92);
+  box-shadow:
+    inset 0 0 0 1px var(--game-field-border),
+    inset 0 0 0 4px var(--game-field-inset),
+    inset 0 10px 24px rgba(0, 0, 0, 0.28),
+    0 0 18px var(--game-field-glow);
+  display: block;
+  isolation: isolate;
+  min-height: 8rem;
+  position: relative;
+  transition: box-shadow 180ms cubic-bezier(0.2, 0, 0, 1);
+  width: 100%;
+}
+
+.game-textarea::before,
+.game-textarea::after {
+  border-color: var(--game-field-corner);
+  border-style: solid;
+  content: '';
+  height: 12px;
+  pointer-events: none;
+  position: absolute;
+  transition: border-color 180ms cubic-bezier(0.2, 0, 0, 1);
+  width: 12px;
+}
+
+.game-textarea:not(.game-textarea--disabled):hover {
+  --game-field-border: rgba(239, 212, 141, 0.7);
+  --game-field-corner: rgba(239, 212, 141, 0.86);
+  --game-field-inset: rgba(48, 33, 17, 0.74);
+  --game-field-glow: rgba(217, 164, 65, 0.12);
+}
+
+.game-textarea::before {
+  border-width: 1px 0 0 1px;
+  left: 7px;
+  top: 7px;
+}
+
+.game-textarea::after {
+  border-width: 0 1px 1px 0;
+  bottom: 7px;
+  right: 7px;
+}
+
+.game-textarea:focus-within {
+  --game-field-border: rgba(239, 212, 141, 0.9);
+  --game-field-corner: rgba(239, 212, 141, 1);
+  --game-field-inset: rgba(60, 40, 18, 0.76);
+  --game-field-glow: rgba(217, 164, 65, 0.24);
+}
+
+.game-textarea.game-textarea--invalid {
+  --game-field-border: rgba(164, 58, 50, 0.9);
+  --game-field-corner: rgba(190, 72, 60, 0.94);
+  --game-field-inset: rgba(55, 20, 18, 0.76);
+  --game-field-glow: rgba(164, 58, 50, 0.2);
+}
+
+.game-textarea__control {
+  background: transparent;
+  border: 0;
+  caret-color: var(--gold-light, #f0d48a);
+  color: var(--parchment, #e8dcc0);
+  display: block;
+  font-family: var(--font-ui);
+  font-size: clamp(1.0625rem, 0.3vw + 1rem, 1.2rem);
+  font-weight: 400;
+  line-height: 1.55;
+  min-height: inherit;
+  outline: 0;
+  padding: 1.25rem 1.4rem;
+  resize: vertical;
+  width: 100%;
+}
+
+.game-textarea--disabled {
+  cursor: not-allowed;
+  filter: grayscale(0.7) brightness(0.72);
+  opacity: 0.58;
+}
+
+.game-textarea__control::placeholder {
+  color: color-mix(in srgb, var(--parchment, #e8dcc0) 62%, transparent);
+  opacity: 1;
+}
+
+/* Même contrat que GameInput : le focus appartient à la surface englobante. */
+.game-textarea__control:focus-visible {
+  box-shadow: none;
+  outline: 0;
+}
+
+.game-textarea__control:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-textarea,
+  .game-textarea::before,
+  .game-textarea::after {
+    transition-duration: 0.01ms;
+  }
+}

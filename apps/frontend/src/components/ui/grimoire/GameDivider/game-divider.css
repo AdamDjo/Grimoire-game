@@ -1,0 +1,149 @@
+.game-divider {
+  --game-divider-color: var(--gold, #d9a441);
+  --game-divider-light: var(--gold-light, #efd48d);
+
+  align-items: center;
+  color: var(--game-divider-color);
+  display: grid;
+  flex: none;
+  justify-content: center;
+}
+
+.game-divider--horizontal {
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  width: 100%;
+}
+
+.game-divider--vertical {
+  grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr);
+  height: 100%;
+  width: 20px;
+}
+
+.game-divider__line {
+  background: linear-gradient(90deg, transparent, currentColor 22%, currentColor 78%, transparent);
+  box-shadow: 0 0 5px color-mix(in srgb, currentColor 18%, transparent);
+  display: block;
+  height: 1px;
+  opacity: 0.72;
+  width: 100%;
+}
+
+.game-divider--vertical .game-divider__line {
+  background: linear-gradient(180deg, transparent, currentColor 22%, currentColor 78%, transparent);
+  height: 100%;
+  justify-self: center;
+  width: 1px;
+}
+
+.game-divider__ornament {
+  background: #120f0b;
+  border: 1px solid currentColor;
+  box-shadow:
+    inset 0 0 0 2px #120f0b,
+    inset 0 0 0 3px color-mix(in srgb, currentColor 46%, transparent);
+  display: block;
+  height: 10px;
+  margin: 0 12px;
+  rotate: 45deg;
+  width: 10px;
+}
+
+.game-divider--vertical .game-divider__ornament {
+  margin: 12px 0;
+}
+
+.game-divider--simple {
+  display: block;
+}
+
+.game-divider--simple .game-divider__ornament,
+.game-divider--simple .game-divider__line:last-child {
+  display: none;
+}
+
+.game-divider--simple.game-divider--horizontal .game-divider__line {
+  margin-top: 10px;
+}
+
+.game-divider--simple.game-divider--vertical .game-divider__line {
+  margin-inline: auto;
+}
+
+.game-divider--ornate .game-divider__line {
+  box-shadow:
+    0 -3px 0 -0.5px color-mix(in srgb, currentColor 24%, transparent),
+    0 3px 0 -0.5px color-mix(in srgb, currentColor 24%, transparent),
+    0 0 7px color-mix(in srgb, currentColor 22%, transparent);
+}
+
+.game-divider--ornate.game-divider--vertical .game-divider__line {
+  box-shadow:
+    -3px 0 0 -0.5px color-mix(in srgb, currentColor 24%, transparent),
+    3px 0 0 -0.5px color-mix(in srgb, currentColor 24%, transparent),
+    0 0 7px color-mix(in srgb, currentColor 22%, transparent);
+}
+
+.game-divider--ornate .game-divider__ornament {
+  border-color: var(--game-divider-light);
+  height: 14px;
+  width: 14px;
+}
+
+.game-divider--celestial,
+.game-divider--auberge {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: block;
+  max-width: none;
+  width: 100%;
+}
+
+.game-divider--celestial {
+  aspect-ratio: 1695 / 218;
+  background-image: url('/ui-kit/dividers/celestial-divider.webp');
+}
+
+.game-divider--auberge {
+  aspect-ratio: 1975 / 89;
+  background-image: url('/ui-kit/dividers/auberge-divider.webp');
+}
+
+.game-divider--celestial .game-divider__line,
+.game-divider--celestial .game-divider__ornament,
+.game-divider--auberge .game-divider__line,
+.game-divider--auberge .game-divider__ornament {
+  display: none;
+}
+
+.game-divider--horizontal.game-divider--sm {
+  max-width: 10rem;
+}
+
+.game-divider--horizontal.game-divider--md {
+  max-width: 24rem;
+}
+
+.game-divider--horizontal.game-divider--lg {
+  max-width: none;
+}
+
+.game-divider--vertical.game-divider--sm {
+  max-height: 7.5rem;
+}
+
+.game-divider--vertical.game-divider--md {
+  max-height: 14rem;
+}
+
+.game-divider--vertical.game-divider--lg {
+  max-height: none;
+}
+
+@media (prefers-contrast: more) {
+  .game-divider__line,
+  .game-divider__ornament {
+    opacity: 1;
+  }
+}

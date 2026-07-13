@@ -1,0 +1,112 @@
+.game-avatar {
+  --game-avatar-accent: var(--gold, #d9a441);
+  --game-avatar-accent-light: var(--gold-light, #efd48d);
+
+  display: inline-block;
+  flex: none;
+  height: var(--game-avatar-size);
+  isolation: isolate;
+  position: relative;
+  width: var(--game-avatar-size);
+}
+
+.game-avatar::before {
+  background: url('/ui-kit/avatars/avatar-frame.webp') center / contain no-repeat;
+  content: '';
+  filter: brightness(0.92) saturate(0.9);
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  transition:
+    filter 200ms ease,
+    transform 200ms cubic-bezier(0.2, 0, 0, 1);
+  z-index: 2;
+}
+
+.game-avatar::after {
+  border-radius: 50%;
+  box-shadow: 0 0 0 transparent;
+  content: '';
+  inset: 9%;
+  pointer-events: none;
+  position: absolute;
+  transition:
+    box-shadow 200ms ease,
+    opacity 200ms ease;
+  z-index: 1;
+}
+
+.game-avatar__portrait {
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(217, 164, 65, 0.42);
+  inset: 11.5%;
+  overflow: hidden;
+  position: absolute;
+  z-index: 0;
+}
+
+.game-avatar__portrait img {
+  object-fit: cover;
+}
+
+.game-avatar--interactive {
+  cursor: pointer;
+}
+
+.game-avatar--interactive:hover::before {
+  filter: brightness(1.12) saturate(1.08);
+  transform: scale(1.025);
+}
+
+.game-avatar--active::before {
+  filter: brightness(1.17) saturate(1.16);
+}
+
+.game-avatar--active::after {
+  box-shadow:
+    0 0 18px color-mix(in srgb, var(--game-avatar-accent-light) 36%, transparent),
+    inset 0 0 10px color-mix(in srgb, var(--game-avatar-accent) 24%, transparent);
+}
+
+.game-avatar--selected::before {
+  filter: brightness(1.1) saturate(1.12);
+}
+
+.game-avatar--selected::after {
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--game-avatar-accent-light) 72%, transparent),
+    0 0 24px color-mix(in srgb, var(--game-avatar-accent) 38%, transparent);
+}
+
+.game-avatar--prestige {
+  --game-avatar-accent: var(--gold, #d9a441);
+  --game-avatar-accent-light: var(--gold-light, #efd48d);
+}
+
+.game-avatar--prestige::before {
+  filter: sepia(0.18) saturate(1.32) brightness(1.16);
+}
+
+.game-avatar--prestige::after {
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--game-avatar-accent-light) 58%, transparent),
+    0 0 26px color-mix(in srgb, var(--game-avatar-accent) 54%, transparent),
+    inset 0 0 14px color-mix(in srgb, var(--game-avatar-accent) 26%, transparent);
+}
+
+.game-avatar__status-label {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-avatar::before,
+  .game-avatar::after {
+    transition-duration: 0.01ms;
+  }
+}

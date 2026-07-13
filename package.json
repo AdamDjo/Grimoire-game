@@ -7,6 +7,7 @@
     "lint": "turbo lint",
     "type-check": "turbo type-check",
     "check:canon": "bash scripts/check-canon.sh",
+    "check:ui-kit-assets": "node scripts/check-ui-kit-assets.mjs",
     "prepare": "husky",
     "knip": "knip",
     "test": "turbo test",

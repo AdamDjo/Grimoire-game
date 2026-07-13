@@ -1,0 +1,5 @@
+.memory-badge { align-items: center; display: flex; flex-direction: column; gap: 0.45rem; margin: 0; max-width: 9rem; text-align: center; }
+.memory-badge__visual { display: inline-flex; filter: brightness(0.86); transition: filter 180ms ease, transform 180ms cubic-bezier(0.2, 0, 0, 1); }
+.memory-badge figcaption { color: var(--gold-light); font-family: var(--font-accent); font-size: 0.95rem; font-style: italic; line-height: 1.25; text-wrap: balance; }
+.memory-badge:hover .memory-badge__visual,
+.memory-badge--selected .memory-badge__visual { filter: brightness(1.1); transform: translateY(-2px); }

@@ -1,0 +1,10 @@
+.inventory-quickbar {
+  align-items: center;
+  display: flex;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+@media (max-width: 640px) {
+  .inventory-quickbar { overflow-x: auto; padding-bottom: 0.25rem; }
+}

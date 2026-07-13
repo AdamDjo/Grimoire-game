@@ -1,0 +1,26 @@
+.player-identity {
+  align-items: center;
+  color: var(--gold-light);
+  display: flex;
+  gap: 0.9rem;
+  min-width: 0;
+}
+
+.player-identity__avatar { display: inline-flex; flex: none; }
+.player-identity__copy { display: grid; gap: 0.12rem; min-width: 0; }
+.player-identity__copy strong {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 0.3vw + 0.95rem, 1.2rem);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.player-identity__copy span { color: var(--ink-2); font-family: var(--font-ui); font-size: 0.9rem; }
+.player-identity__resources { align-items: center; display: flex; gap: 1.25rem; margin-left: 1rem; }
+.player-identity--compact .player-identity__resources { display: none; }
+
+@media (max-width: 720px) {
+  .player-identity__resources { display: none; }
+}

@@ -1,0 +1,263 @@
+.game-button {
+  --game-button-accent: var(--gold, #d9a441);
+  --game-button-accent-light: var(--gold-light, #f0d48a);
+
+  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: var(--game-button-accent-light);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: var(--font-accent);
+  font-weight: 500;
+  gap: 0.7em;
+  isolation: isolate;
+  justify-content: center;
+  letter-spacing: 0.025em;
+  line-height: 1.1;
+  min-height: 44px;
+  position: relative;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.82);
+  transform: translateY(0) scale(1);
+  transition:
+    transform 180ms cubic-bezier(0.2, 0, 0, 1),
+    color 180ms ease,
+    opacity 180ms ease;
+}
+
+.game-button::before {
+  border: 12px solid transparent;
+  border-image-source: url('/ui-kit/controls/button-dark-frame-v2.webp');
+  border-image-slice: 52 72 fill;
+  border-image-width: 12px;
+  content: '';
+  filter: brightness(1) saturate(1);
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  transition:
+    filter 180ms ease,
+    opacity 180ms ease;
+  z-index: -1;
+}
+
+.game-button::after {
+  border-radius: 2px;
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.42),
+    0 0 0 rgba(217, 164, 65, 0);
+  content: '';
+  inset: 14% 4%;
+  pointer-events: none;
+  position: absolute;
+  transition: box-shadow 180ms ease;
+  z-index: -2;
+}
+
+.game-button:hover:not(:disabled)::before {
+  filter: brightness(1.16) saturate(1.14);
+}
+
+.game-button:hover:not(:disabled)::after {
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.48),
+    0 0 24px color-mix(in srgb, var(--game-button-accent) 30%, transparent);
+}
+
+.game-button:hover:not(:disabled) {
+  color: var(--gold-light, #f0d48a);
+  transform: translateY(-2px) scale(1);
+}
+
+.game-button:active:not(:disabled):not(.game-button--static) {
+  transform: translateY(1px) scale(0.96);
+}
+
+.game-button:active:not(:disabled)::before {
+  filter: brightness(0.86) saturate(0.92);
+}
+
+.game-button:focus-visible {
+  box-shadow: none;
+  outline: 2px solid var(--game-button-accent-light);
+  outline-offset: 5px;
+}
+
+.game-button:disabled {
+  color: rgba(190, 183, 169, 0.62);
+  cursor: not-allowed;
+  opacity: 0.54;
+  text-shadow: none;
+}
+
+.game-button:disabled::before {
+  filter: grayscale(0.86) brightness(0.62) contrast(0.9);
+}
+
+.game-button--primary,
+.game-button--radiant {
+  color: var(--ink-manuscript, #2a2118);
+  text-shadow: 0 1px 0 rgba(255, 244, 200, 0.34);
+}
+
+.game-button--primary::before,
+.game-button--radiant::before {
+  border-image-source: url('/ui-kit/controls/cta-gold-frame.webp');
+  border-image-slice: 48 62 fill;
+}
+
+.game-button--primary:hover:not(:disabled),
+.game-button--radiant:hover:not(:disabled) {
+  color: var(--ink-manuscript, #2a2118);
+}
+
+.game-button--secondary::before,
+.game-button--cinematic::before {
+  border-image-source: url('/ui-kit/controls/button-dark-frame-v2.webp');
+}
+
+.game-button--ghost::before {
+  border-image-source: url('/ui-kit/controls/button-dark-frame-v2.webp');
+  filter: brightness(0.78) saturate(0.72);
+  opacity: 0.78;
+}
+
+.game-button--ghost:hover:not(:disabled)::before {
+  filter: brightness(1) saturate(0.92);
+  opacity: 1;
+}
+
+.game-button--icon {
+  aspect-ratio: 1;
+  min-width: 0;
+  padding: 0;
+}
+
+.game-button--icon::before {
+  background: url('/ui-kit/controls/button-icon-frame.webp') center / contain no-repeat;
+  border: 0;
+  border-image: none;
+}
+
+.game-button--gold {
+  --game-button-accent: var(--gold, #d9a441);
+  --game-button-accent-light: var(--gold-light, #f0d48a);
+}
+
+.game-button--blood {
+  --game-button-accent: var(--blood, #c0392b);
+  --game-button-accent-light: color-mix(
+    in srgb,
+    var(--blood, #c0392b) 68%,
+    var(--parchment, #e8dcc0)
+  );
+}
+
+.game-button--soul {
+  --game-button-accent: var(--soul, #35c4ac);
+  --game-button-accent-light: color-mix(
+    in srgb,
+    var(--soul, #35c4ac) 68%,
+    var(--parchment, #e8dcc0)
+  );
+}
+
+.game-button--cendre {
+  --game-button-accent: var(--cendre, #e3b341);
+  --game-button-accent-light: color-mix(
+    in srgb,
+    var(--cendre, #e3b341) 72%,
+    var(--parchment, #e8dcc0)
+  );
+}
+
+.game-button--sm {
+  font-size: var(--text-ui, 1rem);
+  min-height: 48px;
+  min-width: 190px;
+  padding: 0 34px;
+}
+
+.game-button--md {
+  font-size: clamp(1.15rem, 0.7vw + 1rem, var(--text-btn-primary, 1.625rem));
+  min-height: 64px;
+  min-width: 250px;
+  padding: 0 46px;
+}
+
+.game-button--lg {
+  font-size: var(--text-btn-primary, 1.625rem);
+  min-height: 80px;
+  min-width: 320px;
+  padding: 0 58px;
+}
+
+.game-button--icon.game-button--sm {
+  min-width: 48px;
+  padding: 0;
+  width: 48px;
+}
+
+.game-button--icon.game-button--md {
+  min-width: 64px;
+  padding: 0;
+  width: 64px;
+}
+
+.game-button--icon.game-button--lg {
+  min-width: 80px;
+  padding: 0;
+  width: 80px;
+}
+
+.game-button__label,
+.game-button__icon,
+.game-button__spinner {
+  position: relative;
+  z-index: 1;
+}
+
+.game-button--icon .game-button__label {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.game-button__icon {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.game-button__icon > svg {
+  height: 1.15em;
+  width: 1.15em;
+}
+
+.game-button__spinner {
+  animation: game-button-spin 700ms linear infinite;
+  border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+  border-radius: 50%;
+  border-top-color: currentColor;
+  height: 1em;
+  width: 1em;
+}
+
+@keyframes game-button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-button,
+  .game-button::before,
+  .game-button::after {
+    transition-duration: 0.01ms;
+  }
+
+  .game-button__spinner {
+    animation-duration: 1.4s;
+  }
+}

@@ -1,0 +1,68 @@
+.game-section-heading {
+  color: var(--parchment);
+  text-align: center;
+}
+
+.game-section-heading__eyebrow {
+  color: var(--gold);
+  font-family: var(--font-ui);
+  font-size: var(--text-ui);
+  letter-spacing: 0.16em;
+  margin: 0 0 0.65rem;
+  text-transform: uppercase;
+}
+
+.game-section-heading__title-row {
+  align-items: center;
+  display: grid;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  grid-template-columns: minmax(2rem, 1fr) auto minmax(2rem, 1fr);
+}
+
+.game-section-heading h1,
+.game-section-heading h2,
+.game-section-heading h3 {
+  color: var(--gold-light);
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.15;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.game-section-heading__description {
+  color: var(--ink-2);
+  font-family: var(--font-accent);
+  font-size: var(--text-accroche);
+  margin: 0.8rem auto 0;
+  max-width: 42rem;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+  width: 100%;
+}
+
+.game-section-heading__ornament {
+  margin: 1.25rem auto -0.25rem;
+}
+
+@media (max-width: 640px) {
+  .game-section-heading__title-row {
+    display: block;
+  }
+
+  .game-section-heading__title-row .game-divider {
+    display: none;
+  }
+
+  .game-section-heading h1,
+  .game-section-heading h2,
+  .game-section-heading h3 {
+    font-size: clamp(2rem, 10vw, 3rem);
+  }
+
+  .game-section-heading__description {
+    font-size: clamp(1.15rem, 6vw, 1.5rem);
+  }
+}
