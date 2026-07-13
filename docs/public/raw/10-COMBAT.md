@@ -1,0 +1,350 @@
+# 10 — Combat
+
+> _Le sang sèche vite dans le désert. Frappe juste, ou parle bien._
+
+---
+
+## 0. Principe
+
+Le combat dans GRIMOIRE est une **application spécialisée de la boucle d'action** (`09-ACTION-LOOP`), pas un mini-jeu séparé. Pas de grille hexagonale, pas de positionnement précis au pixel : on cherche le **ressenti tactique de BG3** sans la complexité d'un wargame.
+
+> _Le but : que chaque combat soit court, lisible, lourd de conséquences. Pas un combat trash à éviter — un combat qui change la suite du run._
+
+### Les 3 promesses du combat
+
+- 🟢 **Court** : 3 à 7 tours max. L'IA force la conclusion si ça traîne
+- 🟢 **Lisible** : le joueur sait toujours ce qu'il peut faire et pourquoi
+- 🟢 **Triptyque** : SANG ≠ seul attribut utile. SOUFFLE (précision) et **CENDRE (leader)** ont leur rôle
+
+---
+
+## 1. Quand un combat se déclenche
+
+Le combat **n'est pas un mode de jeu** que le joueur active. C'est une **bascule narrative** annoncée par l'IA.
+
+### Déclencheurs
+
+| Type                                | Exemple                                                                  |
+| ----------------------------------- | ------------------------------------------------------------------------ |
+| ⚔️ **Rencontre hostile non évitée** | Le joueur a tenté de passer en force, ou la persuasion a échoué          |
+| 🌑 **Embuscade**                    | Calcinés qui jaillissent du sable, brigands cachés derrière une dune     |
+| 🛡️ **Défi**                         | Un duel, un PNJ qui provoque, un Inquisiteur qui exige réparation        |
+| 🤝 **Défense d'un PNJ**             | Le joueur choisit de protéger quelqu'un                                  |
+| 💀 **Sauvage**                      | Un Calciné, un Ventre-Gris, un Veilleur archontique qui repère le joueur |
+
+### L'annonce IA
+
+L'IA bascule explicitement en mode combat avec un encart :
+
+```
+┌────────────────────────────────────────┐
+│           ⚔️  LE COMBAT COMMENCE         │
+│                                          │
+│  Trois Calcinés rampants surgissent.    │
+│  Le plus proche est à dix pas.          │
+└────────────────────────────────────────┘
+```
+
+🟢 _Le joueur sait qu'il entre en combat. Pas de jet d'initiative caché ni de switch d'UI déroutant._
+
+### Éviter le combat
+
+Avant l'engagement, l'IA propose **toujours** une option de désamorçage (sauf embuscade pure) :
+
+- Fuir (jet SOUFFLE)
+- Parlementer (jet CENDRE)
+- Intimider (jet CENDRE)
+- Se cacher (jet SOUFFLE + Furtivité)
+
+Le combat **doit être un choix** — pas un funnel forcé.
+
+---
+
+## 2. L'initiative
+
+Un **seul jet d'initiative**, pas un par PNJ.
+
+```
+Joueur : d20 + SOUFFLE
+Camp ennemi : d20 + SOUFFLE (moyen du groupe)
+```
+
+- 🟢 **Plus haut = commence** (joueur ou ennemi)
+- 🟢 **Égalité = joueur en premier** (privilège tactique)
+- 🟢 Tous les ennemis agissent **en bloc** quand c'est leur tour (l'IA résout le camp adverse en 1 paragraphe)
+
+🟢 _Simplification volontaire : pas de tour individuel par PNJ. Le rythme est tenu._
+
+---
+
+## 3. Un tour de combat
+
+Le tour du joueur = choix d'**une action** parmi 4 catégories. L'IA propose **3-4 options spécifiques** selon le contexte (comme dans la boucle normale, voir `09-ACTION-LOOP §3`).
+
+### Les 4 catégories d'action
+
+#### ⚔️ Attaque
+
+Frapper, tirer, charger. Jet **d20 + attribut + compétence** vs **CA** ennemie.
+
+```
+SANG → mêlée (Mêlée), poings, charge
+SOUFFLE → tir (Tir), dague de jet, arc
+```
+
+Si touche → dégâts (dé d'arme + mod attribut, voir `08-DICE §7`).
+
+#### 🛡️ Défense / Esquive
+
+Le joueur sacrifie son action pour :
+
+- **Avantage** sur sa prochaine sauvegarde (un coup arrive ? +d20)
+- **Désavantage** sur la prochaine attaque qui le vise
+- **Soin léger** s'il s'écarte (1d4 PV si bandage)
+
+🟢 _Action "passe" intelligente : utile quand le joueur attend un meilleur moment, soigne, ou couvre un allié._
+
+#### 🗣️ Commandement (CENDRE — le rôle clé)
+
+Voir §5. Le joueur **utilise sa voix** pour modifier le champ de bataille.
+
+#### 🔮 Artefact
+
+Le joueur active un artefact (toute vocation, 1×/scène, voir `11-INVENTORY-ECONOMY §5`) :
+
+- **Pouvoir de base** : 1d8 dégâts ou effet narratif, coûte 5 Cendre
+- **Éveil** (Tisse-Verbe seul) : effet majeur garanti + d20 amplification, coûte 10 Cendre
+
+🟢 _L'artefact en combat = "spell slot" thématique. Précieux, à choisir au bon moment._
+
+### Exemple de tour
+
+> _Trois Calcinés rampants. Le plus proche t'a touché au bras. Tu as 7/11 PV._
+
+**Choix proposés par l'IA** :
+
+1. ⚔️ Frapper le Calciné en face (Mêlée — SANG +1) _[option offensive]_
+2. 🗣️ Crier pour faire reculer les autres (Intimidation — CENDRE +2) _[option leader]_
+3. 🛡️ Reculer et bander ta blessure (Défense + soin 1d4) _[option défense]_
+4. ✍️ _Autre action_
+
+---
+
+## 4. La Classe d'Armure (CA)
+
+Formule simple, pas de calcul complexe :
+
+```
+CA = 10 + mod SOUFFLE + bonus armure
+```
+
+| Armure                  | Bonus CA | Malus                       |
+| ----------------------- | -------- | --------------------------- |
+| Aucune                  | 0        | —                           |
+| Cuir                    | +1       | —                           |
+| Maille                  | +2       | -1 Furtivité                |
+| Plate                   | +3       | -1 Furtivité, -1 Athlétisme |
+| Soie archontique (rare) | +2       | — (artefact)                |
+
+→ Un Marcheur-du-Sel (SOUFFLE 0) en cuir : CA = 10 + 0 + 1 = **11**
+→ Un Lame-Ombre (SOUFFLE +2) en cuir : CA = 10 + 2 + 1 = **13**
+→ Un Veilleur en maille : CA = 10 + 2 + 2 = **14**
+
+🟢 _La CA évolue avec l'équipement. Le joueur ressent immédiatement l'effet d'une nouvelle armure._
+
+### CA des ennemis (référence rapide)
+
+| Type                 | CA  |
+| -------------------- | --- |
+| Civil, ivrogne       | 8   |
+| Brigand léger        | 11  |
+| Soldat équipé        | 14  |
+| Inquisiteur          | 16  |
+| Calciné rampant      | 12  |
+| Veilleur archontique | 18  |
+
+---
+
+## 5. Le rôle de CENDRE — "Leader"
+
+C'est **la décision design clé** de GRIMOIRE-combat. CENDRE n'est pas qu'un attribut social — c'est un **rôle de soutien tactique** au combat.
+
+### Les 3 compétences de Leader
+
+#### 🗣️ Intimidation (CENDRE — vs CENDRE ennemi)
+
+```
+d20 + CENDRE + Intimidation  vs  d20 + CENDRE adverse
+```
+
+→ **Succès** : 1 ennemi recule, hésite, **passe son tour suivant** OU fuit (si CA < 11)
+→ **Succès remarquable** : 2 ennemis touchés
+→ **Échec critique** : les ennemis sont galvanisés, +1 attaque sur prochain tour
+
+🟢 _Usable sur ennemis humains et Calcinés faibles. Inefficace sur Veilleurs archontiques (sans peur) ou Calcinés à un stade avancé._
+
+#### 🛡️ Commandement (CENDRE — vs DC fixé)
+
+```
+d20 + CENDRE + Leadership  vs  DC 12 (allié humain) ou 14 (allié bête / mercenaire)
+```
+
+→ **Succès** : 1 allié IA agit **immédiatement** avec **avantage**
+→ **Succès remarquable** : 2 alliés
+→ **Échec** : pas d'effet (l'allié hésite ou ignore)
+
+🟢 _Le Commandement transforme un combat en groupe. Sans CENDRE, les alliés agissent selon la logique IA. Avec, le joueur dirige._
+
+#### 👁️ Présence (passive)
+
+Si le joueur a **CENDRE ≥ +2** : les ennemis basiques (Calcinés rampants, brigands, animaux) **hésitent** avant le 1ᵉʳ tour — l'IA leur applique **désavantage** sur leur première attaque.
+
+🟢 _Récompense pour les builds CENDRE-pures (Tisse-Verbe, concept "leader", peuple Rivain)._
+
+### Bonus Tisse-Verbe au combat
+
+Le Tisse-Verbe (CENDRE +1, SOUFFLE +2) a une **synergie unique** : son éveil d'artefact est **amplifié par CENDRE**.
+
+```
+Éveil normal :     d20 + SOUFFLE + Éveil  vs  DC artefact
+Éveil amplifié :   d20 + SOUFFLE + CENDRE + Éveil  vs  DC artefact
+```
+
+→ Le Tisse-Verbe **commande l'artefact par la voix**. C'est lui le seul à activer ce bonus.
+
+🟢 _Mécanique = le triptyque a du sens. Pas un attribut "social-only"._
+
+---
+
+## 6. Les conditions de combat
+
+En plus des conditions générales de `06-SURVIVAL §2`, le combat ajoute :
+
+| Condition      | Cause                                     | Effet                                                     | Durée              |
+| -------------- | ----------------------------------------- | --------------------------------------------------------- | ------------------ |
+| 🔗 **Engagé**  | Au contact d'un ennemi en mêlée           | Fuir coûte un jet SOUFFLE, échec = un coup gratuit ennemi | Tant qu'au contact |
+| 🎯 **Flanqué** | Encerclé (2+ ennemis adjacents)           | Les ennemis ont **avantage** sur attaque                  | Tant qu'encerclé   |
+| 🔨 **Désarmé** | Nat 1 sur attaque, ou Désarmement adverse | Arme tombée, action = ramasser (perdre 1 tour)            | Jusqu'à ramassage  |
+| 😨 **Effrayé** | Intimidation réussie sur soi (rare)       | Désavantage attaques, ne peut s'approcher de la source    | 1-2 tours          |
+| 🌀 **Étourdi** | Coup à la tête (Nat 20 ennemi en mêlée)   | Perd 1 tour, désavantage prochaine sauvegarde             | 1 tour             |
+
+🟢 _Les conditions sont des **vecteurs de tactique**. Un joueur malin va exploiter le flanc, désarmer, intimider — pas seulement frapper plus fort._
+
+---
+
+## 7. La fuite
+
+Le joueur peut **toujours fuir** un combat. Mais ce n'est jamais gratuit.
+
+```
+Jet : d20 + SOUFFLE  vs  DC 12 (combat normal) ou 15 (encerclé / engagé)
+```
+
+→ **Succès** : le joueur s'échappe, le combat se termine, narration de fuite
+→ **Succès remarquable** : fuite + emporte un objet, ou perd les ennemis
+→ **Échec** : un coup ennemi gratuit (dégâts comme une attaque normale), le combat continue
+→ **Échec critique** : tombe en fuyant, prochaine action avec désavantage
+
+🟢 _La fuite est viable, mais coûte. Pas un bouton "skip combat"._
+
+---
+
+## 8. Mort en combat
+
+Quand les PV tombent à **0 ou moins** :
+
+### Étape 1 — Inconscience
+
+Le perso **n'est pas mort immédiatement**. Il tombe au sol. Le combat continue autour de lui.
+
+### Étape 2 — La décision IA
+
+L'IA décide du sort selon le contexte :
+
+| Contexte                                       | Sort probable                                                          |
+| ---------------------------------------------- | ---------------------------------------------------------------------- |
+| Allié vivant, ennemis affaiblis                | **Sauvé** (l'allié traîne le perso hors du combat, -3 PV à la reprise) |
+| Ennemis humains (brigands, Inquisiteurs)       | **Captivité** (le joueur se réveille enchaîné, nouvelle scène)         |
+| Ennemis sauvages (Calcinés, bêtes)             | **Mort** (le perso est achevé)                                         |
+| Combat en milieu hostile (Ventre-Gris, marais) | **Mort** (les conditions tuent)                                        |
+
+🟢 _La mort effective n'est jamais automatique à 0 PV. L'IA évalue : la mort doit avoir du sens narratif._
+
+### Étape 3 — Si mort effective
+
+- 🟢 Le run se termine
+- 🟢 **Chronique générée** (voir `17-RUN-CHRONICLE`)
+- 🟢 **Héritage transmis** : 1 artefact + écho réputation (voir `11-INVENTORY-ECONOMY §5`)
+- 🟢 Retour à l'auberge avec le **successeur** (voir `07-CHARACTER-CREATION §7`)
+
+🔴 _Anti-règle : pas de "second souffle", pas de potion de revie. La mort, c'est la mort. C'est ce qui rend le combat **tendu**._
+
+---
+
+## 9. Récompenses du combat
+
+Pas de niveau, pas d'XP cumulatif. Les récompenses sont **immédiates et narratives**.
+
+| Récompense                | Source                                                                        |
+| ------------------------- | ----------------------------------------------------------------------------- |
+| 🪙 **Or**                 | Pillage des cadavres (montant selon ennemi : 1-10 brigand, 20-50 Inquisiteur) |
+| ⚔️ **Équipement**         | Arme/armure d'un ennemi vaincu (qualité = celle de l'ennemi)                  |
+| 🔮 **Artefact** (rare)    | Loot de boss ou Veilleur archontique                                          |
+| 📖 **Souvenir nommé**     | Si combat marquant (boss vaincu, victoire impossible, choix moral fort)       |
+| 💭 **Avancée d'intrigue** | L'ennemi laisse une lettre, un indice, un PNJ libéré                          |
+
+🟢 _Pas de barre d'XP. La progression vient de l'équipement, des Souvenirs et de la Chronique — pas d'un score._
+
+---
+
+## 10. Risques & garde-fous
+
+| Risque                                         | Mitigation                                                                                                        |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| **Combat qui traîne**                          | Max 5-7 tours. L'IA accélère le climax (les ennemis se replient, un événement extérieur intervient) si ça dépasse |
+| **TPK frustrant**                              | À 0 PV → inconscience d'abord, l'IA décide. Captivité = nouvelle scène, pas game over                             |
+| **Combat trash systématique**                  | Les ennemis ne sont jamais "pour XP". Chaque combat = enjeu narratif (lettre, contrat, témoin)                    |
+| **CENDRE inutile**                             | Le rôle Leader est core, pas optionnel. Les builds CENDRE doivent briller en combat                               |
+| **Tisse-Verbe OP**                             | Coût Cendre élevé (10/éveil), risque Calamine (cf. `06-SURVIVAL §4`), max 1-2 éveils par combat avant danger      |
+| **Fuite abusée**                               | Coût en dégâts + perte d'or potentiel + désavantage si échec                                                      |
+| **Joueur ne comprend pas pourquoi il a perdu** | Transparence dés (cf. `08-DICE §4`) + narration IA des dégâts (_"Le sabre traverse ton cuir, tu chancelles"_)     |
+
+---
+
+## 11. Synthèse
+
+```
+DÉCLENCHEMENT (IA annonce)
+   ↓
+INITIATIVE (1 jet par camp)
+   ↓
+TOUR DU JOUEUR
+   ↓
+Choix : ⚔️ Attaque  ·  🛡️ Défense  ·  🗣️ Commandement  ·  🔮 Artefact
+   ↓
+DÉ (d20 + attribut + compétence vs CA ou DC)
+   ↓
+Résolution narrative + dégâts/effet
+   ↓
+TOUR ENNEMI (IA résout en bloc)
+   ↓
+   ╴ ╴ ╴ loop (max 5-7 tours) ╴ ╴ ╴
+   ↓
+FIN
+├── 🏆 Victoire → récompenses (or, équip., Souvenir, intrigue)
+├── 🏃 Fuite → DC SOUFFLE, coût
+└── 💀 0 PV → inconscience → IA décide
+        ├── Sauvé (allié)
+        ├── Captif (ennemis humains)
+        └── Mort → Chronique → Héritage → Successeur
+```
+
+🟢 _Combat = boucle d'action tendue. Choix lourds. Conséquences narratives. Triptyque qui compte._
+
+---
+
+_La **résolution des dés** (jets, DC, critiques) est détaillée dans `08-DICE-RESOLUTION.md`._
+_Le **triptyque** SANG/SOUFFLE/CENDRE est détaillé dans `04-ATTRIBUTES.md`._
+_Les **conditions** (fièvre, poison, blessure, Calamine) sont détaillées dans `06-SURVIVAL.md` §2._
+_L'**équipement** (armes, armures, artefacts) est détaillé dans `11-INVENTORY-ECONOMY.md`._
+_La **boucle d'action** générale qui englobe le combat est détaillée dans `09-ACTION-LOOP.md`._

@@ -7,7 +7,7 @@ allowed-tools: Read, Glob
 
 Show the current project status by:
 
-1. Read `docs/MEMORY.md` from the project root
+1. Read `docs/public/current-state/PROJECT_STATUS.md` and `docs/public/current-state/NEXT_ACTIONS.md` from the project root
 2. Count completed vs total tasks in each phase
 3. Present a clean summary:
 

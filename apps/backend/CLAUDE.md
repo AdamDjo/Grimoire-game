@@ -3,8 +3,8 @@
 > Lire d'abord : `../../docs/00-START-HERE.md`, puis `../../docs/public/current-state/PROJECT_STATUS.md`.
 > Statut vivant : `../../docs/public/current-state/PROJECT_STATUS.md`.
 > Architecture active : `../../docs/public/tech/ARCHITECTURE_RULES.md`.
-> Routeur : `../../docs/public/wiki/task-router.md`.
-> Canon ciblé : `../../docs/public/wiki/canon-index.md` → `../../docs/private/raw/*`.
+> Routeur : `../../docs/public/nav/task-router.md`.
+> Canon ciblé : `../../docs/public/nav/canon-index.md` → `../../docs/public/raw/*`.
 
 ## Scope
 
@@ -29,6 +29,7 @@ src/
 
 ## Règles absolues
 
+- **Lire le canon `docs/public/raw/` AVANT de coder toute mécanique de jeu** (dés, DC, dégâts, survie, conditions, économie…). Jamais de constante « provisoire, à valider plus tard » : si le canon n'a pas été lu, la valeur n'est pas écrite. Voir `../../docs/public/nav/PRIVATE_CANON_POLICY.md`. Le canon est versionné → lisible directement dans tout worktree.
 - Zod validation sur toutes les routes.
 - Réponses API : `{ success: boolean, data?: T, error?: string }`.
 - Types partagés dans `@grimoire/shared`, jamais dupliqués.
@@ -39,7 +40,7 @@ src/
 
 ## Canon à lire selon tâche
 
-Utiliser `../../docs/public/wiki/task-router.md`.
+Utiliser `../../docs/public/nav/task-router.md`.
 
 ## Tests
 

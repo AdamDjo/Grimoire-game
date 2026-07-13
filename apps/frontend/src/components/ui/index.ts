@@ -111,3 +111,4 @@ export type {
   GamePanelTone,
   GamePanelVariant,
 } from './grimoire'
+export { SoftSignupPrompt } from './soft-signup-prompt'

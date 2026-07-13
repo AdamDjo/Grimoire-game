@@ -1,0 +1,124 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// ---------------------------------------------------------------------------
+// Vision domaine complète (voir docs/private/raw/*.md) — NON migrée ici :
+// Peuples, Vocations (catalogues statiques, pas de table), Souvenirs
+// (méta-monde cross-run), Factions/réputation, Quêtes, Inventaire/Items,
+// Chroniques (résumé fin de run). Ces modèles arriveront avec les écrans
+// qui en ont besoin (Character Create, Auberge, World Map).
+//
+// Migré maintenant (coeur du world-state de session) : User, Character,
+// GameSession, SceneLog.
+// ---------------------------------------------------------------------------
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id         String      @id
+  email      String      @unique
+  /// Compteur lifetime des requêtes de jeu en tant qu'utilisateur anonyme (cap = 30).
+  anonymousRequestCount Int @default(0)
+  createdAt  DateTime    @default(now())
+  characters Character[]
+}
+
+model Character {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  people    String
+  vocation  String
+  /// Concept libre saisi par le joueur quand vocation = "libre".
+  freeConcept String?
+  backstory   String?
+  avatarUrl   String?
+
+  // Triptyque canon SANG/SOUFFLE/CENDRE (3-18).
+  blood  Int
+  breath Int
+  ash    Int
+
+  // Jauges de survie (0-100), voir SurvivalStats.
+  hp       Int
+  maxHp    Int
+  thirst   Int
+  hunger   Int
+  energy   Int
+  calamine Int
+
+  /// États altérés persistants (Condition[]), ex: "fever", "poisoned".
+  conditions String[]
+
+  createdAt DateTime @default(now())
+  sessions  GameSession[]
+}
+
+model GameSession {
+  id          String   @id @default(uuid())
+  characterId String
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  turnNumber Int      @default(1)
+  location   String   @default("auberge-aveugle")
+  status     String   @default("active") // active | ended
+  /// Why the session ended (death | inn | abandon). Null while active. Bridge to A3.
+  endReason  String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  scenes        SceneLog[]
+  memoryChunks  MemoryChunk[]
+}
+
+model SceneLog {
+  id        String      @id @default(uuid())
+  sessionId String
+  session   GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  turnNumber Int
+  sceneType  String
+  location   String
+  narrative  String
+  /// Choix proposés au joueur pour ce tour (Choice[] sérialisé).
+  choices    Json
+  /// Choix effectivement pris par le joueur (Choice | null).
+  chosenChoice Json?
+  /// Conséquences appliquées (ChoiceConsequence | null).
+  consequences Json?
+  /// Jet de dés serveur pour ce tour, si applicable (DiceRoll | null).
+  diceRoll   Json?
+  source     String // "ai" | "stub"
+
+  createdAt DateTime @default(now())
+}
+
+model MemoryChunk {
+  id        String      @id @default(uuid())
+  sessionId String
+  session   GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  /// Résumé narratif à la 3e personne (~150 tokens max).
+  summary   String
+  /// Faits clés du segment compressé (String[] sérialisé, 3-5 items).
+  keyFacts       Json
+  /// Sous-ensemble de faits critiques épinglés (mort PNJ, artefact, quête, choix moral).
+  keyFactsPinned Json
+  /// Ambiance dominante du segment : calm | tense | festive | sacred | dangerous.
+  mood           String
+  /// Évolution des PNJ croisés (NpcEvolution[] sérialisé).
+  npcsEvolution  Json
+
+  turnRangeStart Int
+  turnRangeEnd   Int
+
+  createdAt DateTime @default(now())
+}

@@ -8,12 +8,10 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
-    "rootDir": "./src",
     "sourceMap": true,
-    "declaration": true,
     "paths": {
       "@grimoire/shared": ["../../packages/shared/src"]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "../../packages/shared/src/**/*"]
 }

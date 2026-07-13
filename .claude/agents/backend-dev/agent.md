@@ -16,7 +16,7 @@ Read these files in order — they contain all the rules, don't re-derive them:
 2. `docs/public/current-state/PROJECT_STATUS.md` — current branch, phase, active priority
 3. `apps/backend/CLAUDE.md` — all backend rules
 4. `docs/public/tech/ARCHITECTURE_RULES.md` — backend/AI/frontend invariants
-5. `docs/public/wiki/task-router.md` — targeted docs and canon routing
+5. `docs/public/nav/task-router.md` — targeted docs and canon routing
 
 ## Scope
 

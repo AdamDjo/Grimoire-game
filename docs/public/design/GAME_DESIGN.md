@@ -1,7 +1,7 @@
 # Game Design — Public Implementation Summary
 
 > Résumé public et lisible pour implémenter sans relire tout le GDD.
-> Canon complet : `docs/private/raw/` via [`../wiki/canon-index.md`](../wiki/canon-index.md).
+> Canon complet : `docs/public/raw/` via [`../nav/canon-index.md`](../nav/canon-index.md).
 > Version longue archivée : `docs/private/archive/public-long-versions/GAME_DESIGN.long.md`.
 
 ## Pitch
@@ -78,7 +78,7 @@ Promesse produit : **un monde qui se souvient**. Le joueur agit librement, le ba
 
 ## Références ciblées
 
-- Attributs et dés : `docs/private/raw/04-ATTRIBUTES.md`, `08-DICE-RESOLUTION.md`
+- Attributs et dés : `docs/public/raw/04-ATTRIBUTES.md`, `08-DICE-RESOLUTION.md`
 - Création personnage : `07-CHARACTER-CREATION.md`, `05-VOCATIONS.md`
 - Auberge : `15-GAME-MASTER.md`, `14-META-WORLD.md`, `22-GLOSSARY.md`
 - Monde : `02-WORLD-BIBLE.md`, `03-FACTIONS.md`, `03-BESTIARY.md`

@@ -1,26 +1,37 @@
-export type SceneType = 'exploration' | 'combat' | 'dialogue' | 'event' | 'shop' | 'rest';
+import type { Attribute } from "./character.types";
+import type { DiceRoll } from "./dice.types";
+
+export type SceneType =
+  | "exploration"
+  | "combat"
+  | "dialog"
+  | "event"
+  | "shop"
+  | "rest";
 
 export interface Choice {
   id: string;
   text: string;
-  type: 'action' | 'dialogue' | 'combat' | 'flee' | 'use_item' | 'skill';
+  type: "action" | "dialog" | "combat" | "flee" | "use_item" | "skill";
   requirements?: ChoiceRequirement;
-  riskLevel?: 'safe' | 'low' | 'medium' | 'high' | 'deadly';
+  riskLevel?: "safe" | "low" | "medium" | "high" | "deadly";
 }
 
 export interface ChoiceRequirement {
-  minStat?: Partial<Record<string, number>>;
+  minAttribute?: Partial<Record<Attribute, number>>;
   requiredItem?: string;
-  requiredLevel?: number;
   requiredSkill?: string;
 }
 
 export interface ChoiceConsequence {
-  statChanges?: Partial<Record<string, number>>;
+  attributeChanges?: Partial<Record<Attribute, number>>;
+  /** Survival gauge deltas (hp/thirst/hunger/energy/calamine). */
+  survivalChanges?: Partial<
+    Record<"hp" | "thirst" | "hunger" | "energy" | "calamine", number>
+  >;
   itemsGained?: string[];
   itemsLost?: string[];
-  xpGained?: number;
-  goldGained?: number;
+  ironGained?: number;
   factionReputation?: Record<string, number>;
   questProgress?: Record<string, string>;
   triggeredEvent?: string;
@@ -47,6 +58,10 @@ export interface SceneResponse {
   updatedStats: Record<string, number>;
   updatedInventory: InventoryItemRef[];
   notifications: GameNotification[];
+  /** Backend d20 result for this turn, if a check was rolled. */
+  diceRoll?: DiceRoll;
+  /** Whether the narrative came from the AI or the local stub fallback. */
+  source?: "ai" | "stub";
 }
 
 export interface InventoryItemRef {
@@ -56,6 +71,13 @@ export interface InventoryItemRef {
 }
 
 export interface GameNotification {
-  type: 'level_up' | 'item_gained' | 'item_lost' | 'quest_update' | 'stat_change' | 'warning' | 'achievement';
+  type:
+    | "item_gained"
+    | "item_lost"
+    | "quest_update"
+    | "stat_change"
+    | "condition"
+    | "warning"
+    | "memory";
   message: string;
 }

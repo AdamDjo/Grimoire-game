@@ -1,5 +1,7 @@
-export type QuestStatus = 'available' | 'active' | 'completed' | 'failed';
-export type QuestType = 'main' | 'side' | 'hidden';
+import type { Attribute } from "./character.types";
+
+export type QuestStatus = "available" | "active" | "completed" | "failed";
+export type QuestType = "main" | "side" | "hidden";
 
 export interface QuestObjective {
   id: string;
@@ -18,14 +20,13 @@ export interface Quest {
   objectives: QuestObjective[];
   rewards: QuestReward;
   giverNpcId?: string;
-  requiredLevel?: number;
 }
 
 export interface QuestReward {
-  xp: number;
-  gold?: number;
+  /** Iron (fer). */
+  iron?: number;
   items?: string[];
-  statBonus?: Partial<Record<string, number>>;
+  attributeBonus?: Partial<Record<Attribute, number>>;
   unlocks?: string;
 }
 

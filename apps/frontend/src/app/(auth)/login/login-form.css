@@ -139,6 +139,29 @@
   width: min(100%, 22rem);
 }
 
+.login-form__oauth {
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.login-form__oauth .game-button {
+  font-size: 0.92rem;
+  min-width: 0;
+  width: 100%;
+}
+
+.login-form__status {
+  color: var(--gold-light);
+  font-family: var(--font-ui);
+  min-height: 1.5rem;
+  text-align: center;
+}
+
+.login-form__status p {
+  margin: 0;
+}
+
 .login-form__footer {
   color: var(--ink-2);
   font-family: var(--font-ui);
@@ -155,6 +178,10 @@
   .login-form__options {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .login-form__oauth {
+    grid-template-columns: 1fr;
   }
 }
 

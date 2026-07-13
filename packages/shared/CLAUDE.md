@@ -48,7 +48,7 @@ src/
 - Before implementing a new feature in backend/frontend, define types here first
 - When a backend/frontend change requires a shared contract change
 - When adding new game constants (items, skills, etc.)
-- For Velkhar gameplay, read targeted canon through `../../docs/public/wiki/task-router.md` before changing constants.
+- For Velkhar gameplay, read targeted canon through `../../docs/public/nav/task-router.md` before changing constants.
 
 ## Testing
 

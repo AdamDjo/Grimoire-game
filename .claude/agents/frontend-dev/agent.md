@@ -14,7 +14,7 @@ Read these files in order — they contain all the rules, don't re-derive them:
 
 1. `docs/00-START-HERE.md` — project entrypoint
 2. `docs/public/current-state/PROJECT_STATUS.md` — current branch, phase, active priority
-3. `docs/public/wiki/task-router.md` — targeted docs and canon routing
+3. `docs/public/nav/task-router.md` — targeted docs and canon routing
 4. `docs/public/design/GAME_DESIGN.md` + `docs/public/design/DESIGN_TOKENS.md` — design/gameplay rules
 5. `apps/frontend/CLAUDE.md` — all frontend rules
 
