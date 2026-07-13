@@ -1,5 +1,6 @@
 // Types
 export * from "./types/character.types";
+export * from "./types/dice.types";
 export * from "./types/scene.types";
 export * from "./types/quest.types";
 export * from "./types/inventory.types";

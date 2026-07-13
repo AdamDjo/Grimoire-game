@@ -1,25 +1,14 @@
-import { type Attribute, type Attributes, attributeModifier } from '@grimoire/shared'
+import {
+  type Attribute,
+  type Attributes,
+  attributeModifier,
+  type Difficulty,
+  type DiceRoll,
+  DIFFICULTY_TARGET,
+} from '@grimoire/shared'
 
-export type Difficulty = 'safe' | 'low' | 'medium' | 'high' | 'deadly'
-
-/** Target numbers per difficulty. Rolls resolve on the backend, never the AI. */
-export const DIFFICULTY_TARGET: Record<Difficulty, number> = {
-  safe: 5,
-  low: 8,
-  medium: 12,
-  high: 16,
-  deadly: 19,
-}
-
-export interface DiceRoll {
-  roll: number
-  modifier: number
-  total: number
-  target: number
-  success: boolean
-  /** Natural 20 / natural 1 flags for narration flavor. */
-  critical: 'success' | 'failure' | null
-}
+export type { Difficulty, DiceRoll }
+export { DIFFICULTY_TARGET }
 
 /** Rolls 1d20, adds the attribute modifier, and compares to the difficulty target. */
 export function rollCheck(

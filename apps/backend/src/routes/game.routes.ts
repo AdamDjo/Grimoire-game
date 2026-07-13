@@ -1,28 +1,48 @@
-import { randomUUID } from 'node:crypto'
-
 import { type Request, type Response, Router } from 'express'
 
-import { generateScene } from '../ai/game-master.service'
-import { assembleScene } from '../services/scene-assembler'
+import { prisma } from '../lib/prisma'
+import {
+  buildOpeningScene,
+  getOrCreateSession,
+  INVALID_CHOICE,
+  resolveChosenChoice,
+  resolveTurn,
+} from '../services/session.service'
 
-import { gameActionSchema } from './game-action.schema'
+import { createSessionSchema, gameActionSchema } from './game-action.schema'
 
-import type { ApiResponse, Scene } from '@grimoire/shared'
-
-/**
- * Scene enriched with how it was produced. `source` lets the client show
- * whether the narration came from the real AI or the deterministic stub.
- */
-export type SceneWithSource = Scene & { source: 'ai' | 'stub' }
+import type { ApiResponse, SceneResponse } from '@grimoire/shared'
 
 export const gameRouter: Router = Router()
 
 /**
- * POST /api/game/action
- * Receives the player's action, asks the Game Master for a narrative payload
- * (AI or deterministic stub), then assembles and returns a validated `Scene`.
+ * POST /api/game/session
+ * Loads (or creates) the player's active session and returns its opening scene.
+ * Idempotent: replaying returns the same active session's world-state.
  */
-gameRouter.post('/action', async (req: Request, res: Response<ApiResponse<SceneWithSource>>) => {
+gameRouter.post('/session', async (req: Request, res: Response<ApiResponse<SceneResponse>>) => {
+  const parsed = createSessionSchema.safeParse(req.body ?? {})
+  if (!parsed.success) {
+    res.status(400).json({
+      success: false,
+      error: parsed.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; '),
+    })
+    return
+  }
+
+  const context = await getOrCreateSession(req.auth!.userId)
+  const response = await buildOpeningScene(context, parsed.data.locale)
+
+  res.json({ success: true, data: response })
+})
+
+/**
+ * POST /api/game/action
+ * Resolves one turn against the persisted world-state. The backend rolls the
+ * d20, applies survival + HP and persists the outcome. Refuses (409) once the
+ * session has ended (e.g. death) — a finished run cannot be played on.
+ */
+gameRouter.post('/action', async (req: Request, res: Response<ApiResponse<SceneResponse>>) => {
   const parsed = gameActionSchema.safeParse(req.body)
   if (!parsed.success) {
     res.status(400).json({
@@ -32,25 +52,39 @@ gameRouter.post('/action', async (req: Request, res: Response<ApiResponse<SceneW
     return
   }
 
-  const { character, locale, sessionId, choiceId, chosenActionText, freeAction } = parsed.data
+  const { sessionId, choiceId, chosenActionText, freeAction, locale } = parsed.data
   const userId = req.auth!.userId
 
-  const result = await generateScene({
-    character: { ...character, userId },
-    locale,
+  // Scope the session to the caller — a user can only act on their own session.
+  const session = await prisma.gameSession.findFirst({
+    where: { id: sessionId, character: { userId } },
+    include: { character: true },
+  })
+  if (!session) {
+    res.status(404).json({ success: false, error: 'Session not found' })
+    return
+  }
+  if (session.status === 'ended') {
+    res.status(409).json({ success: false, error: 'Session has ended' })
+    return
+  }
+
+  // Resolve the risk from the persisted scene, never from the client. An unknown
+  // choiceId is rejected outright — it must not silently degrade to a safe turn.
+  const choice = await resolveChosenChoice(sessionId, choiceId, chosenActionText, freeAction)
+  if (choice === INVALID_CHOICE) {
+    res.status(400).json({ success: false, error: 'Choice does not belong to the current scene' })
+    return
+  }
+
+  const response = await resolveTurn({
+    session,
+    character: session.character,
+    choice,
     chosenActionText,
     freeAction,
+    locale,
   })
 
-  const scene = assembleScene({
-    payload: result.scene,
-    sessionId: sessionId ?? randomUUID(),
-    // First turn until sessions are persisted (out of scope for this ticket).
-    turnNumber: 1,
-  })
-
-  // choiceId is accepted now but only consumed once sessions are persisted.
-  void choiceId
-
-  res.json({ success: true, data: { ...scene, source: result.source } })
+  res.json({ success: true, data: response })
 })

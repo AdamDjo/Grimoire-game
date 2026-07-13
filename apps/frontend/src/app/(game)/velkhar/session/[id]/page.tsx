@@ -6,7 +6,9 @@ interface VelkharSessionPageProps {
 }
 
 export default async function VelkharSessionPage({ params }: VelkharSessionPageProps) {
-  const { id } = await params
+  // The `[id]` segment is only a route placeholder — the real session id is
+  // owned by the backend and returned by `createSession` inside SessionClient.
+  await params
 
-  return <SessionClient sessionId={id} initialCharacter={MOCK_CHARACTER} />
+  return <SessionClient initialCharacter={MOCK_CHARACTER} />
 }

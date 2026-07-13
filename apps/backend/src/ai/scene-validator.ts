@@ -11,6 +11,17 @@ export const aiChoiceSchema = z.object({
   riskLevel: z.enum(['safe', 'low', 'medium', 'high', 'deadly']).optional(),
 })
 
+/**
+ * Zod schema for a fully-assembled `Choice` as persisted in `SceneLog.choices`
+ * (the AI shape plus the backend-assigned `id`). Used to safely re-read a
+ * stored scene's choices — Prisma `Json` columns are `unknown` at runtime.
+ */
+export const persistedChoiceSchema = aiChoiceSchema.extend({
+  id: z.string().min(1),
+})
+
+export const persistedChoicesSchema = z.array(persistedChoiceSchema)
+
 export const aiSceneSchema = z.object({
   narrative: z.string().min(1).max(4000),
   sceneType: z.enum(['exploration', 'combat', 'dialog', 'event', 'shop', 'rest']),

@@ -2,7 +2,10 @@ import type { CharacterStats } from "./character.types";
 import type { Inventory } from "./inventory.types";
 import type { QuestState } from "./quest.types";
 
-export type SessionStatus = "active" | "game_over" | "completed";
+export type SessionStatus = "active" | "ended";
+
+/** Why a session ended. Only bridge to the A3 narrative memory layer. */
+export type SessionEndReason = "death" | "inn" | "abandon";
 
 /** Player language for the Game Master's narration. Default 'en'. */
 export type Locale = "en" | "fr";
@@ -24,6 +27,8 @@ export interface GameSession {
   userId: string;
   characterId: string;
   status: SessionStatus;
+  /** Set when status is 'ended'. Undefined while the session is active. */
+  endReason?: SessionEndReason;
   locale: Locale;
   currentStats: CharacterStats;
   inventory: Inventory;

@@ -70,6 +70,8 @@ model GameSession {
   turnNumber Int      @default(1)
   location   String   @default("auberge-aveugle")
   status     String   @default("active") // active | ended
+  /// Why the session ended (death | inn | abandon). Null while active. Bridge to A3.
+  endReason  String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
