@@ -1,19 +1,36 @@
 import { hasOpenRouterKey } from '../config/env'
+import { prisma } from '../lib/prisma'
 
 import { callOpenRouter } from './openrouter.provider'
 import { buildStubScene } from './scene-stub'
 import { type AiScenePayload, validateAiScene } from './scene-validator'
 import { buildSystemPrompt } from './system-prompt'
 
+import type { MemoryChunkModel } from '../generated/prisma/models'
 import type { Character, Locale } from '@grimoire/shared'
 
 export interface GameMasterInput {
   character: Character
   locale: Locale
+  /** Session this scene belongs to — used to load N2 memory context. */
+  sessionId: string
   /** Label of the choice the player just took, if any. */
   chosenActionText?: string
   /** Free-form action typed by the player, if any. */
   freeAction?: string
+}
+
+/**
+ * Loads the N2 memory context for the prompt: the 5 most recent chunks (for
+ * the "story so far" summaries) plus every chunk's pinned facts, deduplicated
+ * downstream by `buildSystemPrompt` — bounded per feedback_challenge_canon_scalability.
+ */
+async function loadMemoryChunks(sessionId: string): Promise<MemoryChunkModel[]> {
+  return prisma.memoryChunk.findMany({
+    where: { sessionId },
+    orderBy: { turnRangeEnd: 'desc' },
+    take: 5,
+  })
 }
 
 export interface GameMasterResult {
@@ -43,8 +60,10 @@ export async function generateScene(input: GameMasterInput): Promise<GameMasterR
     return { scene: buildStubScene(input.character, input.locale), source: 'stub' }
   }
 
+  const memoryChunks = await loadMemoryChunks(input.sessionId)
+
   const result = await callOpenRouter([
-    { role: 'system', content: buildSystemPrompt(input.character, input.locale) },
+    { role: 'system', content: buildSystemPrompt(input.character, input.locale, memoryChunks) },
     { role: 'user', content: buildUserPrompt(input) },
   ])
 
