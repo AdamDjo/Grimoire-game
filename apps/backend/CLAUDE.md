@@ -29,6 +29,7 @@ src/
 
 ## Règles absolues
 
+- **Lire le canon `docs/public/raw/` AVANT de coder toute mécanique de jeu** (dés, DC, dégâts, survie, conditions, économie…). Jamais de constante « provisoire, à valider plus tard » : si le canon n'a pas été lu, la valeur n'est pas écrite. Voir `../../docs/public/nav/PRIVATE_CANON_POLICY.md`. Le canon est versionné → lisible directement dans tout worktree.
 - Zod validation sur toutes les routes.
 - Réponses API : `{ success: boolean, data?: T, error?: string }`.
 - Types partagés dans `@grimoire/shared`, jamais dupliqués.

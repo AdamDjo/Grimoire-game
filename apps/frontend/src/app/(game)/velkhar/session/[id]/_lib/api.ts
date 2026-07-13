@@ -1,19 +1,9 @@
-import type { ApiResponse, Character, Locale, Scene } from '@grimoire/shared'
-
-/**
- * Scene returned by `POST /api/game/action`, enriched with how it was produced.
- * `source` mirrors the backend field — 'ai' when the real Game Master answered,
- * 'stub' when it fell back to the deterministic scene.
- *
- * Provisional (session demo) — will move to a shared client once the API stabilizes.
- */
-export type SceneWithSource = Scene & { source: 'ai' | 'stub' }
+import type { ApiResponse, Locale, SceneResponse } from '@grimoire/shared'
 
 /** Payload accepted by the game action route. Mirrors the backend Zod schema. */
 export interface GameActionInput {
-  character: Character
+  sessionId: string
   locale: Locale
-  sessionId?: string
   choiceId?: string
   /** Label of the choice the player just picked. */
   chosenActionText?: string
@@ -22,22 +12,45 @@ export interface GameActionInput {
 }
 
 /**
- * Sends the player's action to the Game Master and returns the next scene.
- * Throws on network failure or a non-ok / unsuccessful API response so the
- * caller can surface the error in the UI.
+ * Reads an `ApiResponse<SceneResponse>` and throws the backend `error` verbatim
+ * on failure — this preserves the exact 'Anonymous limit reached' string the
+ * caller matches on to show the signup wall.
  */
-export async function postGameAction(input: GameActionInput): Promise<SceneWithSource> {
+async function readSceneResponse(response: Response): Promise<SceneResponse> {
+  const body = (await response.json()) as ApiResponse<SceneResponse>
+
+  if (!response.ok || !body.success || !body.data) {
+    throw new Error(body.error ?? `Game request failed (${response.status})`)
+  }
+
+  return body.data
+}
+
+/**
+ * Creates (or resumes) the player's active session and returns its opening
+ * scene with the persisted world-state.
+ */
+export async function createSession(locale: Locale): Promise<SceneResponse> {
+  const response = await fetch('/api/game/session', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ locale }),
+  })
+
+  return readSceneResponse(response)
+}
+
+/**
+ * Sends the player's action to the Game Master and returns the next scene.
+ * The backend owns the rules — the response carries the updated stats and the
+ * d20 roll for this turn.
+ */
+export async function postGameAction(input: GameActionInput): Promise<SceneResponse> {
   const response = await fetch('/api/game/action', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(input),
   })
 
-  const body = (await response.json()) as ApiResponse<SceneWithSource>
-
-  if (!response.ok || !body.success || !body.data) {
-    throw new Error(body.error ?? `Game action failed (${response.status})`)
-  }
-
-  return body.data
+  return readSceneResponse(response)
 }

@@ -5,6 +5,11 @@
 > Design/gameplay : `../../docs/public/design/GAME_DESIGN.md`.
 > Tokens UI : `../../docs/public/design/DESIGN_TOKENS.md`.
 > Architecture/API : `../../docs/public/tech/ARCHITECTURE_RULES.md`.
+> Canon (source de vérité) : `../../docs/public/nav/canon-index.md` → `../../docs/public/raw/*`.
+
+## Règle absolue — lire le canon AVANT de coder
+
+**Toute copie affichée, règle de jeu visible ou lore présenté à l'écran doit être vérifié dans `docs/public/raw/` AVANT d'écrire le code.** Jamais de valeur, de libellé ou de comportement « provisoire, à valider plus tard ». Si `GAME_DESIGN.md` (résumé) contredit le canon `raw/`, le `raw/` gagne. Le canon est versionné → lisible directement dans tout worktree. Voir `../../docs/public/nav/PRIVATE_CANON_POLICY.md`.
 
 ## Scope
 

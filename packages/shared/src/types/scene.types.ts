@@ -1,4 +1,5 @@
 import type { Attribute } from "./character.types";
+import type { DiceRoll } from "./dice.types";
 
 export type SceneType =
   | "exploration"
@@ -57,6 +58,10 @@ export interface SceneResponse {
   updatedStats: Record<string, number>;
   updatedInventory: InventoryItemRef[];
   notifications: GameNotification[];
+  /** Backend d20 result for this turn, if a check was rolled. */
+  diceRoll?: DiceRoll;
+  /** Whether the narrative came from the AI or the local stub fallback. */
+  source?: "ai" | "stub";
 }
 
 export interface InventoryItemRef {
