@@ -1,0 +1,8 @@
+.game-icon {
+  display: inline-block;
+  flex: none;
+  height: auto;
+  object-fit: contain;
+  user-select: none;
+  vertical-align: middle;
+}

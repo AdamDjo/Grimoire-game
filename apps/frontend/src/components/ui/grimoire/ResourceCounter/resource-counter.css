@@ -1,0 +1,24 @@
+.resource-counter {
+  align-items: center;
+  color: var(--gold-light);
+  display: inline-grid;
+  font-family: var(--font-ui);
+  gap: 0.15rem 0.55rem;
+  grid-template-columns: auto auto;
+}
+
+.resource-counter__icon { display: inline-flex; grid-row: 1 / span 2; }
+.resource-counter__value {
+  font-family: var(--font-accent);
+  font-size: var(--text-stat-value);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.resource-counter__label {
+  color: var(--ink-2);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.resource-counter--compact { grid-template-columns: auto auto; }
+.resource-counter--compact .resource-counter__icon { grid-row: auto; }

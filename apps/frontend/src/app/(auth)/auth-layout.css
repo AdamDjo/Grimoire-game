@@ -1,0 +1,74 @@
+.auth-layout {
+  align-items: start;
+  background:
+    linear-gradient(90deg, rgba(3, 3, 2, 0.88), rgba(5, 4, 3, 0.58) 48%, rgba(3, 3, 2, 0.9)),
+    linear-gradient(180deg, rgba(4, 3, 2, 0.28), rgba(4, 3, 2, 0.94)),
+    url('/landing/plates/new-hero.webp') center / cover no-repeat;
+  display: grid;
+  isolation: isolate;
+  min-height: 100svh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: clamp(3.5rem, 6vh, 5rem) clamp(1rem, 3vw, 3rem) 2rem;
+  position: relative;
+}
+
+.auth-layout::before {
+  background:
+    radial-gradient(circle at 50% 46%, rgba(217, 164, 65, 0.1), transparent 24rem),
+    url('/landing/textures/grain.svg') center / 180px 180px;
+  content: '';
+  inset: 0;
+  mix-blend-mode: soft-light;
+  opacity: 0.42;
+  pointer-events: none;
+  position: absolute;
+}
+
+.auth-layout__home {
+  color: var(--gold-light);
+  font-family: var(--font-display);
+  font-size: 0.76rem;
+  left: clamp(1.25rem, 3vw, 3rem);
+  letter-spacing: 0.18em;
+  opacity: 0.82;
+  position: absolute;
+  text-transform: uppercase;
+  top: clamp(1.25rem, 3vw, 2.5rem);
+  transition:
+    color 180ms ease,
+    opacity 180ms ease;
+  z-index: 2;
+}
+
+.auth-layout__home:hover {
+  color: var(--parchment);
+  opacity: 1;
+}
+
+.auth-layout__content {
+  margin: 0 auto;
+  max-width: 38rem;
+  position: relative;
+  width: 100%;
+  z-index: 1;
+}
+
+@media (max-width: 640px) {
+  .auth-layout {
+    align-items: start;
+    background-position: 62% center;
+    overflow: auto;
+    padding: 5.5rem 0.75rem 1rem;
+  }
+}
+
+@media (max-height: 760px) and (min-width: 641px) {
+  .auth-layout {
+    padding-block: 2.4rem 1.25rem;
+  }
+
+  .auth-layout__home {
+    top: 1.4rem;
+  }
+}

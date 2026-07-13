@@ -74,4 +74,3 @@ ALTER TABLE "GameSession" ADD CONSTRAINT "GameSession_characterId_fkey" FOREIGN 
 
 -- AddForeignKey
 ALTER TABLE "SceneLog" ADD CONSTRAINT "SceneLog_sessionId_fkey" FOREIGN KEY ("sessionId") REFERENCES "GameSession"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
