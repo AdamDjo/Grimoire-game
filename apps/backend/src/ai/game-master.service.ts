@@ -4,7 +4,7 @@ import { prisma } from '../lib/prisma'
 import { callOpenRouter } from './openrouter.provider'
 import { buildStubScene } from './scene-stub'
 import { type AiScenePayload, validateAiScene } from './scene-validator'
-import { buildSystemPrompt } from './system-prompt'
+import { buildSystemPrompt, type RecentTurnSummary } from './system-prompt'
 
 import type { MemoryChunkModel } from '../generated/prisma/models'
 import type { Character, Locale } from '@grimoire/shared'
@@ -30,6 +30,20 @@ async function loadMemoryChunks(sessionId: string): Promise<MemoryChunkModel[]> 
     where: { sessionId },
     orderBy: { turnRangeEnd: 'desc' },
     take: 5,
+  })
+}
+
+/**
+ * Loads the N1 short-term window: the 5 most recent scene logs' `turnSummary`.
+ * Unlike N2 this must be awaited synchronously — it covers the gap between
+ * compressions (or before the first one) and feeds the *current* turn's prompt.
+ */
+async function loadRecentTurns(sessionId: string): Promise<RecentTurnSummary[]> {
+  return prisma.sceneLog.findMany({
+    where: { sessionId },
+    orderBy: { turnNumber: 'desc' },
+    take: 5,
+    select: { turnNumber: true, turnSummary: true },
   })
 }
 
@@ -60,10 +74,16 @@ export async function generateScene(input: GameMasterInput): Promise<GameMasterR
     return { scene: buildStubScene(input.character, input.locale), source: 'stub' }
   }
 
-  const memoryChunks = await loadMemoryChunks(input.sessionId)
+  const [memoryChunks, recentTurns] = await Promise.all([
+    loadMemoryChunks(input.sessionId),
+    loadRecentTurns(input.sessionId),
+  ])
 
   const result = await callOpenRouter([
-    { role: 'system', content: buildSystemPrompt(input.character, input.locale, memoryChunks) },
+    {
+      role: 'system',
+      content: buildSystemPrompt(input.character, input.locale, memoryChunks, recentTurns),
+    },
     { role: 'user', content: buildUserPrompt(input) },
   ])
 

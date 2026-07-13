@@ -19,6 +19,7 @@ export function buildStubScene(character: Character, locale: Locale): AiScenePay
         { text: 'Fouiller la piste de caravane effacée', type: 'action', riskLevel: 'medium' },
         { text: 'Faire un détour prudent par les dunes', type: 'action', riskLevel: 'safe' },
       ],
+      turnSummary: `${character.name} arrive route du sel, une silhouette attend près d'un puits à sec.`,
     }
   }
 
@@ -34,5 +35,6 @@ export function buildStubScene(character: Character, locale: Locale): AiScenePay
       { text: 'Search the fading caravan track', type: 'action', riskLevel: 'medium' },
       { text: 'Take a careful detour through the dunes', type: 'action', riskLevel: 'safe' },
     ],
+    turnSummary: `${character.name} arrives on the salt road, a figure waits beside a dry well.`,
   }
 }

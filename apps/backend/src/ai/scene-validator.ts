@@ -27,6 +27,12 @@ export const aiSceneSchema = z.object({
   sceneType: z.enum(['exploration', 'combat', 'dialog', 'event', 'shop', 'rest']),
   location: z.string().min(1).max(120),
   choices: z.array(aiChoiceSchema).min(1).max(6),
+  /**
+   * Short factual condensate of this turn (N1 short-term memory) — generated
+   * by the AI itself, never truncated from `narrative` by the backend. Fuels
+   * the recent-turns prompt section injected between N2 chunks.
+   */
+  turnSummary: z.string().min(1).max(200),
 })
 
 export type AiScenePayload = z.infer<typeof aiSceneSchema>

@@ -88,6 +88,8 @@ model SceneLog {
   sceneType  String
   location   String
   narrative  String
+  /// Condensé factuel court (<=200 car.) du tour, généré par l'IA — alimente la fenêtre N1.
+  turnSummary String?
   /// Choix proposés au joueur pour ce tour (Choice[] sérialisé).
   choices    Json
   /// Choix effectivement pris par le joueur (Choice | null).
