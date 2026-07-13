@@ -31,6 +31,7 @@ const turns = Array.from({ length: 8 }, (_, i) => ({
   sceneType: 'exploration',
   location: 'Calamine',
   narrative: `Narrative for turn ${i + 1}`,
+  turnSummary: `Summary for turn ${i + 1}`,
   choices: [],
   chosenChoice: null,
   consequences: null,

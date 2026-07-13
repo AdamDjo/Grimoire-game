@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { buildSystemPrompt } from './system-prompt'
+import { buildSystemPrompt, type RecentTurnSummary } from './system-prompt'
 
 import type { MemoryChunkModel } from '../generated/prisma/models'
 
@@ -86,5 +86,63 @@ describe('buildSystemPrompt — N2 memory injection', () => {
 
     expect(prompt).toContain('Story so far')
     expect(prompt).not.toContain('Critical facts to always remember')
+  })
+})
+
+describe('buildSystemPrompt — N1 recent-turns injection', () => {
+  it('injects no recent-turns section when the list is empty', () => {
+    const prompt = buildSystemPrompt(character, 'en', [], [])
+
+    expect(prompt).not.toContain('Recent turns')
+  })
+
+  it('injects no recent-turns section when every entry has a null turnSummary', () => {
+    const recentTurns: RecentTurnSummary[] = [
+      { turnNumber: 2, turnSummary: null },
+      { turnNumber: 1, turnSummary: null },
+    ]
+
+    const prompt = buildSystemPrompt(character, 'en', [], recentTurns)
+
+    expect(prompt).not.toContain('Recent turns')
+  })
+
+  it('formats recent turns in chronological order (oldest first), regardless of input order', () => {
+    const recentTurns: RecentTurnSummary[] = [
+      { turnNumber: 3, turnSummary: 'Yarel found a shrine.' },
+      { turnNumber: 1, turnSummary: 'Yarel left the Aveugle.' },
+      { turnNumber: 2, turnSummary: 'Yarel crossed the dunes.' },
+    ]
+
+    const prompt = buildSystemPrompt(character, 'en', [], recentTurns)
+
+    expect(prompt).toContain('Recent turns (most recent scenes, in order):')
+    expect(prompt).toContain('- (turn 1) Yarel left the Aveugle.')
+    expect(prompt).toContain('- (turn 2) Yarel crossed the dunes.')
+    expect(prompt).toContain('- (turn 3) Yarel found a shrine.')
+    expect(prompt.indexOf('turn 1')).toBeLessThan(prompt.indexOf('turn 2'))
+    expect(prompt.indexOf('turn 2')).toBeLessThan(prompt.indexOf('turn 3'))
+  })
+
+  it('filters out entries with a null turnSummary while keeping the valid ones', () => {
+    const recentTurns: RecentTurnSummary[] = [
+      { turnNumber: 2, turnSummary: null },
+      { turnNumber: 1, turnSummary: 'Yarel left the Aveugle.' },
+    ]
+
+    const prompt = buildSystemPrompt(character, 'en', [], recentTurns)
+
+    expect(prompt).toContain('- (turn 1) Yarel left the Aveugle.')
+    expect(prompt).not.toContain('turn 2')
+  })
+
+  it('places the N1 recent-turns section after the N2 memory section', () => {
+    const chunks = [chunk({ summary: 'Chunk summary' })]
+    const recentTurns: RecentTurnSummary[] = [{ turnNumber: 9, turnSummary: 'Latest turn.' }]
+
+    const prompt = buildSystemPrompt(character, 'en', chunks, recentTurns)
+
+    expect(prompt.indexOf('Story so far')).toBeGreaterThanOrEqual(0)
+    expect(prompt.indexOf('Recent turns')).toBeGreaterThan(prompt.indexOf('Story so far'))
   })
 })
