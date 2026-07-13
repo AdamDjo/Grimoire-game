@@ -21,15 +21,13 @@ export interface GameActionInput {
   freeAction?: string
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
-
 /**
  * Sends the player's action to the Game Master and returns the next scene.
  * Throws on network failure or a non-ok / unsuccessful API response so the
  * caller can surface the error in the UI.
  */
 export async function postGameAction(input: GameActionInput): Promise<SceneWithSource> {
-  const response = await fetch(`${API_URL}/api/game/action`, {
+  const response = await fetch('/api/game/action', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(input),

@@ -6,9 +6,13 @@ dotenv.config()
  * Centralized, typed access to environment variables.
  * Secrets (API keys) are read here and never logged.
  */
+const supabaseUrl = process.env.SUPABASE_URL ?? ''
+
 export const env = {
   port: process.env.PORT ?? '3001',
   frontendUrl: process.env.FRONTEND_URL ?? 'http://localhost:3000',
+  supabaseUrl,
+  supabaseJwksUrl: `${supabaseUrl}/auth/v1/.well-known/jwks.json`,
   openRouter: {
     apiKey: process.env.OPENROUTER_API_KEY ?? '',
     /** Free multilingual model by default; override with OPENROUTER_MODEL. */

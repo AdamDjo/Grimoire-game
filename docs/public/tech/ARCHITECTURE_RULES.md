@@ -20,6 +20,7 @@ source_of_truth: true
 - Les entrées passent par validation Zod.
 - Les appels frontend passent par `app/api/[...path]/route.ts`.
 - Les sorties IA passent par parsing structuré + validation backend.
+- **Auth** : le backend ne fait jamais confiance à un `userId` du body. L'identité vient du JWT Supabase vérifié localement (JWKS) par `requireAuth`. `User.id` = `auth.users.id`. Détail : [[AUTH]].
 
 ## Canon et mémoire
 

@@ -52,6 +52,9 @@ importers:
       express-rate-limit:
         specifier: ^7.4.0
         version: 7.5.1(express@4.22.1)
+      jose:
+        specifier: ^6.2.3
+        version: 6.2.3
       zod:
         specifier: ^3.24.0
         version: 3.25.76
@@ -104,9 +107,12 @@ importers:
       "@gsap/react":
         specifier: ^2.1.2
         version: 2.1.2(gsap@3.15.0)(react@19.2.3)
+      "@supabase/ssr":
+        specifier: ^0.12.0
+        version: 0.12.0(@supabase/supabase-js@2.110.2)
       "@supabase/supabase-js":
-        specifier: ^2.47.0
-        version: 2.95.3
+        specifier: ^2.110.2
+        version: 2.110.2
       "@tanstack/react-query":
         specifier: ^5.55.0
         version: 5.90.21(react@19.2.3)
@@ -3582,12 +3588,26 @@ packages:
         integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==,
       }
 
+  "@supabase/auth-js@2.110.2":
+    resolution:
+      {
+        integrity: sha512-Qj7a6EDP+AMMQFWqGv+qFa8r6re//dk+qQI5bA0KK+PZmnI3JPu97TDeNt6SMiQ2FkklP79hP2yDFYSnA989OA==,
+      }
+    engines: { node: ">=22.0.0" }
+
   "@supabase/auth-js@2.95.3":
     resolution:
       {
         integrity: sha512-vD2YoS8E2iKIX0F7EwXTmqhUpaNsmbU6X2R0/NdFcs02oEfnHyNP/3M716f3wVJ2E5XHGiTFXki6lRckhJ0Thg==,
       }
     engines: { node: ">=20.0.0" }
+
+  "@supabase/functions-js@2.110.2":
+    resolution:
+      {
+        integrity: sha512-ZjjqrXpxM9/rE+eAtZxiK45EWy9EBoJQ322Q5Y75LccYQNh212neHTgXP/o4MIzmH0LNXT8UzvTZtQOfOzyoeQ==,
+      }
+    engines: { node: ">=22.0.0" }
 
   "@supabase/functions-js@2.95.3":
     resolution:
@@ -3596,12 +3616,32 @@ packages:
       }
     engines: { node: ">=20.0.0" }
 
+  "@supabase/phoenix@0.4.4":
+    resolution:
+      {
+        integrity: sha512-Gt0pqoXuIqX/8dvG0OKp/wMCobXNH3klNbUPBNyOfN0YA1IswrM3HyWFMOPk1Jy+BRaIyDPcFx4jLBwHNmlyfQ==,
+      }
+
+  "@supabase/postgrest-js@2.110.2":
+    resolution:
+      {
+        integrity: sha512-++LBmcIMwCtgO4tISQUmo9+2xkRwHQqS8ZKMCnhXLe9P8k8YQRXuMoh/RiSzQSoev8gqet0W7yOboW0cUxnt0Q==,
+      }
+    engines: { node: ">=22.0.0" }
+
   "@supabase/postgrest-js@2.95.3":
     resolution:
       {
         integrity: sha512-LTrRBqU1gOovxRm1vRXPItSMPBmEFqrfTqdPTRtzOILV4jPSueFz6pES5hpb4LRlkFwCPRmv3nQJ5N625V2Xrg==,
       }
     engines: { node: ">=20.0.0" }
+
+  "@supabase/realtime-js@2.110.2":
+    resolution:
+      {
+        integrity: sha512-z3jTOTPgyn6E3r6dVOOQ10He4yAMB2czjFw7xVdX3s16MHElna5rY1gVaePs0NIo6xvtMYbtmOXlFaFt/ePLpg==,
+      }
+    engines: { node: ">=22.0.0" }
 
   "@supabase/realtime-js@2.95.3":
     resolution:
@@ -3610,12 +3650,34 @@ packages:
       }
     engines: { node: ">=20.0.0" }
 
+  "@supabase/ssr@0.12.0":
+    resolution:
+      {
+        integrity: sha512-d9XV5XzJvzzZbeAIM7fWTCUYxQJZ2Ru6ny3dJHmHGp/LIrJ+o9FpD7N9Rf/UhhWEvHXSoDe8SI32Z2ouOdMjBg==,
+      }
+    peerDependencies:
+      "@supabase/supabase-js": ^2.108.0
+
+  "@supabase/storage-js@2.110.2":
+    resolution:
+      {
+        integrity: sha512-EhsRSwSnmQefKJsAxoRUZ0hvHr92ECM8DDGAKR5z0HdoJx4heI60PjHUTruVNZxKX6XeobLGDyLud020Bw1iwg==,
+      }
+    engines: { node: ">=22.0.0" }
+
   "@supabase/storage-js@2.95.3":
     resolution:
       {
         integrity: sha512-4GxkJiXI3HHWjxpC3sDx1BVrV87O0hfX+wvJdqGv67KeCu+g44SPnII8y0LL/Wr677jB7tpjAxKdtVWf+xhc9A==,
       }
     engines: { node: ">=20.0.0" }
+
+  "@supabase/supabase-js@2.110.2":
+    resolution:
+      {
+        integrity: sha512-r9q9w4ZQ6mOjh36aqUNFSisBF611vzpO8JphBESr2Q1SWvmGFQeI7Jq7Y+PaNMZ6Zszz+S2yTlJStCpnaMSnQg==,
+      }
+    engines: { node: ">=22.0.0" }
 
   "@supabase/supabase-js@2.95.3":
     resolution:
@@ -5342,6 +5404,13 @@ packages:
         integrity: sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==,
       }
     engines: { node: ">= 0.6" }
+
+  cookie@1.1.1:
+    resolution:
+      {
+        integrity: sha512-ei8Aos7ja0weRpFzJnEA9UHJ/7XQmqglbRwnf2ATjcB9Wq874VKH9kfjjirM6UhU2/E5fFYadylyhFldcqSidQ==,
+      }
+    engines: { node: ">=18" }
 
   core-util-is@1.0.2:
     resolution:
@@ -12918,7 +12987,15 @@ snapshots:
 
   "@standard-schema/spec@1.1.0": {}
 
+  "@supabase/auth-js@2.110.2":
+    dependencies:
+      tslib: 2.8.1
+
   "@supabase/auth-js@2.95.3":
+    dependencies:
+      tslib: 2.8.1
+
+  "@supabase/functions-js@2.110.2":
     dependencies:
       tslib: 2.8.1
 
@@ -12926,8 +13003,19 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  "@supabase/phoenix@0.4.4": {}
+
+  "@supabase/postgrest-js@2.110.2":
+    dependencies:
+      tslib: 2.8.1
+
   "@supabase/postgrest-js@2.95.3":
     dependencies:
+      tslib: 2.8.1
+
+  "@supabase/realtime-js@2.110.2":
+    dependencies:
+      "@supabase/phoenix": 0.4.4
       tslib: 2.8.1
 
   "@supabase/realtime-js@2.95.3":
@@ -12940,10 +13028,28 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
+  "@supabase/ssr@0.12.0(@supabase/supabase-js@2.110.2)":
+    dependencies:
+      "@supabase/supabase-js": 2.110.2
+      cookie: 1.1.1
+
+  "@supabase/storage-js@2.110.2":
+    dependencies:
+      iceberg-js: 0.8.1
+      tslib: 2.8.1
+
   "@supabase/storage-js@2.95.3":
     dependencies:
       iceberg-js: 0.8.1
       tslib: 2.8.1
+
+  "@supabase/supabase-js@2.110.2":
+    dependencies:
+      "@supabase/auth-js": 2.110.2
+      "@supabase/functions-js": 2.110.2
+      "@supabase/postgrest-js": 2.110.2
+      "@supabase/realtime-js": 2.110.2
+      "@supabase/storage-js": 2.110.2
 
   "@supabase/supabase-js@2.95.3":
     dependencies:
@@ -13441,7 +13547,7 @@ snapshots:
       std-env: 3.10.0
       test-exclude: 7.0.2
       tinyrainbow: 1.2.0
-      vitest: 2.1.9(@types/node@22.19.11)(@vitest/ui@2.1.9)(jsdom@25.0.1)(lightningcss@1.30.2)
+      vitest: 2.1.9(@types/node@20.19.33)(@vitest/ui@2.1.9)(jsdom@25.0.1)(lightningcss@1.30.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -13496,7 +13602,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 1.2.0
-      vitest: 2.1.9(@types/node@22.19.11)(@vitest/ui@2.1.9)(jsdom@25.0.1)(lightningcss@1.30.2)
+      vitest: 2.1.9(@types/node@20.19.33)(@vitest/ui@2.1.9)(jsdom@25.0.1)(lightningcss@1.30.2)
 
   "@vitest/utils@2.1.9":
     dependencies:
@@ -14008,6 +14114,8 @@ snapshots:
 
   cookie@0.7.2: {}
 
+  cookie@1.1.1: {}
+
   core-util-is@1.0.2: {}
 
   cors@2.8.6:
@@ -14457,7 +14565,7 @@ snapshots:
       "@next/eslint-plugin-next": 16.1.6
       eslint: 9.39.2(jiti@2.7.0)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import-x@4.16.2(eslint-import-resolver-node@0.3.9)(eslint@9.39.2(jiti@2.7.0)))(eslint-plugin-import@2.32.0(eslint@9.39.2(jiti@2.7.0)))(eslint@9.39.2(jiti@2.7.0))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import-x@4.16.2(eslint-import-resolver-node@0.3.9)(eslint@9.39.2(jiti@2.7.0)))(eslint-plugin-import@2.32.0)(eslint@9.39.2(jiti@2.7.0))
       eslint-plugin-import: 2.32.0(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@2.7.0))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.39.2(jiti@2.7.0))
       eslint-plugin-react: 7.37.5(eslint@9.39.2(jiti@2.7.0))
@@ -14491,22 +14599,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import-x@4.16.2(eslint-import-resolver-node@0.3.9)(eslint@9.39.2(jiti@2.7.0)))(eslint-plugin-import@2.32.0(eslint@9.39.2(jiti@2.7.0)))(eslint@9.39.2(jiti@2.7.0)):
-    dependencies:
-      "@nolyfill/is-core-module": 1.0.39
-      debug: 4.4.3(supports-color@8.1.1)
-      eslint: 9.39.2(jiti@2.7.0)
-      get-tsconfig: 4.13.6
-      is-bun-module: 2.0.0
-      stable-hash: 0.0.5
-      tinyglobby: 0.2.15
-      unrs-resolver: 1.11.1
-    optionalDependencies:
-      eslint-plugin-import: 2.32.0(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@2.7.0))
-      eslint-plugin-import-x: 4.16.2(eslint-import-resolver-node@0.3.9)(eslint@9.39.2(jiti@2.7.0))
-    transitivePeerDependencies:
-      - supports-color
-
   eslint-import-resolver-typescript@3.10.1(eslint-plugin-import-x@4.16.2(eslint-import-resolver-node@0.3.9)(eslint@9.39.2(jiti@2.7.0)))(eslint-plugin-import@2.32.0)(eslint@9.39.2(jiti@2.7.0)):
     dependencies:
       "@nolyfill/is-core-module": 1.0.39
@@ -14531,17 +14623,6 @@ snapshots:
       eslint: 9.39.2(jiti@2.7.0)
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import-x@4.16.2(eslint-import-resolver-node@0.3.9)(eslint@9.39.2(jiti@2.7.0)))(eslint-plugin-import@2.32.0)(eslint@9.39.2(jiti@2.7.0))
-    transitivePeerDependencies:
-      - supports-color
-    optional: true
-
-  eslint-module-utils@2.12.1(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@2.7.0)):
-    dependencies:
-      debug: 3.2.7(supports-color@8.1.1)
-    optionalDependencies:
-      eslint: 9.39.2(jiti@2.7.0)
-      eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import-x@4.16.2(eslint-import-resolver-node@0.3.9)(eslint@9.39.2(jiti@2.7.0)))(eslint-plugin-import@2.32.0(eslint@9.39.2(jiti@2.7.0)))(eslint@9.39.2(jiti@2.7.0))
     transitivePeerDependencies:
       - supports-color
 
@@ -14604,7 +14685,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.39.2(jiti@2.7.0)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.1(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@2.7.0))
+      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.55.0(eslint@9.39.2(jiti@2.7.0))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@2.7.0))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3

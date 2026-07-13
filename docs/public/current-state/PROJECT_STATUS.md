@@ -3,7 +3,7 @@ type: status
 visibility: public
 rag: true
 source_of_truth: true
-updated: 2026-07-11
+updated: 2026-07-12
 ---
 
 # Project Status
@@ -25,12 +25,15 @@ updated: 2026-07-11
   - #98 OpenRouter Game Master + route `POST /api/game/action`.
   - #99 écran gamesession jouable branché sur le MJ IA (composants provisoires `_components/`, jetables, zéro collision avec #93).
   - #100 bundler tsup pour un dist backend autonome.
+- **#107 — auth Supabase** : ✅ implémentée (worktree `-claude`, `feature/107-supabase-auth-magic-link-oauth`). Tier anonyme (`signInAnonymously`), magic link + OAuth Google/Discord, JWT vérifié via JWKS dans `requireAuth`, `userId` client retiré du body, proxy `app/api/[...path]/route.ts` qui injecte le Bearer, cap 30 req anonymes → 403 → blocage forcé UI. Bug email anonyme vide (P2002) résolu. Vérifié live. Détail : [[../tech/AUTH]].
 
 ## Dette / non-autoritatif à durcir
 
 - Le moteur de conséquences + le d20 de #99 sont **simulés côté front** (démo). À rapatrier côté backend (règles souveraines) lors de l'implémentation réelle de la Session.
 - #101 (fallback multi-modèles OpenRouter) : ouvert, non implémenté.
 - 91 vulnérabilités Dependabot sur `develop` (3 critiques) — à traiter dans un ticket dédié.
+- **Cap anonyme contournable** (#107) : vider les cookies `sb-*` réinitialise le quota (nouvel `auth.users.id`). Dette V1 assumée (friction, pas sécurité). À durcir avec un rate-limit / cap par IP quand l'IA payante remplacera le stub. Détail : [[../tech/AUTH]].
+- **RLS Postgres** différé (#107, décision #7) : autorisation V1 = filtrage `userId` explicite côté Express.
 
 ## Critères pour avancer dans la Phase 1B
 
@@ -46,3 +49,4 @@ updated: 2026-07-11
 - Routeur IA : [[../nav/task-router]]
 - Canon : [[../nav/canon-index]]
 - Règles d'architecture : [[../tech/ARCHITECTURE_RULES]]
+- Authentification : [[../tech/AUTH]]
