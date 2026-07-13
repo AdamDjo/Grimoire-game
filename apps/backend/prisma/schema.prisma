@@ -75,7 +75,8 @@ model GameSession {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  scenes SceneLog[]
+  scenes        SceneLog[]
+  memoryChunks  MemoryChunk[]
 }
 
 model SceneLog {
@@ -96,6 +97,28 @@ model SceneLog {
   /// Jet de dés serveur pour ce tour, si applicable (DiceRoll | null).
   diceRoll   Json?
   source     String // "ai" | "stub"
+
+  createdAt DateTime @default(now())
+}
+
+model MemoryChunk {
+  id        String      @id @default(uuid())
+  sessionId String
+  session   GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  /// Résumé narratif à la 3e personne (~150 tokens max).
+  summary   String
+  /// Faits clés du segment compressé (String[] sérialisé, 3-5 items).
+  keyFacts       Json
+  /// Sous-ensemble de faits critiques épinglés (mort PNJ, artefact, quête, choix moral).
+  keyFactsPinned Json
+  /// Ambiance dominante du segment : calm | tense | festive | sacred | dangerous.
+  mood           String
+  /// Évolution des PNJ croisés (NpcEvolution[] sérialisé).
+  npcsEvolution  Json
+
+  turnRangeStart Int
+  turnRangeEnd   Int
 
   createdAt DateTime @default(now())
 }

@@ -12,16 +12,30 @@ export interface OpenRouterResult {
   error?: string
 }
 
+export interface OpenRouterCallOptions {
+  /** Overrides `env.openRouter.model` for this call (e.g. N2 compression). */
+  model?: string
+  /** Aborts the request if it exceeds this duration. */
+  timeoutMs?: number
+}
+
 /**
  * Calls OpenRouter's chat completions endpoint.
  * The API key stays server-side and is never logged or returned.
  */
-export async function callOpenRouter(messages: OpenRouterMessage[]): Promise<OpenRouterResult> {
-  const { apiKey, model, baseUrl } = env.openRouter
+export async function callOpenRouter(
+  messages: OpenRouterMessage[],
+  options?: OpenRouterCallOptions
+): Promise<OpenRouterResult> {
+  const { apiKey, model: defaultModel, baseUrl } = env.openRouter
+  const model = options?.model ?? defaultModel
 
   if (!apiKey) {
     return { success: false, error: 'OpenRouter API key not configured' }
   }
+
+  const controller = options?.timeoutMs ? new AbortController() : undefined
+  const timeout = controller ? setTimeout(() => controller.abort(), options?.timeoutMs) : undefined
 
   try {
     const response = await fetch(`${baseUrl}/chat/completions`, {
@@ -39,6 +53,7 @@ export async function callOpenRouter(messages: OpenRouterMessage[]): Promise<Ope
         temperature: 0.8,
         response_format: { type: 'json_object' },
       }),
+      signal: controller?.signal,
     })
 
     if (!response.ok) {
@@ -57,8 +72,13 @@ export async function callOpenRouter(messages: OpenRouterMessage[]): Promise<Ope
 
     return { success: true, content }
   } catch (err) {
+    if (err instanceof Error && err.name === 'AbortError') {
+      return { success: false, error: 'OpenRouter request timed out' }
+    }
     // Log the message only (never the request headers, which carry the key).
     const message = err instanceof Error ? err.message : 'unknown error'
     return { success: false, error: `OpenRouter request errored: ${message}` }
+  } finally {
+    if (timeout) clearTimeout(timeout)
   }
 }

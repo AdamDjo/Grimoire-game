@@ -15,6 +15,7 @@ import { persistedChoicesSchema } from '../ai/scene-validator'
 import { resolveChoice } from '../game-rules/consequences'
 import { prisma } from '../lib/prisma'
 
+import { compressScene } from './memory.service'
 import { assembleScene } from './scene-assembler'
 
 import type { Character as DbCharacter, GameSession } from '../generated/prisma/client'
@@ -199,6 +200,7 @@ export async function buildOpeningScene(
   const gm = await generateScene({
     character: toGmCharacter(character, attributes, survival),
     locale,
+    sessionId: session.id,
   })
   const scene = assembleScene({
     payload: gm.scene,
@@ -294,6 +296,7 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
   const gm = await generateScene({
     character: toGmCharacter(character, attributes, resolution.updatedSurvival),
     locale,
+    sessionId: session.id,
     chosenActionText,
     freeAction,
   })
@@ -342,6 +345,26 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
       },
     }),
   ])
+
+  if (nextTurn % 8 === 0) {
+    void (async () => {
+      try {
+        const recentTurns = await prisma.sceneLog.findMany({
+          where: { sessionId: session.id },
+          orderBy: { turnNumber: 'desc' },
+          take: 8,
+        })
+        await compressScene(
+          session.id,
+          recentTurns,
+          toGmCharacter(character, attributes, resolution.updatedSurvival),
+          scene.location
+        )
+      } catch (err) {
+        console.warn(`[Memory] failed to load turns for session ${session.id}:`, err)
+      }
+    })()
+  }
 
   return {
     scene,
