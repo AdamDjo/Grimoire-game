@@ -74,6 +74,19 @@ describe('generateScene — N1 recent-turns loading', () => {
     })
   })
 
+  it('queries the 8 most recent memory chunks ordered by turnRangeEnd desc', async () => {
+    hasOpenRouterKey.mockReturnValue(true)
+    callOpenRouter.mockResolvedValue({ success: true, content: JSON.stringify(validAiPayload) })
+
+    await generateScene({ character, locale: 'en', sessionId: 's1' })
+
+    expect(memoryChunkFindMany).toHaveBeenCalledWith({
+      where: { sessionId: 's1' },
+      orderBy: { turnRangeEnd: 'desc' },
+      take: 8,
+    })
+  })
+
   it('passes the loaded recent turns through to buildSystemPrompt', async () => {
     hasOpenRouterKey.mockReturnValue(true)
     const recentTurns = [

@@ -21,15 +21,17 @@ export interface GameMasterInput {
 }
 
 /**
- * Loads the N2 memory context for the prompt: the 5 most recent chunks (for
+ * Loads the N2 memory context for the prompt: the 8 most recent chunks (for
  * the "story so far" summaries) plus every chunk's pinned facts, deduplicated
- * downstream by `buildSystemPrompt` — bounded per feedback_challenge_canon_scalability.
+ * downstream by `buildSystemPrompt`. 8 chunks (64 turns) covers nearly the
+ * full history of a vertical-slice run (45-70 min, ~40-60 turns) — see #120,
+ * which replaced semantic recall (#114, deferred) with this wider window.
  */
 async function loadMemoryChunks(sessionId: string): Promise<MemoryChunkModel[]> {
   return prisma.memoryChunk.findMany({
     where: { sessionId },
     orderBy: { turnRangeEnd: 'desc' },
-    take: 5,
+    take: 8,
   })
 }
 
