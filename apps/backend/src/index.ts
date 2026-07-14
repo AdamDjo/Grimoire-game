@@ -34,9 +34,17 @@ const gameLimiter = rateLimit({
   legacyHeaders: false,
 })
 
+// Rate-limit the authenticated read endpoints against abuse (no AI cost here).
+const apiLimiter = rateLimit({
+  windowMs: 60_000,
+  limit: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+
 // Routes
 app.use('/api/game', gameLimiter, requireAuth, gameRouter)
-app.use('/api/souvenirs', requireAuth, souvenirRouter)
+app.use('/api/souvenirs', apiLimiter, requireAuth, souvenirRouter)
 
 // Health check
 app.get('/api/health', (_req, res) => {
