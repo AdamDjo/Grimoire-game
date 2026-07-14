@@ -50,8 +50,8 @@ export const aiSceneSchema = z.object({
    * the recent-turns prompt section injected between N2 chunks.
    */
   turnSummary: z.string().min(1).max(200),
-  /** Optional named-Souvenir candidate for this turn (N3 memory, #115). */
-  souvenir_candidate: aiSouvenirCandidateSchema.optional(),
+  /** Optional named-Souvenir candidate for this turn (N3 memory, #115). Some models emit `null` instead of omitting the field. */
+  souvenir_candidate: aiSouvenirCandidateSchema.nullish().transform((v) => v ?? undefined),
 })
 
 export type AiScenePayload = z.infer<typeof aiSceneSchema>
