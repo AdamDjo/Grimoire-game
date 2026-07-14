@@ -9,13 +9,18 @@ import { GameField } from '@/components/ui/grimoire/GameField/GameField'
 import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
 import { GameInput } from '@/components/ui/grimoire/GameInput/GameInput'
 import { GamePanel } from '@/components/ui/grimoire/GamePanel/GamePanel'
+import { getAuthHref } from '@/lib/internal-navigation'
 import { createClient } from '@/lib/supabase/client'
 
 import type { FormEvent } from 'react'
 
 import './login-form.css'
 
-export function LoginForm() {
+interface LoginFormProps {
+  nextPath: string
+}
+
+export function LoginForm({ nextPath }: LoginFormProps) {
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'sent' | 'error'>('idle')
 
@@ -24,9 +29,11 @@ export function LoginForm() {
     setStatus('loading')
 
     const supabase = createClient()
+    const callbackUrl = new URL('/auth/callback', window.location.origin)
+    callbackUrl.searchParams.set('next', nextPath)
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+      options: { emailRedirectTo: callbackUrl.toString() },
     })
 
     setStatus(error ? 'error' : 'sent')
@@ -35,9 +42,11 @@ export function LoginForm() {
   async function handleOAuth(provider: 'google' | 'discord') {
     setStatus('loading')
     const supabase = createClient()
+    const callbackUrl = new URL('/auth/callback', window.location.origin)
+    callbackUrl.searchParams.set('next', nextPath)
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo: callbackUrl.toString() },
     })
 
     if (error) setStatus('error')
@@ -103,7 +112,7 @@ export function LoginForm() {
       </form>
 
       <p className="login-form__footer">
-        Première visite ? <Link href="/signup">Créer votre chronique</Link>
+        Première visite ? <Link href={getAuthHref('/signup', nextPath)}>Créer votre chronique</Link>
       </p>
     </GamePanel>
   )

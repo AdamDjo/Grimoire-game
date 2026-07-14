@@ -9,13 +9,18 @@ import { GameField } from '@/components/ui/grimoire/GameField/GameField'
 import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
 import { GameInput } from '@/components/ui/grimoire/GameInput/GameInput'
 import { GamePanel } from '@/components/ui/grimoire/GamePanel/GamePanel'
+import { getAuthHref } from '@/lib/internal-navigation'
 import { createClient } from '@/lib/supabase/client'
 
 import type { FormEvent } from 'react'
 
 import '../login/login-form.css'
 
-export function SignupForm() {
+interface SignupFormProps {
+  nextPath: string
+}
+
+export function SignupForm({ nextPath }: SignupFormProps) {
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'sent' | 'error'>('idle')
 
@@ -24,11 +29,13 @@ export function SignupForm() {
     setStatus('loading')
 
     const supabase = createClient()
+    const callbackUrl = new URL('/auth/callback', window.location.origin)
+    callbackUrl.searchParams.set('next', nextPath)
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
         shouldCreateUser: true,
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: callbackUrl.toString(),
       },
     })
 
@@ -38,9 +45,11 @@ export function SignupForm() {
   async function handleOAuth(provider: 'google' | 'discord') {
     setStatus('loading')
     const supabase = createClient()
+    const callbackUrl = new URL('/auth/callback', window.location.origin)
+    callbackUrl.searchParams.set('next', nextPath)
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo: callbackUrl.toString() },
     })
 
     if (error) setStatus('error')
@@ -105,7 +114,7 @@ export function SignupForm() {
       </form>
 
       <p className="login-form__footer">
-        Chronique existante ? <Link href="/login">Se connecter</Link>
+        Chronique existante ? <Link href={getAuthHref('/login', nextPath)}>Se connecter</Link>
       </p>
     </GamePanel>
   )

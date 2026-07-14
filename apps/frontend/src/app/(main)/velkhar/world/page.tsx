@@ -1,11 +1,23 @@
-import { AnimatedShinyText } from '@/components/ui/animated-shiny-text'
+import { SystemState } from '@/components/system-state/SystemState'
+import { GameLink } from '@/components/ui/game-link'
+
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Le Makhzen · GRIMOIRE',
+}
 
 export default function VelkharWorldPage() {
   return (
-    <div>
-      <h1>
-        <AnimatedShinyText variant="gold-strong">Velkhar World Map</AnimatedShinyText>
-      </h1>
-    </div>
+    <SystemState
+      eyebrow="Territoire non découvert"
+      title="Le Makhzen reste voilé."
+      body="La carte ne révélera que les régions connues du personnage. Aucune destination ne peut encore être affichée sans données de découverte."
+      action={
+        <GameLink href="/dashboard" size="sm" variant="secondary">
+          Retour aux Chroniques
+        </GameLink>
+      }
+    />
   )
 }

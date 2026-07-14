@@ -1,11 +1,19 @@
-import { AnimatedShinyText } from '@/components/ui/animated-shiny-text'
+import { notFound, redirect } from 'next/navigation'
 
-export default function CampaignPage() {
-  return (
-    <div>
-      <h1>
-        <AnimatedShinyText variant="gold-strong">Campaign</AnimatedShinyText>
-      </h1>
-    </div>
-  )
+import {
+  getCampaignResumeSnapshot,
+  resolveCampaignDestination,
+} from '../../../_lib/campaign-resume'
+
+interface CampaignPageProps {
+  params: Promise<{ id: string }>
+}
+
+export default async function CampaignPage({ params }: CampaignPageProps) {
+  const { id } = await params
+  const snapshot = getCampaignResumeSnapshot(id)
+
+  if (!snapshot) notFound()
+
+  redirect(resolveCampaignDestination(snapshot))
 }

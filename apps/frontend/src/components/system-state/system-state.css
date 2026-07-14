@@ -101,7 +101,7 @@
   line-height: 1.55;
   margin: 18px 0 0;
   max-width: 46ch;
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 
 .system-state__loading {

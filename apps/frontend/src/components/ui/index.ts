@@ -8,6 +8,9 @@ export { ScrollProgressBar } from './scroll-progress-bar'
 export { SectionProgress } from './section-progress'
 export { GameButton } from './grimoire'
 export type { GameButtonProps, GameButtonSize, GameButtonTone, GameButtonVariant } from './grimoire'
+export { GameLink } from './game-link'
+export type { GameLinkProps } from './game-link'
+export { MainNavigation } from './main-navigation'
 export {
   GameSceneLayout,
   GameStepDock,
