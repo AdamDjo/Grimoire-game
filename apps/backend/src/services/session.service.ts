@@ -15,6 +15,7 @@ import { persistedChoicesSchema } from '../ai/scene-validator'
 import { resolveChoice } from '../game-rules/consequences'
 import { prisma } from '../lib/prisma'
 
+import { generateChronicle } from './chronicle.service'
 import { compressScene } from './memory.service'
 import { assembleScene } from './scene-assembler'
 import { validateAndPersistSouvenirCandidate } from './souvenir.service'
@@ -384,6 +385,16 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
     })()
   }
 
+  if (resolution.gameOver) {
+    void (async () => {
+      try {
+        await generateChronicle(session.id)
+      } catch (err) {
+        console.warn(`[Chronicle] failed to generate for session ${session.id}:`, err)
+      }
+    })()
+  }
+
   return {
     scene,
     updatedStats: toStatsRecord(resolution.updatedSurvival),
@@ -392,6 +403,63 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
     diceRoll: resolution.diceRoll,
     source: gm.source,
   }
+}
+
+/**
+ * Ends an active session with the given reason (`inn` or `abandon`) and
+ * fires the Chronicle generation, mirroring the `death` path in `resolveTurn`.
+ * Returns null if the session doesn't exist, isn't the caller's, or has
+ * already ended — the route decides how to surface that.
+ */
+async function endSession(
+  sessionId: string,
+  userId: string,
+  endReason: Exclude<SessionEndReason, 'death'>
+): Promise<GameSession | null> {
+  const session = await prisma.gameSession.findFirst({
+    where: { id: sessionId, status: 'active', character: { userId } },
+  })
+  if (!session) {
+    return null
+  }
+
+  const updated = await prisma.gameSession.update({
+    where: { id: session.id },
+    data: { status: 'ended', endReason },
+  })
+
+  void (async () => {
+    try {
+      await generateChronicle(session.id)
+    } catch (err) {
+      console.warn(`[Chronicle] failed to generate for session ${session.id}:`, err)
+    }
+  })()
+
+  return updated
+}
+
+/**
+ * Ends a session via the player's voluntary choice at the inn, facing
+ * L'Aveugle ("Ton aventure se termine ici").
+ */
+export async function endSessionAtInn(
+  sessionId: string,
+  userId: string
+): Promise<GameSession | null> {
+  return endSession(sessionId, userId, 'inn')
+}
+
+/**
+ * Ends a session via an explicit "Abandonner ce perso" click. The 30-day
+ * inactivity path is a separate job, not wired here (mirrors the Souvenir
+ * purge job's approach: a plain exported function, no cron infra yet).
+ */
+export async function abandonSession(
+  sessionId: string,
+  userId: string
+): Promise<GameSession | null> {
+  return endSession(sessionId, userId, 'abandon')
 }
 
 /** Assembles the shared `Character` shape the Game Master prompt expects. */
