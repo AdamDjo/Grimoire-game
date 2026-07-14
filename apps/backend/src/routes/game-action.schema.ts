@@ -22,3 +22,10 @@ export const createSessionSchema = z.object({
 })
 
 export type CreateSessionRequest = z.infer<typeof createSessionSchema>
+
+/** Request to voluntarily end a session (inn choice or explicit abandon). */
+export const endSessionSchema = z.object({
+  sessionId: z.string().min(1),
+})
+
+export type EndSessionRequest = z.infer<typeof endSessionSchema>

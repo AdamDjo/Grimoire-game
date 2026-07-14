@@ -2,18 +2,25 @@ import { type Request, type Response, Router } from 'express'
 
 import { prisma } from '../lib/prisma'
 import {
+  abandonSession,
   buildOpeningScene,
+  endSessionAtInn,
   getOrCreateSession,
   INVALID_CHOICE,
   resolveChosenChoice,
   resolveTurn,
 } from '../services/session.service'
 
-import { createSessionSchema, gameActionSchema } from './game-action.schema'
+import { createSessionSchema, endSessionSchema, gameActionSchema } from './game-action.schema'
 
-import type { ApiResponse, SceneResponse } from '@grimoire/shared'
+import type { ApiResponse, SceneResponse, SessionEndReason } from '@grimoire/shared'
 
 export const gameRouter: Router = Router()
+
+interface EndSessionResponse {
+  status: 'ended'
+  endReason: SessionEndReason
+}
 
 /**
  * POST /api/game/session
@@ -88,3 +95,57 @@ gameRouter.post('/action', async (req: Request, res: Response<ApiResponse<SceneR
 
   res.json({ success: true, data: response })
 })
+
+/**
+ * POST /api/game/session/end-inn
+ * Voluntary end-of-run: the player clicks "Ton aventure se termine ici" while
+ * facing L'Aveugle at the inn. Ends the session and triggers the Chronicle.
+ */
+gameRouter.post(
+  '/session/end-inn',
+  async (req: Request, res: Response<ApiResponse<EndSessionResponse>>) => {
+    const parsed = endSessionSchema.safeParse(req.body)
+    if (!parsed.success) {
+      res.status(400).json({
+        success: false,
+        error: parsed.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; '),
+      })
+      return
+    }
+
+    const session = await endSessionAtInn(parsed.data.sessionId, req.auth!.userId)
+    if (!session) {
+      res.status(404).json({ success: false, error: 'Active session not found' })
+      return
+    }
+
+    res.json({ success: true, data: { status: 'ended', endReason: 'inn' } })
+  }
+)
+
+/**
+ * POST /api/game/session/abandon
+ * Explicit "Abandonner ce perso" click. Ends the session and triggers the
+ * Chronicle. The 30-day-inactivity path is a separate job, not this route.
+ */
+gameRouter.post(
+  '/session/abandon',
+  async (req: Request, res: Response<ApiResponse<EndSessionResponse>>) => {
+    const parsed = endSessionSchema.safeParse(req.body)
+    if (!parsed.success) {
+      res.status(400).json({
+        success: false,
+        error: parsed.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; '),
+      })
+      return
+    }
+
+    const session = await abandonSession(parsed.data.sessionId, req.auth!.userId)
+    if (!session) {
+      res.status(404).json({ success: false, error: 'Active session not found' })
+      return
+    }
+
+    res.json({ success: true, data: { status: 'ended', endReason: 'abandon' } })
+  }
+)

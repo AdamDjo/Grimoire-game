@@ -29,6 +29,7 @@ model User {
   createdAt  DateTime    @default(now())
   characters Character[]
   souvenirs  Souvenir[]
+  chronicles Chronicle[]
 }
 
 model Character {
@@ -146,6 +147,35 @@ model Souvenir {
 
   /// Placeholder for the future Aveugle Souvenir-for-lore exchange (#133). Unused for now.
   sharedWithAveugle Boolean @default(false)
+
+  createdAt DateTime @default(now())
+}
+
+/// End-of-run literary synthesis (#116). One-time, generated when a
+/// GameSession ends (death | inn | abandon). Linked to `User` only (no
+/// cascade relation to Session/Character, which must be free to disappear
+/// while the Chronicle survives them, mirroring `Souvenir`). `characterId`
+/// and `sessionId` are kept as plain strings for provenance/display only.
+/// No slug/public-URL field yet — public sharing is a deferred, separate ticket.
+model Chronicle {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  characterId String
+  sessionId   String
+
+  /// Why the run ended (death | inn | abandon), copied from GameSession.endReason.
+  endReason String
+
+  title        String
+  bodyMarkdown String
+  /// ChronicleMood (@grimoire/shared) stored as a plain string, matching
+  /// Souvenir.type's convention — no Prisma enum in this schema.
+  mood         String
+  /// ChronicleKeyMoment[] sérialisé ({label, scene_ref}[]).
+  keyMoments   Json
+  tagline      String
 
   createdAt DateTime @default(now())
 }
