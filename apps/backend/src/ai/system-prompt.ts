@@ -1,4 +1,4 @@
-import type { MemoryChunkModel } from '../generated/prisma/models'
+import type { MemoryChunkModel, SouvenirModel } from '../generated/prisma/models'
 import type { Character, Locale } from '@grimoire/shared'
 
 /** Human-readable language name for the locale, injected into the prompt. */
@@ -63,6 +63,25 @@ function buildRecentTurnsSection(recentTurns: RecentTurnSummary[]): string[] {
 }
 
 /**
+ * Builds the N3 memory section: the caller passes at most the 3 most recent
+ * named Souvenirs (cross-run, per #115 — narrower than the canon's 5-max
+ * since these are a passive mention, not the Aveugle's relevance-ranked pick).
+ * Souvenirs are immutable once created; this prompt never asks the AI to
+ * alter or contradict them, only to be aware of them.
+ */
+function buildSouvenirsSection(souvenirs: SouvenirModel[]): string[] {
+  if (souvenirs.length === 0) return []
+
+  const lines = souvenirs.map((souvenir) => `- "${souvenir.title}" — ${souvenir.body}`)
+
+  return [
+    '',
+    "The player's named Souvenirs from past runs (permanent, never contradict them):",
+    ...lines,
+  ]
+}
+
+/**
  * Builds the Game Master system prompt.
  * The AI writes narration and choice labels only; the backend owns all rules,
  * dice, stats, and canon consistency. Canon brand terms are NOT re-translated —
@@ -72,7 +91,8 @@ export function buildSystemPrompt(
   character: Character,
   locale: Locale,
   memoryChunks: MemoryChunkModel[] = [],
-  recentTurns: RecentTurnSummary[] = []
+  recentTurns: RecentTurnSummary[] = [],
+  souvenirs: SouvenirModel[] = []
 ): string {
   const languageName = LOCALE_NAME[locale]
 
@@ -91,6 +111,7 @@ export function buildSystemPrompt(
     `Player character: ${character.name} — people "${character.people}", vocation "${character.vocation}".`,
     ...buildMemorySection(memoryChunks),
     ...buildRecentTurnsSection(recentTurns),
+    ...buildSouvenirsSection(souvenirs),
     '',
     'Respond with a single JSON object and nothing else, matching exactly:',
     '{',
@@ -98,11 +119,18 @@ export function buildSystemPrompt(
     '  "sceneType": "exploration" | "combat" | "dialog" | "event" | "shop" | "rest",',
     '  "location": string,',
     '  "choices": [{ "text": string, "type": "action"|"dialog"|"combat"|"flee"|"use_item"|"skill", "riskLevel"?: "safe"|"low"|"medium"|"high"|"deadly" }],',
-    '  "turnSummary": string',
+    '  "turnSummary": string,',
+    '  "souvenir_candidate"?: { "title_suggestion": string, "body": string, "type": "npc-death"|"moral-choice"|"secret-discovery"|"boss-victory"|"strong-promise" }',
     '}',
     '',
     'turnSummary: a short factual sentence (max 200 characters) condensing what just',
     'happened THIS turn — not styled narration, a compact fact usable for continuity',
     '(e.g. "The player fled the oasis after discovering the merchant NPC was lying").',
+    '',
+    'souvenir_candidate: OPTIONAL, omit on most turns. Only include it when something',
+    'truly Souvenir-worthy just happened THIS turn: a named NPC died, a major moral',
+    'choice was made, a secret was discovered, a boss was defeated, or a strong promise',
+    'was sworn. title_suggestion: 4-15 words, evocative. body: 30-70 tokens, third person,',
+    'describing the moment concretely (not restating narrative style).',
   ].join('\n')
 }

@@ -3,13 +3,13 @@
 
 // ---------------------------------------------------------------------------
 // Vision domaine complète (voir docs/private/raw/*.md) — NON migrée ici :
-// Peuples, Vocations (catalogues statiques, pas de table), Souvenirs
-// (méta-monde cross-run), Factions/réputation, Quêtes, Inventaire/Items,
-// Chroniques (résumé fin de run). Ces modèles arriveront avec les écrans
-// qui en ont besoin (Character Create, Auberge, World Map).
+// Peuples, Vocations (catalogues statiques, pas de table), Factions/réputation,
+// Quêtes, Inventaire/Items, Chroniques (résumé fin de run). Ces modèles
+// arriveront avec les écrans qui en ont besoin (Character Create, Auberge,
+// World Map).
 //
 // Migré maintenant (coeur du world-state de session) : User, Character,
-// GameSession, SceneLog.
+// GameSession, SceneLog, MemoryChunk, Souvenir.
 // ---------------------------------------------------------------------------
 
 generator client {
@@ -28,6 +28,7 @@ model User {
   anonymousRequestCount Int @default(0)
   createdAt  DateTime    @default(now())
   characters Character[]
+  souvenirs  Souvenir[]
 }
 
 model Character {
@@ -121,6 +122,30 @@ model MemoryChunk {
 
   turnRangeStart Int
   turnRangeEnd   Int
+
+  createdAt DateTime @default(now())
+}
+
+/// Named Souvenir (N3 inter-run memory, #115). Cross-run and permanent —
+/// linked to `User` only (no cascade relation to Session/Character, which
+/// must be free to disappear while the Souvenir survives them). `characterId`
+/// and `sessionId` are kept as plain strings for provenance/display only.
+model Souvenir {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  characterId String
+  sessionId   String
+
+  title String
+  body  String
+  /// SouvenirType (@grimoire/shared) stored as a plain string, matching
+  /// SceneLog.sceneType's convention — no Prisma enum in this schema.
+  type  String
+
+  /// Placeholder for the future Aveugle Souvenir-for-lore exchange (#133). Unused for now.
+  sharedWithAveugle Boolean @default(false)
 
   createdAt DateTime @default(now())
 }

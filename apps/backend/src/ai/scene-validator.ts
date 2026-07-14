@@ -22,6 +22,23 @@ export const persistedChoiceSchema = aiChoiceSchema.extend({
 
 export const persistedChoicesSchema = z.array(persistedChoiceSchema)
 
+/**
+ * Zod schema for the optional per-turn Souvenir candidate (N3 memory, #115).
+ * The AI proposes this only when a Souvenir-worthy moment just happened —
+ * most turns omit it entirely. `type` is an explicit hint from the AI since
+ * it can't be reliably inferred server-side from prose alone; the backend
+ * still re-validates it against the enum and applies every other rule (cap,
+ * pinned-fact match, dedup, length bounds) in `souvenir.service.ts` before
+ * ever persisting anything.
+ */
+export const aiSouvenirCandidateSchema = z.object({
+  title_suggestion: z.string().min(1).max(200),
+  body: z.string().min(1).max(1000),
+  type: z.enum(['npc-death', 'moral-choice', 'secret-discovery', 'boss-victory', 'strong-promise']),
+})
+
+export type AiSouvenirCandidate = z.infer<typeof aiSouvenirCandidateSchema>
+
 export const aiSceneSchema = z.object({
   narrative: z.string().min(1).max(4000),
   sceneType: z.enum(['exploration', 'combat', 'dialog', 'event', 'shop', 'rest']),
@@ -33,6 +50,8 @@ export const aiSceneSchema = z.object({
    * the recent-turns prompt section injected between N2 chunks.
    */
   turnSummary: z.string().min(1).max(200),
+  /** Optional named-Souvenir candidate for this turn (N3 memory, #115). */
+  souvenir_candidate: aiSouvenirCandidateSchema.optional(),
 })
 
 export type AiScenePayload = z.infer<typeof aiSceneSchema>

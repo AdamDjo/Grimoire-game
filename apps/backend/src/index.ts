@@ -5,6 +5,7 @@ import rateLimit from 'express-rate-limit'
 import { env } from './config/env'
 import { requireAuth } from './middleware/auth.middleware'
 import { gameRouter } from './routes/game.routes'
+import { souvenirRouter } from './routes/souvenir.routes'
 
 const app: Express = express()
 const PORT = env.port
@@ -35,6 +36,7 @@ const gameLimiter = rateLimit({
 
 // Routes
 app.use('/api/game', gameLimiter, requireAuth, gameRouter)
+app.use('/api/souvenirs', requireAuth, souvenirRouter)
 
 // Health check
 app.get('/api/health', (_req, res) => {
