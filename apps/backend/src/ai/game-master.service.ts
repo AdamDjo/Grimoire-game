@@ -6,7 +6,7 @@ import { buildStubScene } from './scene-stub'
 import { type AiScenePayload, validateAiScene } from './scene-validator'
 import { buildSystemPrompt, type RecentTurnSummary } from './system-prompt'
 
-import type { MemoryChunkModel } from '../generated/prisma/models'
+import type { MemoryChunkModel, SouvenirModel } from '../generated/prisma/models'
 import type { Character, Locale } from '@grimoire/shared'
 
 export interface GameMasterInput {
@@ -49,6 +49,19 @@ async function loadRecentTurns(sessionId: string): Promise<RecentTurnSummary[]> 
   })
 }
 
+/**
+ * Loads the N3 inter-run memory context: the 3 most recent named Souvenirs
+ * for this user (across all their sessions/characters, per #115 — Souvenirs
+ * are cross-run and permanent, never scoped to the current session).
+ */
+async function loadRecentSouvenirs(userId: string): Promise<SouvenirModel[]> {
+  return prisma.souvenir.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'desc' },
+    take: 3,
+  })
+}
+
 export interface GameMasterResult {
   scene: AiScenePayload
   /** How the scene was produced — useful for debugging and the front badge. */
@@ -76,15 +89,22 @@ export async function generateScene(input: GameMasterInput): Promise<GameMasterR
     return { scene: buildStubScene(input.character, input.locale), source: 'stub' }
   }
 
-  const [memoryChunks, recentTurns] = await Promise.all([
+  const [memoryChunks, recentTurns, souvenirs] = await Promise.all([
     loadMemoryChunks(input.sessionId),
     loadRecentTurns(input.sessionId),
+    loadRecentSouvenirs(input.character.userId),
   ])
 
   const result = await callOpenRouter([
     {
       role: 'system',
-      content: buildSystemPrompt(input.character, input.locale, memoryChunks, recentTurns),
+      content: buildSystemPrompt(
+        input.character,
+        input.locale,
+        memoryChunks,
+        recentTurns,
+        souvenirs
+      ),
     },
     { role: 'user', content: buildUserPrompt(input) },
   ])

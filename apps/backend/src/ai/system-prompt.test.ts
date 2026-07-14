@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { buildSystemPrompt, type RecentTurnSummary } from './system-prompt'
 
-import type { MemoryChunkModel } from '../generated/prisma/models'
+import type { MemoryChunkModel, SouvenirModel } from '../generated/prisma/models'
 
 const character = {
   id: 'char1',
@@ -29,6 +29,21 @@ function chunk(overrides: Partial<MemoryChunkModel>): MemoryChunkModel {
     npcsEvolution: [],
     turnRangeStart: 1,
     turnRangeEnd: 8,
+    createdAt: new Date(),
+    ...overrides,
+  }
+}
+
+function souvenir(overrides: Partial<SouvenirModel>): SouvenirModel {
+  return {
+    id: 'sv1',
+    userId: 'user1',
+    characterId: 'char1',
+    sessionId: 's1',
+    title: 'The Trader Who Never Lied',
+    body: 'Yarel watched the old trader take his last breath by the dry well.',
+    type: 'npc-death',
+    sharedWithAveugle: false,
     createdAt: new Date(),
     ...overrides,
   }
@@ -144,5 +159,33 @@ describe('buildSystemPrompt — N1 recent-turns injection', () => {
 
     expect(prompt.indexOf('Story so far')).toBeGreaterThanOrEqual(0)
     expect(prompt.indexOf('Recent turns')).toBeGreaterThan(prompt.indexOf('Story so far'))
+  })
+})
+
+describe('buildSystemPrompt — N3 Souvenirs injection (#115)', () => {
+  it('injects no Souvenirs section when the list is empty', () => {
+    const prompt = buildSystemPrompt(character, 'en', [], [], [])
+
+    expect(prompt).not.toContain('named Souvenirs')
+  })
+
+  it('injects each Souvenir title and body', () => {
+    const souvenirs = [
+      souvenir({ id: 'sv1', title: 'The Trader Who Never Lied', body: 'He died at dusk.' }),
+      souvenir({ id: 'sv2', title: 'The Vow at the Well', body: 'She swore to return.' }),
+    ]
+
+    const prompt = buildSystemPrompt(character, 'en', [], [], souvenirs)
+
+    expect(prompt).toContain("player's named Souvenirs from past runs")
+    expect(prompt).toContain('"The Trader Who Never Lied" — He died at dusk.')
+    expect(prompt).toContain('"The Vow at the Well" — She swore to return.')
+  })
+
+  it('documents the optional souvenir_candidate field in the JSON output instructions', () => {
+    const prompt = buildSystemPrompt(character, 'en')
+
+    expect(prompt).toContain('"souvenir_candidate"?')
+    expect(prompt).toContain('npc-death')
   })
 })

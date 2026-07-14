@@ -7,6 +7,7 @@ export * from "./types/inventory.types";
 export * from "./types/combat.types";
 export * from "./types/session.types";
 export * from "./types/api.types";
+export * from "./types/souvenir.types";
 
 // Constants
 export * from "./constants/localized";

@@ -59,3 +59,65 @@ describe('validateAiScene — turnSummary (N1)', () => {
     expect(result.error).toBeDefined()
   })
 })
+
+describe('aiSceneSchema — souvenir_candidate (N3, #115)', () => {
+  it('accepts a payload with no souvenir_candidate at all (most turns)', () => {
+    const result = aiSceneSchema.safeParse({
+      ...basePayload,
+      turnSummary: 'Yarel keeps walking.',
+    })
+
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts a valid souvenir_candidate', () => {
+    const result = aiSceneSchema.safeParse({
+      ...basePayload,
+      turnSummary: 'The trader falls silent forever.',
+      souvenir_candidate: {
+        title_suggestion: 'The Trader Who Never Lied',
+        body: 'Yarel watched the old trader take his last breath by the dry well, and swore to carry his warning to the next town.',
+        type: 'npc-death',
+      },
+    })
+
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects a souvenir_candidate with an invalid type', () => {
+    const result = aiSceneSchema.safeParse({
+      ...basePayload,
+      turnSummary: 'Something happened.',
+      souvenir_candidate: {
+        title_suggestion: 'A valid title here',
+        body: 'A body long enough to pass the minimum character requirement for this schema.',
+        type: 'not-a-real-type',
+      },
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects a souvenir_candidate missing title_suggestion', () => {
+    const result = aiSceneSchema.safeParse({
+      ...basePayload,
+      turnSummary: 'Something happened.',
+      souvenir_candidate: {
+        body: 'A body long enough to pass the minimum character requirement for this schema.',
+        type: 'moral-choice',
+      },
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects a souvenir_candidate with an empty body', () => {
+    const result = aiSceneSchema.safeParse({
+      ...basePayload,
+      turnSummary: 'Something happened.',
+      souvenir_candidate: { title_suggestion: 'A valid title', body: '', type: 'moral-choice' },
+    })
+
+    expect(result.success).toBe(false)
+  })
+})

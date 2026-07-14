@@ -5,6 +5,7 @@ import rateLimit from 'express-rate-limit'
 import { env } from './config/env'
 import { requireAuth } from './middleware/auth.middleware'
 import { gameRouter } from './routes/game.routes'
+import { souvenirRouter } from './routes/souvenir.routes'
 
 const app: Express = express()
 const PORT = env.port
@@ -33,8 +34,17 @@ const gameLimiter = rateLimit({
   legacyHeaders: false,
 })
 
+// Rate-limit the authenticated read endpoints against abuse (no AI cost here).
+const apiLimiter = rateLimit({
+  windowMs: 60_000,
+  limit: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+
 // Routes
 app.use('/api/game', gameLimiter, requireAuth, gameRouter)
+app.use('/api/souvenirs', apiLimiter, requireAuth, souvenirRouter)
 
 // Health check
 app.get('/api/health', (_req, res) => {

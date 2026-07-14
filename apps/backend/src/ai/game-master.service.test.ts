@@ -5,10 +5,12 @@ vi.mock('../config/env', () => ({ hasOpenRouterKey }))
 
 const memoryChunkFindMany = vi.fn().mockResolvedValue([])
 const sceneLogFindMany = vi.fn().mockResolvedValue([])
+const souvenirFindMany = vi.fn().mockResolvedValue([])
 vi.mock('../lib/prisma', () => ({
   prisma: {
     memoryChunk: { findMany: memoryChunkFindMany },
     sceneLog: { findMany: sceneLogFindMany },
+    souvenir: { findMany: souvenirFindMany },
   },
 }))
 
@@ -47,6 +49,7 @@ describe('generateScene — N1 recent-turns loading', () => {
     hasOpenRouterKey.mockReset()
     memoryChunkFindMany.mockClear()
     sceneLogFindMany.mockClear()
+    souvenirFindMany.mockClear()
     buildSystemPrompt.mockClear()
     callOpenRouter.mockReset()
   })
@@ -58,6 +61,7 @@ describe('generateScene — N1 recent-turns loading', () => {
 
     expect(result.source).toBe('stub')
     expect(sceneLogFindMany).not.toHaveBeenCalled()
+    expect(souvenirFindMany).not.toHaveBeenCalled()
   })
 
   it('queries the 5 most recent scene logs ordered by turnNumber desc, selecting only turnNumber and turnSummary', async () => {
@@ -87,19 +91,36 @@ describe('generateScene — N1 recent-turns loading', () => {
     })
   })
 
-  it('passes the loaded recent turns through to buildSystemPrompt', async () => {
+  it('passes the loaded recent turns and souvenirs through to buildSystemPrompt', async () => {
     hasOpenRouterKey.mockReturnValue(true)
     const recentTurns = [
       { turnNumber: 3, turnSummary: 'Turn 3 happened.' },
       { turnNumber: 2, turnSummary: null },
       { turnNumber: 1, turnSummary: 'Turn 1 happened.' },
     ]
+    const souvenirs = [
+      { id: 'sv1', userId: 'user1', title: 'The Trader Fell', createdAt: new Date() },
+    ]
     sceneLogFindMany.mockResolvedValue(recentTurns)
+    souvenirFindMany.mockResolvedValue(souvenirs)
     callOpenRouter.mockResolvedValue({ success: true, content: JSON.stringify(validAiPayload) })
 
     await generateScene({ character, locale: 'en', sessionId: 's1' })
 
-    expect(buildSystemPrompt).toHaveBeenCalledWith(character, 'en', [], recentTurns)
+    expect(buildSystemPrompt).toHaveBeenCalledWith(character, 'en', [], recentTurns, souvenirs)
+  })
+
+  it('queries the 3 most recent Souvenirs for the character owner, ordered by createdAt desc', async () => {
+    hasOpenRouterKey.mockReturnValue(true)
+    callOpenRouter.mockResolvedValue({ success: true, content: JSON.stringify(validAiPayload) })
+
+    await generateScene({ character, locale: 'en', sessionId: 's1' })
+
+    expect(souvenirFindMany).toHaveBeenCalledWith({
+      where: { userId: 'user1' },
+      orderBy: { createdAt: 'desc' },
+      take: 3,
+    })
   })
 
   it('falls back to the stub when the AI response is missing turnSummary (Zod rejection)', async () => {

@@ -17,6 +17,7 @@ import { prisma } from '../lib/prisma'
 
 import { compressScene } from './memory.service'
 import { assembleScene } from './scene-assembler'
+import { validateAndPersistSouvenirCandidate } from './souvenir.service'
 
 import type { Character as DbCharacter, GameSession } from '../generated/prisma/client'
 
@@ -364,6 +365,21 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
         )
       } catch (err) {
         console.warn(`[Memory] failed to load turns for session ${session.id}:`, err)
+      }
+    })()
+  }
+
+  if (gm.scene.souvenir_candidate) {
+    void (async () => {
+      try {
+        await validateAndPersistSouvenirCandidate(
+          session.id,
+          character.userId,
+          character.id,
+          gm.scene.souvenir_candidate!
+        )
+      } catch (err) {
+        console.warn(`[Souvenir] failed to persist candidate for session ${session.id}:`, err)
       }
     })()
   }
