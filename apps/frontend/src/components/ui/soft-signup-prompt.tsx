@@ -18,7 +18,7 @@ export function SoftSignupPrompt() {
       className="fixed inset-x-0 bottom-0 z-50 flex flex-wrap items-center justify-center gap-4 border-t border-gold-dark bg-ash/95 px-6 py-4 text-center"
     >
       <p className="m-0 font-manuscript text-parchment">
-        Crée un compte pour continuer ton aventure sans limite.
+        Crée un compte gratuitement pour conserver cette aventure et continuer à jouer.
       </p>
       <Link href="/signup" className="font-accent text-gold-soft underline">
         Créer un compte

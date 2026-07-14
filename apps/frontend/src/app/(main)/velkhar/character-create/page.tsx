@@ -1,11 +1,17 @@
-import { AnimatedShinyText } from '@/components/ui/animated-shiny-text'
+import { redirect } from 'next/navigation'
 
-export default function VelkharCharacterCreatePage() {
-  return (
-    <div>
-      <h1>
-        <AnimatedShinyText variant="gold-strong">Velkhar Character Create</AnimatedShinyText>
-      </h1>
-    </div>
-  )
+interface VelkharCharacterCreatePageProps {
+  searchParams: Promise<{ campaign?: string | string[] }>
+}
+
+export default async function VelkharCharacterCreatePage({
+  searchParams,
+}: VelkharCharacterCreatePageProps) {
+  const { campaign } = await searchParams
+  const campaignId = typeof campaign === 'string' ? campaign : undefined
+  const destination = campaignId
+    ? `/velkhar/aveugle?flow=character-create&campaign=${encodeURIComponent(campaignId)}`
+    : '/velkhar/aveugle?flow=character-create'
+
+  redirect(destination)
 }

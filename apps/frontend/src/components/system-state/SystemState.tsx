@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { GameBrand } from '@/components/ui/grimoire/GameBrand/GameBrand'
 
 import type { ReactNode } from 'react'
 
@@ -23,14 +23,12 @@ export function SystemState({ action, body, eyebrow, isLoading = false, title }:
 
       <section className="system-state__content" aria-labelledby="system-state-title">
         <div className="system-state__brand" aria-hidden="true">
-          <Image
+          <GameBrand
             className="system-state__logo"
-            src="/landing/ui/brand-lockup-grimoire.webp"
-            alt=""
-            width={720}
-            height={336}
+            decorative
             priority
-            sizes="(max-width: 640px) 190px, 250px"
+            size="md"
+            variant="lockup"
           />
         </div>
 

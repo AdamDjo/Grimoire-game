@@ -58,7 +58,7 @@ export function SectionOutro() {
           {OUTRO_COPY.body}
         </p>
         <div data-motion="reveal">
-          <Button data-magnetic href="/signup">
+          <Button data-magnetic href="/velkhar/aveugle">
             {OUTRO_COPY.cta}
           </Button>
         </div>
