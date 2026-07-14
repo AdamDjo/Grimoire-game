@@ -1,3 +1,5 @@
+import type { ViewerTier } from '@/lib/viewer'
+
 export interface DashboardRunViewModel {
   campaignId: string
   lastActivityLabel: string
@@ -11,20 +13,24 @@ export interface DashboardViewModel {
   viewerLabel: string
 }
 
+export interface DashboardSnapshot {
+  activeRun: DashboardRunViewModel | null
+  recentChronicles: readonly []
+}
+
+const EMPTY_DASHBOARD_SNAPSHOT: DashboardSnapshot = {
+  activeRun: null,
+  recentChronicles: [],
+}
+
 export function createDashboardViewModel(
-  hasAccount: boolean,
-  displayName: string | null
+  tier: ViewerTier,
+  displayName: string | null,
+  snapshot: DashboardSnapshot = EMPTY_DASHBOARD_SNAPSHOT
 ): DashboardViewModel {
   return {
-    activeRun: hasAccount
-      ? {
-          campaignId: 'cendre-veille',
-          lastActivityLabel: 'Dernière trace conservée',
-          progressLabel: 'Run en cours',
-          title: 'Le chemin demeure ouvert',
-        }
-      : null,
-    recentChronicles: [],
-    viewerLabel: displayName ?? (hasAccount ? 'Voyageur' : 'Visiteur'),
+    activeRun: snapshot.activeRun,
+    recentChronicles: snapshot.recentChronicles,
+    viewerLabel: displayName ?? (tier === 'anonymous' ? 'Visiteur' : 'Voyageur'),
   }
 }

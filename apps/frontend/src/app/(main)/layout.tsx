@@ -10,7 +10,7 @@ export default async function MainLayout({ children }: Readonly<{ children: Reac
 
   return (
     <div className="main-shell">
-      <MainNavigation hasAccount={viewer.hasAccount} />
+      <MainNavigation tier={viewer.tier} />
       <div className="main-shell__grain" aria-hidden="true" />
       {children}
     </div>

@@ -7,10 +7,12 @@ import { GameBrand } from './grimoire/GameBrand/GameBrand'
 import { GameIcon } from './grimoire/GameIcon/GameIcon'
 import { GameTopBar } from './grimoire/GameTopBar/GameTopBar'
 
+import type { ViewerTier } from '@/lib/viewer'
+
 import './main-navigation.css'
 
 interface MainNavigationProps {
-  hasAccount: boolean
+  tier: ViewerTier
 }
 
 const MAIN_LINKS = [
@@ -27,8 +29,9 @@ function isCurrentPath(pathname: string, href: string): boolean {
   )
 }
 
-export function MainNavigation({ hasAccount }: MainNavigationProps) {
+export function MainNavigation({ tier }: MainNavigationProps) {
   const pathname = usePathname()
+  const hasAccount = tier !== 'anonymous'
 
   return (
     <GameTopBar

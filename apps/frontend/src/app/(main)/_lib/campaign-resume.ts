@@ -35,7 +35,7 @@ export function resolveCampaignDestination(snapshot: CampaignResumeSnapshot): st
   }
 
   if (snapshot.stage === 'character-create') {
-    return `/velkhar/character-create?campaign=${campaign}`
+    return `/velkhar/aveugle?flow=character-create&campaign=${campaign}`
   }
 
   return `/velkhar/aveugle?campaign=${campaign}`

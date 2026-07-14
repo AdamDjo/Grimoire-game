@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default async function DashboardPage() {
   const viewer = await getViewerSummary()
-  const viewModel = createDashboardViewModel(viewer.hasAccount, viewer.displayName)
+  const viewModel = createDashboardViewModel(viewer.tier, viewer.displayName)
 
-  return <DashboardContent hasAccount={viewer.hasAccount} viewModel={viewModel} />
+  return <DashboardContent tier={viewer.tier} viewModel={viewModel} />
 }

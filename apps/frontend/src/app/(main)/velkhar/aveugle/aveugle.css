@@ -1,0 +1,132 @@
+.aveugle-threshold {
+  align-items: end;
+  display: grid;
+  min-height: calc(100dvh - 5rem);
+  overflow: hidden;
+  padding: clamp(2rem, 5vw, 5rem) clamp(1rem, 5vw, 5rem);
+  position: relative;
+}
+
+.aveugle-threshold__scene,
+.aveugle-threshold__veil {
+  inset: 0;
+  position: absolute;
+}
+
+.aveugle-threshold__scene {
+  background: url('/scenes/hub-auberge-clean.webp') center 42% / cover no-repeat;
+  filter: saturate(0.82) contrast(1.06);
+  transform: scale(1.015);
+}
+
+.aveugle-threshold__veil {
+  background:
+    linear-gradient(180deg, rgba(5, 4, 3, 0.18) 0%, rgba(5, 4, 3, 0.3) 45%, rgba(5, 4, 3, 0.93) 100%),
+    linear-gradient(90deg, rgba(5, 4, 3, 0.72) 0%, transparent 55%);
+}
+
+.aveugle-threshold__dialogue {
+  max-width: 54rem;
+  position: relative;
+  width: 100%;
+  z-index: 1;
+}
+
+.aveugle-threshold__location {
+  color: var(--gold-light);
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  margin: 0 0 0.75rem 0.25rem;
+  text-shadow: 0 2px 8px #000;
+  text-transform: uppercase;
+}
+
+.aveugle-threshold__panel {
+  backdrop-filter: blur(10px);
+  background: rgba(12, 9, 6, 0.9);
+  box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.52);
+}
+
+.aveugle-threshold__speaker {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+}
+
+.aveugle-threshold__speaker .game-icon {
+  filter: brightness(0.94) drop-shadow(0 8px 18px rgba(0, 0, 0, 0.55));
+  flex: 0 0 auto;
+}
+
+.aveugle-threshold__speaker p {
+  color: var(--gold);
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  margin: 0 0 0.25rem;
+  text-transform: uppercase;
+}
+
+.aveugle-threshold__speaker h1 {
+  color: var(--gold-light);
+  font-family: var(--font-accent);
+  font-size: clamp(1.65rem, 4vw, 2.75rem);
+  font-weight: 500;
+  line-height: 1.08;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.aveugle-threshold blockquote {
+  border-left: 1px solid rgba(217, 164, 65, 0.55);
+  color: var(--parchment);
+  font-family: var(--font-accent);
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  font-style: italic;
+  line-height: 1.6;
+  margin: clamp(1.5rem, 3vw, 2.25rem) 0 1rem;
+  padding-left: 1.25rem;
+  text-wrap: pretty;
+}
+
+.aveugle-threshold__copy {
+  color: var(--ink-2);
+  line-height: 1.65;
+  margin: 0;
+  max-width: 58ch;
+  text-wrap: pretty;
+}
+
+.aveugle-threshold__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+@media (max-width: 640px) {
+  .aveugle-threshold {
+    min-height: calc(100dvh - 8rem);
+    padding: 8rem 0.75rem 1.25rem;
+  }
+
+  .aveugle-threshold__scene {
+    background-position: 58% center;
+  }
+
+  .aveugle-threshold__speaker {
+    align-items: flex-start;
+  }
+
+  .aveugle-threshold__actions,
+  .aveugle-threshold__actions .game-button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aveugle-threshold__scene {
+    transform: none;
+  }
+}

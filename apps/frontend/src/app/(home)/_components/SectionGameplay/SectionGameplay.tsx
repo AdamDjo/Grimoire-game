@@ -61,7 +61,7 @@ export function SectionGameplay() {
           ))}
         </div>
         <div data-motion="reveal">
-          <Button className="button--gameplay" data-magnetic href="/signup">
+          <Button className="button--gameplay" data-magnetic href="/velkhar/aveugle">
             {GAMEPLAY_COPY.cta}
           </Button>
         </div>

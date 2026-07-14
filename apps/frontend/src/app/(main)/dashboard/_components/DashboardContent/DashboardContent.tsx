@@ -5,15 +5,16 @@ import { GameSectionHeading } from '@/components/ui/grimoire/GameSectionHeading/
 import { getAuthHref } from '@/lib/internal-navigation'
 
 import type { DashboardViewModel } from '../../_data/dashboard-view-model'
+import type { ViewerTier } from '@/lib/viewer'
 
 import './dashboard-content.css'
 
 interface DashboardContentProps {
-  hasAccount: boolean
+  tier: ViewerTier
   viewModel: DashboardViewModel
 }
 
-export function DashboardContent({ hasAccount, viewModel }: DashboardContentProps) {
+export function DashboardContent({ tier, viewModel }: DashboardContentProps) {
   return (
     <main className="dashboard-content">
       <header className="dashboard-content__intro">
@@ -70,7 +71,7 @@ export function DashboardContent({ hasAccount, viewModel }: DashboardContentProp
               </GameLink>
             )}
 
-            {!hasAccount ? (
+            {tier === 'anonymous' ? (
               <GameLink href={getAuthHref('/login', '/dashboard')} size="sm" variant="ghost">
                 Retrouver mes traces
               </GameLink>

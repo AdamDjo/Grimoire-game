@@ -4,8 +4,10 @@ import { createClient } from '@/lib/supabase/server'
 
 export interface ViewerSummary {
   displayName: string | null
-  hasAccount: boolean
+  tier: ViewerTier
 }
+
+export type ViewerTier = 'anonymous' | 'free' | 'premium'
 
 export const getViewerSummary = cache(async (): Promise<ViewerSummary> => {
   try {
@@ -14,7 +16,13 @@ export const getViewerSummary = cache(async (): Promise<ViewerSummary> => {
       data: { user },
     } = await supabase.auth.getUser()
 
-    const hasAccount = Boolean(user && !user.is_anonymous)
+    const tier: ViewerTier = user?.is_anonymous
+      ? 'anonymous'
+      : user?.app_metadata?.tier === 'premium'
+        ? 'premium'
+        : user
+          ? 'free'
+          : 'anonymous'
     const displayName =
       typeof user?.user_metadata?.display_name === 'string'
         ? user.user_metadata.display_name
@@ -22,8 +30,8 @@ export const getViewerSummary = cache(async (): Promise<ViewerSummary> => {
           ? user.email.split('@')[0]
           : null
 
-    return { displayName, hasAccount }
+    return { displayName, tier }
   } catch {
-    return { displayName: null, hasAccount: false }
+    return { displayName: null, tier: 'anonymous' }
   }
 })

@@ -20,7 +20,7 @@ describe('campaign resume adapter', () => {
     const destination = resolveCampaignDestination(snapshot)
     const expected =
       snapshot.stage === 'character-create'
-        ? '/velkhar/character-create?campaign=new'
+        ? '/velkhar/aveugle?flow=character-create&campaign=new'
         : '/velkhar/aveugle?campaign=known'
 
     expect(destination).toBe(expected)
