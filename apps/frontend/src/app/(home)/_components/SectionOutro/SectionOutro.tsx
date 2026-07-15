@@ -59,7 +59,12 @@ export function SectionOutro() {
           {OUTRO_COPY.body}
         </p>
         <div data-motion="reveal">
-          <GameLink data-magnetic href="/velkhar/aveugle?transition=home" variant="landing">
+          <GameLink
+            data-magnetic
+            href="/velkhar/aveugle?transition=home"
+            prefetch={false}
+            variant="landing"
+          >
             {OUTRO_COPY.cta}
           </GameLink>
         </div>

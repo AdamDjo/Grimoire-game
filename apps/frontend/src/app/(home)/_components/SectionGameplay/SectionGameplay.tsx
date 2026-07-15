@@ -65,6 +65,7 @@ export function SectionGameplay() {
           <GameLink
             data-magnetic
             href="/velkhar/aveugle?transition=home"
+            prefetch={false}
             variant="landing-gameplay"
           >
             {GAMEPLAY_COPY.cta}

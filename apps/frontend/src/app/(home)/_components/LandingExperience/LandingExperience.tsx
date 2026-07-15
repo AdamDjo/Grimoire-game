@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { AmbientEmbers, ScrollProgressBar, SectionProgress } from '@/components/ui'
@@ -26,7 +25,6 @@ import type { MouseEvent } from 'react'
 const TRANSITION_VEIL_OPACITY = 0.82
 
 export function LandingExperience() {
-  const router = useRouter()
   const rootRef = useRef<HTMLDivElement>(null)
   const exitCurtainRef = useRef<HTMLDivElement>(null)
   const isLeavingRef = useRef(false)
@@ -47,47 +45,44 @@ export function LandingExperience() {
     return () => document.documentElement.classList.remove('has-landing-scroll-progress')
   }, [])
 
-  const handleExitCapture = useCallback(
-    (event: MouseEvent<HTMLElement>) => {
-      if (
-        event.button !== 0 ||
-        event.altKey ||
-        event.ctrlKey ||
-        event.metaKey ||
-        event.shiftKey ||
-        isLeavingRef.current
-      ) {
-        return
-      }
+  const handleExitCapture = useCallback((event: MouseEvent<HTMLElement>) => {
+    if (
+      event.button !== 0 ||
+      event.altKey ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.shiftKey ||
+      isLeavingRef.current
+    ) {
+      return
+    }
 
-      const target = event.target
-      if (!(target instanceof Element)) return
+    const target = event.target
+    if (!(target instanceof Element)) return
 
-      const anchor = target.closest<HTMLAnchorElement>('a[href*="transition=home"]')
-      if (!anchor || anchor.download || anchor.target === '_blank') return
+    const anchor = target.closest<HTMLAnchorElement>('a[href*="transition=home"]')
+    if (!anchor || anchor.download || anchor.target === '_blank') return
 
-      const destination = new URL(anchor.href, window.location.href)
-      if (destination.origin !== window.location.origin) return
+    const destination = new URL(anchor.href, window.location.href)
+    if (destination.origin !== window.location.origin) return
 
-      event.preventDefault()
-      isLeavingRef.current = true
+    event.preventDefault()
+    isLeavingRef.current = true
 
-      const href = `${destination.pathname}${destination.search}${destination.hash}`
-      const curtain = exitCurtainRef.current
-      if (!curtain || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        router.push(href)
-        return
-      }
+    const href = `${destination.pathname}${destination.search}${destination.hash}`
+    const curtain = exitCurtainRef.current
+    if (!curtain || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      window.location.assign(href)
+      return
+    }
 
-      gsap.to(curtain, {
-        autoAlpha: 1,
-        duration: 0.42,
-        ease: 'power2.inOut',
-        onComplete: () => router.push(href),
-      })
-    },
-    [router]
-  )
+    gsap.to(curtain, {
+      autoAlpha: 1,
+      duration: 0.42,
+      ease: 'power2.inOut',
+      onComplete: () => window.location.assign(href),
+    })
+  }, [])
 
   useGSAP(
     () => {
