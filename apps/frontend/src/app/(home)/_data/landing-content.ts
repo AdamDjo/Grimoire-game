@@ -1,11 +1,3 @@
-export const LANDING_NAV_LINKS = [
-  { label: 'Découvrir', href: '#velkhar' },
-  { label: 'Chroniques', href: '/dashboard' },
-  { label: 'L’Auberge', href: '/velkhar/aveugle?transition=home' },
-] as const
-
-export const LANDING_AUTH_LINK = { label: 'Se connecter', href: '/login' } as const
-
 export const LANDING_FOOTER_LINKS = [
   { label: 'Discord', href: null, external: true },
   { label: 'GitHub', href: 'https://github.com/AdamDjo/Grimoire-game', external: true },

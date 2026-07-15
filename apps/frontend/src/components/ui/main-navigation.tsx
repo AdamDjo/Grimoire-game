@@ -5,43 +5,72 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
+import { cn } from '@/lib/utils'
+
 import { GameBrand } from './grimoire/GameBrand/GameBrand'
 import { GameIcon } from './grimoire/GameIcon/GameIcon'
 import { GameTopBar } from './grimoire/GameTopBar/GameTopBar'
 
 import type { ViewerTier } from '@/lib/viewer'
+import type { MouseEvent } from 'react'
 
 import './main-navigation.css'
 
-interface MainNavigationProps {
-  tier: ViewerTier
+type MainNavigationProps =
+  | {
+      context: 'marketing'
+      onAnchorNavigate: (href: string) => boolean
+      onMenuOpenChange?: (isOpen: boolean) => void
+      tier?: never
+    }
+  | { context: 'game'; tier: ViewerTier }
+
+interface NavigationLink {
+  href: string
+  label: string
 }
 
-const MAIN_LINKS = [
-  { href: '/#velkhar', label: 'Découvrir' },
+const MARKETING_LINKS: readonly NavigationLink[] = [
+  { href: '#velkhar', label: 'Découvrir' },
   { href: '/dashboard', label: 'Chroniques' },
+  { href: '/velkhar/aveugle?transition=home', label: 'L’Auberge' },
+]
+
+const GAME_LINKS: readonly NavigationLink[] = [
   { href: '/velkhar/aveugle', label: 'L’Auberge' },
-] as const
+  { href: '/dashboard', label: 'Chroniques' },
+]
 
 function isCurrentPath(pathname: string, href: string): boolean {
-  if (href === '/#velkhar') return pathname === '/'
   if (href === '/dashboard') return pathname === href
-  return (
-    pathname === '/velkhar/aveugle' ||
-    pathname === '/velkhar/character-create' ||
-    pathname.startsWith('/velkhar/campaign/')
-  )
+  if (href.startsWith('/velkhar/aveugle')) {
+    return (
+      pathname === '/velkhar/aveugle' ||
+      pathname === '/velkhar/character-create' ||
+      pathname.startsWith('/velkhar/campaign/') ||
+      pathname.startsWith('/velkhar/session/')
+    )
+  }
+  return false
 }
 
-export function MainNavigation({ tier }: MainNavigationProps) {
+export function MainNavigation(props: MainNavigationProps) {
   const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const menuTriggerRef = useRef<HTMLButtonElement>(null)
-  const hasAccount = tier !== 'anonymous'
-  const accountHref = hasAccount ? '/dashboard' : '/login?next=%2Fdashboard'
-  const accountLabel = hasAccount ? 'Votre espace' : 'Se connecter'
+  const isMarketing = props.context === 'marketing'
+  const onMenuOpenChange = props.context === 'marketing' ? props.onMenuOpenChange : undefined
+  const hasAccount = props.context === 'game' && props.tier !== 'anonymous'
+  const links = isMarketing ? MARKETING_LINKS : GAME_LINKS
+  const brandHref = isMarketing ? '/' : hasAccount ? '/dashboard' : '/velkhar/aveugle'
+  const accountHref = isMarketing
+    ? '/login'
+    : hasAccount
+      ? '/dashboard'
+      : '/login?next=%2Fdashboard'
+  const accountLabel = isMarketing ? 'Se connecter' : hasAccount ? 'Votre espace' : 'Se connecter'
 
   useEffect(() => {
     setIsMounted(true)
@@ -56,6 +85,7 @@ export function MainNavigation({ tier }: MainNavigationProps) {
 
     const previousOverflow = document.documentElement.style.overflow
     document.documentElement.style.overflow = 'hidden'
+    onMenuOpenChange?.(true)
 
     const focusableElements = Array.from(
       menuRef.current?.querySelectorAll<HTMLElement>('a[href], button:not(:disabled)') ?? []
@@ -85,29 +115,59 @@ export function MainNavigation({ tier }: MainNavigationProps) {
     document.addEventListener('keydown', handleMenuKeyDown)
     return () => {
       document.documentElement.style.overflow = previousOverflow
+      onMenuOpenChange?.(false)
       document.removeEventListener('keydown', handleMenuKeyDown)
     }
-  }, [isMobileMenuOpen])
+  }, [isMobileMenuOpen, onMenuOpenChange])
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false)
+    menuTriggerRef.current?.focus()
+  }
+
+  const handleLinkClick = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (props.context === 'marketing' && href.startsWith('#')) {
+      if (isMobileMenuOpen) props.onMenuOpenChange?.(false)
+      if (props.onAnchorNavigate(href)) event.preventDefault()
+    }
+    setIsMobileMenuOpen(false)
+  }
 
   return (
     <GameTopBar
-      className="main-navigation"
-      label="Navigation globale"
+      className={cn('main-navigation', `main-navigation--${props.context}`)}
+      data-motion={isMarketing ? 'chrome' : undefined}
+      label={isMarketing ? 'Navigation du site' : 'Navigation du jeu'}
       variant="velkhar"
       start={
-        <Link className="main-navigation__brand" href="/" aria-label="GRIMOIRE, accueil">
-          <GameBrand decorative size="sm" variant="lockup" />
+        <Link
+          className={cn(
+            'main-navigation__brand',
+            isMarketing && 'main-navigation__brand--marketing'
+          )}
+          href={brandHref}
+          aria-label={isMarketing ? 'GRIMOIRE, accueil du site' : 'GRIMOIRE, accueil du jeu'}
+        >
+          {isMarketing ? (
+            <span className="main-navigation__marketing-logo" aria-hidden="true" />
+          ) : (
+            <GameBrand decorative size="sm" variant="lockup" />
+          )}
         </Link>
       }
       center={
-        <nav aria-label="Espaces de Velkhar">
+        <nav aria-label={isMarketing ? 'Découvrir GRIMOIRE' : 'Espaces du jeu'}>
           <ul className="main-navigation__links">
-            {MAIN_LINKS.map((link) => {
-              const isCurrent = isCurrentPath(pathname, link.href)
+            {links.map((link) => {
+              const isCurrent = !isMarketing && isCurrentPath(pathname, link.href)
 
               return (
                 <li key={link.href}>
-                  <Link href={link.href} aria-current={isCurrent ? 'page' : undefined}>
+                  <Link
+                    href={link.href}
+                    aria-current={isCurrent ? 'page' : undefined}
+                    onClick={(event) => handleLinkClick(event, link.href)}
+                  >
                     {link.label}
                   </Link>
                 </li>
@@ -121,9 +181,11 @@ export function MainNavigation({ tier }: MainNavigationProps) {
           <Link
             className="main-navigation__account main-navigation__account--desktop"
             href={accountHref}
-            aria-label={hasAccount ? 'Ouvrir votre espace' : accountLabel}
+            aria-label={!isMarketing && hasAccount ? 'Ouvrir votre espace' : accountLabel}
           >
-            <GameIcon decorative name={hasAccount ? 'book' : 'key'} size={24} />
+            {!isMarketing ? (
+              <GameIcon decorative name={hasAccount ? 'book' : 'key'} size={24} />
+            ) : null}
             <span>{accountLabel}</span>
           </Link>
 
@@ -144,7 +206,7 @@ export function MainNavigation({ tier }: MainNavigationProps) {
             ? createPortal(
                 <div
                   ref={menuRef}
-                  aria-label="Menu principal"
+                  aria-label={isMarketing ? 'Menu du site' : 'Menu du jeu'}
                   aria-modal="true"
                   className="main-navigation__mobile-menu"
                   id="main-navigation-mobile-menu"
@@ -153,10 +215,7 @@ export function MainNavigation({ tier }: MainNavigationProps) {
                   <button
                     aria-label="Fermer la navigation"
                     className="main-navigation__mobile-menu-close"
-                    onClick={() => {
-                      setIsMobileMenuOpen(false)
-                      menuTriggerRef.current?.focus()
-                    }}
+                    onClick={closeMobileMenu}
                     type="button"
                   >
                     <span />
@@ -164,15 +223,15 @@ export function MainNavigation({ tier }: MainNavigationProps) {
                   </button>
                   <nav aria-label="Navigation mobile">
                     <ul>
-                      {MAIN_LINKS.map((link) => {
-                        const isCurrent = isCurrentPath(pathname, link.href)
+                      {links.map((link) => {
+                        const isCurrent = !isMarketing && isCurrentPath(pathname, link.href)
 
                         return (
                           <li key={link.href}>
                             <Link
                               aria-current={isCurrent ? 'page' : undefined}
                               href={link.href}
-                              onClick={() => setIsMobileMenuOpen(false)}
+                              onClick={(event) => handleLinkClick(event, link.href)}
                             >
                               {link.label}
                             </Link>
@@ -185,7 +244,9 @@ export function MainNavigation({ tier }: MainNavigationProps) {
                           href={accountHref}
                           onClick={() => setIsMobileMenuOpen(false)}
                         >
-                          <GameIcon decorative name={hasAccount ? 'book' : 'key'} size={24} />
+                          {!isMarketing ? (
+                            <GameIcon decorative name={hasAccount ? 'book' : 'key'} size={24} />
+                          ) : null}
                           <span>{accountLabel}</span>
                         </Link>
                       </li>

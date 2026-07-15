@@ -1,8 +1,7 @@
 'use client'
 
 import { GameLink } from '@/components/ui/game-link'
-
-import { scrollToAnchor } from '../LandingChrome/scroll-to-anchor'
+import { scrollToLandingAnchor } from '@/components/ui/scroll-to-landing-anchor'
 
 import type { MouseEvent, ReactNode } from 'react'
 
@@ -13,7 +12,7 @@ interface HeroScrollCtaProps {
 
 export function HeroScrollCta({ children, href }: HeroScrollCtaProps) {
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
-    if (!scrollToAnchor(href)) return
+    if (!scrollToLandingAnchor(href)) return
 
     event.preventDefault()
   }

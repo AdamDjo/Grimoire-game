@@ -4,11 +4,12 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { AmbientEmbers, ScrollProgressBar, SectionProgress } from '@/components/ui'
-import { useLenis } from '@/hooks/use-lenis'
+import { MainNavigation } from '@/components/ui/main-navigation'
+import { scrollToLandingAnchor } from '@/components/ui/scroll-to-landing-anchor'
+import { getLenis, useLenis } from '@/hooks/use-lenis'
 import { ScrollTrigger, SplitText, gsap, useGSAP } from '@/lib/gsap-init'
 
 import { renderFrameSequence } from '../FrameSequenceCanvas/FrameSequenceCanvas'
-import { LandingChrome } from '../LandingChrome/LandingChrome'
 import { LandingPreloader } from '../LandingPreloader/LandingPreloader'
 import { SectionGameplay } from '../SectionGameplay/SectionGameplay'
 import { SectionHero } from '../SectionHero/SectionHero'
@@ -32,6 +33,11 @@ export function LandingExperience() {
   // L'entrée du chrome et des CTA attend la levée du voile de preload.
   const [preloaderDone, setPreloaderDone] = useState(false)
   const handlePreloaderDone = useCallback(() => setPreloaderDone(true), [])
+  const handleMarketingMenuOpenChange = useCallback((isOpen: boolean) => {
+    const lenis = getLenis()
+    if (isOpen) lenis?.stop()
+    else lenis?.start()
+  }, [])
 
   useLenis()
   useLandingHeroEntrance(rootRef, preloaderDone)
@@ -695,7 +701,11 @@ export function LandingExperience() {
     <main ref={rootRef} className="landing-experience" onClickCapture={handleExitCapture}>
       <LandingPreloader onDone={handlePreloaderDone} />
       <AmbientEmbers />
-      <LandingChrome />
+      <MainNavigation
+        context="marketing"
+        onAnchorNavigate={scrollToLandingAnchor}
+        onMenuOpenChange={handleMarketingMenuOpenChange}
+      />
       <ScrollProgressBar />
       <SectionProgress
         sectionCount={4}

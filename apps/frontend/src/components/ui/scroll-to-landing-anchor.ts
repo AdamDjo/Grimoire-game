@@ -1,16 +1,14 @@
 import { getLenis } from '@/hooks/use-lenis'
 import { ScrollTrigger } from '@/lib/gsap-init'
 
-interface ScrollToAnchorOptions {
+interface ScrollToLandingAnchorOptions {
   onDone?: () => void
 }
 
-// Résout la cible d'un lien d'ancre et pilote le scroll via Lenis (seul driver
-// de scroll de la landing). Fallback natif quand Lenis est absent (reduced-motion
-// ou avant montage). Offsets pensés pour les sections pinnées :
-// - #gameplay : atterrir APRÈS le voile noir d'entrée (~0.6 viewport de pin).
-// - #velkhar : retour tout en haut (la section hero est pinnée dès 0).
-export function scrollToAnchor(hash: string, options: ScrollToAnchorOptions = {}): boolean {
+export function scrollToLandingAnchor(
+  hash: string,
+  options: ScrollToLandingAnchorOptions = {}
+): boolean {
   if (!hash.startsWith('#')) return false
 
   const id = hash.slice(1)

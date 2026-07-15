@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { scrollToAnchor } from './scroll-to-anchor'
+import { scrollToLandingAnchor } from './scroll-to-landing-anchor'
 
 const { getByIdMock, scrollToMock } = vi.hoisted(() => ({
   getByIdMock: vi.fn(),
@@ -15,7 +15,7 @@ vi.mock('@/lib/gsap-init', () => ({
   ScrollTrigger: { getById: getByIdMock },
 }))
 
-describe('scrollToAnchor', () => {
+describe('scrollToLandingAnchor', () => {
   beforeEach(() => {
     document.body.innerHTML = '<section id="outro" />'
     getByIdMock.mockReturnValue({ end: 4321 })
@@ -23,7 +23,7 @@ describe('scrollToAnchor', () => {
   })
 
   it('termine le scroll à la fin du pin GSAP de l’outro', () => {
-    expect(scrollToAnchor('#outro')).toBe(true)
+    expect(scrollToLandingAnchor('#outro')).toBe(true)
     expect(getByIdMock).toHaveBeenCalledWith('landing-outro')
     expect(scrollToMock).toHaveBeenCalledWith(4321, expect.objectContaining({ duration: 1.35 }))
   })

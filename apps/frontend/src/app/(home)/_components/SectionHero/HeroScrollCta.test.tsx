@@ -2,12 +2,12 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
-import { scrollToAnchor } from '../LandingChrome/scroll-to-anchor'
+import { scrollToLandingAnchor } from '@/components/ui/scroll-to-landing-anchor'
 
 import { HeroScrollCta } from './HeroScrollCta'
 
-vi.mock('../LandingChrome/scroll-to-anchor', () => ({
-  scrollToAnchor: vi.fn(() => true),
+vi.mock('@/components/ui/scroll-to-landing-anchor', () => ({
+  scrollToLandingAnchor: vi.fn(() => true),
 }))
 
 describe('HeroScrollCta', () => {
@@ -17,7 +17,7 @@ describe('HeroScrollCta', () => {
 
     await user.click(screen.getByRole('link', { name: 'Commencer une partie' }))
 
-    expect(scrollToAnchor).toHaveBeenCalledWith('#outro')
+    expect(scrollToLandingAnchor).toHaveBeenCalledWith('#outro')
     expect(window.location.hash).toBe('')
   })
 })

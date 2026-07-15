@@ -9,6 +9,30 @@
   padding: 0.85rem clamp(1.75rem, 4.8vw, 5.125rem);
 }
 
+.main-navigation--marketing {
+  inset-inline: 0;
+  opacity: 0;
+  position: fixed;
+  transform: translateY(-16px);
+}
+
+.main-navigation--marketing.game-top-bar {
+  background: transparent;
+  border-bottom-color: transparent;
+  min-height: 0;
+  padding: 18px clamp(28px, 4.8vw, 82px);
+  transition-property: backdrop-filter, background-color, border-color, padding;
+  transition-duration: 500ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.main-navigation--marketing.is-scrolled.game-top-bar {
+  backdrop-filter: blur(14px);
+  background: linear-gradient(180deg, rgba(10, 8, 6, 0.82), rgba(10, 8, 6, 0));
+  border-bottom-color: rgba(217, 164, 65, 0.14);
+  padding-block: 10px;
+}
+
 .main-navigation__brand {
   align-items: center;
   display: inline-flex;
@@ -17,6 +41,29 @@
 
 .main-navigation__brand .game-brand {
   width: clamp(11.5rem, 15vw, 13.75rem);
+}
+
+.main-navigation__brand--marketing {
+  isolation: isolate;
+}
+
+.main-navigation__marketing-logo {
+  aspect-ratio: 1733 / 808;
+  background: url('/landing/ui/brand-lockup-grimoire.webp') center / contain no-repeat;
+  display: block;
+  filter: drop-shadow(0 5px 18px rgba(0, 0, 0, 0.72));
+  transition-property: filter, width;
+  transition-duration: 500ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  width: clamp(11.5rem, 15vw, 13.75rem);
+}
+
+.main-navigation__brand--marketing:hover .main-navigation__marketing-logo {
+  filter: drop-shadow(0 5px 18px rgba(0, 0, 0, 0.72)) drop-shadow(0 0 12px rgba(217, 164, 65, 0.18));
+}
+
+.main-navigation--marketing.is-scrolled .main-navigation__marketing-logo {
+  width: clamp(9.25rem, 12vw, 11.125rem);
 }
 
 .main-navigation__links {
@@ -72,6 +119,34 @@
   transform: translateX(-50%) scaleX(1);
 }
 
+.main-navigation--marketing .main-navigation__links {
+  gap: clamp(2.375rem, 3.5vw, 3.75rem);
+}
+
+.main-navigation--marketing .main-navigation__links a,
+.main-navigation--marketing .main-navigation__account {
+  color: rgba(239, 225, 194, 0.92);
+  font-family: var(--font-ui);
+  font-size: 0.9375rem;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.8);
+}
+
+.main-navigation--marketing .main-navigation__links li + li a::before {
+  aspect-ratio: 1;
+  border: 1px solid rgba(218, 170, 74, 0.42);
+  content: '';
+  left: clamp(-36px, -2.1vw, -28px);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  width: 8px;
+}
+
+.main-navigation--marketing .main-navigation__links a:hover,
+.main-navigation--marketing .main-navigation__account:hover {
+  color: var(--gold-light);
+}
+
 .main-navigation__account {
   align-items: center;
   display: inline-flex;
@@ -81,6 +156,22 @@
 
 .main-navigation__account .game-icon {
   filter: brightness(0.92);
+}
+
+.main-navigation--marketing .main-navigation__account {
+  letter-spacing: 0.08em;
+  padding-inline-start: 1.25rem;
+}
+
+.main-navigation--marketing .main-navigation__account::before {
+  aspect-ratio: 1;
+  border: 1px solid rgba(217, 164, 65, 0.62);
+  content: '';
+  left: 1px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  width: 8px;
 }
 
 .main-navigation__actions {
@@ -264,11 +355,36 @@
   .main-navigation__mobile-menu {
     display: flex;
   }
+
+  .main-navigation--marketing.game-top-bar {
+    min-height: 0;
+    padding: 18px clamp(20px, 3vw, 28px);
+  }
+
+  .main-navigation--marketing .main-navigation__marketing-logo {
+    width: clamp(9.625rem, 20vw, 11.5rem);
+  }
+
+  .main-navigation--marketing.is-scrolled .main-navigation__marketing-logo {
+    width: clamp(8.625rem, 18vw, 10rem);
+  }
 }
 
 @media (max-width: 480px) {
   .main-navigation__brand .game-brand {
     width: 9.625rem;
+  }
+
+  .main-navigation--marketing.game-top-bar {
+    padding: 22px 20px;
+  }
+
+  .main-navigation--marketing .main-navigation__marketing-logo {
+    width: 9.625rem;
+  }
+
+  .main-navigation--marketing.is-scrolled .main-navigation__marketing-logo {
+    width: 8.625rem;
   }
 }
 
