@@ -144,6 +144,96 @@ export default function UiKitPreviewPage() {
       </section>
 
       <section className="ui-kit-preview__section">
+        <h2>Variantes · Création de personnage</h2>
+        <div className="ui-kit-preview__character-kit">
+          <GamePanel
+            className="ui-kit-preview__character-form"
+            padding="none"
+            variant="character-form"
+          >
+            <div className="ui-kit-preview__character-stepper">
+              <GameStepper
+                ariaLabel="Variante de progression"
+                currentId="identity"
+                items={steps}
+                orientation="horizontal"
+                variant="character"
+              />
+            </div>
+            <div className="ui-kit-preview__character-content">
+              <GameSectionHeading
+                description="Chaque légende commence par un nom."
+                title="Identité"
+              />
+              <GameField label="Nom du personnage">
+                <GameInput placeholder="Entrez votre nom…" variant="character" />
+              </GameField>
+            </div>
+          </GamePanel>
+
+          <GamePanel
+            as="aside"
+            className="ui-kit-preview__character-aside"
+            padding="none"
+            variant="character-aside"
+          >
+            <span className="ui-kit-preview__character-medallion">
+              <GameIcon decorative name="book" size={32} />
+            </span>
+            <h3>Le nom</h3>
+            <p>C’est le nom que L’Aveugle et le récit utiliseront.</p>
+          </GamePanel>
+        </div>
+      </section>
+
+      <section className="ui-kit-preview__section">
+        <h2>Variantes V2 · Création premium</h2>
+        <p className="ui-kit-preview__intro">
+          Nouveaux masters opaques et variantes responsive. Les composants historiques restent
+          disponibles au-dessus.
+        </p>
+        <div className="ui-kit-preview__character-kit ui-kit-preview__character-kit--v2">
+          <GamePanel
+            className="ui-kit-preview__character-form ui-kit-preview__character-form--v2"
+            padding="none"
+            variant="character-form-v2"
+          >
+            <div className="ui-kit-preview__character-stepper ui-kit-preview__character-stepper--v2">
+              <GameStepper
+                ariaLabel="Progression premium"
+                currentId="identity"
+                items={steps}
+                orientation="horizontal"
+                variant="character"
+              />
+            </div>
+            <div className="ui-kit-preview__character-content">
+              <GameSectionHeading
+                description="Chaque légende commence par un nom."
+                title="Identité"
+              />
+              <GameField label="Nom du personnage">
+                <GameInput placeholder="Entre ton nom…" variant="character-v2" />
+              </GameField>
+            </div>
+          </GamePanel>
+
+          <GamePanel
+            as="aside"
+            className="ui-kit-preview__character-aside ui-kit-preview__character-aside--v2"
+            padding="none"
+            variant="character-aside-v2"
+          >
+            <span className="ui-kit-preview__character-medallion">
+              <GameIcon decorative name="book" size={32} />
+            </span>
+            <h3>Le nom</h3>
+            <p>C’est le nom que L’Aveugle et le récit utiliseront.</p>
+          </GamePanel>
+        </div>
+      </section>
+
+      <section className="ui-kit-preview__section">
         <h2>Surfaces</h2>
         <div className="ui-kit-preview__surfaces">
           <GameSurface variant="card">

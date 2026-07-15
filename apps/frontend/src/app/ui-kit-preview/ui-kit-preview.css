@@ -120,6 +120,101 @@
   gap: 1.5rem;
 }
 
+.ui-kit-preview__character-kit {
+  align-items: center;
+  display: grid;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  grid-template-columns: minmax(0, 3fr) minmax(10rem, 0.72fr);
+}
+
+.ui-kit-preview__character-form {
+  aspect-ratio: 3 / 2;
+  min-height: 0;
+}
+
+.ui-kit-preview__character-form > .game-panel__content {
+  height: 100%;
+  padding: 4% 11% 18%;
+}
+
+.ui-kit-preview__character-stepper {
+  background: url('/ui-kit/character-create/character-stepper-frame.webp') center / 100% 100%
+    no-repeat;
+  padding: 2.5% 6%;
+}
+
+.ui-kit-preview__character-stepper .game-stepper {
+  --game-step-size: clamp(36px, 4vw, 58px);
+}
+
+.ui-kit-preview__character-content {
+  display: grid;
+  gap: 1rem;
+  margin: 4% auto 0;
+  max-width: 34rem;
+}
+
+.ui-kit-preview__character-content .game-section-heading h2 {
+  font-size: clamp(1.8rem, 4vw, 3.4rem);
+}
+
+.ui-kit-preview__character-aside {
+  aspect-ratio: 899 / 1748;
+  min-height: 0;
+}
+
+.ui-kit-preview__character-aside > .game-panel__content {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 14% 13%;
+  text-align: center;
+}
+
+.ui-kit-preview__character-aside h3 {
+  color: var(--gold-light);
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  margin: 0.25rem 0 1rem;
+  text-transform: uppercase;
+}
+
+.ui-kit-preview__character-aside p {
+  color: var(--ink-2);
+  font-size: clamp(0.8rem, 1.4vw, 1rem);
+  margin: 0;
+}
+
+.ui-kit-preview__character-medallion {
+  align-items: center;
+  background: url('/ui-kit/character-create/character-medallion.webp') center / contain no-repeat;
+  display: inline-flex;
+  height: clamp(3.5rem, 6vw, 5rem);
+  justify-content: center;
+  width: clamp(3.5rem, 6vw, 5rem);
+}
+
+.ui-kit-preview__character-form--v2 > .game-panel__content {
+  padding: 0;
+}
+
+.ui-kit-preview__character-form--v2 .ui-kit-preview__character-stepper--v2 {
+  left: 7%;
+  padding: 2.5% 6%;
+  position: absolute;
+  right: 7%;
+  top: 4%;
+}
+
+.ui-kit-preview__character-form--v2 .ui-kit-preview__character-content {
+  left: 13%;
+  margin: 0;
+  position: absolute;
+  right: 13%;
+  top: 28%;
+}
+
 .ui-kit-preview__hud-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -630,6 +725,45 @@
 }
 
 @media (max-width: 800px) {
+  .ui-kit-preview__character-kit {
+    grid-template-columns: 1fr;
+  }
+
+  .ui-kit-preview__character-form {
+    aspect-ratio: 768 / 1344;
+  }
+
+  .ui-kit-preview__character-form > .game-panel__content {
+    padding: 8% 10% 22%;
+  }
+
+  .ui-kit-preview__character-stepper {
+    background-image: url('/ui-kit/character-create/character-stepper-frame-mobile.webp');
+  }
+
+  .ui-kit-preview__character-stepper .game-stepper__label {
+    display: none;
+  }
+
+  .ui-kit-preview__character-aside {
+    aspect-ratio: 768 / 300;
+    justify-self: center;
+    width: min(100%, 30rem);
+  }
+
+  .ui-kit-preview__character-aside > .game-panel__content {
+    display: grid;
+    gap: 0.4rem 1rem;
+    grid-template-columns: auto 1fr;
+    padding: 1.5rem 2rem;
+    text-align: left;
+  }
+
+  .ui-kit-preview__character-medallion {
+    background-image: url('/ui-kit/character-create/character-medallion-mobile.webp');
+    grid-row: 1 / 3;
+  }
+
   .ui-kit-preview__panels,
   .ui-kit-preview__button-showcase,
   .ui-kit-preview__hud-grid,

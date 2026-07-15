@@ -23,8 +23,7 @@
   border-image-repeat: stretch;
   box-sizing: border-box;
   content: '';
-  filter:
-    brightness(var(--game-field-frame-brightness))
+  filter: brightness(var(--game-field-frame-brightness))
     saturate(var(--game-field-frame-saturation))
     drop-shadow(0 0 var(--game-field-halo-size) var(--game-field-halo-color));
   inset: 0;
@@ -32,6 +31,26 @@
   position: absolute;
   transition: filter 180ms cubic-bezier(0.2, 0, 0, 1);
   z-index: -1;
+}
+
+.game-input--character::before {
+  background: url('/ui-kit/character-create/character-input-frame.webp') center / 100% 100%
+    no-repeat;
+  border: 0;
+  border-image: none;
+  filter: brightness(var(--game-field-frame-brightness))
+    saturate(var(--game-field-frame-saturation))
+    drop-shadow(0 0 var(--game-field-halo-size) var(--game-field-halo-color));
+}
+
+.game-input--character-v2::before {
+  background: url('/ui-kit/character-create/character-input-frame-v2.webp') center / 100% 100%
+    no-repeat;
+  border: 0;
+  border-image: none;
+  filter: brightness(var(--game-field-frame-brightness))
+    saturate(var(--game-field-frame-saturation))
+    drop-shadow(0 0 var(--game-field-halo-size) var(--game-field-halo-color));
 }
 
 .game-input:not(.game-input--disabled):hover {
@@ -142,9 +161,7 @@
 }
 
 .game-input.game-input--invalid::before {
-  filter:
-    sepia(0.3)
-    brightness(var(--game-field-frame-brightness))
+  filter: sepia(0.3) brightness(var(--game-field-frame-brightness))
     saturate(var(--game-field-frame-saturation))
     drop-shadow(0 0 var(--game-field-halo-size) var(--game-field-halo-color));
 }
@@ -165,6 +182,14 @@
 }
 
 @media (max-width: 720px) {
+  .game-input--character::before {
+    background-image: url('/ui-kit/character-create/character-input-frame-mobile.webp');
+  }
+
+  .game-input--character-v2::before {
+    background-image: url('/ui-kit/character-create/character-input-frame-v2-mobile.webp');
+  }
+
   .game-input {
     min-height: 58px;
   }

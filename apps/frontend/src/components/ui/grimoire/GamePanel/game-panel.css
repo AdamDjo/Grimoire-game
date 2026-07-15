@@ -74,6 +74,41 @@
   min-height: 7rem;
 }
 
+.game-panel--character-form::before,
+.game-panel--character-aside::before,
+.game-panel--character-form-v2::before,
+.game-panel--character-aside-v2::before {
+  border: 0;
+  filter: none;
+  inset: 0;
+}
+
+.game-panel--character-form::before {
+  background: url('/ui-kit/character-create/character-form-frame.webp') center / 100% 100% no-repeat;
+}
+
+.game-panel--character-aside::before {
+  background: url('/ui-kit/character-create/character-aside-frame.webp') center / 100% 100%
+    no-repeat;
+}
+
+.game-panel--character-form-v2::before {
+  background: url('/ui-kit/character-create/character-form-frame-v2.webp') center / 100% 100%
+    no-repeat;
+}
+
+.game-panel--character-aside-v2::before {
+  background: url('/ui-kit/character-create/character-aside-frame-v2.webp') center / 100% 100%
+    no-repeat;
+}
+
+.game-panel--character-form::after,
+.game-panel--character-aside::after,
+.game-panel--character-form-v2::after,
+.game-panel--character-aside-v2::after {
+  display: none;
+}
+
 .game-panel--padding-none {
   padding: 0;
 }
@@ -160,6 +195,26 @@
   align-items: center;
   display: inline-flex;
   justify-content: center;
+}
+
+@media (max-width: 900px) {
+  .game-panel--character-aside::before {
+    background-image: url('/ui-kit/character-create/character-aside-frame-mobile.webp');
+  }
+
+  .game-panel--character-aside-v2::before {
+    background-image: url('/ui-kit/character-create/character-aside-frame-v2-mobile.webp');
+  }
+}
+
+@media (max-width: 640px) {
+  .game-panel--character-form::before {
+    background-image: url('/ui-kit/character-create/character-form-frame-mobile.webp');
+  }
+
+  .game-panel--character-form-v2::before {
+    background-image: url('/ui-kit/character-create/character-form-frame-v2-mobile.webp');
+  }
 }
 
 @media (max-width: 720px) {

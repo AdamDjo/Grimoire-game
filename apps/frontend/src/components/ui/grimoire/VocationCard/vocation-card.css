@@ -27,6 +27,16 @@
   text-wrap: balance;
 }
 
+.vocation-card__eyebrow {
+  color: var(--gold, #d9a441);
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  letter-spacing: 0.13em;
+  margin-bottom: 0.45rem;
+  text-transform: uppercase;
+}
+
 .vocation-card__description {
   color: color-mix(in srgb, var(--parchment, #e8dcc0) 84%, transparent);
   font-family: var(--font-serif);

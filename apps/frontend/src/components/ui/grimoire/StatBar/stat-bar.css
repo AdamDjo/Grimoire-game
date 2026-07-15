@@ -74,9 +74,7 @@
 
 .stat-bar__track {
   background: rgba(8, 7, 5, 0.92);
-  box-shadow:
-    inset 0 0 0 1px rgba(218, 170, 74, 0.42),
-    inset 0 3px 6px rgba(0, 0, 0, 0.72);
+
   height: var(--stat-bar-height);
   isolation: isolate;
   padding: 2px;
@@ -107,7 +105,11 @@
 .stat-bar__fill {
   background:
     linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent),
-    linear-gradient(90deg, color-mix(in srgb, var(--stat-bar-color) 72%, #090705), var(--stat-bar-color));
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--stat-bar-color) 72%, #090705),
+      var(--stat-bar-color)
+    );
   box-shadow:
     inset 0 1px rgba(255, 255, 255, 0.14),
     0 0 9px color-mix(in srgb, var(--stat-bar-color) 34%, transparent);

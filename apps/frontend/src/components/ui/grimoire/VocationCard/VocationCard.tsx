@@ -11,11 +11,14 @@ export interface VocationCardProps {
   id: string
   title: string
   description: string
+  eyebrow?: string
   illustration?: ReactNode
   selected?: boolean
   disabled?: boolean
   actionLabel?: string
   onSelect?: (id: string) => void
+  onPreview?: (id: string) => void
+  onPreviewEnd?: () => void
   className?: string
 }
 
@@ -24,8 +27,11 @@ export function VocationCard({
   className = '',
   description,
   disabled = false,
+  eyebrow,
   id,
   illustration,
+  onPreview,
+  onPreviewEnd,
   onSelect,
   selected = false,
   title,
@@ -39,9 +45,19 @@ export function VocationCard({
       interactive={!disabled}
       className={`vocation-card ${selected ? 'vocation-card--selected' : ''} ${className}`}
       aria-disabled={disabled || undefined}
+      onBlur={(event) => {
+        const nextTarget = event.relatedTarget
+        if (!(nextTarget instanceof Node) || !event.currentTarget.contains(nextTarget)) {
+          onPreviewEnd?.()
+        }
+      }}
+      onFocus={() => onPreview?.(id)}
+      onMouseEnter={() => onPreview?.(id)}
+      onMouseLeave={onPreviewEnd}
     >
       {illustration ? <div className="vocation-card__illustration">{illustration}</div> : null}
       <div className="vocation-card__body">
+        {eyebrow ? <span className="vocation-card__eyebrow">{eyebrow}</span> : null}
         <h3 className="vocation-card__title">{title}</h3>
         <p className="vocation-card__description">{description}</p>
       </div>

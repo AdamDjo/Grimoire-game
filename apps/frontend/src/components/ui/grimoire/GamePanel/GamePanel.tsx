@@ -7,7 +7,16 @@ import type { HTMLAttributes, ReactNode } from 'react'
 import './game-panel.css'
 
 export type GamePanelElement = 'section' | 'article' | 'div' | 'aside'
-export type GamePanelVariant = 'main' | 'sidebar' | 'compact' | 'header' | 'footer'
+export type GamePanelVariant =
+  | 'main'
+  | 'sidebar'
+  | 'compact'
+  | 'header'
+  | 'footer'
+  | 'character-form'
+  | 'character-aside'
+  | 'character-form-v2'
+  | 'character-aside-v2'
 export type GamePanelTone = 'neutral' | 'gold' | 'blood' | 'soul' | 'cendre'
 export type GamePanelPadding = 'none' | 'sm' | 'md' | 'lg'
 

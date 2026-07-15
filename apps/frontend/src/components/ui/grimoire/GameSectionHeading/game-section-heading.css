@@ -19,6 +19,13 @@
   grid-template-columns: minmax(2rem, 1fr) auto minmax(2rem, 1fr);
 }
 
+.game-section-heading__title-row
+  .game-divider--simple.game-divider--horizontal
+  .game-divider__line {
+  margin-top: 0;
+  transform: translateY(-0.08em);
+}
+
 .game-section-heading h1,
 .game-section-heading h2,
 .game-section-heading h3 {

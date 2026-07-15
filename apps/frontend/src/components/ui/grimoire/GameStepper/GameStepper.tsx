@@ -21,6 +21,7 @@ export interface GameStepperProps {
   onStepChange?: (id: string) => void
   className?: string
   ariaLabel?: string
+  variant?: 'default' | 'character'
 }
 
 export function GameStepper({
@@ -31,12 +32,18 @@ export function GameStepper({
   items,
   onStepChange,
   orientation = 'responsive',
+  variant = 'default',
 }: GameStepperProps) {
   const completed = new Set(completedIds)
 
   return (
     <nav
-      className={cn('game-stepper', `game-stepper--${orientation}`, className)}
+      className={cn(
+        'game-stepper',
+        `game-stepper--${orientation}`,
+        `game-stepper--${variant}`,
+        className
+      )}
       aria-label={ariaLabel}
     >
       <ol className="game-stepper__list">
