@@ -1,12 +1,14 @@
 .game-button {
   --game-button-accent: var(--gold, #d9a441);
   --game-button-accent-light: var(--gold-light, #f0d48a);
+  --game-button-text: var(--game-button-accent-light);
+  --game-button-text-hover: var(--game-button-accent-light);
 
   align-items: center;
   appearance: none;
   background: transparent;
   border: 0;
-  color: var(--game-button-accent-light);
+  color: var(--game-button-text);
   cursor: pointer;
   display: inline-flex;
   font-family: var(--font-game-heading);
@@ -55,26 +57,26 @@
   z-index: -2;
 }
 
-.game-button:hover:not(:disabled)::before {
+.game-button:hover:not(:disabled):not([aria-disabled='true'])::before {
   filter: brightness(1.16) saturate(1.14);
 }
 
-.game-button:hover:not(:disabled)::after {
+.game-button:hover:not(:disabled):not([aria-disabled='true'])::after {
   box-shadow:
     0 16px 34px rgba(0, 0, 0, 0.48),
     0 0 24px color-mix(in srgb, var(--game-button-accent) 30%, transparent);
 }
 
-.game-button:hover:not(:disabled) {
-  color: var(--gold-light, #f0d48a);
+.game-button:hover:not(:disabled):not([aria-disabled='true']) {
+  color: var(--game-button-text-hover);
   transform: translateY(-2px) scale(1);
 }
 
-.game-button:active:not(:disabled):not(.game-button--static) {
+.game-button:active:not(:disabled):not([aria-disabled='true']):not(.game-button--static) {
   transform: translateY(1px) scale(0.96);
 }
 
-.game-button:active:not(:disabled)::before {
+.game-button:active:not(:disabled):not([aria-disabled='true'])::before {
   filter: brightness(0.86) saturate(0.92);
 }
 
@@ -97,7 +99,9 @@
 
 .game-button--primary,
 .game-button--radiant {
-  color: var(--ink-manuscript, #2a2118);
+  --game-button-text: var(--ink-manuscript, #2a2118);
+  --game-button-text-hover: var(--ink-manuscript, #2a2118);
+
   text-shadow: 0 1px 0 rgba(255, 244, 200, 0.34);
 }
 
@@ -105,11 +109,6 @@
 .game-button--radiant::before {
   border-image-source: url('/ui-kit/controls/cta-gold-frame.webp');
   border-image-slice: 48 62 fill;
-}
-
-.game-button--primary:hover:not(:disabled),
-.game-button--radiant:hover:not(:disabled) {
-  color: var(--ink-manuscript, #2a2118);
 }
 
 .game-button--secondary::before,
@@ -123,7 +122,7 @@
   opacity: 0.78;
 }
 
-.game-button--ghost:hover:not(:disabled)::before {
+.game-button--ghost:hover:not(:disabled):not([aria-disabled='true'])::before {
   filter: brightness(1) saturate(0.92);
   opacity: 1;
 }
@@ -159,15 +158,17 @@
 }
 
 .game-button--landing,
-.game-button--landing-gameplay,
-.game-button--landing:hover,
-.game-button--landing-gameplay:hover {
-  color: var(--ink-manuscript);
+.game-button--landing-gameplay {
+  --game-button-text: var(--ink-manuscript);
+  --game-button-text-hover: var(--ink-manuscript);
+
   text-shadow: none;
 }
 
 .game-button.game-button--landing-gameplay {
-  color: var(--gold-light);
+  --game-button-text: var(--gold-light);
+  --game-button-text-hover: var(--gold-light);
+
   font-size: var(--text-btn-secondary);
   min-height: 88px;
   min-width: 390px;
@@ -182,13 +183,10 @@
   );
 }
 
-.game-button--landing-gameplay,
-.game-button--landing-gameplay:hover {
-  color: var(--gold-light);
-}
-
 .game-button.game-button--landing-ghost {
-  color: rgba(239, 225, 194, 0.92);
+  --game-button-text: rgba(239, 225, 194, 0.92);
+  --game-button-text-hover: var(--gold-light);
+
   font-family: var(--font-game-ui);
   font-size: 1rem;
   min-height: 44px;
