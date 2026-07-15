@@ -1,4 +1,5 @@
 import { getLenis } from '@/hooks/use-lenis'
+import { ScrollTrigger } from '@/lib/gsap-init'
 
 interface ScrollToAnchorOptions {
   onDone?: () => void
@@ -26,6 +27,21 @@ export function scrollToAnchor(hash: string, options: ScrollToAnchorOptions = {}
       options.onDone?.()
     }
     return true
+  }
+
+  if (id === 'outro') {
+    const outroTrigger = ScrollTrigger.getById('landing-outro')
+    const outroEnd = outroTrigger?.end
+
+    if (typeof outroEnd === 'number') {
+      if (lenis) {
+        lenis.scrollTo(outroEnd, { duration: 1.35, onComplete: options.onDone })
+      } else {
+        window.scrollTo({ top: outroEnd, behavior: 'smooth' })
+        options.onDone?.()
+      }
+      return true
+    }
   }
 
   const offset = id === 'gameplay' ? window.innerHeight * 0.6 : 0

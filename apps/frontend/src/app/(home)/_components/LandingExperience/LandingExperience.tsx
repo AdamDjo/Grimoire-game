@@ -414,6 +414,7 @@ export function LandingExperience() {
 
         const outroTimeline = gsap.timeline({
           scrollTrigger: {
+            id: 'landing-outro',
             trigger: '[data-motion="outro"]',
             start: 'top top',
             end: '+=150%',
