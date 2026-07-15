@@ -4,7 +4,7 @@ body:has(.aveugle-threshold) .main-navigation {
 }
 
 .aveugle-threshold {
-  align-items: end;
+  align-items: center;
   display: grid;
   min-height: 100dvh;
   overflow: hidden;
@@ -157,8 +157,7 @@ body:has(.aveugle-threshold) .main-navigation {
   .aveugle-threshold__panel > .game-panel__content {
     align-content: center;
     height: auto;
-    padding: clamp(3.75rem, 8vw, 5rem) clamp(2.5rem, 7vw, 4.25rem)
-      clamp(4rem, 8vw, 5.25rem);
+    padding: clamp(3.75rem, 8vw, 5rem) clamp(2.5rem, 7vw, 4.25rem) clamp(4rem, 8vw, 5.25rem);
   }
 
   .aveugle-threshold__speaker {

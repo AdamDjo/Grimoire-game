@@ -23,23 +23,23 @@ type MainNavigationProps =
       onMenuOpenChange?: (isOpen: boolean) => void
       tier?: never
     }
-  | { context: 'game'; tier: ViewerTier }
+  | { context: 'game'; resumeHref?: string; tier: ViewerTier }
 
 interface NavigationLink {
   href: string
   label: string
+  priority?: boolean
 }
 
 const MARKETING_LINKS: readonly NavigationLink[] = [
   { href: '#velkhar', label: 'Découvrir' },
-  { href: '/dashboard', label: 'Chroniques' },
-  { href: '/velkhar/aveugle?transition=home', label: 'L’Auberge' },
+  { href: '#gameplay', label: 'Gameplay' },
+  { href: '#world', label: 'Univers' },
 ]
 
-const GAME_LINKS: readonly NavigationLink[] = [
-  { href: '/velkhar/aveugle', label: 'L’Auberge' },
-  { href: '/dashboard', label: 'Chroniques' },
-]
+const GAME_AUBERGE_LINK: NavigationLink = { href: '/velkhar/aveugle', label: 'L’Auberge' }
+const GAME_CHRONICLES_LINK: NavigationLink = { href: '/dashboard', label: 'Chroniques' }
+const BASE_GAME_LINKS: readonly NavigationLink[] = [GAME_AUBERGE_LINK, GAME_CHRONICLES_LINK]
 
 function isCurrentPath(pathname: string, href: string): boolean {
   if (href === '/dashboard') return pathname === href
@@ -63,7 +63,15 @@ export function MainNavigation(props: MainNavigationProps) {
   const isMarketing = props.context === 'marketing'
   const onMenuOpenChange = props.context === 'marketing' ? props.onMenuOpenChange : undefined
   const hasAccount = props.context === 'game' && props.tier !== 'anonymous'
-  const links = isMarketing ? MARKETING_LINKS : GAME_LINKS
+  const links = isMarketing
+    ? MARKETING_LINKS
+    : props.context === 'game' && props.resumeHref
+      ? [
+          GAME_AUBERGE_LINK,
+          { href: props.resumeHref, label: 'Reprendre la partie', priority: true },
+          GAME_CHRONICLES_LINK,
+        ]
+      : BASE_GAME_LINKS
   const brandHref = isMarketing ? '/' : hasAccount ? '/dashboard' : '/velkhar/aveugle'
   const accountHref = isMarketing
     ? '/login'
@@ -164,6 +172,7 @@ export function MainNavigation(props: MainNavigationProps) {
               return (
                 <li key={link.href}>
                   <Link
+                    className={link.priority ? 'main-navigation__priority-link' : undefined}
                     href={link.href}
                     aria-current={isCurrent ? 'page' : undefined}
                     onClick={(event) => handleLinkClick(event, link.href)}
@@ -230,6 +239,9 @@ export function MainNavigation(props: MainNavigationProps) {
                           <li key={link.href}>
                             <Link
                               aria-current={isCurrent ? 'page' : undefined}
+                              className={
+                                link.priority ? 'main-navigation__priority-link' : undefined
+                              }
                               href={link.href}
                               onClick={(event) => handleLinkClick(event, link.href)}
                             >

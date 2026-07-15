@@ -119,6 +119,16 @@
   transform: translateX(-50%) scaleX(1);
 }
 
+.main-navigation__links .main-navigation__priority-link {
+  color: var(--gold-light);
+  text-shadow: 0 0 18px rgba(217, 164, 65, 0.24);
+}
+
+.main-navigation__links .main-navigation__priority-link::after {
+  opacity: 0.62;
+  transform: translateX(-50%) scaleX(1);
+}
+
 .main-navigation--marketing .main-navigation__links {
   gap: clamp(2.375rem, 3.5vw, 3.75rem);
 }
@@ -318,6 +328,11 @@
   font-size: var(--text-game-label) !important;
   margin-top: 0.5rem;
   padding: 0.9rem 1.75rem !important;
+}
+
+.main-navigation__mobile-menu .main-navigation__priority-link {
+  color: var(--gold-light);
+  text-shadow: 0 0 22px rgba(217, 164, 65, 0.24);
 }
 
 @keyframes main-navigation-menu-enter {

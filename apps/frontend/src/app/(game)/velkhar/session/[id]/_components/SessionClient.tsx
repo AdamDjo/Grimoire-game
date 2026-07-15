@@ -13,6 +13,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { SoftSignupPrompt } from '@/components/ui/soft-signup-prompt'
+import { forgetActiveGameSession, rememberActiveGameSession } from '@/lib/active-game-session'
 import { createClient } from '@/lib/supabase/client'
 import { useSessionStore } from '@/stores/session-store'
 
@@ -77,6 +78,8 @@ export function SessionClient({ initialCharacter, locale = 'en' }: SessionClient
   /** Applies a backend `SceneResponse` to local state — no rules run here. */
   const applyResponse = useCallback((next: SceneResponse) => {
     sessionIdRef.current = next.scene.sessionId
+    if (next.scene.consequences?.gameOver === true) forgetActiveGameSession()
+    else rememberActiveGameSession()
     setScene(next.scene)
     setSource(next.source)
     setSurvival((prev) => readSurvival(next.updatedStats, prev))

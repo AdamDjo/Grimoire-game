@@ -54,10 +54,10 @@ describe('MainNavigation', () => {
 
     const discoverLink = screen.getByRole('link', { name: 'Découvrir' })
     expect(discoverLink).toHaveAttribute('href', '#velkhar')
-    expect(screen.getByRole('link', { name: 'L’Auberge' })).toHaveAttribute(
-      'href',
-      '/velkhar/aveugle?transition=home'
-    )
+    expect(screen.getByRole('link', { name: 'Gameplay' })).toHaveAttribute('href', '#gameplay')
+    expect(screen.getByRole('link', { name: 'Univers' })).toHaveAttribute('href', '#world')
+    expect(screen.queryByRole('link', { name: 'Chroniques' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'L’Auberge' })).not.toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'GRIMOIRE, accueil du site' })).toHaveAttribute(
       'href',
       '/'
@@ -73,6 +73,18 @@ describe('MainNavigation', () => {
     expect(screen.getByRole('link', { name: 'GRIMOIRE, accueil du jeu' })).toHaveAttribute(
       'href',
       '/dashboard'
+    )
+  })
+
+  it('met en avant la reprise lorsqu’une session active existe', () => {
+    render(<MainNavigation context="game" resumeHref="/velkhar/session/resume" tier="anonymous" />)
+
+    expect(screen.getByRole('link', { name: 'Reprendre la partie' })).toHaveAttribute(
+      'href',
+      '/velkhar/session/resume'
+    )
+    expect(screen.getByRole('link', { name: 'Reprendre la partie' })).toHaveClass(
+      'main-navigation__priority-link'
     )
   })
 
