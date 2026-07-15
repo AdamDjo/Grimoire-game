@@ -3,7 +3,7 @@ type: status
 visibility: public
 rag: true
 source_of_truth: true
-updated: 2026-07-13
+updated: 2026-07-15
 ---
 
 # Project Status
@@ -11,18 +11,21 @@ updated: 2026-07-13
 ## État actuel
 
 - Projet : **GRIMOIRE — Of Ash and Salt**
-- Phase actuelle : **Phase 1B — vertical slice gamesession** (moteur backend) + chantier A3 mémoire narrative en cours
-- Branche active : `feature/111-memoire-n2-compression-scene` (worktree `-claude`)
-- Priorité active : terminer/merger #111 (N2 compression — implémenté, testé, 32/32), puis enchaîner sur le backlog A3 (#113→#117).
-- Chantier parallèle (Codex) : UI Kit Grimoire, `feature/93-ui-kit-grimoire-complet` (#93). Ne pas toucher au code du main folder.
+- Phase actuelle : **Phase 1B — parcours frontend Velkhar** (EPIC #123), après livraison du moteur backend et de la mémoire narrative principale.
+- Branche active : `feature/126-auberge-aveugle-hub`.
+- Priorité active : finaliser #126, avec deux flows distincts : seuil narratif avant création et hub immersif après création du personnage. Le hub est fixé à `100dvh` sur desktop, utilise le cadre sombre existant de l’auberge et sépare les états Parler, Souvenirs et Présage. Le présage constitue la préparation significative avant un nouveau run ; il est persisté localement et transmis à la route Session en attendant le contrat backend.
+- Ordre recommandé ensuite : #125 Game Session, puis #134 inventaire/fiche/menu.
 
 ## Livré récemment
 
 - **Phase 1A — landing** : ✅ mergée (#94).
+- **#124 — Character Create / Forge guidée** : ✅ mergée (PR #141 → `develop`). Le résultat temporaire est persisté côté frontend jusqu’au contrat API personnage.
+- **#128 — dashboard, reprise et navigation** : ✅ mergée (PR #139 → `develop`).
+- **#115 — Souvenirs nommés** et **#116 — Chronique de fin de run** : ✅ mergés (PR #138 et #140 → `develop`).
 - **EPIC #95 — vertical slice gamesession Velkhar** : ✅ mergée sur `develop` (PR #102, commit `9bb37a5`). Ferme #95→#100.
 - **#107 — auth Supabase** : ✅ livrée, en PR [#108](https://github.com/AdamDjo/Grimoire-game/pull/108) → `develop`. Tier anonyme (`signInAnonymously`), magic link + OAuth Google/Discord, JWT vérifié via JWKS dans `requireAuth`, cap 30 req anonymes → 403. Vérifiée live. Détail : [[../tech/AUTH]].
 - **#109 — moteur de session durci (A1+A2)** : ✅ mergé (PR #110 → `develop`). D20 + conséquences rapatriés côté backend, world-state persistant, `endReason` posé sur `GameSession`.
-- **#111 — mémoire narrative N2 (compression de scène)** : ✅ implémenté et testé (32/32), branche `feature/111-memoire-n2-compression-scene`. Compression fire-and-forget tous les 8 tours via Mistral Small (fallback Llama 3.3), stockage `MemoryChunk`, injection des 5 chunks récents + faits épinglés dans le prompt système. Reste à merger.
+- **#111 — mémoire narrative N2 (compression de scène)** : ✅ mergé (PR #118 → `develop`). Compression fire-and-forget tous les 8 tours via Mistral Small (fallback Llama 3.3), stockage `MemoryChunk`, injection des chunks récents + faits épinglés dans le prompt système.
 
 ## Backlog A3 — mémoire narrative (après #111)
 
@@ -43,8 +46,9 @@ Chantier découpé en sous-tickets indépendants, tous rattachés à A3 :
 
 ## Critères pour avancer dans la Phase 1B
 
-- #111 mergé sur `develop`.
-- Écrans Auberge de L'Aveugle + Character Create branchés sur le triptyque canon.
+- #126 mergé sur `develop` avec séparation seuil/hub validée.
+- #125 Game Session reconstruite avec le UI Kit.
+- Parcours Landing → seuil → Forge → hub → Session sans cul-de-sac.
 
 ## Sources liées
 

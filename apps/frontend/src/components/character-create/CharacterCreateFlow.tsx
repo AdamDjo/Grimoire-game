@@ -260,7 +260,7 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
 
   const replayCreation = () => {
     window.sessionStorage.removeItem(CHARACTER_DRAFT_STORAGE_KEY)
-    window.sessionStorage.removeItem(CHARACTER_RESULT_STORAGE_KEY)
+    window.localStorage.removeItem(CHARACTER_RESULT_STORAGE_KEY)
     setDraft(EMPTY_CHARACTER_DRAFT)
     setIsDirty(false)
     moveToStep('identity')
@@ -268,7 +268,7 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
 
   const finishCreation = () => {
     const result = createCharacterResult(draft)
-    window.sessionStorage.setItem(CHARACTER_RESULT_STORAGE_KEY, JSON.stringify(result))
+    window.localStorage.setItem(CHARACTER_RESULT_STORAGE_KEY, JSON.stringify(result))
     window.sessionStorage.removeItem(CHARACTER_DRAFT_STORAGE_KEY)
     setIsDirty(false)
     router.push(buildAveugleHref(campaignId, true))

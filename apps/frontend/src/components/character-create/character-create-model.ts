@@ -75,6 +75,10 @@ export function parseStoredCharacterDraft(value: string | null): CharacterCreate
   }
 }
 
+export function parseStoredCharacterResult(value: string | null): CharacterCreateDraft | null {
+  return parseStoredCharacterDraft(value)
+}
+
 export function getResumeStep(draft: CharacterCreateDraft): CharacterCreateStep {
   if (!characterNameSchema.safeParse(draft.name).success) return 'identity'
   if (!draft.peopleId) return 'people'
