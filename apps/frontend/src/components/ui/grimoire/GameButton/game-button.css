@@ -9,7 +9,7 @@
   color: var(--game-button-accent-light);
   cursor: pointer;
   display: inline-flex;
-  font-family: var(--font-accent);
+  font-family: var(--font-game-heading);
   font-weight: 500;
   gap: 0.7em;
   isolation: isolate;
@@ -173,21 +173,21 @@
 }
 
 .game-button--sm {
-  font-size: var(--text-ui, 1rem);
+  font-size: var(--text-game-button-sm);
   min-height: 48px;
   min-width: 190px;
   padding: 0 34px;
 }
 
 .game-button--md {
-  font-size: clamp(1.15rem, 0.7vw + 1rem, var(--text-btn-primary, 1.625rem));
+  font-size: var(--text-game-button);
   min-height: 64px;
   min-width: 250px;
   padding: 0 46px;
 }
 
 .game-button--lg {
-  font-size: var(--text-btn-primary, 1.625rem);
+  font-size: clamp(1.45rem, 0.5vw + 1.3rem, 1.75rem);
   min-height: 80px;
   min-width: 320px;
   padding: 0 58px;

@@ -85,8 +85,8 @@
   border: 0;
   caret-color: var(--gold-light, #efd48d);
   color: var(--parchment, #e8dcc0);
-  font-family: var(--font-ui);
-  font-size: clamp(1.0625rem, 0.3vw + 1rem, 1.2rem);
+  font-family: var(--font-game-ui);
+  font-size: var(--text-game-body);
   font-weight: 400;
   line-height: 1.4;
   grid-column: auto;

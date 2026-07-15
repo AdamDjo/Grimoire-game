@@ -56,8 +56,8 @@
 }
 
 .game-surface__content {
-  font-family: var(--font-serif);
-  font-size: var(--text-body-editorial, 1.125rem);
+  font-family: var(--font-game-body);
+  font-size: var(--text-game-body);
   line-height: var(--text-body-editorial--line-height, 1.6);
   min-height: inherit;
   position: relative;
@@ -65,8 +65,8 @@
 }
 
 .game-surface--stats .game-surface__content {
-  font-family: var(--font-ui);
-  font-size: var(--text-ui, 1rem);
+  font-family: var(--font-game-ui);
+  font-size: var(--text-game-label);
 }
 
 @media (max-width: 640px) {

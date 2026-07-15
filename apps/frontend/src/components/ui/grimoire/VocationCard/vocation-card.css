@@ -19,8 +19,8 @@
 
 .vocation-card__title {
   color: var(--gold-light, #f0d48a);
-  font-family: var(--font-accent);
-  font-size: var(--text-card-title, 1.5625rem);
+  font-family: var(--font-game-heading);
+  font-size: var(--text-game-heading);
   font-weight: 500;
   line-height: 1.2;
   margin: 0;
@@ -30,8 +30,8 @@
 .vocation-card__eyebrow {
   color: var(--gold, #d9a441);
   display: block;
-  font-family: var(--font-ui);
-  font-size: 0.75rem;
+  font-family: var(--font-game-ui);
+  font-size: var(--text-game-label);
   letter-spacing: 0.13em;
   margin-bottom: 0.45rem;
   text-transform: uppercase;
@@ -39,8 +39,8 @@
 
 .vocation-card__description {
   color: color-mix(in srgb, var(--parchment, #e8dcc0) 84%, transparent);
-  font-family: var(--font-serif);
-  font-size: clamp(1.0625rem, 0.3vw + 1rem, 1.2rem);
+  font-family: var(--font-game-body);
+  font-size: var(--text-game-body);
   line-height: 1.6;
   margin: 0.65rem 0 0;
   text-wrap: pretty;

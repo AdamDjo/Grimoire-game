@@ -78,43 +78,150 @@
   filter: brightness(0.92);
 }
 
-@media (max-width: 760px) {
-  .main-navigation {
-    grid-template-rows: auto auto;
-    padding-bottom: 0.45rem;
+.main-navigation__actions {
+  align-items: center;
+  display: flex;
+  position: relative;
+}
+
+.main-navigation__menu-trigger {
+  align-items: center;
+  background: radial-gradient(circle, rgba(217, 164, 65, 0.12), rgba(7, 6, 4, 0.72));
+  border: 1px solid rgba(217, 164, 65, 0.48);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.72),
+    inset 0 0 16px rgba(217, 164, 65, 0.08);
+  color: var(--gold-light);
+  cursor: pointer;
+  display: none;
+  flex-direction: column;
+  gap: 0.42rem;
+  height: 48px;
+  justify-content: center;
+  padding: 0;
+  width: 48px;
+}
+
+.main-navigation__menu-trigger span {
+  background: currentColor;
+  height: 1px;
+  transform-origin: center;
+  transition-property: transform;
+  transition-duration: 180ms;
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+  width: 1.35rem;
+}
+
+.main-navigation__menu-trigger[aria-expanded='true'] span:first-child {
+  transform: translateY(0.235rem) rotate(45deg);
+}
+
+.main-navigation__menu-trigger[aria-expanded='true'] span:last-child {
+  transform: translateY(-0.235rem) rotate(-45deg);
+}
+
+.main-navigation.game-top-bar--velkhar .main-navigation__menu-trigger {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.main-navigation.game-top-bar--velkhar .main-navigation__menu-trigger:hover {
+  color: var(--gold);
+}
+
+.main-navigation__mobile-menu {
+  animation: main-navigation-menu-enter 180ms cubic-bezier(0.2, 0, 0, 1) both;
+  background:
+    radial-gradient(circle at 88% 0%, rgba(217, 164, 65, 0.12), transparent 38%),
+    rgba(8, 7, 5, 0.98);
+  border: 1px solid rgba(217, 164, 65, 0.5);
+  box-shadow:
+    0 1.5rem 3rem rgba(0, 0, 0, 0.62),
+    inset 0 0 28px rgba(217, 164, 65, 0.04);
+  display: none;
+  min-width: min(21rem, calc(100vw - 1.5rem));
+  padding: 0.65rem;
+  position: absolute;
+  right: -0.35rem;
+  top: calc(100% + 1.15rem);
+}
+
+.main-navigation__mobile-menu ul {
+  display: grid;
+  gap: 0.2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.main-navigation__mobile-menu a {
+  align-items: center;
+  color: var(--ink-2);
+  display: flex;
+  font-family: var(--font-game-ui);
+  font-size: var(--text-game-label);
+  gap: 0.65rem;
+  letter-spacing: 0.08em;
+  min-height: 48px;
+  padding: 0.65rem 0.9rem;
+  transition-property: background-color, color;
+  transition-duration: 180ms;
+  transition-timing-function: ease;
+}
+
+.main-navigation__mobile-menu a:hover,
+.main-navigation__mobile-menu a[aria-current='page'] {
+  background: rgba(217, 164, 65, 0.08);
+  color: var(--gold-light);
+}
+
+.main-navigation__mobile-account {
+  border-top: 1px solid rgba(217, 164, 65, 0.22);
+  margin-top: 0.35rem;
+}
+
+@keyframes main-navigation-menu-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 900px) {
+  .main-navigation.game-top-bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    min-height: 78px;
+    padding: 0.65rem clamp(0.85rem, 3vw, 1.5rem);
   }
 
   .main-navigation .game-top-bar__center {
+    display: none;
+  }
+
+  .main-navigation__brand .game-brand {
+    width: clamp(6.75rem, 16vw, 8.5rem);
+  }
+
+  .main-navigation__account--desktop {
+    display: none;
+  }
+
+  .main-navigation__menu-trigger,
+  .main-navigation__mobile-menu {
     display: flex;
-    grid-column: 1 / -1;
-    grid-row: 2;
-  }
-
-  .main-navigation__links {
-    gap: 1.25rem;
-    justify-content: center;
-    width: 100%;
-  }
-
-  .main-navigation__links a {
-    font-size: 0.76rem;
-    min-height: 40px;
-  }
-
-  .main-navigation__account span {
-    clip: rect(0 0 0 0);
-    clip-path: inset(50%);
-    height: 1px;
-    overflow: hidden;
-    position: absolute;
-    white-space: nowrap;
-    width: 1px;
   }
 }
 
 @media (max-width: 480px) {
   .main-navigation__brand .game-brand {
-    width: 6.5rem;
+    width: 6.25rem;
   }
 }
 
@@ -122,6 +229,13 @@
   .main-navigation__links a,
   .main-navigation__links a::after,
   .main-navigation__account {
+    transition-duration: 0.01ms;
+  }
+
+  .main-navigation__menu-trigger span,
+  .main-navigation__mobile-menu,
+  .main-navigation__mobile-menu a {
+    animation-duration: 0.01ms;
     transition-duration: 0.01ms;
   }
 }

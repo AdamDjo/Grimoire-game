@@ -9,8 +9,8 @@
   color: var(--gold-light);
   cursor: pointer;
   display: grid;
-  font-family: var(--font-serif);
-  font-size: clamp(1.05rem, 0.35vw + 1rem, 1.25rem);
+  font-family: var(--font-game-body);
+  font-size: var(--text-game-body);
   gap: 1rem;
   grid-template-columns: auto minmax(0, 1fr);
   min-height: 56px;

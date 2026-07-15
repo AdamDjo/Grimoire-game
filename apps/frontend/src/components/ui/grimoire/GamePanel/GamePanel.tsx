@@ -17,6 +17,7 @@ export type GamePanelVariant =
   | 'character-aside'
   | 'character-form-v2'
   | 'character-aside-v2'
+  | 'aveugle-dialogue'
 export type GamePanelTone = 'neutral' | 'gold' | 'blood' | 'soul' | 'cendre'
 export type GamePanelPadding = 'none' | 'sm' | 'md' | 'lg'
 

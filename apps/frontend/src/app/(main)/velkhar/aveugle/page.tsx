@@ -46,13 +46,13 @@ export default async function AveuglePage({ searchParams }: AveuglePageProps) {
 
       <section className="aveugle-threshold__dialogue" aria-labelledby="aveugle-title">
         <p className="aveugle-threshold__location">Velkhar · L’Auberge de L’Aveugle</p>
+        <div className="aveugle-threshold__portrait" aria-hidden="true" />
 
         <GamePanel
           className="aveugle-threshold__panel"
-          ornament="diamond"
-          padding="lg"
+          padding="none"
           tone="gold"
-          variant="main"
+          variant="aveugle-dialogue"
         >
           <div className="aveugle-threshold__speaker">
             <GameIcon

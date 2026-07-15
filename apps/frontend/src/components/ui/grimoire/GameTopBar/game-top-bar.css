@@ -19,6 +19,17 @@
   position: absolute;
   z-index: 0;
 }
+
+.game-top-bar--velkhar {
+  backdrop-filter: blur(10px);
+  background: linear-gradient(180deg, rgba(6, 5, 3, 0.62), rgba(6, 5, 3, 0.14) 76%, transparent);
+  border-bottom: 1px solid rgba(217, 164, 65, 0.14);
+  min-height: 78px;
+}
+
+.game-top-bar--velkhar::before {
+  display: none;
+}
 .game-top-bar__start,
 .game-top-bar__center,
 .game-top-bar__end {

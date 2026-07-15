@@ -299,6 +299,12 @@ export default function UiKitPreviewPage() {
 
       <section className="ui-kit-preview__section">
         <h2>Structure et navigation</h2>
+        <GameTopBar
+          variant="velkhar"
+          start={<GameBrand decorative size="sm" variant="lockup" />}
+          center={<span>Velkhar · Le seuil de L’Aveugle</span>}
+          end={<GameIcon decorative name="key" size={24} />}
+        />
         <GameSceneLayout
           className="ui-kit-preview__scene"
           variant="sidebar"
