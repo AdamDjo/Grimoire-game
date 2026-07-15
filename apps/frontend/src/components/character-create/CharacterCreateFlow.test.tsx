@@ -13,6 +13,7 @@ vi.mock('next/navigation', () => ({
 
 describe('CharacterCreateFlow', () => {
   beforeEach(() => {
+    window.localStorage.clear()
     window.sessionStorage.clear()
     pushMock.mockReset()
   })
@@ -53,7 +54,7 @@ describe('CharacterCreateFlow', () => {
       )
     })
 
-    const storedResult = window.sessionStorage.getItem(CHARACTER_RESULT_STORAGE_KEY)
+    const storedResult = window.localStorage.getItem(CHARACTER_RESULT_STORAGE_KEY)
     expect(storedResult).toContain('Amani')
     expect(storedResult).not.toContain('stats')
   })

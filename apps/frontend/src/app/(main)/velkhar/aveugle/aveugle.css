@@ -45,7 +45,7 @@ body:has(.aveugle-threshold) .main-navigation {
 .aveugle-threshold__location {
   color: var(--gold-light);
   font-family: var(--font-game-ui);
-  font-size: var(--text-game-label);
+  font-size: clamp(1rem, 1.35vw, 1.2rem);
   letter-spacing: 0.18em;
   margin: 0 0 0.75rem 0.25rem;
   text-shadow: 0 2px 8px #000;
@@ -81,22 +81,15 @@ body:has(.aveugle-threshold) .main-navigation {
   flex: 0 0 auto;
 }
 
-.aveugle-threshold__speaker p {
-  color: var(--gold);
-  font-family: var(--font-game-ui);
-  font-size: var(--text-game-label);
-  letter-spacing: 0.16em;
-  margin: 0 0 0.25rem;
-  text-transform: uppercase;
-}
-
 .aveugle-threshold__speaker h1 {
   color: var(--gold-light);
   font-family: var(--font-game-heading);
-  font-size: var(--text-game-title);
+  font-size: clamp(1.6rem, 2.5vw, 2.25rem);
   font-weight: 500;
-  line-height: 1.08;
+  letter-spacing: 0.08em;
+  line-height: 1.15;
   margin: 0;
+  text-transform: uppercase;
   text-wrap: balance;
 }
 
@@ -104,20 +97,13 @@ body:has(.aveugle-threshold) .main-navigation {
   border-left: 1px solid rgba(217, 164, 65, 0.55);
   color: var(--parchment);
   font-family: var(--font-game-heading);
-  font-size: var(--text-game-quote);
+  font-size: clamp(1.55rem, 2.5vw, 2.15rem);
   font-style: italic;
-  line-height: 1.6;
-  margin: clamp(1.5rem, 3vw, 2.25rem) 0 1rem;
+  line-height: 1.45;
+  margin: clamp(1.75rem, 3vw, 2.5rem) 0 0;
+  max-width: 36ch;
+  padding-bottom: 0.12em;
   padding-left: 1.25rem;
-  text-wrap: pretty;
-}
-
-.aveugle-threshold__copy {
-  color: var(--ink-2);
-  font-size: var(--text-game-body);
-  line-height: 1.65;
-  margin: 0;
-  max-width: 58ch;
   text-wrap: pretty;
 }
 
@@ -125,7 +111,7 @@ body:has(.aveugle-threshold) .main-navigation {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
-  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  margin-top: clamp(2rem, 3.5vw, 3rem);
 }
 
 @media (min-width: 641px) and (max-width: 900px) {
@@ -172,10 +158,6 @@ body:has(.aveugle-threshold) .main-navigation {
   .aveugle-threshold blockquote {
     line-height: 1.5;
     margin-top: 1.35rem;
-  }
-
-  .aveugle-threshold__copy {
-    line-height: 1.55;
   }
 
   .aveugle-threshold__actions {
@@ -237,10 +219,6 @@ body:has(.aveugle-threshold) .main-navigation {
   .aveugle-threshold blockquote {
     line-height: 1.5;
     margin-top: 1.25rem;
-  }
-
-  .aveugle-threshold__copy {
-    line-height: 1.55;
   }
 
   .aveugle-threshold__actions,
