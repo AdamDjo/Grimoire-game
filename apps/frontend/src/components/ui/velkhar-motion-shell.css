@@ -1,0 +1,31 @@
+.velkhar-motion-shell {
+  position: relative;
+}
+
+.velkhar-motion-curtain {
+  background:
+    radial-gradient(circle at 50% 44%, rgba(34, 24, 13, 0.18), transparent 38%),
+    #050403;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  visibility: hidden;
+  z-index: 80;
+}
+
+.velkhar-motion-shell .game-button__icon:last-child {
+  transition-property: transform;
+  transition-duration: var(--motion-fast);
+  transition-timing-function: var(--ease-grimoire-out);
+}
+
+.velkhar-motion-shell .game-button:hover .game-button__icon:last-child {
+  transform: translateX(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .velkhar-motion-shell .game-button__icon:last-child {
+    transition-duration: 0.01ms;
+  }
+}

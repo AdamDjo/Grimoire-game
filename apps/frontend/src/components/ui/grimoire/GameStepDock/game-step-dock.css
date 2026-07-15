@@ -1,9 +1,7 @@
 .game-step-dock {
   align-items: center;
   background: linear-gradient(rgba(7, 6, 4, 0.78), rgba(7, 6, 4, 0.94));
-  box-shadow:
-    inset 0 1px rgba(217, 164, 65, 0.54),
-    inset 0 0 0 1px rgba(217, 164, 65, 0.24);
+
   display: flex;
   gap: 1rem;
   justify-content: space-between;

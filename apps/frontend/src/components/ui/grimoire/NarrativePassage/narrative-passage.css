@@ -1,7 +1,7 @@
 .narrative-passage {
   color: color-mix(in srgb, var(--parchment) 88%, var(--gold));
-  font-family: var(--font-accent);
-  font-size: var(--text-body-editorial);
+  font-family: var(--font-game-heading);
+  font-size: var(--text-game-lead);
   font-style: italic;
   line-height: var(--text-body-editorial--line-height);
   max-width: 52rem;
@@ -20,7 +20,7 @@
 .narrative-passage--drop-cap p:first-child::first-letter {
   color: var(--gold-light);
   float: left;
-  font-family: var(--font-display);
+  font-family: var(--font-game-display);
   font-size: 3.25em;
   font-style: normal;
   line-height: 0.78;

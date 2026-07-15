@@ -1,4 +1,5 @@
-import { Button, Card, MediaLayer } from '@/components/ui'
+import { Card, MediaLayer } from '@/components/ui'
+import { GameLink } from '@/components/ui/game-link'
 
 import { GAMEPLAY_CARDS, GAMEPLAY_COPY, LANDING_MEDIA } from '../../_data/landing-content'
 
@@ -61,9 +62,14 @@ export function SectionGameplay() {
           ))}
         </div>
         <div data-motion="reveal">
-          <Button className="button--gameplay" data-magnetic href="/velkhar/aveugle">
+          <GameLink
+            data-magnetic
+            href="/velkhar/aveugle?transition=home"
+            prefetch={false}
+            variant="landing-gameplay"
+          >
             {GAMEPLAY_COPY.cta}
-          </Button>
+          </GameLink>
         </div>
       </div>
 

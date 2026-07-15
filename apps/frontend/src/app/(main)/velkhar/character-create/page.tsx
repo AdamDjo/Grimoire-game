@@ -1,4 +1,11 @@
-import { redirect } from 'next/navigation'
+import { CharacterCreateFlow } from '@/components/character-create/CharacterCreateFlow'
+
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'La Forge de L’Aveugle · GRIMOIRE',
+  description: 'Créez votre personnage dans le prologue de L’Aveugle.',
+}
 
 interface VelkharCharacterCreatePageProps {
   searchParams: Promise<{ campaign?: string | string[] }>
@@ -9,9 +16,6 @@ export default async function VelkharCharacterCreatePage({
 }: VelkharCharacterCreatePageProps) {
   const { campaign } = await searchParams
   const campaignId = typeof campaign === 'string' ? campaign : undefined
-  const destination = campaignId
-    ? `/velkhar/aveugle?flow=character-create&campaign=${encodeURIComponent(campaignId)}`
-    : '/velkhar/aveugle?flow=character-create'
 
-  redirect(destination)
+  return <CharacterCreateFlow campaignId={campaignId} />
 }

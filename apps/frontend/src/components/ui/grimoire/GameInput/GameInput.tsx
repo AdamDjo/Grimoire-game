@@ -11,6 +11,7 @@ export interface GameInputProps extends InputHTMLAttributes<HTMLInputElement> {
   trailingAction?: ReactNode
   invalid?: boolean
   inputClassName?: string
+  variant?: 'default' | 'character' | 'character-v2'
 }
 
 export const GameInput = forwardRef<HTMLInputElement, GameInputProps>(function GameInput(
@@ -22,6 +23,7 @@ export const GameInput = forwardRef<HTMLInputElement, GameInputProps>(function G
     invalid = false,
     leadingIcon,
     trailingAction,
+    variant = 'default',
     ...props
   },
   ref
@@ -32,6 +34,7 @@ export const GameInput = forwardRef<HTMLInputElement, GameInputProps>(function G
     <span
       className={cn(
         'game-input',
+        `game-input--${variant}`,
         leadingIcon && 'game-input--with-leading',
         trailingAction && 'game-input--with-trailing',
         isInvalid && 'game-input--invalid',

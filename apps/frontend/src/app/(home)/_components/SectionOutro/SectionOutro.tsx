@@ -1,4 +1,5 @@
-import { Button, MediaLayer } from '@/components/ui'
+import { MediaLayer } from '@/components/ui'
+import { GameLink } from '@/components/ui/game-link'
 
 import {
   LANDING_FOOTER_LINKS,
@@ -58,9 +59,14 @@ export function SectionOutro() {
           {OUTRO_COPY.body}
         </p>
         <div data-motion="reveal">
-          <Button data-magnetic href="/velkhar/aveugle">
+          <GameLink
+            data-magnetic
+            href="/velkhar/aveugle?transition=home"
+            prefetch={false}
+            variant="landing"
+          >
             {OUTRO_COPY.cta}
-          </Button>
+          </GameLink>
         </div>
       </div>
 

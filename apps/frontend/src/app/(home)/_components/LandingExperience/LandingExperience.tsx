@@ -1,13 +1,14 @@
 'use client'
 
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { AmbientEmbers, CustomCursor, ScrollProgressBar, SectionProgress } from '@/components/ui'
-import { useLenis } from '@/hooks/use-lenis'
+import { AmbientEmbers, ScrollProgressBar, SectionProgress } from '@/components/ui'
+import { MainNavigation } from '@/components/ui/main-navigation'
+import { scrollToLandingAnchor } from '@/components/ui/scroll-to-landing-anchor'
+import { getLenis, useLenis } from '@/hooks/use-lenis'
 import { ScrollTrigger, SplitText, gsap, useGSAP } from '@/lib/gsap-init'
 
 import { renderFrameSequence } from '../FrameSequenceCanvas/FrameSequenceCanvas'
-import { LandingChrome } from '../LandingChrome/LandingChrome'
 import { LandingPreloader } from '../LandingPreloader/LandingPreloader'
 import { SectionGameplay } from '../SectionGameplay/SectionGameplay'
 import { SectionHero } from '../SectionHero/SectionHero'
@@ -16,6 +17,8 @@ import { SectionWorld } from '../SectionWorld/SectionWorld'
 
 import { useLandingHeroEntrance } from './use-landing-hero-entrance'
 
+import type { MouseEvent } from 'react'
+
 // Un dip cinématique doit assombrir la plate, jamais effacer tout le viewport.
 // Garder une fraction de l'image visible évite aussi l'impression de frame morte
 // lorsque le scrub lissé termine sa course après le changement de section.
@@ -23,12 +26,63 @@ const TRANSITION_VEIL_OPACITY = 0.82
 
 export function LandingExperience() {
   const rootRef = useRef<HTMLDivElement>(null)
+  const exitCurtainRef = useRef<HTMLDivElement>(null)
+  const isLeavingRef = useRef(false)
   // L'entrée du chrome et des CTA attend la levée du voile de preload.
   const [preloaderDone, setPreloaderDone] = useState(false)
   const handlePreloaderDone = useCallback(() => setPreloaderDone(true), [])
+  const handleMarketingMenuOpenChange = useCallback((isOpen: boolean) => {
+    const lenis = getLenis()
+    if (isOpen) lenis?.stop()
+    else lenis?.start()
+  }, [])
 
   useLenis()
   useLandingHeroEntrance(rootRef, preloaderDone)
+
+  useEffect(() => {
+    document.documentElement.classList.add('has-landing-scroll-progress')
+    return () => document.documentElement.classList.remove('has-landing-scroll-progress')
+  }, [])
+
+  const handleExitCapture = useCallback((event: MouseEvent<HTMLElement>) => {
+    if (
+      event.button !== 0 ||
+      event.altKey ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.shiftKey ||
+      isLeavingRef.current
+    ) {
+      return
+    }
+
+    const target = event.target
+    if (!(target instanceof Element)) return
+
+    const anchor = target.closest<HTMLAnchorElement>('a[href*="transition=home"]')
+    if (!anchor || anchor.download || anchor.target === '_blank') return
+
+    const destination = new URL(anchor.href, window.location.href)
+    if (destination.origin !== window.location.origin) return
+
+    event.preventDefault()
+    isLeavingRef.current = true
+
+    const href = `${destination.pathname}${destination.search}${destination.hash}`
+    const curtain = exitCurtainRef.current
+    if (!curtain || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      window.location.assign(href)
+      return
+    }
+
+    gsap.to(curtain, {
+      autoAlpha: 1,
+      duration: 0.42,
+      ease: 'power2.inOut',
+      onComplete: () => window.location.assign(href),
+    })
+  }, [])
 
   useGSAP(
     () => {
@@ -361,6 +415,7 @@ export function LandingExperience() {
 
         const outroTimeline = gsap.timeline({
           scrollTrigger: {
+            id: 'landing-outro',
             trigger: '[data-motion="outro"]',
             start: 'top top',
             end: '+=150%',
@@ -638,11 +693,14 @@ export function LandingExperience() {
   )
 
   return (
-    <main ref={rootRef} className="landing-experience">
+    <main ref={rootRef} className="landing-experience" onClickCapture={handleExitCapture}>
       <LandingPreloader onDone={handlePreloaderDone} />
       <AmbientEmbers />
-      <CustomCursor />
-      <LandingChrome />
+      <MainNavigation
+        context="marketing"
+        onAnchorNavigate={scrollToLandingAnchor}
+        onMenuOpenChange={handleMarketingMenuOpenChange}
+      />
       <ScrollProgressBar />
       <SectionProgress
         sectionCount={4}
@@ -653,6 +711,7 @@ export function LandingExperience() {
       <SectionGameplay />
       <SectionWorld />
       <SectionOutro />
+      <div ref={exitCurtainRef} className="landing-experience__exit-curtain" aria-hidden="true" />
     </main>
   )
 }
