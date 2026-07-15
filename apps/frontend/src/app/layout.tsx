@@ -1,5 +1,7 @@
 import { Alegreya_Sans, Caveat, Cinzel, Cormorant_Garamond, EB_Garamond } from 'next/font/google'
 
+import { GlobalExperience } from '@/components/ui/global-experience'
+
 import type { Metadata } from 'next'
 import './globals.css'
 
@@ -54,7 +56,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       lang="fr"
       className={`${cinzel.variable} ${cormorantGaramond.variable} ${ebGaramond.variable} ${alegreyaSans.variable} ${caveat.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <GlobalExperience />
+        {children}
+      </body>
     </html>
   )
 }

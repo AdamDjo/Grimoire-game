@@ -77,6 +77,16 @@ body:has(.character-create) .main-navigation {
   transform: scale(0.96);
 }
 
+.character-create .game-button__icon:last-child {
+  transition-property: transform;
+  transition-duration: var(--motion-fast);
+  transition-timing-function: var(--ease-grimoire-out);
+}
+
+.character-create .game-button:hover .game-button__icon:last-child {
+  transform: translateX(3px);
+}
+
 .character-create__composition {
   max-width: min(74rem, 76vw, calc((100dvh - 8rem) * 1.497));
   position: relative;
@@ -877,6 +887,10 @@ body:has(.character-create) .main-navigation {
 @media (prefers-reduced-motion: reduce) {
   .character-create__scene {
     transform: none;
+  }
+
+  .character-create .game-button__icon:last-child {
+    transition-duration: 0.01ms;
   }
 
   .character-create__exit,

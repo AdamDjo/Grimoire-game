@@ -57,6 +57,7 @@ export function GameStepper({
               <button
                 type="button"
                 className="game-stepper__button"
+                aria-label={item.label}
                 aria-current={isActive ? 'step' : undefined}
                 disabled={item.disabled}
                 onClick={() => onStepChange?.(item.id)}

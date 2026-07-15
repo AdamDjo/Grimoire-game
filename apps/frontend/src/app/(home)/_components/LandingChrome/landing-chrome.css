@@ -220,7 +220,7 @@
 .mobile-menu {
   position: fixed;
   inset: 0;
-  z-index: 55;
+  z-index: 39;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -233,6 +233,36 @@
 
 .mobile-menu[data-open='true'] {
   visibility: visible;
+}
+
+.mobile-menu__close {
+  align-items: center;
+  background: transparent;
+  border: 1px solid rgba(217, 164, 65, 0.42);
+  color: var(--gold-light);
+  cursor: pointer;
+  display: flex;
+  height: 48px;
+  justify-content: center;
+  position: fixed;
+  right: clamp(20px, 3vw, 28px);
+  top: 22px;
+  width: 48px;
+}
+
+.mobile-menu__close span {
+  background: currentColor;
+  height: 1px;
+  position: absolute;
+  width: 24px;
+}
+
+.mobile-menu__close span:first-child {
+  transform: rotate(45deg);
+}
+
+.mobile-menu__close span:last-child {
+  transform: rotate(-45deg);
 }
 
 .mobile-menu__nav {

@@ -30,6 +30,12 @@
   --text-game-label: clamp(1.05rem, 0.18vw + 0.98rem, 1.16rem);
   --text-game-button-sm: clamp(1.3rem, 0.32vw + 1.18rem, 1.5rem);
   --text-game-button: clamp(1.3rem, 0.45vw + 1.15rem, 1.625rem);
+  --motion-fast: 160ms;
+  --motion-ui: 220ms;
+  --motion-step: 280ms;
+  --motion-page: 650ms;
+  --ease-grimoire-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-grimoire-standard: cubic-bezier(0.2, 0, 0, 1);
   --ink: var(--parchment);
   --ink-2: rgba(232, 220, 192, 0.75);
   --focus-ring: 0 0 0 3px rgba(217, 164, 65, 0.3);
@@ -149,16 +155,32 @@ a {
   outline-offset: 3px;
 }
 
-/* Scrollbar native masquée : l'indicateur de progression est repris par la
-   fine barre dorée en haut (`ScrollProgressBar`). Le scroll reste fonctionnel
-   (molette, trackpad, clavier), seul le rail visuel disparaît. */
 html {
-  scrollbar-width: none;
+  scrollbar-color: rgba(217, 164, 65, 0.58) rgba(5, 4, 3, 0.72);
+  scrollbar-width: thin;
 }
 
 ::-webkit-scrollbar {
-  width: 0;
+  height: 9px;
+  width: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(5, 4, 3, 0.72);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(240, 212, 138, 0.72), rgba(146, 95, 35, 0.78));
+  border: 2px solid rgba(5, 4, 3, 0.72);
+}
+
+html.has-landing-scroll-progress {
+  scrollbar-width: none;
+}
+
+html.has-landing-scroll-progress::-webkit-scrollbar {
   height: 0;
+  width: 0;
 }
 
 .landing-experience {
@@ -168,6 +190,18 @@ html {
   isolation: isolate;
   min-height: 100vh;
   position: relative;
+}
+
+.landing-experience__exit-curtain {
+  background:
+    radial-gradient(circle at 50% 44%, rgba(34, 24, 13, 0.18), transparent 38%),
+    #050403;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  visibility: hidden;
+  z-index: 90;
 }
 
 .landing-experience::after {

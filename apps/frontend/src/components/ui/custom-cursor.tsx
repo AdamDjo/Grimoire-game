@@ -16,11 +16,10 @@ export function CustomCursor() {
   const emberLayerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const isTouch = window.matchMedia('(pointer: coarse)').matches
-    const isMobile = window.matchMedia('(max-width: 720px)').matches
+    const supportsCustomCursor = window.matchMedia('(hover: hover) and (pointer: fine)').matches
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-    if (isTouch || isMobile || reduceMotion || !arrowRef.current || !emberLayerRef.current) {
+    if (!supportsCustomCursor || reduceMotion || !arrowRef.current || !emberLayerRef.current) {
       return
     }
 

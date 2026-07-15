@@ -3,7 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { DialogueChoice } from '@/components/ui/grimoire/DialogueChoice/DialogueChoice'
 import { GameButton } from '@/components/ui/grimoire/GameButton/GameButton'
@@ -38,6 +38,7 @@ import {
 } from './character-create-model'
 
 import type { CharacterCreateDraft, CharacterCreateStep } from './character-create-model'
+import type { Variants } from 'framer-motion'
 import type { FormEvent } from 'react'
 
 import './character-create-flow.css'
@@ -75,6 +76,26 @@ const STEP_CONTENT = {
 } as const
 
 const STEP_INDEX = new Map(CHARACTER_CREATE_STEPS.map((step, index) => [step, index]))
+
+const STEP_MOTION_VARIANTS: Variants = {
+  center: {
+    filter: 'blur(0px)',
+    opacity: 1,
+    transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] },
+    x: 0,
+  },
+  enter: (direction: number) => ({
+    filter: 'blur(2px)',
+    opacity: 0,
+    x: direction * 16,
+  }),
+  exit: (direction: number) => ({
+    filter: 'blur(2px)',
+    opacity: 0,
+    transition: { duration: 0.16, ease: 'easeIn' },
+    x: direction * -10,
+  }),
+}
 
 const STEP_GUIDANCE: Record<CharacterCreateStep, { title: string; body: string }> = {
   identity: {
@@ -119,8 +140,10 @@ function getErrorMessage(error: unknown): string {
 export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
   const router = useRouter()
   const reduceMotion = useReducedMotion()
+  const stageRef = useRef<HTMLDivElement>(null)
   const [draft, setDraft] = useState<CharacterCreateDraft>(EMPTY_CHARACTER_DRAFT)
   const [currentStep, setCurrentStep] = useState<CharacterCreateStep>('identity')
+  const [stepDirection, setStepDirection] = useState(1)
   const [error, setError] = useState<string | null>(null)
   const [hydrated, setHydrated] = useState(false)
   const [isDirty, setIsDirty] = useState(false)
@@ -172,6 +195,10 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
     return () => window.removeEventListener('beforeunload', preventAccidentalExit)
   }, [isDirty])
 
+  useEffect(() => {
+    if (stageRef.current) stageRef.current.scrollTop = 0
+  }, [currentStep])
+
   const updateDraft = (values: Partial<CharacterCreateDraft>) => {
     setDraft((current) => ({ ...current, ...values }))
     setIsDirty(true)
@@ -179,6 +206,10 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
   }
 
   const moveToStep = (step: CharacterCreateStep) => {
+    const currentIndex = STEP_INDEX.get(currentStep) ?? 0
+    const nextIndex = STEP_INDEX.get(step) ?? currentIndex
+
+    setStepDirection(nextIndex >= currentIndex ? 1 : -1)
     setPreviewedVocationId(null)
     setCurrentStep(step)
     setError(null)
@@ -282,7 +313,6 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
     <main className="character-create">
       <div className="character-create__scene" aria-hidden="true" />
       <div className="character-create__veil" aria-hidden="true" />
-
       <button className="character-create__exit" type="button" onClick={leaveCreation}>
         <GameIcon decorative name="arrow" size={24} />
         Retour à L’Aveugle
@@ -324,16 +354,17 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
             />
           </div>
 
-          <div className="character-create__stage" aria-live="polite">
-            <AnimatePresence initial={false} mode="wait">
+          <div ref={stageRef} className="character-create__stage" aria-live="polite">
+            <AnimatePresence custom={stepDirection} initial={false} mode="wait">
               <motion.section
                 key={currentStep}
                 className="character-create__step"
                 aria-labelledby={`character-create-${currentStep}`}
-                initial={reduceMotion ? false : { opacity: 0, y: 12, filter: 'blur(4px)' }}
-                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                exit={reduceMotion ? undefined : { opacity: 0, y: -8, filter: 'blur(4px)' }}
-                transition={{ duration: reduceMotion ? 0 : 0.2, ease: 'easeOut' }}
+                animate="center"
+                custom={stepDirection}
+                exit={reduceMotion ? undefined : 'exit'}
+                initial={reduceMotion ? false : 'enter'}
+                variants={STEP_MOTION_VARIANTS}
               >
                 <GameSectionHeading
                   description={currentMeta.description}

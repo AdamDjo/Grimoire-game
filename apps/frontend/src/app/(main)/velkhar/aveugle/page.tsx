@@ -1,6 +1,7 @@
 import { GameLink } from '@/components/ui/game-link'
 import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
 import { GamePanel } from '@/components/ui/grimoire/GamePanel/GamePanel'
+import { VelkharMotionShell } from '@/components/ui/velkhar-motion-shell'
 
 import type { Metadata } from 'next'
 
@@ -15,6 +16,7 @@ interface AveuglePageProps {
     campaign?: string | string[]
     character?: string | string[]
     flow?: string | string[]
+    transition?: string | string[]
   }>
 }
 
@@ -35,26 +37,29 @@ function getCharacterCreateHref(campaign: string | string[] | undefined): string
 }
 
 export default async function AveuglePage({ searchParams }: AveuglePageProps) {
-  const { campaign, character, flow } = await searchParams
+  const { campaign, character, flow, transition } = await searchParams
   const isCharacterFlow = flow === 'character-create'
   const isCharacterReady = character === 'ready'
 
   return (
-    <main className="aveugle-threshold">
-      <div className="aveugle-threshold__scene" aria-hidden="true" />
+    <VelkharMotionShell animateEntrance={transition === 'home'} className="aveugle-threshold">
+      <div className="aveugle-threshold__scene" data-velkhar-scene aria-hidden="true" />
       <div className="aveugle-threshold__veil" aria-hidden="true" />
 
       <section className="aveugle-threshold__dialogue" aria-labelledby="aveugle-title">
-        <p className="aveugle-threshold__location">Velkhar · L’Auberge de L’Aveugle</p>
-        <div className="aveugle-threshold__portrait" aria-hidden="true" />
+        <p className="aveugle-threshold__location" data-velkhar-enter>
+          Velkhar · L’Auberge de L’Aveugle
+        </p>
+        <div className="aveugle-threshold__portrait" data-velkhar-enter aria-hidden="true" />
 
         <GamePanel
           className="aveugle-threshold__panel"
+          data-velkhar-frame
           padding="none"
           tone="gold"
           variant="aveugle-dialogue"
         >
-          <div className="aveugle-threshold__speaker">
+          <div className="aveugle-threshold__speaker" data-velkhar-enter>
             <GameIcon
               decorative
               name={isCharacterReady ? 'scroll' : isCharacterFlow ? 'quill' : 'eye'}
@@ -74,7 +79,7 @@ export default async function AveuglePage({ searchParams }: AveuglePageProps) {
             </div>
           </div>
 
-          <blockquote>
+          <blockquote data-velkhar-enter>
             {isCharacterReady
               ? '« Bien. Les sables sauront qui marche sur eux. Lorsque tu seras prêt, la porte s’ouvrira. »'
               : isCharacterFlow
@@ -82,7 +87,7 @@ export default async function AveuglePage({ searchParams }: AveuglePageProps) {
                 : '« Repose-toi, voyageur. Avant de franchir les portes de Velkhar, dis-moi qui tu es. »'}
           </blockquote>
 
-          <p className="aveugle-threshold__copy">
+          <p className="aveugle-threshold__copy" data-velkhar-enter>
             {isCharacterReady
               ? 'Ton personnage est revenu auprès de L’Aveugle. La prochaine action peut maintenant ouvrir le run.'
               : isCharacterFlow
@@ -90,7 +95,7 @@ export default async function AveuglePage({ searchParams }: AveuglePageProps) {
                 : 'L’Auberge est le seuil de chaque run. Vous pouvez commencer cette première conversation sans créer de compte.'}
           </p>
 
-          <div className="aveugle-threshold__actions">
+          <div className="aveugle-threshold__actions" data-velkhar-enter>
             {isCharacterReady ? (
               <GameLink
                 href="/velkhar/session/new"
@@ -116,6 +121,6 @@ export default async function AveuglePage({ searchParams }: AveuglePageProps) {
           </div>
         </GamePanel>
       </section>
-    </main>
+    </VelkharMotionShell>
   )
 }

@@ -129,19 +129,19 @@ export function MobileMenu({ authLink, links }: MobileMenuProps) {
 
       if (event.key !== 'Tab') return
 
-      const links = Array.from(
-        overlayRef.current?.querySelectorAll<HTMLAnchorElement>('a[href]') ?? []
+      const focusableElements = Array.from(
+        overlayRef.current?.querySelectorAll<HTMLElement>('a[href], button:not(:disabled)') ?? []
       )
-      if (links.length === 0) return
+      if (focusableElements.length === 0) return
 
-      const firstLink = links[0]
-      const lastLink = links[links.length - 1]
-      if (event.shiftKey && document.activeElement === firstLink) {
+      const firstElement = focusableElements[0]
+      const lastElement = focusableElements[focusableElements.length - 1]
+      if (event.shiftKey && document.activeElement === firstElement) {
         event.preventDefault()
-        lastLink?.focus()
-      } else if (!event.shiftKey && document.activeElement === lastLink) {
+        lastElement?.focus()
+      } else if (!event.shiftKey && document.activeElement === lastElement) {
         event.preventDefault()
-        firstLink?.focus()
+        firstElement?.focus()
       }
     }
     document.addEventListener('keydown', onKey)
@@ -165,6 +165,15 @@ export function MobileMenu({ authLink, links }: MobileMenuProps) {
       data-open={open}
       aria-hidden={!open}
     >
+      <button
+        aria-label="Fermer la navigation"
+        className="mobile-menu__close"
+        onClick={close}
+        type="button"
+      >
+        <span />
+        <span />
+      </button>
       <nav className="mobile-menu__nav" aria-label="Navigation mobile">
         {links.map((link) => (
           <a

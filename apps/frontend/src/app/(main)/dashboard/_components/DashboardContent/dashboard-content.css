@@ -14,7 +14,7 @@
 .dashboard-content__welcome {
   color: var(--ink-2);
   font-family: var(--font-accent);
-  font-size: 1.1rem;
+  font-size: var(--text-game-lead);
   font-style: italic;
   margin: 0 0 1rem;
   text-align: center;
@@ -42,7 +42,7 @@
 .dashboard-content__panel-heading p {
   color: var(--gold);
   font-family: var(--font-ui);
-  font-size: 0.78rem;
+  font-size: var(--text-game-label);
   letter-spacing: 0.15em;
   margin: 0 0 0.15rem;
   text-transform: uppercase;
@@ -85,7 +85,7 @@
 .dashboard-content__empty p {
   color: var(--parchment);
   font-family: var(--font-accent);
-  font-size: 1.25rem;
+  font-size: var(--text-game-quote);
   font-style: italic;
   margin: 0 0 0.4rem;
   text-wrap: pretty;
@@ -94,7 +94,7 @@
 .dashboard-content__empty span {
   color: var(--ink-2);
   font-family: var(--font-ui);
-  font-size: 0.96rem;
+  font-size: var(--text-game-body-sm);
 }
 
 .dashboard-content__boundary {
@@ -110,7 +110,7 @@
 
 .dashboard-content__boundary p {
   font-family: var(--font-accent);
-  font-size: 1.05rem;
+  font-size: var(--text-game-body-sm);
   font-style: italic;
   margin: 0;
   text-wrap: pretty;

@@ -1,10 +1,10 @@
 export const LANDING_NAV_LINKS = [
-  { label: 'Velkhar', href: '#velkhar' },
-  { label: 'Mémoire', href: '#gameplay' },
-  { label: 'Auberge', href: '#outro' },
+  { label: 'Découvrir', href: '#velkhar' },
+  { label: 'Chroniques', href: '/dashboard' },
+  { label: 'L’Auberge', href: '/velkhar/aveugle?transition=home' },
 ] as const
 
-export const LANDING_AUTH_LINK = { label: 'Connexion', href: '/login' } as const
+export const LANDING_AUTH_LINK = { label: 'Se connecter', href: '/login' } as const
 
 export const LANDING_FOOTER_LINKS = [
   { label: 'Discord', href: null, external: true },

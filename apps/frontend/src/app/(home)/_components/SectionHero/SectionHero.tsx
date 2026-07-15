@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui'
+import { GameLink } from '@/components/ui/game-link'
 
 import { HERO_COPY, LANDING_MEDIA } from '../../_data/landing-content'
 import { FrameSequenceCanvas } from '../FrameSequenceCanvas/FrameSequenceCanvas'
@@ -65,10 +65,12 @@ export function SectionHero() {
           ))}
         </div>
         <div className="hero-actions mt-9 flex" data-motion="hero-actions">
-          <Button href="#outro">{HERO_COPY.primaryCta}</Button>
-          <Button href="#gameplay" variant="ghost" disabled>
+          <GameLink data-magnetic href="#outro" variant="landing">
+            {HERO_COPY.primaryCta}
+          </GameLink>
+          <GameLink disabled href="#gameplay" variant="landing-ghost">
             {HERO_COPY.secondaryCta}
-          </Button>
+          </GameLink>
         </div>
       </div>
 
