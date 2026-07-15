@@ -3,6 +3,8 @@ import { GameLink } from '@/components/ui/game-link'
 import { HERO_COPY, LANDING_MEDIA } from '../../_data/landing-content'
 import { FrameSequenceCanvas } from '../FrameSequenceCanvas/FrameSequenceCanvas'
 
+import { HeroScrollCta } from './HeroScrollCta'
+
 import './section-hero.css'
 
 export function SectionHero() {
@@ -65,9 +67,7 @@ export function SectionHero() {
           ))}
         </div>
         <div className="hero-actions mt-9 flex" data-motion="hero-actions">
-          <GameLink data-magnetic href="#outro" variant="landing">
-            {HERO_COPY.primaryCta}
-          </GameLink>
+          <HeroScrollCta href="#outro">{HERO_COPY.primaryCta}</HeroScrollCta>
           <GameLink disabled href="#gameplay" variant="landing-ghost">
             {HERO_COPY.secondaryCta}
           </GameLink>
