@@ -1,3 +1,5 @@
+import { GameIcon } from '@/components/ui/grimoire'
+
 import type { DiceRoll as DiceRollResult } from '@grimoire/shared'
 
 interface DiceRollProps {
@@ -9,8 +11,9 @@ export function DiceRoll({ roll }: DiceRollProps) {
   const modifierSign = roll.modifier >= 0 ? '+' : ''
 
   return (
-    <div className="gs-dice" aria-label="Dice roll">
+    <div className="gs-dice" aria-label="Dice roll result" role="status">
       <span className="gs-die" data-critical={roll.critical ?? undefined}>
+        <GameIcon decorative name="dice" size={48} />
         {roll.roll}
       </span>
       <div>
@@ -18,9 +21,8 @@ export function DiceRoll({ roll }: DiceRollProps) {
           {roll.success ? 'Success' : 'Failure'}
         </div>
         <div className="gs-dice-target">
-          {roll.roll}
-          {modifierSign}
-          {roll.modifier} = {roll.total} vs {roll.target}
+          d20 {roll.roll} {modifierSign}
+          {roll.modifier} = {roll.total} against {roll.target}
         </div>
       </div>
     </div>

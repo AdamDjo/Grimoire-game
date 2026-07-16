@@ -1,92 +1,120 @@
 import {
-  ATTRIBUTE_LABELS,
-  attributeModifier,
-  type Attribute,
-  type Attributes,
-  type SurvivalStats,
-} from '@grimoire/shared'
+  GameHudDock,
+  GameIcon,
+  GameProgressRing,
+  InventoryQuickbar,
+  InventorySlot,
+  ResourceCounter,
+  StatBar,
+} from '@/components/ui/grimoire'
 
-const ATTRIBUTE_ORDER: Attribute[] = ['blood', 'breath', 'ash']
-
-type GaugeKind = 'hp' | 'thirst' | 'hunger' | 'energy' | 'calamine'
-
-interface Gauge {
-  kind: GaugeKind
-  label: string
-  value: number
-  max: number
-}
+import type { Attributes, InventoryItemRef, SurvivalStats } from '@grimoire/shared'
 
 interface SurvivalHudProps {
-  name: string
-  descriptor: string
   attributes: Attributes
+  inventory: InventoryItemRef[]
+  onOpenCharacter: () => void
+  onOpenInventory: () => void
+  onOpenMenu: () => void
   survival: SurvivalStats
 }
 
-/** Provisional HUD: canon triptych (blood/breath/ash) + survival gauges. */
-export function SurvivalHud({ name, descriptor, attributes, survival }: SurvivalHudProps) {
-  const gauges: Gauge[] = [
-    { kind: 'hp', label: 'HP', value: survival.hp, max: survival.maxHp },
-    { kind: 'thirst', label: 'Thirst', value: survival.thirst, max: 100 },
-    { kind: 'hunger', label: 'Hunger', value: survival.hunger, max: 100 },
-    { kind: 'energy', label: 'Energy', value: survival.energy, max: 100 },
-    { kind: 'calamine', label: 'Calamine', value: survival.calamine, max: 100 },
-  ]
-
+/** Persistent combat and survival readout, tuned for glanceability during play. */
+export function SurvivalHud({
+  attributes,
+  inventory,
+  onOpenCharacter,
+  onOpenInventory,
+  onOpenMenu,
+  survival,
+}: SurvivalHudProps) {
   return (
-    <section className="gs-card" aria-label="Character status">
-      <h2 className="gs-char-name">{name}</h2>
-      <p className="gs-char-sub">{descriptor}</p>
-
-      <div className="gs-triptych" aria-label="Attributes">
-        {ATTRIBUTE_ORDER.map((key) => {
-          const value = attributes[key]
-          const mod = attributeModifier(value)
-          const sign = mod >= 0 ? '+' : ''
-          return (
-            <div key={key} className="gs-attr" data-attr={key}>
-              <div className="gs-attr-label">{ATTRIBUTE_LABELS[key].en}</div>
-              <div className="gs-attr-value">{value}</div>
-              <div className="gs-attr-mod">
-                {sign}
-                {mod}
-              </div>
-            </div>
-          )
-        })}
+    <GameHudDock className="gs-hud" label="Character status and field kit">
+      <div className="gs-stats">
+        <StatBar
+          icon={<GameIcon decorative name="blood-drop" size={24} />}
+          label="Blood"
+          max={survival.maxHp}
+          size="sm"
+          tone="sang"
+          value={survival.hp}
+        />
+        <StatBar
+          icon={<GameIcon decorative name="wind" size={24} />}
+          label="Breath"
+          max={18}
+          size="sm"
+          tone="souffle"
+          value={attributes.breath}
+        />
+        <StatBar
+          icon={<GameIcon decorative name="fire" size={24} />}
+          label="Ash"
+          max={18}
+          size="sm"
+          tone="cendre"
+          value={attributes.ash}
+        />
       </div>
 
-      <div className="gs-gauges" aria-label="Survival">
-        {gauges.map((gauge) => {
-          const pct = gauge.max > 0 ? Math.round((gauge.value / gauge.max) * 100) : 0
-          return (
-            <div key={gauge.kind} className="gs-gauge-row">
-              <div className="gs-gauge-head">
-                <span>{gauge.label}</span>
-                <span>
-                  {gauge.value}
-                  {gauge.kind === 'hp' ? `/${gauge.max}` : ''}
-                </span>
-              </div>
-              <div
-                className="gs-gauge-track"
-                role="progressbar"
-                aria-label={gauge.label}
-                aria-valuenow={gauge.value}
-                aria-valuemin={0}
-                aria-valuemax={gauge.max}
-              >
-                <div
-                  className="gs-gauge-fill"
-                  data-kind={gauge.kind}
-                  style={{ width: `${pct}%` }}
-                />
-              </div>
-            </div>
-          )
-        })}
+      <div className="gs-rings">
+        <GameProgressRing
+          icon={<GameIcon decorative name="water" size={24} />}
+          label="Thirst"
+          max={100}
+          size="sm"
+          tone="souffle"
+          value={survival.thirst}
+        />
+        <GameProgressRing
+          icon={<GameIcon decorative name="hunger" size={24} />}
+          label="Hunger"
+          max={100}
+          size="sm"
+          tone="cendre"
+          value={survival.hunger}
+        />
+        <GameProgressRing
+          icon={<GameIcon decorative name="moon" size={24} />}
+          label="Fatigue"
+          max={100}
+          size="sm"
+          value={100 - survival.energy}
+        />
+        <GameProgressRing
+          className="gs-calamine-ring"
+          icon={<GameIcon decorative name="warning" size={24} />}
+          label="Calamine"
+          max={100}
+          size="sm"
+          value={survival.calamine}
+        />
       </div>
-    </section>
+
+      <ResourceCounter
+        compact
+        icon={<GameIcon decorative name="coin" size={32} />}
+        label="Iron"
+        value="?"
+      />
+
+      <InventoryQuickbar className="gs-quickbar" label="Session tools">
+        <InventorySlot
+          icon={<GameIcon decorative name="chest" size={48} />}
+          label={`Open inventory, ${inventory.length} items`}
+          onClick={onOpenInventory}
+        />
+        <InventorySlot
+          icon={<GameIcon decorative name="stranger" size={48} />}
+          label="Open character sheet"
+          onClick={onOpenCharacter}
+        />
+        <InventorySlot
+          icon={<GameIcon decorative name="journal" size={48} />}
+          label="Open session menu"
+          onClick={onOpenMenu}
+        />
+      </InventoryQuickbar>
+    </GameHudDock>
   )
 }
