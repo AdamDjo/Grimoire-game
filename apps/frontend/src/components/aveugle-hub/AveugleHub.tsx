@@ -28,6 +28,7 @@ import {
   type AubergePreparationState,
 } from './auberge-preparation'
 import { AubergeDock, type AubergePanel } from './AubergeDock'
+import { AubergeIntro, hasSeenAubergeIntro } from './AubergeIntro'
 import {
   getFallbackHubCharacter,
   resolveAveugleHubSnapshot,
@@ -42,6 +43,7 @@ interface AveugleHubProps {
   characterReadyHint?: boolean
   isCharacterFlow?: boolean
   isRunReturn?: boolean
+  previewIntro?: boolean
   transitionFromHome?: boolean
 }
 
@@ -82,11 +84,13 @@ export function AveugleHub({
   characterReadyHint = false,
   isCharacterFlow = false,
   isRunReturn = false,
+  previewIntro = false,
   transitionFromHome = false,
 }: AveugleHubProps) {
   const [hydrated, setHydrated] = useState(false)
   const [character, setCharacter] = useState<CharacterCreateDraft | null>(null)
   const [hasActiveSessionState, setHasActiveSessionState] = useState(false)
+  const [showIntro, setShowIntro] = useState(false)
   const [activePanel, setActivePanel] = useState<AubergePanel>('dialogue')
   const [preparation, setPreparation] = useState<AubergePreparationState>(EMPTY_AUBERGE_PREPARATION)
   const ambienceRef = useRef<HTMLDivElement>(null)
@@ -94,8 +98,11 @@ export function AveugleHub({
   const departureRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    setCharacter(readCharacter(characterReadyHint))
+    const nextCharacter = readCharacter(characterReadyHint)
+    setCharacter(nextCharacter)
     setHasActiveSessionState(readActiveSessionCookie())
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    setShowIntro(previewIntro || (!reduceMotion && !hasSeenAubergeIntro()))
     const storedPreparation = parseAubergePreparation(
       window.localStorage.getItem(AUBERGE_PREPARATION_STORAGE_KEY)
     )
@@ -107,7 +114,7 @@ export function AveugleHub({
       window.localStorage.setItem(AUBERGE_PREPARATION_STORAGE_KEY, JSON.stringify(nextPreparation))
     }
     setHydrated(true)
-  }, [characterReadyHint, isRunReturn])
+  }, [characterReadyHint, isRunReturn, previewIntro])
 
   const snapshot = useMemo(
     () =>
@@ -236,16 +243,24 @@ export function AveugleHub({
 
   if (!snapshot.character) {
     return (
-      <AveugleThreshold
-        campaignId={campaignId}
-        isCharacterFlow={isCharacterFlow}
-        transitionFromHome={transitionFromHome}
-      />
+      <>
+        {showIntro ? (
+          <AubergeIntro onComplete={() => setShowIntro(false)} preview={previewIntro} />
+        ) : null}
+        <AveugleThreshold
+          campaignId={campaignId}
+          isCharacterFlow={isCharacterFlow}
+          transitionFromHome={transitionFromHome}
+        />
+      </>
     )
   }
 
   return (
     <VelkharMotionShell animateEntrance={transitionFromHome} className="aveugle-hub">
+      {showIntro ? (
+        <AubergeIntro onComplete={() => setShowIntro(false)} preview={previewIntro} />
+      ) : null}
       <GameSceneLayout
         background={
           <>

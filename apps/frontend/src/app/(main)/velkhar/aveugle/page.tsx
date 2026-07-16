@@ -13,13 +13,14 @@ interface AveuglePageProps {
     campaign?: string | string[]
     character?: string | string[]
     flow?: string | string[]
+    intro?: string | string[]
     return?: string | string[]
     transition?: string | string[]
   }>
 }
 
 export default async function AveuglePage({ searchParams }: AveuglePageProps) {
-  const { campaign, character, flow, return: returnState, transition } = await searchParams
+  const { campaign, character, flow, intro, return: returnState, transition } = await searchParams
 
   return (
     <AveugleHub
@@ -27,6 +28,7 @@ export default async function AveuglePage({ searchParams }: AveuglePageProps) {
       characterReadyHint={character === 'ready'}
       isCharacterFlow={flow === 'character-create'}
       isRunReturn={returnState === 'chronicle' || returnState === 'run'}
+      previewIntro={intro === 'preview'}
       transitionFromHome={transition === 'home'}
     />
   )
