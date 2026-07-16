@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { CHARACTER_RESULT_STORAGE_KEY } from '@/components/character-create/character-create-model'
 import { ACTIVE_GAME_SESSION_COOKIE } from '@/lib/active-game-session'
 
+import { AUBERGE_INTRO_STORAGE_KEY } from './AubergeIntro'
 import { AveugleHub } from './AveugleHub'
 
 vi.mock('next/image', () => ({
@@ -36,6 +37,7 @@ describe('AveugleHub', () => {
   beforeEach(() => {
     window.localStorage.clear()
     window.sessionStorage.clear()
+    window.sessionStorage.setItem(AUBERGE_INTRO_STORAGE_KEY, 'seen')
     document.cookie = `${ACTIVE_GAME_SESSION_COOKIE}=; Path=/; Max-Age=0`
   })
 
@@ -86,6 +88,16 @@ describe('AveugleHub', () => {
     await user.click(screen.getByRole('button', { name: 'Autres sujets' }))
     await user.click(screen.getByRole('button', { name: 'Autre question…' }))
     expect(screen.getByPlaceholderText('Pose ta question…')).toBeInTheDocument()
+  })
+
+  it('lance l’introduction au premier passage même sans personnage', async () => {
+    window.sessionStorage.removeItem(AUBERGE_INTRO_STORAGE_KEY)
+
+    render(<AveugleHub previewIntro />)
+
+    expect(
+      await screen.findByRole('dialog', { name: 'Introduction à l’Auberge de L’Aveugle' })
+    ).toBeInTheDocument()
   })
 
   it('prépare le prochain run avec un présage explicite', async () => {

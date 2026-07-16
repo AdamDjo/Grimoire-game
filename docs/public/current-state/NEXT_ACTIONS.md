@@ -2,14 +2,14 @@
 type: actions
 visibility: public
 rag: true
-updated: 2026-07-15
+updated: 2026-07-16
 ---
 
 # Next Actions
 
 ## Immédiat
 
-1. **Finaliser + merger #126** (Auberge de L’Aveugle) vers `develop` : valider le hub `100dvh`, les panneaux exclusifs Parler/Souvenirs/Présage et les animations GSAP, puis remplacer les fixtures de souvenirs et de présages par les contrats API lorsqu’ils seront disponibles.
+1. **Finaliser + merger #142** (cinématique d’entrée de l’auberge) vers `develop` : valider le raccord vidéo → seuil/hub, le skip de session et le cadrage responsive. Les fixtures de souvenirs et de présages seront remplacées par les contrats API lorsqu’ils seront disponibles.
 
 ## EPIC frontend #123 — ordre recommandé
 
@@ -27,7 +27,7 @@ updated: 2026-07-15
 
 ## Phase 1B — écrans restants
 
-7. **Écran Auberge de L'Aveugle** (backlog priorité 1) : `app/(game)/velkhar/aveugle/page.tsx` + `aveugle.service.ts` backend.
+7. **Backend Auberge de L'Aveugle** : remplacer les fixtures frontend de #126 par `aveugle.service.ts` et ses contrats API.
 8. **Écran Character Create (la Forge)** : 4 vocations + concept libre, peuples, attribution triptyque.
 9. **Écran World Map (Makhzen)** : carte désertique, régions, points d'intérêt.
 

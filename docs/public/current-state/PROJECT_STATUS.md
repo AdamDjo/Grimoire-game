@@ -3,7 +3,7 @@ type: status
 visibility: public
 rag: true
 source_of_truth: true
-updated: 2026-07-15
+updated: 2026-07-16
 ---
 
 # Project Status
@@ -12,12 +12,13 @@ updated: 2026-07-15
 
 - Projet : **GRIMOIRE — Of Ash and Salt**
 - Phase actuelle : **Phase 1B — parcours frontend Velkhar** (EPIC #123), après livraison du moteur backend et de la mémoire narrative principale.
-- Branche active : `feature/126-auberge-aveugle-hub`.
-- Priorité active : finaliser #126, avec deux flows distincts : seuil narratif avant création et hub immersif après création du personnage. Le hub est fixé à `100dvh` sur desktop, utilise le cadre sombre existant de l’auberge et sépare les états Parler, Souvenirs et Présage. Le présage constitue la préparation significative avant un nouveau run ; il est persisté localement et transmis à la route Session en attendant le contrat backend.
+- Branche active : `feature/142-auberge-intro-video`.
+- Priorité active : finaliser #142, une cinématique d’arrivée de 8 secondes jouée avant les deux flows de l’auberge, avec skip différé, mémorisation limitée à la session navigateur, fallback d’autoplay et respect de `prefers-reduced-motion`.
 - Ordre recommandé ensuite : #125 Game Session, puis #134 inventaire/fiche/menu.
 
 ## Livré récemment
 
+- **#126 — Auberge de L’Aveugle** : ✅ mergée (PR #143 → `develop`). Deux flows distincts : seuil narratif avant création et hub immersif après création du personnage, fixé à `100dvh` sur desktop avec les espaces Parler, Souvenirs et Présage.
 - **Phase 1A — landing** : ✅ mergée (#94).
 - **#124 — Character Create / Forge guidée** : ✅ mergée (PR #141 → `develop`). Le résultat temporaire est persisté côté frontend jusqu’au contrat API personnage.
 - **#128 — dashboard, reprise et navigation** : ✅ mergée (PR #139 → `develop`).
@@ -47,6 +48,7 @@ Chantier découpé en sous-tickets indépendants, tous rattachés à A3 :
 ## Critères pour avancer dans la Phase 1B
 
 - #126 mergé sur `develop` avec séparation seuil/hub validée.
+- #142 mergé avec une arrivée cinématique qui précède le choix seuil/hub sans bloquer le joueur.
 - #125 Game Session reconstruite avec le UI Kit.
 - Parcours Landing → seuil → Forge → hub → Session sans cul-de-sac.
 
