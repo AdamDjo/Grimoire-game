@@ -6,12 +6,25 @@ import {
   type Character,
   type Choice,
   type DiceRoll as DiceRollResult,
+  type GameNotification,
+  type InventoryItemRef,
   type Locale,
   type SceneResponse,
   type SurvivalStats,
 } from '@grimoire/shared'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react'
 
+import {
+  GameAvatar,
+  GameIcon,
+  GameSceneLayout,
+  GameTopBar,
+  LocationIdentity,
+  NarrativeComposer,
+  PlayerIdentity,
+} from '@/components/ui/grimoire'
 import { SoftSignupPrompt } from '@/components/ui/soft-signup-prompt'
 import { forgetActiveGameSession, rememberActiveGameSession } from '@/lib/active-game-session'
 import { createClient } from '@/lib/supabase/client'
@@ -22,6 +35,7 @@ import { createSession, postGameAction } from '../_lib/api'
 import { ChoiceList } from './ChoiceList'
 import { DiceRoll } from './DiceRoll'
 import { NarrativePanel } from './NarrativePanel'
+import { SessionToolPanel, type SessionTool } from './SessionToolPanel'
 import { SourceBadge } from './SourceBadge'
 import { SurvivalHud } from './SurvivalHud'
 
@@ -30,6 +44,11 @@ import './session.css'
 interface SessionClientProps {
   initialCharacter: Character
   locale?: Locale
+}
+
+interface PendingAction {
+  choice?: Choice
+  freeAction?: string
 }
 
 /**
@@ -47,6 +66,28 @@ function readSurvival(stats: Record<string, number>, previous: SurvivalStats): S
   }
 }
 
+function formatChange(value: number): string {
+  return value > 0 ? `+${value}` : `${value}`
+}
+
+function consequenceMessages(response: SceneResponse): string[] {
+  const messages = response.notifications.map(
+    (notification: GameNotification) => notification.message
+  )
+  const consequences = response.scene.consequences
+
+  if (!consequences) return messages
+
+  for (const [stat, value] of Object.entries(consequences.survivalChanges ?? {})) {
+    messages.push(`${stat}: ${formatChange(value)}`)
+  }
+  for (const item of consequences.itemsGained ?? []) messages.push(`Found: ${item}`)
+  for (const item of consequences.itemsLost ?? []) messages.push(`Lost: ${item}`)
+  if (consequences.ironGained) messages.push(`Iron: ${formatChange(consequences.ironGained)}`)
+
+  return messages
+}
+
 /**
  * Orchestrates the gamesession loop. The backend is the Game Master: it owns
  * the world-state, the d20 and every consequence. This client only sends the
@@ -62,11 +103,17 @@ export function SessionClient({ initialCharacter, locale = 'en' }: SessionClient
   const sessionIdRef = useRef<string | null>(null)
   const [source, setSource] = useState<SceneResponse['source']>(undefined)
   const [roll, setRoll] = useState<DiceRollResult | null>(null)
+  const [inventory, setInventory] = useState<InventoryItemRef[]>([])
+  const [notifications, setNotifications] = useState<string[]>([])
   const [turn, setTurn] = useState(0)
   const [gameOver, setGameOver] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [limitReached, setLimitReached] = useState(false)
+  const [freeAction, setFreeAction] = useState('')
+  const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(null)
+  const [openTool, setOpenTool] = useState<SessionTool | null>(null)
+  const [online, setOnline] = useState(true)
 
   const incrementAnonymousRequestCount = useSessionStore(
     (state) => state.incrementAnonymousRequestCount
@@ -74,6 +121,7 @@ export function SessionClient({ initialCharacter, locale = 'en' }: SessionClient
 
   // Guards React 18 StrictMode's double-mount so the session is created once.
   const startedRef = useRef(false)
+  const lastAttemptRef = useRef<PendingAction | null>(null)
 
   /** Applies a backend `SceneResponse` to local state — no rules run here. */
   const applyResponse = useCallback((next: SceneResponse) => {
@@ -84,7 +132,11 @@ export function SessionClient({ initialCharacter, locale = 'en' }: SessionClient
     setSource(next.source)
     setSurvival((prev) => readSurvival(next.updatedStats, prev))
     setRoll(next.diceRoll ?? null)
+    setInventory(next.updatedInventory)
+    setNotifications(consequenceMessages(next))
     setGameOver(next.scene.consequences?.gameOver === true)
+    setSelectedChoiceId(null)
+    setFreeAction('')
     setTurn((t) => t + 1)
   }, [])
 
@@ -96,18 +148,41 @@ export function SessionClient({ initialCharacter, locale = 'en' }: SessionClient
     }
   }, [])
 
-  const chooseAction = useCallback(
-    async (choice: Choice) => {
+  const openSession = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      applyResponse(await createSession(locale))
+      lastAttemptRef.current = null
+    } catch (err) {
+      handleRequestError(err)
+    } finally {
+      setLoading(false)
+    }
+  }, [applyResponse, handleRequestError, locale])
+
+  const submitAction = useCallback(
+    async (action: PendingAction) => {
       const activeSessionId = sessionIdRef.current
       if (!activeSessionId) return
+      if (!navigator.onLine) {
+        setOnline(false)
+        setError('You are offline. Your current scene is safe; reconnect to continue.')
+        return
+      }
+
+      lastAttemptRef.current = action
+      setSelectedChoiceId(action.choice?.id ?? null)
       setLoading(true)
       setError(null)
       try {
         const next = await postGameAction({
           sessionId: activeSessionId,
           locale,
-          choiceId: choice.id,
-          chosenActionText: choice.text,
+          ...(action.choice
+            ? { choiceId: action.choice.id, chosenActionText: action.choice.text }
+            : {}),
+          ...(action.freeAction ? { freeAction: action.freeAction } : {}),
         })
         applyResponse(next)
         incrementAnonymousRequestCount()
@@ -119,6 +194,33 @@ export function SessionClient({ initialCharacter, locale = 'en' }: SessionClient
     },
     [locale, applyResponse, incrementAnonymousRequestCount, handleRequestError]
   )
+
+  useEffect(() => {
+    const syncConnection = () => {
+      const isOnline = navigator.onLine
+      setOnline(isOnline)
+      if (isOnline) {
+        setError((current) => (current?.startsWith('You are offline') ? null : current))
+      }
+    }
+
+    syncConnection()
+    window.addEventListener('online', syncConnection)
+    window.addEventListener('offline', syncConnection)
+    return () => {
+      window.removeEventListener('online', syncConnection)
+      window.removeEventListener('offline', syncConnection)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!openTool) return
+    const closeOnEscape = (event: globalThis.KeyboardEvent) => {
+      if (event.key === 'Escape') setOpenTool(null)
+    }
+    window.addEventListener('keydown', closeOnEscape)
+    return () => window.removeEventListener('keydown', closeOnEscape)
+  }, [openTool])
 
   // Ensures an authenticated session (anonymous if none), then opens the session.
   useEffect(() => {
@@ -135,14 +237,7 @@ export function SessionClient({ initialCharacter, locale = 'en' }: SessionClient
         await supabase.auth.signInAnonymously()
       }
 
-      setLoading(true)
-      try {
-        applyResponse(await createSession(locale))
-      } catch (err) {
-        handleRequestError(err)
-      } finally {
-        setLoading(false)
-      }
+      await openSession()
     })()
     // One-shot on mount; deps are stable callbacks.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -151,85 +246,173 @@ export function SessionClient({ initialCharacter, locale = 'en' }: SessionClient
   const handleChoose = useCallback(
     (choice: Choice) => {
       if (gameOver) return
-      void chooseAction(choice)
+      void submitAction({ choice })
     },
-    [gameOver, chooseAction]
+    [gameOver, submitAction]
   )
+
+  const handleFreeAction = useCallback(
+    (draft = freeAction) => {
+      const action = draft.trim()
+      if (!action || gameOver || loading) return
+      void submitAction({ freeAction: action })
+    },
+    [freeAction, gameOver, loading, submitAction]
+  )
+
+  const handleComposerKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLTextAreaElement>) => {
+      if (event.key !== 'Enter' || event.shiftKey) return
+      event.preventDefault()
+      handleFreeAction(event.currentTarget.value)
+    },
+    [handleFreeAction]
+  )
+
+  const handleRetry = useCallback(() => {
+    const lastAttempt = lastAttemptRef.current
+    if (lastAttempt) void submitAction(lastAttempt)
+    else void openSession()
+  }, [openSession, submitAction])
 
   const people = getPeople(initialCharacter.people)
   const vocation = getVocation(initialCharacter.vocation)
-  const descriptor = [people?.name.en, vocation?.name.en].filter(Boolean).join(' — ')
+  const descriptor = [people?.name.en, vocation?.name.en].filter(Boolean).join(' · ')
+  const narrative = scene?.narrative ?? 'The salt road stretches ahead…'
 
   return (
-    <div className="gs-shell">
-      <main className="gs-main">
-        <header className="gs-header">
-          <h1 className="gs-title">Velkhar Session</h1>
-          <div className="gs-header-meta">
-            {scene && source ? <SourceBadge source={source} /> : null}
-            {scene ? <span className="gs-location">{scene.location}</span> : null}
-          </div>
-        </header>
-
-        {limitReached ? (
-          <div className="gs-error" role="alert">
-            You&apos;ve reached the anonymous play limit. Create a free account to keep playing.
-            <div>
-              <a href="/signup" className="gs-retry">
-                Create account
-              </a>
-            </div>
-          </div>
-        ) : error ? (
-          <div className="gs-error" role="alert">
-            {error}
-            <div>
-              <button
-                type="button"
-                className="gs-retry"
-                onClick={() =>
-                  void createSession(locale).then(applyResponse).catch(handleRequestError)
-                }
-              >
-                Retry
-              </button>
-            </div>
-          </div>
-        ) : (
-          <NarrativePanel
-            narrative={scene?.narrative ?? 'The salt road stretches ahead…'}
-            loading={loading}
+    <>
+      <GameSceneLayout
+        className="gs-shell"
+        variant="immersive"
+        background={
+          <Image
+            alt="The crowded room of the Broken Finger tavern"
+            className="gs-background"
+            fill
+            priority
+            sizes="100vw"
+            src="/scenes/doigt-casse-session.webp"
           />
-        )}
+        }
+        top={
+          <GameTopBar
+            className="gs-topbar"
+            variant="velkhar"
+            start={
+              <LocationIdentity
+                icon={<GameIcon decorative name="compass" size={32} />}
+                place={scene?.location ?? 'The Salt Road'}
+                world="Velkhar"
+              />
+            }
+            center={
+              <PlayerIdentity
+                avatar={
+                  <GameAvatar alt="" size="sm" src="/ui-kit/icons/stranger.webp" state="active" />
+                }
+                compact
+                name={initialCharacter.name}
+                subtitle={descriptor}
+              />
+            }
+            end={
+              <div className="gs-topbar__end">
+                {source ? <SourceBadge source={source} /> : null}
+                <Link href="/velkhar/aveugle?return=run">Return to the Blind One</Link>
+              </div>
+            }
+          />
+        }
+        main={
+          <main className="gs-main">
+            <div className="gs-stage" key={scene?.id ?? 'opening'}>
+              {notifications.length > 0 ? (
+                <div className="gs-consequences" aria-label="Latest consequences" role="status">
+                  {notifications.map((message) => (
+                    <span key={message}>{message}</span>
+                  ))}
+                </div>
+              ) : null}
 
-        {gameOver && !error && !limitReached ? (
-          <div className="gs-error" role="alert">
-            Your run has ended. The salt keeps what it takes.
-          </div>
-        ) : null}
+              {limitReached ? (
+                <div className="gs-state-panel" role="alert">
+                  <GameIcon decorative name="lock" size={48} />
+                  <h1>Your Chronicle is waiting</h1>
+                  <p>Create a free account to keep this run and continue playing.</p>
+                  <Link href="/signup">Create account</Link>
+                </div>
+              ) : error ? (
+                <div className="gs-state-panel" role="alert">
+                  <GameIcon decorative name={online ? 'warning' : 'hourglass'} size={48} />
+                  <h1>{online ? 'The Game Master fell silent' : 'The road is out of reach'}</h1>
+                  <p>{error}</p>
+                  <button type="button" onClick={handleRetry} disabled={!online}>
+                    Try again
+                  </button>
+                </div>
+              ) : gameOver ? (
+                <div className="gs-state-panel" role="status">
+                  <GameIcon decorative name="book" size={48} />
+                  <h1>This run has become a Chronicle</h1>
+                  <p>The salt keeps what it takes. Your ending is ready to be remembered.</p>
+                  <Link href="/velkhar/aveugle?return=chronicle">Return with your Chronicle</Link>
+                </div>
+              ) : (
+                <>
+                  <NarrativePanel narrative={narrative} loading={loading} />
 
-        {scene && !error && !limitReached && !gameOver ? (
-          <ChoiceList choices={scene.choices} disabled={loading} onChoose={handleChoose} />
-        ) : null}
-      </main>
+                  {roll ? <DiceRoll key={turn} roll={roll} /> : null}
 
-      <aside className="gs-aside">
-        <SurvivalHud
-          name={initialCharacter.name}
-          descriptor={descriptor}
-          attributes={initialCharacter.stats.attributes}
-          survival={survival}
-        />
-        {roll ? (
-          <section className="gs-card" aria-label="Last roll">
-            <h2 className="gs-card-title">Last roll</h2>
-            {/* Key on turn so the die re-animates each risky pivot. */}
-            <DiceRoll key={turn} roll={roll} />
-          </section>
-        ) : null}
-      </aside>
+                  {scene ? (
+                    <>
+                      <ChoiceList
+                        choices={scene.choices}
+                        disabled={loading}
+                        selectedChoiceId={selectedChoiceId}
+                        onChoose={handleChoose}
+                      />
 
+                      <NarrativeComposer
+                        aria-label="Describe another action"
+                        actionDisabled={loading || freeAction.trim().length === 0}
+                        actionLabel="Attempt this action"
+                        maxLength={500}
+                        placeholder="Another action… describe what you want to attempt"
+                        value={freeAction}
+                        onAction={() => handleFreeAction()}
+                        onChange={(event) => setFreeAction(event.target.value)}
+                        onKeyDown={handleComposerKeyDown}
+                      />
+                      <p className="gs-composer-hint">
+                        Enter to act · Shift + Enter for a new line
+                      </p>
+                    </>
+                  ) : null}
+                </>
+              )}
+            </div>
+          </main>
+        }
+        bottom={
+          <SurvivalHud
+            attributes={initialCharacter.stats.attributes}
+            inventory={inventory}
+            survival={survival}
+            onOpenCharacter={() => setOpenTool('character')}
+            onOpenInventory={() => setOpenTool('inventory')}
+            onOpenMenu={() => setOpenTool('menu')}
+          />
+        }
+      />
+      <SessionToolPanel
+        character={initialCharacter}
+        inventory={inventory}
+        openTool={openTool}
+        source={source}
+        onClose={() => setOpenTool(null)}
+      />
       <SoftSignupPrompt />
-    </div>
+    </>
   )
 }
