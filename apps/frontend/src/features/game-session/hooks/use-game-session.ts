@@ -27,6 +27,7 @@ export interface UseGameSessionResult<
   TWorldState,
   TResponse extends GameSessionResponse,
 > extends GameSessionState<TWorldState, TResponse> {
+  abandon: () => Promise<boolean>
   choose: (choice: GameSessionChoice) => void
   retry: () => void
   submitFreeAction: (action: string) => void
@@ -44,6 +45,7 @@ export function useGameSession<TWorldState, TResponse extends GameSessionRespons
   resumeHref,
 }: UseGameSessionOptions<TWorldState, TResponse>): UseGameSessionResult<TWorldState, TResponse> {
   const [state, setState] = useState<GameSessionState<TWorldState, TResponse>>({
+    ending: false,
     error: null,
     gameOver: false,
     inventory: [],
@@ -74,6 +76,7 @@ export function useGameSession<TWorldState, TResponse extends GameSessionRespons
       setState((current) => ({
         ...current,
         error: null,
+        ending: false,
         gameOver: response.scene.consequences?.gameOver === true,
         inventory: response.updatedInventory,
         limitReached: false,
@@ -93,11 +96,12 @@ export function useGameSession<TWorldState, TResponse extends GameSessionRespons
   const handleRequestError = useCallback((error: unknown) => {
     setState((current) => {
       if (error instanceof Error && error.message === 'Anonymous limit reached') {
-        return { ...current, limitReached: true, loading: false }
+        return { ...current, ending: false, limitReached: true, loading: false }
       }
 
       return {
         ...current,
+        ending: false,
         error: error instanceof Error ? error.message : 'The Game Master fell silent.',
         loading: false,
       }
@@ -210,5 +214,26 @@ export function useGameSession<TWorldState, TResponse extends GameSessionRespons
     else void openSession()
   }, [openSession, submitAction])
 
-  return { ...state, choose, retry, submitFreeAction }
+  const abandon = useCallback(async () => {
+    const sessionId = sessionIdRef.current
+    if (!sessionId || state.ending) return false
+
+    setState((current) => ({ ...current, ending: true, error: null }))
+    try {
+      await api.abandonSession(sessionId)
+      forgetActiveGameSession()
+      setState((current) => ({
+        ...current,
+        ending: false,
+        gameOver: true,
+        loading: false,
+      }))
+      return true
+    } catch (error) {
+      handleRequestError(error)
+      return false
+    }
+  }, [api, handleRequestError, state.ending])
+
+  return { ...state, abandon, choose, retry, submitFreeAction }
 }

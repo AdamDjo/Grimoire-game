@@ -24,18 +24,49 @@ export interface GameWindowProps {
  */
 export function GameWindow({ children, className, label, onClose, title }: GameWindowProps) {
   const closeRef = useRef<HTMLButtonElement>(null)
+  const dialogRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const previouslyFocused = document.activeElement as HTMLElement | null
+    const previousOverflow = document.documentElement.style.overflow
+    document.documentElement.style.overflow = 'hidden'
     closeRef.current?.focus()
 
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose()
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        onClose()
+        return
+      }
+
+      if (event.key !== 'Tab') return
+
+      const focusableElements = Array.from(
+        dialogRef.current?.querySelectorAll<HTMLElement>(
+          'a[href], button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])'
+        ) ?? []
+      )
+      if (focusableElements.length === 0) {
+        event.preventDefault()
+        dialogRef.current?.focus()
+        return
+      }
+
+      const firstElement = focusableElements[0]
+      const lastElement = focusableElements[focusableElements.length - 1]
+      if (event.shiftKey && document.activeElement === firstElement) {
+        event.preventDefault()
+        lastElement?.focus()
+      } else if (!event.shiftKey && document.activeElement === lastElement) {
+        event.preventDefault()
+        firstElement?.focus()
+      }
     }
 
-    window.addEventListener('keydown', closeOnEscape)
+    document.addEventListener('keydown', handleKeyDown)
     return () => {
-      window.removeEventListener('keydown', closeOnEscape)
+      document.documentElement.style.overflow = previousOverflow
+      document.removeEventListener('keydown', handleKeyDown)
       previouslyFocused?.focus()
     }
   }, [onClose])
@@ -44,11 +75,20 @@ export function GameWindow({ children, className, label, onClose, title }: GameW
     <div className={cn('game-window-layer', className)}>
       <button
         aria-label="Dismiss panel"
+        aria-hidden="true"
         className="game-window-layer__backdrop"
         onClick={onClose}
+        tabIndex={-1}
         type="button"
       />
-      <section aria-label={label} aria-modal="true" className="game-window" role="dialog">
+      <section
+        ref={dialogRef}
+        aria-label={label}
+        aria-modal="true"
+        className="game-window"
+        role="dialog"
+        tabIndex={-1}
+      >
         <div className="game-window__header">
           <h2>{title}</h2>
           <GameButton

@@ -179,6 +179,23 @@ Velkhar injecte :
 
 Un futur monde peut réutiliser le contrôleur sans importer un type de personnage Velkhar.
 
+## HUD de session partagé
+
+`features/game-session/components/GameSessionHud.tsx` possède la structure responsive commune du
+footer de jeu. Il ne connaît aucun univers et reçoit uniquement quatre groupes de props :
+
+- `statusBars` : ressources principales sous forme de barres ;
+- `statusGauges` : états secondaires sous forme de jauges ;
+- `resource` : monnaie ou ressource ponctuelle, optionnelle ;
+- `tools` : raccourcis vers inventaire, fiche, menu ou outils propres à l’univers.
+
+Chaque monde conserve un adaptateur local. Par exemple, `VelkharSurvivalHud` transforme SANG,
+SOUFFLE, CENDRE, faim, soif, fatigue et Calamine en configuration de `GameSessionHud`. Un autre
+univers peut fournir PV, bouclier, stress et crédits sans importer le modèle de survie Velkhar.
+
+La structure, les breakpoints et l’accessibilité restent partagés. Les libellés, valeurs, icônes,
+tons, nombre de jauges et présence de la monnaie restent configurables par univers.
+
 ## Nommage
 
 - Composant partagé : `DiceRoll`, `GameWindow`, `NarrativePanel`.

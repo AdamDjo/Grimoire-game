@@ -92,6 +92,8 @@ export function VelkharSession({ initialCharacter, locale = 'en' }: VelkharSessi
     reduceWorldState,
     resumeHref: `${VELKHAR_WORLD.routes.session}/resume`,
   })
+  const abandonSession = session.abandon
+  const closeTool = useCallback(() => setOpenTool(null), [])
 
   const people = getPeople(initialCharacter.people)
   const vocation = getVocation(initialCharacter.vocation)
@@ -120,6 +122,11 @@ export function VelkharSession({ initialCharacter, locale = 'en' }: VelkharSessi
     },
     [submitFreeAction]
   )
+
+  const handleAbandon = useCallback(async () => {
+    const abandoned = await abandonSession()
+    if (abandoned) closeTool()
+  }, [abandonSession, closeTool])
 
   return (
     <>
@@ -248,10 +255,14 @@ export function VelkharSession({ initialCharacter, locale = 'en' }: VelkharSessi
       />
       <VelkharSessionToolPanel
         character={initialCharacter}
+        ending={session.ending}
+        iron={session.response?.updatedStats.iron ?? null}
         inventory={session.inventory}
         openTool={openTool}
         source={session.source}
-        onClose={() => setOpenTool(null)}
+        survival={session.worldState}
+        onAbandon={handleAbandon}
+        onClose={closeTool}
       />
       <SoftSignupPrompt />
     </>
