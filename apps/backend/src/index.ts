@@ -1,5 +1,6 @@
 import cors from 'cors'
-import express, { type Express } from 'express'
+import express, { type Express, type ErrorRequestHandler } from 'express'
+import 'express-async-errors'
 import rateLimit from 'express-rate-limit'
 
 import { env } from './config/env'
@@ -52,6 +53,14 @@ app.use('/api/chronicles', apiLimiter, requireAuth, chronicleRouter)
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() })
 })
+
+// Global error handler — catches sync throws and async rejections
+// (express-async-errors routes async handler rejections here via next(err)).
+const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
+  console.error(err)
+  res.status(500).json({ success: false, error: 'Internal server error' })
+}
+app.use(errorHandler)
 
 app.listen(PORT, () => {
   console.info(`Backend running on http://localhost:${PORT}`)
