@@ -266,6 +266,6 @@ describe('VelkharSession', () => {
     await user.click(screen.getByRole('button', { name: 'Confirm abandon' }))
 
     await waitFor(() => expect(abandonSessionMock).toHaveBeenCalledWith('session-1'))
-    expect(await screen.findByText('This run has become a Chronicle')).toBeInTheDocument()
+    expect(await screen.findByText('Quelques pas, pas encore une Chronique')).toBeInTheDocument()
   })
 })

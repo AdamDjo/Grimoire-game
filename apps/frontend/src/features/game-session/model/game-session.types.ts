@@ -80,6 +80,7 @@ export interface GameSessionState<
   TWorldState,
   TResponse extends GameSessionResponse = GameSessionResponse,
 > {
+  endReason: 'death' | 'inn' | 'abandon' | null
   error: string | null
   ending: boolean
   gameOver: boolean
@@ -90,6 +91,7 @@ export interface GameSessionState<
   response: TResponse | null
   roll: GameSessionDiceRoll | null
   scene: TResponse['scene'] | null
+  sessionId: string | null
   selectedChoiceId: string | null
   source?: GameSessionResponse['source']
   turn: number

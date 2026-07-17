@@ -13,6 +13,7 @@ import { LocationIdentity } from '@/components/ui/grimoire/LocationIdentity/Loca
 import { NarrativeComposer } from '@/components/ui/grimoire/NarrativeComposer/NarrativeComposer'
 import { PlayerIdentity } from '@/components/ui/grimoire/PlayerIdentity/PlayerIdentity'
 import { SoftSignupPrompt } from '@/features/auth/components/SoftSignupPrompt/SoftSignupPrompt'
+import { ChronicleEndExperience } from '@/features/chronicle/components/ChronicleEndExperience'
 import { gameSessionApi } from '@/features/game-session/api/game-session-api'
 import { ChoiceList } from '@/features/game-session/components/ChoiceList'
 import { ConsequenceList } from '@/features/game-session/components/ConsequenceList'
@@ -35,6 +36,7 @@ import type {
 } from '@grimoire/shared'
 
 import '../_theme/velkhar-session.css'
+import '@/features/chronicle/chronicle.css'
 
 interface VelkharSessionProps {
   initialCharacter: Character
@@ -198,14 +200,7 @@ export function VelkharSession({ initialCharacter, locale = 'en' }: VelkharSessi
                   </button>
                 </div>
               ) : session.gameOver ? (
-                <div className="velkhar-session__state" role="status">
-                  <GameIcon decorative name="book" size={48} />
-                  <h1>This run has become a Chronicle</h1>
-                  <p>The salt keeps what it takes. Your ending is ready to be remembered.</p>
-                  <Link href={`${VELKHAR_WORLD.routes.aveugle}?return=chronicle`}>
-                    Return with your Chronicle
-                  </Link>
-                </div>
+                <ChronicleEndExperience sessionId={session.sessionId} turnCount={session.turn} />
               ) : (
                 <>
                   <NarrativePanel narrative={narrative} loading={session.loading} />

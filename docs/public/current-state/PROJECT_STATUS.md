@@ -12,13 +12,16 @@ updated: 2026-07-17
 
 - Projet : **GRIMOIRE — Of Ash and Salt**
 - Phase actuelle : **Phase 1B — parcours frontend Velkhar** (EPIC #123), après livraison du moteur backend et de la mémoire narrative principale.
-- Branche active : `feature/134-inventaire-fiche-menu`.
-- Priorité active : compléter Game Session avec la fiche personnage, l’inventaire canonique,
-  l’équipement et le menu accessible sans quitter la narration.
-- Ordre recommandé ensuite : #132 fin de run et Chronique, puis #135 auth complète.
+- Branche active : `feature/132-fin-run-chronique`.
+- Priorité active : compléter la fin de run, l’attente de génération et le lecteur public de
+  Chronique sans introduire de dépendance au futur contrat de publication backend.
+- Ordre recommandé ensuite : #135 auth complète, puis #136 profil et confidentialité.
 
 ## Livré récemment
 
+- **#134 — inventaire, fiche et menu de session** : ✅ mergée (PR #153 → `develop`). Le HUD
+  multi-univers partage désormais ses jauges, ressources, inventaire rapide et commandes, tandis
+  que Velkhar injecte ses statistiques et son équipement canonique 8+12.
 - **#149 — architecture frontend multi-univers** : ✅ mergée (PR #150 → `develop`). Velkhar
   est colocalisé sous `(game)`, la boucle de session est partagée et les frontières ESLint
   empêchent les dépendances inversées.
