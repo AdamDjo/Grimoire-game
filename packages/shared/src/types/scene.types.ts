@@ -65,10 +65,30 @@ export interface SceneResponse {
 }
 
 export interface InventoryItemRef {
+  /** Actions explicitly authorized by the backend for the current scene. */
+  allowedActions?: InventoryItemAction[];
+  /** Generic placement hint. Worlds decide how categories map to their UI. */
+  category?: InventoryItemCategory;
+  description?: string;
+  /** Backend-owned equipment slot id, when the item is currently worn. */
+  equippedSlot?: string;
   id: string;
   name: string;
   quantity: number;
+  /** Transient availability supplied by the backend contract. */
+  state?: InventoryItemState;
 }
+
+export type InventoryItemAction = "use" | "equip" | "unequip" | "inspect";
+
+export type InventoryItemCategory =
+  | "equipment"
+  | "bag"
+  | "artifact"
+  | "heirloom"
+  | "key";
+
+export type InventoryItemState = "ready" | "locked" | "pending";
 
 export interface GameNotification {
   type:

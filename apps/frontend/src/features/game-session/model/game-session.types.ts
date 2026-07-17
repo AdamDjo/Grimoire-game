@@ -19,9 +19,14 @@ export interface GameSessionDiceRoll {
 }
 
 export interface GameSessionInventoryItem {
+  allowedActions?: ('use' | 'equip' | 'unequip' | 'inspect')[]
+  category?: 'equipment' | 'bag' | 'artifact' | 'heirloom' | 'key'
+  description?: string
+  equippedSlot?: string
   id: string
   name: string
   quantity: number
+  state?: 'ready' | 'locked' | 'pending'
 }
 
 export interface GameSessionNotification {
@@ -49,12 +54,18 @@ export interface GameSessionResponse {
   updatedStats: Record<string, number>
 }
 
+export interface GameSessionEndResponse {
+  endReason: 'inn' | 'abandon'
+  status: 'ended'
+}
+
 export interface PendingGameAction {
   choice?: GameSessionChoice
   freeAction?: string
 }
 
 export interface GameSessionApi<TResponse extends GameSessionResponse = GameSessionResponse> {
+  abandonSession: (sessionId: string) => Promise<GameSessionEndResponse>
   createSession: (locale: Locale) => Promise<TResponse>
   postGameAction: (input: {
     sessionId: string
@@ -70,6 +81,7 @@ export interface GameSessionState<
   TResponse extends GameSessionResponse = GameSessionResponse,
 > {
   error: string | null
+  ending: boolean
   gameOver: boolean
   inventory: GameSessionInventoryItem[]
   limitReached: boolean

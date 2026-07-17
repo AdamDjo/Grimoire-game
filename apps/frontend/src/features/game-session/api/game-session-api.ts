@@ -1,4 +1,4 @@
-import type { GameSessionResponse } from '../model/game-session.types'
+import type { GameSessionEndResponse, GameSessionResponse } from '../model/game-session.types'
 import type { ApiResponse, Locale } from '@grimoire/shared'
 
 /** Payload accepted by the game action route. Mirrors the backend Zod schema. */
@@ -21,6 +21,16 @@ async function readSceneResponse<TResponse extends GameSessionResponse>(
   response: Response
 ): Promise<TResponse> {
   const body = (await response.json()) as ApiResponse<TResponse>
+
+  if (!response.ok || !body.success || !body.data) {
+    throw new Error(body.error ?? `Game request failed (${response.status})`)
+  }
+
+  return body.data
+}
+
+async function readEndResponse(response: Response): Promise<GameSessionEndResponse> {
+  const body = (await response.json()) as ApiResponse<GameSessionEndResponse>
 
   if (!response.ok || !body.success || !body.data) {
     throw new Error(body.error ?? `Game request failed (${response.status})`)
@@ -62,7 +72,19 @@ export async function postGameAction<TResponse extends GameSessionResponse = Gam
   return readSceneResponse<TResponse>(response)
 }
 
+/** Ends the current run only after the session menu confirmation. */
+export async function abandonSession(sessionId: string): Promise<GameSessionEndResponse> {
+  const response = await fetch('/api/game/session/abandon', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sessionId }),
+  })
+
+  return readEndResponse(response)
+}
+
 export const gameSessionApi = {
+  abandonSession,
   createSession,
   postGameAction,
 } as const
