@@ -17,6 +17,14 @@ describe('CharacterCreateFlow', () => {
     window.localStorage.clear()
     window.sessionStorage.clear()
     pushMock.mockReset()
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({ success: true, data: { id: 'char1' } }),
+      })
+    )
   })
 
   it('completes the preset path and returns to L’Aveugle', async () => {

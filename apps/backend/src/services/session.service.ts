@@ -1,31 +1,32 @@
-import {
-  type Attributes,
-  type Choice,
-  type Locale,
-  type SceneResponse,
-  type SessionEndReason,
-  type SurvivalStats,
-  getPeople,
-  getVocation,
-  maxHpFromBlood,
-} from '@grimoire/shared'
-
 import { generateScene } from '../ai/game-master.service'
 import { persistedChoicesSchema } from '../ai/scene-validator'
 import { resolveChoice } from '../game-rules/consequences'
 import { prisma } from '../lib/prisma'
 
+import { deriveAttributes } from './character.service'
 import { generateChronicle } from './chronicle.service'
 import { compressScene } from './memory.service'
 import { assembleScene } from './scene-assembler'
 import { validateAndPersistSouvenirCandidate } from './souvenir.service'
 
 import type { Character as DbCharacter, GameSession } from '../generated/prisma/client'
+import type {
+  Attributes,
+  Choice,
+  Locale,
+  SceneResponse,
+  SessionEndReason,
+  SurvivalStats,
+} from '@grimoire/shared'
 
 /**
- * Provisional seed character (Yarel of the Salt Roads) — the same canon build
- * the demo used, now owned by the backend. Replaced by character creation
- * (the Forge) later; the `Character` contract stays stable, only the source moves.
+ * Fallback seed character (Yarel of the Salt Roads), the same canon build the
+ * demo used. Character creation (the Forge, #146) is now the primary path —
+ * `POST /api/character` persists the real `Character` before a session ever
+ * starts. This seed only covers a session request that somehow reaches the
+ * backend with no character on file (e.g. dev/test shortcuts, or a client
+ * bypassing the Forge) so `POST /api/game/session` never hard-fails; it logs
+ * a warning so that path is visible rather than silent.
  */
 const SEED = { vocationId: 'salt-walker', peopleId: 'sahelin' } as const
 
@@ -37,24 +38,14 @@ function buildSeedCharacter(): {
   attributes: Attributes
   maxHp: number
 } {
-  const vocation = getVocation(SEED.vocationId)
-  const people = getPeople(SEED.peopleId)
-  if (!vocation || !people) {
-    throw new Error('session.service: missing canon vocation or people for seed')
-  }
-
-  const attributes: Attributes = {
-    blood: vocation.baseAttributes.blood + (people.attributeBonus.blood ?? 0),
-    breath: vocation.baseAttributes.breath + (people.attributeBonus.breath ?? 0),
-    ash: vocation.baseAttributes.ash + (people.attributeBonus.ash ?? 0),
-  }
+  const { attributes, maxHp } = deriveAttributes(SEED.peopleId, SEED.vocationId)
 
   return {
     name: 'Yarel of the Salt Roads',
-    people: people.id,
-    vocation: vocation.id,
+    people: SEED.peopleId,
+    vocation: SEED.vocationId,
     attributes,
-    maxHp: maxHpFromBlood(attributes.blood),
+    maxHp,
   }
 }
 
@@ -94,9 +85,14 @@ export interface SessionContext {
 }
 
 /**
- * Returns the user's active session, creating the seed character and an active
- * session on first play. Idempotent: one character and one active session per
- * user. The world-state lives in the DB — this is the single source of truth.
+ * Returns the user's active session, creating an active session on first
+ * play. Idempotent: one character and one active session per user. The
+ * world-state lives in the DB — this is the single source of truth.
+ *
+ * The `Character` itself is expected to already exist, created via the Forge
+ * (`POST /api/character`, #146) before the player ever reaches the session
+ * screen. If none exists — a caller bypassed the Forge — this falls back to
+ * the seed build (see `SEED` above) rather than failing the request.
  */
 export async function getOrCreateSession(userId: string): Promise<SessionContext> {
   const existing = await prisma.gameSession.findFirst({
@@ -108,10 +104,11 @@ export async function getOrCreateSession(userId: string): Promise<SessionContext
     return { session: existing, character: existing.character }
   }
 
-  const seed = buildSeedCharacter()
-  const character =
-    (await prisma.character.findFirst({ where: { userId } })) ??
-    (await prisma.character.create({
+  let character = await prisma.character.findFirst({ where: { userId } })
+  if (!character) {
+    console.warn(`[Session] no character on file for user ${userId}, falling back to seed`)
+    const seed = buildSeedCharacter()
+    character = await prisma.character.create({
       data: {
         userId,
         name: seed.name,
@@ -128,7 +125,8 @@ export async function getOrCreateSession(userId: string): Promise<SessionContext
         calamine: 0,
         conditions: [],
       },
-    }))
+    })
+  }
 
   const session = await prisma.gameSession.create({
     data: { characterId: character.id },
