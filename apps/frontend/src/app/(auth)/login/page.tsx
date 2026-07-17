@@ -1,4 +1,5 @@
 import { getSafeInternalDestination } from '@/lib/internal-navigation'
+import { getViewerSummary } from '@/lib/viewer'
 
 import { LoginForm } from './LoginForm'
 
@@ -10,12 +11,18 @@ export const metadata: Metadata = {
 }
 
 interface LoginPageProps {
-  searchParams: Promise<{ next?: string | string[] }>
+  searchParams: Promise<{ error?: string | string[]; next?: string | string[] }>
 }
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
-  const { next } = await searchParams
+  const [{ error, next }, viewer] = await Promise.all([searchParams, getViewerSummary()])
   const nextPath = getSafeInternalDestination(next)
 
-  return <LoginForm nextPath={nextPath} />
+  return (
+    <LoginForm
+      anonymousSession={viewer.hasSession && viewer.tier === 'anonymous'}
+      callbackError={(Array.isArray(error) ? error[0] : error) === 'callback'}
+      nextPath={nextPath}
+    />
+  )
 }

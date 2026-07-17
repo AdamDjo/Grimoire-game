@@ -1,4 +1,5 @@
 import { getSafeInternalDestination } from '@/lib/internal-navigation'
+import { getViewerSummary } from '@/lib/viewer'
 
 import { SignupForm } from './SignupForm'
 
@@ -14,8 +15,13 @@ interface SignupPageProps {
 }
 
 export default async function SignupPage({ searchParams }: SignupPageProps) {
-  const { next } = await searchParams
+  const [{ next }, viewer] = await Promise.all([searchParams, getViewerSummary()])
   const nextPath = getSafeInternalDestination(next)
 
-  return <SignupForm nextPath={nextPath} />
+  return (
+    <SignupForm
+      anonymousSession={viewer.hasSession && viewer.tier === 'anonymous'}
+      nextPath={nextPath}
+    />
+  )
 }

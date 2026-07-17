@@ -16,5 +16,7 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  return NextResponse.redirect(`${origin}/login`)
+  const loginUrl = new URL('/login', origin)
+  loginUrl.searchParams.set('error', 'callback')
+  return NextResponse.redirect(loginUrl)
 }
