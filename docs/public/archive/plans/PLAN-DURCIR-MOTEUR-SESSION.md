@@ -1,6 +1,6 @@
-# PLAN — Durcir le moteur de session backend (A1 + A2) · Phase 1B
+# PLAN — Durcir le moteur de session backend (A1 + A2) · Phase 1B — archivé
 
-> **Doc de reprise.** Si je reviens plus tard, je lis ce fichier + l'issue GitHub du chantier et je reprends où j'en étais.
+> **Statut : livré.** Issue #109 fermée. Conservé pour historique ; ne pas utiliser comme doc de reprise.
 > **d20 souverain + world-state persistant.** Rapatrier au backend les règles aujourd'hui simulées au front.
 > **Dernière mise à jour** : 2026-07-12.
 

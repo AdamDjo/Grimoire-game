@@ -1,6 +1,6 @@
-# Plan de production du UI Kit Grimoire
+# Plan de production du UI Kit Grimoire — archivé
 
-> Statut : plan validable avant implémentation.
+> Statut : livré par l'issue #93 et la PR #121 le 13 juillet 2026. Conservé pour historique.
 > Portée : assainissement des assets, pipeline reproductible, composants React
 > réutilisables, Storybook, tests, documentation et migration progressive.
 > Contrainte Git : créer les issues avant les branches. Ne pas mélanger ce

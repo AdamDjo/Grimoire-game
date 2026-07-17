@@ -139,3 +139,26 @@ Balayage de tous les fichiers contenant des liens markdown/wiki-links (`00-START
 - `task-router.md` et `apps/frontend/CLAUDE.md` référençaient encore `docs/private/plans/landing/PLAN-LANDING-CUBERTO-LEVEL.md` et `LANDING_SEO_BILINGUAL_PLAN.md` — ces fichiers n'existent plus (Phase 1A livrée, plans landing archivés). Remplacés par les entrées vers les plans actifs réels : `docs/private/plans/gamesession-1b/NOTES-IMPLEMENTATION.md` et `docs/private/plans/ui-kit/PLAN-UI-KIT-PRODUCTION.md`.
 - `TECH_STACK.md` : mention résiduelle "canon privé" corrigée en "canon (`docs/public/raw/`)" — terminologie obsolète depuis que le canon est public.
 - Tous les autres liens vérifiés (contenu lu intégralement, pas juste grep) : corrects.
+
+---
+
+## 2026-07-17 — Séparation des états frontend, backend et release
+
+Le travail parallèle frontend/backend provoquait des conflits récurrents dans `PROJECT_STATUS.md`
+et `NEXT_ACTIONS.md`. Les responsabilités documentaires sont désormais séparées :
+
+- `PROJECT_STATUS.md` devient un index stable sans branche active ;
+- `NEXT_ACTIONS.md` devient un routeur de compatibilité sans backlog dupliqué ;
+- `FRONTEND_STATUS.md` + `FRONTEND_NEXT.md` appartiennent au chantier frontend ;
+- `BACKEND_STATUS.md` + `BACKEND_NEXT.md` appartiennent au chantier backend ;
+- `RELEASE_READINESS.md` est synchronisé après merge sur `develop`, jamais depuis deux branches concurrentes ;
+- les skills et agents Codex/Claude ont été alignés sur ces frontières.
+
+---
+
+## 2026-07-17 — Clôture documentaire des chantiers UI Kit et Phase 1B
+
+L'issue UI Kit #93 est fermée et sa PR #121 est mergée. Les anciens plans UI Kit, vertical slice
+Game Session, durcissement moteur et backlog Phase 1B ont été déplacés de `plans-actifs/` vers
+`public/archive/plans/`. Le frontend v0.1 reste ouvert uniquement pour l'auth, les intégrations
+réelles, la configuration de production et le golden path ; les écrans secondaires sont post-v0.1.
