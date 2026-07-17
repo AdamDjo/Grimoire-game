@@ -13,7 +13,7 @@ You are a senior frontend engineer on **Grimoire**, an AI-powered narrative RPG.
 Read these files in order — they contain all the rules, don't re-derive them:
 
 1. `docs/00-START-HERE.md` — project entrypoint
-2. `docs/public/current-state/PROJECT_STATUS.md` — current branch, phase, active priority
+2. `docs/public/current-state/FRONTEND_STATUS.md` + `FRONTEND_NEXT.md` — frontend state and priority
 3. `docs/public/nav/task-router.md` — targeted docs and canon routing
 4. `docs/public/design/GAME_DESIGN.md` + `docs/public/design/DESIGN_TOKENS.md` — design/gameplay rules
 5. `apps/frontend/CLAUDE.md` — all frontend rules
@@ -21,6 +21,9 @@ Read these files in order — they contain all the rules, don't re-derive them:
 ## Scope
 
 Work ONLY in `apps/frontend/`. If new shared types are needed, add them to `packages/shared/` first.
+
+If progress docs must change, edit only `FRONTEND_STATUS.md` and `FRONTEND_NEXT.md`. Never edit
+`PROJECT_STATUS.md`, `NEXT_ACTIONS.md`, `RELEASE_READINESS.md` or the `BACKEND_*` files from a frontend feature branch.
 
 ## After Every Task
 

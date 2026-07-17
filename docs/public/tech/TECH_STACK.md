@@ -78,7 +78,7 @@
 ## Références ciblées
 
 - État projet : [`../current-state/PROJECT_STATUS.md`](../current-state/PROJECT_STATUS.md)
-- Backlog : [`../plans-actifs/PHASE-1B-BACKLOG.md`](../plans-actifs/PHASE-1B-BACKLOG.md)
+- Prochaines actions : [`../current-state/NEXT_ACTIONS.md`](../current-state/NEXT_ACTIONS.md)
 - Design : [`../design/GAME_DESIGN.md`](../design/GAME_DESIGN.md)
 - Architecture : [`ARCHITECTURE_RULES.md`](ARCHITECTURE_RULES.md)
 - Canon : [`../nav/canon-index.md`](../nav/canon-index.md)

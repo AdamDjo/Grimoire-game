@@ -19,7 +19,8 @@ Objectif : rendre le vault facile à indexer pour une IA sans créer de bruit ni
 
 ## Collections recommandées
 
-- `public-core` : `00-START-HERE`, status, actions, task-router, architecture rules.
+- `public-core` : `00-START-HERE`, index d'état, release readiness, statuts/actions par domaine,
+  task-router et architecture rules.
 - `public-reference` : design, tech stack, docs map, public brief.
 - `public-canon` : `docs/public/raw/`.
 - `private-plans` : plans actifs, prompts, assets, roadmap interne.
@@ -40,6 +41,7 @@ updated: 2026-07-04
 
 1. Lire `docs/00-START-HERE.md`.
 2. Lire `docs/public/current-state/PROJECT_STATUS.md`.
-3. Lire `docs/public/current-state/NEXT_ACTIONS.md`.
-4. Utiliser `docs/public/nav/task-router.md` pour choisir les fichiers ciblés.
-5. Lire le canon (`docs/public/raw/`) via `task-router.md`, seulement les fichiers ciblés par la tâche.
+3. Lire `RELEASE_READINESS.md` seulement pour une question de livraison globale.
+4. Lire les fichiers `FRONTEND_*` ou `BACKEND_*`, jamais les deux sans besoin transverse.
+5. Utiliser `docs/public/nav/task-router.md` pour choisir les fichiers ciblés.
+6. Lire le canon (`docs/public/raw/`) via `task-router.md`, seulement les fichiers ciblés par la tâche.
