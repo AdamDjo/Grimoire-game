@@ -10,7 +10,6 @@ export { GameButton } from './grimoire'
 export type { GameButtonProps, GameButtonSize, GameButtonTone, GameButtonVariant } from './grimoire'
 export { GameLink } from './game-link'
 export type { GameLinkProps } from './game-link'
-export { MainNavigation } from './main-navigation'
 export {
   GameSceneLayout,
   GameStepDock,
@@ -81,22 +80,8 @@ export { StatBar } from './grimoire'
 export type { StatBarProps, StatBarSize, StatBarTone } from './grimoire'
 export { HudFrame } from './grimoire'
 export type { HudFrameProps, HudFrameVariant } from './grimoire'
-export {
-  CalamineMeter,
-  SurvieGauge,
-  VOCATION_EMBLEM_NAMES,
-  VocationCard,
-  VocationEmblem,
-} from './grimoire'
-export type {
-  CalamineMeterProps,
-  SurvieGaugeProps,
-  SurvieGaugeValue,
-  VocationCardProps,
-  VocationEmblemName,
-  VocationEmblemProps,
-  VocationEmblemSize,
-} from './grimoire'
+export { ArchetypeCard, GameWindow } from './grimoire'
+export type { ArchetypeCardProps, GameWindowProps } from './grimoire'
 export { GameInput } from './grimoire'
 export type { GameInputProps } from './grimoire'
 export { GameDivider } from './grimoire'
@@ -114,4 +99,3 @@ export type {
   GamePanelTone,
   GamePanelVariant,
 } from './grimoire'
-export { SoftSignupPrompt } from './soft-signup-prompt'

@@ -12,13 +12,16 @@ updated: 2026-07-16
 
 - Projet : **GRIMOIRE — Of Ash and Salt**
 - Phase actuelle : **Phase 1B — parcours frontend Velkhar** (EPIC #123), après livraison du moteur backend et de la mémoire narrative principale.
-- Branche active : `feature/125-game-session-pixel-perfect`.
-- Priorité active : finaliser #125, la Game Session immersive fidèle au UI Kit, avec narration prioritaire, choix typés, action libre, retours de dés et conséquences, HUD compact et outils de session.
+- Branche active : `feature/149-multi-universe-frontend-architecture`.
+- Priorité active : réorganiser le frontend multi-univers sans changement fonctionnel, avec
+  Velkhar colocalisé sous `(game)`, une boucle de session partagée et des primitives UI sans canon.
 - Ordre recommandé ensuite : #134 inventaire/fiche/menu, puis #132 fin de run et Chronique.
 
 ## Livré récemment
 
 - **#126 — Auberge de L’Aveugle** : ✅ mergée (PR #143 → `develop`). Deux flows distincts : seuil narratif avant création et hub immersif après création du personnage, fixé à `100dvh` sur desktop avec les espaces Parler, Souvenirs et Présage.
+- **#125 — Game Session pixel-perfect** : ✅ mergée (PR #148 → `develop`). Narration
+  prioritaire, choix typés, action libre, dés et conséquences, HUD compact et panneaux de session.
 - **#142 — cinématique d’entrée de l’auberge** : ✅ mergée (PR #145 → `develop`). Arrivée vidéo avant seuil/hub avec skip de session, autoplay fallback et reduced-motion.
 - **Phase 1A — landing** : ✅ mergée (#94).
 - **#124 — Character Create / Forge guidée** : ✅ mergée (PR #141 → `develop`). Le résultat temporaire est persisté côté frontend jusqu’au contrat API personnage.

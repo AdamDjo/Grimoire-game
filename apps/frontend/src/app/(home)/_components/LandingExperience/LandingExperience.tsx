@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+import { MainNavigation } from '@/components/system/MainNavigation/main-navigation'
 import { AmbientEmbers, ScrollProgressBar, SectionProgress } from '@/components/ui'
-import { MainNavigation } from '@/components/ui/main-navigation'
 import { scrollToLandingAnchor } from '@/components/ui/scroll-to-landing-anchor'
 import { getLenis, useLenis } from '@/hooks/use-lenis'
 import { ScrollTrigger, SplitText, gsap, useGSAP } from '@/lib/gsap-init'

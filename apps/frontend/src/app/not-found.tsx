@@ -1,4 +1,4 @@
-import { SystemState } from '@/components/system-state/SystemState'
+import { SystemState } from '@/components/system/SystemState/SystemState'
 
 export default function NotFound() {
   return (

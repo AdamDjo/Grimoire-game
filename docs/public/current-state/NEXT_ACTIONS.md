@@ -9,7 +9,8 @@ updated: 2026-07-16
 
 ## Immédiat
 
-1. **Finaliser + merger #125** (Game Session pixel-perfect) vers `develop` : valider la composition à 1440 px, le panneau personnage au-dessus du HUD, le responsive mobile et le flux choix/action libre → scène suivante. Les données d’inventaire et de monnaie restent branchées sur les contrats existants, encore vides côté backend.
+1. **Finaliser #149** : valider la nouvelle architecture frontend multi-univers, les frontières
+   ESLint, les routes Velkhar inchangées et la boucle de session partagée.
 
 ## EPIC frontend #123 — ordre recommandé
 

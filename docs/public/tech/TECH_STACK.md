@@ -18,10 +18,15 @@
 ## Frontend
 
 - Toutes les routes gameplay publiques passent sous `velkhar/`.
-- Les appels API frontend doivent passer par le proxy Next `app/api/[...path]/route.ts`.
-- Les composants route-specific restent dans `_components/`.
-- Les composants réutilisables restent dans `components/ui/`.
+- Les routes d'un monde sont colocalisées sous `app/(game)/<world>/`.
+- Les appels API frontend passent par le proxy Next `app/api/[...path]/route.ts`.
+- Les composants spécifiques à une route restent dans ses dossiers privés `_components/`,
+  `_data` et `_lib`.
+- Les comportements partagés entre univers restent dans `features/`.
+- Les primitives visuelles sans métier restent dans `components/ui/`.
+- Les shells et états globaux restent dans `components/system/`.
 - Ne jamais hardcoder couleur/police : utiliser [`../design/DESIGN_TOKENS.md`](../design/DESIGN_TOKENS.md).
+- Architecture détaillée : [`FRONTEND_ARCHITECTURE.md`](FRONTEND_ARCHITECTURE.md).
 
 ## Backend
 

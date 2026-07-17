@@ -33,7 +33,7 @@
   z-index: -1;
 }
 
-.game-input--character::before {
+.game-input--framed::before {
   background: url('/ui-kit/character-create/character-input-frame.webp') center / 100% 100%
     no-repeat;
   border: 0;
@@ -43,7 +43,7 @@
     drop-shadow(0 0 var(--game-field-halo-size) var(--game-field-halo-color));
 }
 
-.game-input--character-v2::before {
+.game-input--framed-v2::before {
   background: url('/ui-kit/character-create/character-input-frame-v2.webp') center / 100% 100%
     no-repeat;
   border: 0;
@@ -182,11 +182,11 @@
 }
 
 @media (max-width: 720px) {
-  .game-input--character::before {
+  .game-input--framed::before {
     background-image: url('/ui-kit/character-create/character-input-frame-mobile.webp');
   }
 
-  .game-input--character-v2::before {
+  .game-input--framed-v2::before {
     background-image: url('/ui-kit/character-create/character-input-frame-v2-mobile.webp');
   }
 

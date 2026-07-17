@@ -1,0 +1,68 @@
+'use client'
+
+import { useEffect, useRef } from 'react'
+
+import { cn } from '@/lib/utils'
+
+import { GameButton } from '../GameButton/GameButton'
+
+import type { ReactNode } from 'react'
+
+import './game-window.css'
+
+export interface GameWindowProps {
+  children: ReactNode
+  className?: string
+  label: string
+  onClose: () => void
+  title: ReactNode
+}
+
+/**
+ * Accessible world-agnostic overlay window.
+ * Worlds customize its frame through class names and CSS variables.
+ */
+export function GameWindow({ children, className, label, onClose, title }: GameWindowProps) {
+  const closeRef = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    const previouslyFocused = document.activeElement as HTMLElement | null
+    closeRef.current?.focus()
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose()
+    }
+
+    window.addEventListener('keydown', closeOnEscape)
+    return () => {
+      window.removeEventListener('keydown', closeOnEscape)
+      previouslyFocused?.focus()
+    }
+  }, [onClose])
+
+  return (
+    <div className={cn('game-window-layer', className)}>
+      <button
+        aria-label="Dismiss panel"
+        className="game-window-layer__backdrop"
+        onClick={onClose}
+        type="button"
+      />
+      <section aria-label={label} aria-modal="true" className="game-window" role="dialog">
+        <div className="game-window__header">
+          <h2>{title}</h2>
+          <GameButton
+            ref={closeRef}
+            aria-label="Close panel"
+            onClick={onClose}
+            size="sm"
+            variant="icon"
+          >
+            ×
+          </GameButton>
+        </div>
+        <div className="game-window__content">{children}</div>
+      </section>
+    </div>
+  )
+}

@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 
 import {
-  CalamineMeter,
+  ArchetypeCard,
   DialogueChoice,
   DialogueChoiceGroup,
   GAME_ICON_NAMES,
@@ -34,10 +34,11 @@ import {
   PlayerIdentity,
   ResourceCounter,
   StatBar,
-  SurvieGauge,
-  VocationCard,
-  VocationEmblem,
 } from '@/components/ui/grimoire'
+
+import { CalamineMeter } from '../(game)/velkhar/_components/CalamineMeter/CalamineMeter'
+import { SurvieGauge } from '../(game)/velkhar/_components/SurvieGauge/SurvieGauge'
+import { VocationEmblem } from '../(game)/velkhar/_components/VocationEmblem/VocationEmblem'
 
 import './ui-kit-preview.css'
 
@@ -136,7 +137,7 @@ export default function UiKitPreviewPage() {
               <GameTextarea placeholder="Écrivez votre légende…" />
             </GameField>
           </GamePanel>
-          <GamePanel variant="sidebar" tone="cendre" padding="sm">
+          <GamePanel variant="sidebar" tone="ember" padding="sm">
             <h3>Héritage</h3>
             <p>Votre passé forge votre destinée, mais vos choix écriront votre légende.</p>
           </GamePanel>
@@ -147,9 +148,9 @@ export default function UiKitPreviewPage() {
         <h2>Variantes · Création de personnage</h2>
         <div className="ui-kit-preview__character-kit">
           <GamePanel
-            className="ui-kit-preview__character-form"
+            className="ui-kit-preview__form-frame-legacy"
             padding="none"
-            variant="character-form"
+            variant="form-frame-legacy"
           >
             <div className="ui-kit-preview__character-stepper">
               <GameStepper
@@ -157,7 +158,7 @@ export default function UiKitPreviewPage() {
                 currentId="identity"
                 items={steps}
                 orientation="horizontal"
-                variant="character"
+                variant="creation"
               />
             </div>
             <div className="ui-kit-preview__character-content">
@@ -166,16 +167,16 @@ export default function UiKitPreviewPage() {
                 title="Identité"
               />
               <GameField label="Nom du personnage">
-                <GameInput placeholder="Entrez votre nom…" variant="character" />
+                <GameInput placeholder="Entrez votre nom…" variant="framed" />
               </GameField>
             </div>
           </GamePanel>
 
           <GamePanel
             as="aside"
-            className="ui-kit-preview__character-aside"
+            className="ui-kit-preview__aside-frame-legacy"
             padding="none"
-            variant="character-aside"
+            variant="aside-frame-legacy"
           >
             <span className="ui-kit-preview__character-medallion">
               <GameIcon decorative name="book" size={32} />
@@ -194,9 +195,9 @@ export default function UiKitPreviewPage() {
         </p>
         <div className="ui-kit-preview__character-kit ui-kit-preview__character-kit--v2">
           <GamePanel
-            className="ui-kit-preview__character-form ui-kit-preview__character-form--v2"
+            className="ui-kit-preview__form-frame-legacy ui-kit-preview__form-frame-legacy--v2"
             padding="none"
-            variant="character-form-v2"
+            variant="form-frame"
           >
             <div className="ui-kit-preview__character-stepper ui-kit-preview__character-stepper--v2">
               <GameStepper
@@ -204,7 +205,7 @@ export default function UiKitPreviewPage() {
                 currentId="identity"
                 items={steps}
                 orientation="horizontal"
-                variant="character"
+                variant="creation"
               />
             </div>
             <div className="ui-kit-preview__character-content">
@@ -213,16 +214,16 @@ export default function UiKitPreviewPage() {
                 title="Identité"
               />
               <GameField label="Nom du personnage">
-                <GameInput placeholder="Entre ton nom…" variant="character-v2" />
+                <GameInput placeholder="Entre ton nom…" variant="framed-v2" />
               </GameField>
             </div>
           </GamePanel>
 
           <GamePanel
             as="aside"
-            className="ui-kit-preview__character-aside ui-kit-preview__character-aside--v2"
+            className="ui-kit-preview__aside-frame-legacy ui-kit-preview__aside-frame-legacy--v2"
             padding="none"
-            variant="character-aside-v2"
+            variant="aside-frame"
           >
             <span className="ui-kit-preview__character-medallion">
               <GameIcon decorative name="book" size={32} />
@@ -300,7 +301,7 @@ export default function UiKitPreviewPage() {
       <section className="ui-kit-preview__section">
         <h2>Structure et navigation</h2>
         <GameTopBar
-          variant="velkhar"
+          variant="transparent"
           start={<GameBrand decorative size="sm" variant="lockup" />}
           center={<span>Velkhar · Le seuil de L’Aveugle</span>}
           end={<GameIcon decorative name="key" size={24} />}
@@ -368,7 +369,7 @@ export default function UiKitPreviewPage() {
         <h2>HUD</h2>
         <div className="ui-kit-preview__hud-grid">
           <HudFrame variant="horizontal">
-            <StatBar label="Sang" value={12} max={14} tone="sang" />
+            <StatBar label="Sang" value={12} max={14} tone="danger" />
           </HudFrame>
           <SurvieGauge
             soif={{ value: 8, max: 10 }}
@@ -383,14 +384,14 @@ export default function UiKitPreviewPage() {
               icon={<GameIcon decorative name="water" size={24} />}
               label="Soif"
               max={100}
-              tone="souffle"
+              tone="aqua"
               value={78}
             />
             <GameProgressRing
               icon={<GameIcon decorative name="hunger" size={24} />}
               label="Faim"
               max={100}
-              tone="cendre"
+              tone="ember"
               value={60}
             />
             <GameProgressRing
@@ -428,26 +429,26 @@ export default function UiKitPreviewPage() {
       <section className="ui-kit-preview__section">
         <h2>Vocations</h2>
         <div className="ui-kit-preview__cards">
-          <VocationCard
+          <ArchetypeCard
             description="Lit les routes, le vent et les dettes d’hospitalité."
             id="marcheur-du-sel"
             illustration={<VocationEmblem decorative name="marcheur-du-sel" />}
             title="Marcheur-du-Sel"
           />
-          <VocationCard
+          <ArchetypeCard
             description="Traverse les secrets, les contrats et les ombres sans laisser de trace."
             id="lame-ombre"
             illustration={<VocationEmblem decorative name="lame-ombre" />}
             title="Lame-Ombre"
           />
-          <VocationCard
+          <ArchetypeCard
             id="veilleur"
             title="Le Veilleur"
             description="Déchiffre les ruines, les glyphes et le savoir archontique enfoui."
             illustration={<VocationEmblem decorative name="veilleur" />}
             selected
           />
-          <VocationCard
+          <ArchetypeCard
             id="tisse-verbe"
             title="Le Tisse-Verbe"
             description="Éveille les artefacts par les mots et accepte le prix de la Cendre."
