@@ -9,7 +9,7 @@ export interface GameTopBarProps extends HTMLAttributes<HTMLElement> {
   center?: ReactNode
   end?: ReactNode
   label?: string
-  variant?: 'default' | 'velkhar'
+  variant?: 'default' | 'transparent'
 }
 
 export function GameTopBar({

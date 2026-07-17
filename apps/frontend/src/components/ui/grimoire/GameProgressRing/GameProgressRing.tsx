@@ -2,7 +2,7 @@ import type { CSSProperties, ReactNode } from 'react'
 
 import './game-progress-ring.css'
 
-export type GameProgressRingTone = 'gold' | 'sang' | 'souffle' | 'cendre'
+export type GameProgressRingTone = 'gold' | 'danger' | 'aqua' | 'ember'
 export type GameProgressRingSize = 'sm' | 'md' | 'lg'
 
 export interface GameProgressRingProps {

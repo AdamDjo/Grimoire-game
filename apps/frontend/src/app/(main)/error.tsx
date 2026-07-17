@@ -1,6 +1,6 @@
 'use client'
 
-import { SystemState } from '@/components/system-state/SystemState'
+import { SystemState } from '@/components/system/SystemState/SystemState'
 import { GameButton } from '@/components/ui/grimoire/GameButton/GameButton'
 
 interface MainErrorProps {

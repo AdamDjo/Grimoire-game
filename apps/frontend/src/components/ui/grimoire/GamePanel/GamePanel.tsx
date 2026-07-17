@@ -13,12 +13,12 @@ export type GamePanelVariant =
   | 'compact'
   | 'header'
   | 'footer'
-  | 'character-form'
-  | 'character-aside'
-  | 'character-form-v2'
-  | 'character-aside-v2'
-  | 'aveugle-dialogue'
-export type GamePanelTone = 'neutral' | 'gold' | 'blood' | 'soul' | 'cendre'
+  | 'form-frame-legacy'
+  | 'aside-frame-legacy'
+  | 'form-frame'
+  | 'aside-frame'
+  | 'dialogue-frame'
+export type GamePanelTone = 'neutral' | 'gold' | 'danger' | 'aqua' | 'ember'
 export type GamePanelPadding = 'none' | 'sm' | 'md' | 'lg'
 
 export interface GamePanelProps extends HTMLAttributes<HTMLElement> {

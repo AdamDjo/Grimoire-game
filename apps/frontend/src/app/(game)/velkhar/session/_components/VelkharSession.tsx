@@ -1,0 +1,265 @@
+'use client'
+
+import { getPeople, getVocation } from '@grimoire/shared'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useCallback, useEffect, useMemo, useState, type KeyboardEvent } from 'react'
+
+import { GameAvatar } from '@/components/ui/grimoire/GameAvatar/GameAvatar'
+import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
+import { GameSceneLayout } from '@/components/ui/grimoire/GameSceneLayout/GameSceneLayout'
+import { GameTopBar } from '@/components/ui/grimoire/GameTopBar/GameTopBar'
+import { LocationIdentity } from '@/components/ui/grimoire/LocationIdentity/LocationIdentity'
+import { NarrativeComposer } from '@/components/ui/grimoire/NarrativeComposer/NarrativeComposer'
+import { PlayerIdentity } from '@/components/ui/grimoire/PlayerIdentity/PlayerIdentity'
+import { SoftSignupPrompt } from '@/features/auth/components/SoftSignupPrompt/SoftSignupPrompt'
+import { ChronicleEndExperience } from '@/features/chronicle/components/ChronicleEndExperience'
+import { gameSessionApi } from '@/features/game-session/api/game-session-api'
+import { ChoiceList } from '@/features/game-session/components/ChoiceList'
+import { ConsequenceList } from '@/features/game-session/components/ConsequenceList'
+import { DiceRoll } from '@/features/game-session/components/DiceRoll'
+import { NarrativePanel } from '@/features/game-session/components/NarrativePanel'
+import { SourceBadge } from '@/features/game-session/components/SourceBadge'
+import { useGameSession } from '@/features/game-session/hooks/use-game-session'
+
+import { VELKHAR_WORLD } from '../../_config/velkhar-world'
+
+import { VelkharSessionToolPanel, type VelkharSessionTool } from './VelkharSessionToolPanel'
+import { VelkharSurvivalHud } from './VelkharSurvivalHud'
+
+import type {
+  Character,
+  GameNotification,
+  Locale,
+  SceneResponse,
+  SurvivalStats,
+} from '@grimoire/shared'
+
+import '../_theme/velkhar-session.css'
+import '@/features/chronicle/chronicle.css'
+
+interface VelkharSessionProps {
+  initialCharacter: Character
+  locale?: Locale
+}
+
+function readSurvival(stats: Record<string, number>, previous: SurvivalStats): SurvivalStats {
+  return {
+    hp: stats.hp ?? previous.hp,
+    maxHp: stats.maxHp ?? previous.maxHp,
+    thirst: stats.thirst ?? previous.thirst,
+    hunger: stats.hunger ?? previous.hunger,
+    energy: stats.energy ?? previous.energy,
+    calamine: stats.calamine ?? previous.calamine,
+  }
+}
+
+function formatChange(value: number): string {
+  return value > 0 ? `+${value}` : `${value}`
+}
+
+function consequenceMessages(response: SceneResponse | null): string[] {
+  if (!response) return []
+
+  const messages = response.notifications.map(
+    (notification: GameNotification) => notification.message
+  )
+  const consequences = response.scene.consequences
+
+  if (!consequences) return messages
+
+  for (const [stat, value] of Object.entries(consequences.survivalChanges ?? {})) {
+    messages.push(`${stat}: ${formatChange(value)}`)
+  }
+  for (const item of consequences.itemsGained ?? []) messages.push(`Found: ${item}`)
+  for (const item of consequences.itemsLost ?? []) messages.push(`Lost: ${item}`)
+  if (consequences.ironGained) messages.push(`Iron: ${formatChange(consequences.ironGained)}`)
+
+  return messages
+}
+
+/** Velkhar composition for the shared game-session controller and components. */
+export function VelkharSession({ initialCharacter, locale = 'en' }: VelkharSessionProps) {
+  const [freeAction, setFreeAction] = useState('')
+  const [openTool, setOpenTool] = useState<VelkharSessionTool | null>(null)
+  const reduceWorldState = useCallback(
+    (previous: SurvivalStats, response: SceneResponse) =>
+      readSurvival(response.updatedStats, previous),
+    []
+  )
+  const session = useGameSession<SurvivalStats, SceneResponse>({
+    api: gameSessionApi,
+    initialWorldState: initialCharacter.stats.survival,
+    locale,
+    reduceWorldState,
+    resumeHref: `${VELKHAR_WORLD.routes.session}/resume`,
+  })
+  const abandonSession = session.abandon
+  const closeTool = useCallback(() => setOpenTool(null), [])
+
+  const people = getPeople(initialCharacter.people)
+  const vocation = getVocation(initialCharacter.vocation)
+  const descriptor = [people?.name.en, vocation?.name.en].filter(Boolean).join(' · ')
+  const narrative = session.scene?.narrative ?? 'The salt road stretches ahead…'
+  const notifications = useMemo(() => consequenceMessages(session.response), [session.response])
+
+  useEffect(() => {
+    setFreeAction('')
+  }, [session.turn])
+
+  const submitFreeAction = useCallback(
+    (draft = freeAction) => {
+      const action = draft.trim()
+      if (!action) return
+      session.submitFreeAction(action)
+    },
+    [freeAction, session]
+  )
+
+  const handleComposerKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLTextAreaElement>) => {
+      if (event.key !== 'Enter' || event.shiftKey) return
+      event.preventDefault()
+      submitFreeAction(event.currentTarget.value)
+    },
+    [submitFreeAction]
+  )
+
+  const handleAbandon = useCallback(async () => {
+    const abandoned = await abandonSession()
+    if (abandoned) closeTool()
+  }, [abandonSession, closeTool])
+
+  return (
+    <>
+      <GameSceneLayout
+        className="velkhar-session"
+        variant="immersive"
+        background={
+          <Image
+            alt={VELKHAR_WORLD.session.backgroundAlt}
+            className="velkhar-session__background"
+            fill
+            priority
+            sizes="100vw"
+            src={session.scene?.imageUrl ?? VELKHAR_WORLD.session.fallbackBackground}
+          />
+        }
+        top={
+          <GameTopBar
+            className="velkhar-session__topbar"
+            variant="transparent"
+            start={
+              <LocationIdentity
+                icon={<GameIcon decorative name="compass" size={32} />}
+                place={session.scene?.location ?? 'The Salt Road'}
+                world={VELKHAR_WORLD.name}
+              />
+            }
+            center={
+              <PlayerIdentity
+                avatar={
+                  <GameAvatar alt="" size="sm" src="/ui-kit/icons/stranger.webp" state="active" />
+                }
+                compact
+                name={initialCharacter.name}
+                subtitle={descriptor}
+              />
+            }
+            end={
+              <div className="velkhar-session__topbar-end">
+                {session.source ? <SourceBadge source={session.source} /> : null}
+                <Link href={`${VELKHAR_WORLD.routes.aveugle}?return=run`}>
+                  Return to the Blind One
+                </Link>
+              </div>
+            }
+          />
+        }
+        main={
+          <main className="velkhar-session__main">
+            <div className="velkhar-session__stage" key={session.scene?.id ?? 'opening'}>
+              <ConsequenceList messages={notifications} />
+
+              {session.limitReached ? (
+                <div className="velkhar-session__state" role="alert">
+                  <GameIcon decorative name="lock" size={48} />
+                  <h1>Your Chronicle is waiting</h1>
+                  <p>Create a free account to keep this run and continue playing.</p>
+                  <Link href="/signup">Create account</Link>
+                </div>
+              ) : session.error ? (
+                <div className="velkhar-session__state" role="alert">
+                  <GameIcon decorative name={session.online ? 'warning' : 'hourglass'} size={48} />
+                  <h1>
+                    {session.online ? 'The Game Master fell silent' : 'The road is out of reach'}
+                  </h1>
+                  <p>{session.error}</p>
+                  <button type="button" onClick={session.retry} disabled={!session.online}>
+                    Try again
+                  </button>
+                </div>
+              ) : session.gameOver ? (
+                <ChronicleEndExperience sessionId={session.sessionId} turnCount={session.turn} />
+              ) : (
+                <>
+                  <NarrativePanel narrative={narrative} loading={session.loading} />
+
+                  {session.roll ? <DiceRoll key={session.turn} roll={session.roll} /> : null}
+
+                  {session.scene ? (
+                    <>
+                      <ChoiceList
+                        choices={session.scene.choices}
+                        disabled={session.loading}
+                        selectedChoiceId={session.selectedChoiceId}
+                        onChoose={session.choose}
+                      />
+
+                      <NarrativeComposer
+                        aria-label="Describe another action"
+                        actionDisabled={session.loading || freeAction.trim().length === 0}
+                        actionLabel="Attempt this action"
+                        maxLength={500}
+                        placeholder="Another action… describe what you want to attempt"
+                        value={freeAction}
+                        onAction={() => submitFreeAction()}
+                        onChange={(event) => setFreeAction(event.target.value)}
+                        onKeyDown={handleComposerKeyDown}
+                      />
+                      <p className="velkhar-session__composer-hint">
+                        Enter to act · Shift + Enter for a new line
+                      </p>
+                    </>
+                  ) : null}
+                </>
+              )}
+            </div>
+          </main>
+        }
+        bottom={
+          <VelkharSurvivalHud
+            attributes={initialCharacter.stats.attributes}
+            inventory={session.inventory}
+            survival={session.worldState}
+            onOpenCharacter={() => setOpenTool('character')}
+            onOpenInventory={() => setOpenTool('inventory')}
+            onOpenMenu={() => setOpenTool('menu')}
+          />
+        }
+      />
+      <VelkharSessionToolPanel
+        character={initialCharacter}
+        ending={session.ending}
+        iron={session.response?.updatedStats.iron ?? null}
+        inventory={session.inventory}
+        openTool={openTool}
+        source={session.source}
+        survival={session.worldState}
+        onAbandon={handleAbandon}
+        onClose={closeTool}
+      />
+      <SoftSignupPrompt />
+    </>
+  )
+}

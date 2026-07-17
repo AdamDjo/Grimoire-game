@@ -1,5 +1,6 @@
 import { Card, MediaLayer } from '@/components/ui'
 import { GameLink } from '@/components/ui/game-link'
+import { WORLD_ROUTES } from '@/config/worlds'
 
 import { GAMEPLAY_CARDS, GAMEPLAY_COPY, LANDING_MEDIA } from '../../_data/landing-content'
 
@@ -64,7 +65,7 @@ export function SectionGameplay() {
         <div data-motion="reveal">
           <GameLink
             data-magnetic
-            href="/velkhar/aveugle?transition=home"
+            href={`${WORLD_ROUTES.velkhar.aveugle}?transition=home`}
             prefetch={false}
             variant="landing-gameplay"
           >

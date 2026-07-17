@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
-import { CalamineMeter } from './CalamineMeter/CalamineMeter'
+import { ArchetypeCard } from './ArchetypeCard/ArchetypeCard'
 import { DialogueChoice } from './DialogueChoice/DialogueChoice'
 import { DialogueChoiceGroup } from './DialogueChoiceGroup/DialogueChoiceGroup'
 import { GameAvatar } from './GameAvatar/GameAvatar'
@@ -24,6 +24,7 @@ import { GameStepper } from './GameStepper/GameStepper'
 import { GameSurface } from './GameSurface/GameSurface'
 import { GameTextarea } from './GameTextarea/GameTextarea'
 import { GameTopBar } from './GameTopBar/GameTopBar'
+import { GameWindow } from './GameWindow/GameWindow'
 import { HudFrame } from './HudFrame/HudFrame'
 import { InventoryQuickbar } from './InventoryQuickbar/InventoryQuickbar'
 import { InventorySlot } from './InventorySlot/InventorySlot'
@@ -34,9 +35,6 @@ import { NarrativePassage } from './NarrativePassage/NarrativePassage'
 import { PlayerIdentity } from './PlayerIdentity/PlayerIdentity'
 import { ResourceCounter } from './ResourceCounter/ResourceCounter'
 import { StatBar } from './StatBar/StatBar'
-import { SurvieGauge } from './SurvieGauge/SurvieGauge'
-import { VocationCard } from './VocationCard/VocationCard'
-import { VocationEmblem } from './VocationEmblem/VocationEmblem'
 
 vi.mock('next/image', () => ({
   default: ({
@@ -87,7 +85,7 @@ describe('Grimoire UI primitives', () => {
   })
 
   it('borne la valeur exposée par StatBar', () => {
-    render(<StatBar label="Sang" value={18} max={14} tone="sang" />)
+    render(<StatBar label="Sang" value={18} max={14} tone="danger" />)
 
     const progressbar = screen.getByRole('progressbar', { name: 'Sang' })
     expect(progressbar).toHaveAttribute('aria-valuenow', '14')
@@ -194,6 +192,21 @@ describe('Grimoire UI primitives', () => {
     expect(screen.getByRole('button', { name: 'Valider l’action' })).toBeDisabled()
   })
 
+  it('ferme une GameWindow partagée avec Escape', async () => {
+    const user = userEvent.setup()
+    const handleClose = vi.fn()
+
+    render(
+      <GameWindow label="Inventaire" onClose={handleClose} title="Sac">
+        Contenu
+      </GameWindow>
+    )
+
+    expect(screen.getByRole('dialog', { name: 'Inventaire' })).toBeInTheDocument()
+    await user.keyboard('{Escape}')
+    expect(handleClose).toHaveBeenCalledOnce()
+  })
+
   it('expose les repères sémantiques de scène et de navigation', () => {
     render(
       <GameSceneLayout
@@ -214,12 +227,8 @@ describe('Grimoire UI primitives', () => {
     render(
       <GameHudDock>
         <HudFrame active>État</HudFrame>
-        <CalamineMeter max={100} value={32} />
-        <SurvieGauge
-          faim={{ value: 60, max: 100 }}
-          fatigue={{ value: 45, max: 100 }}
-          soif={{ value: 78, max: 100 }}
-        />
+        <StatBar label="Vitalité" max={100} tone="danger" value={32} />
+        <GameProgressRing label="Fatigue" max={100} tone="ember" value={45} />
         <ResourceCounter label="Cendres" value={127} />
         <InventoryQuickbar>
           <InventorySlot label="Potion" />
@@ -228,8 +237,8 @@ describe('Grimoire UI primitives', () => {
     )
 
     expect(screen.getByRole('complementary', { name: 'État du personnage' })).toBeInTheDocument()
-    expect(screen.getByRole('progressbar', { name: 'Calamine' })).toBeInTheDocument()
-    expect(screen.getByRole('region', { name: 'Survie' })).toBeInTheDocument()
+    expect(screen.getByRole('progressbar', { name: 'Vitalité' })).toBeInTheDocument()
+    expect(screen.getByRole('progressbar', { name: 'Fatigue' })).toBeInTheDocument()
     expect(screen.getByLabelText('Cendres : 127')).toBeInTheDocument()
     expect(screen.getByRole('toolbar', { name: 'Raccourcis d’inventaire' })).toBeInTheDocument()
   })
@@ -243,7 +252,7 @@ describe('Grimoire UI primitives', () => {
         <GameSectionHeading level={3} title="Héritage" />
         <NarrativePassage dropCap>Ton passé forge ta destinée.</NarrativePassage>
         <MemoryBadge title="Le serment" visual={<span>Souvenir</span>} />
-        <VocationCard
+        <ArchetypeCard
           description="Une voie forgée dans les cendres."
           id="sentinelle"
           onSelect={handleSelect}
@@ -269,13 +278,5 @@ describe('Grimoire UI primitives', () => {
     expect(
       screen.getByRole('img', { name: 'Portrait d’Aerion' }).closest('.game-avatar')
     ).toHaveClass('game-avatar--selected')
-  })
-
-  it('expose un symbole de vocation accessible ou décoratif', () => {
-    const { rerender } = render(<VocationEmblem name="marcheur-du-sel" />)
-    expect(screen.getByRole('img', { name: 'Symbole du Marcheur-du-Sel' })).toBeInTheDocument()
-
-    rerender(<VocationEmblem decorative name="lame-ombre" />)
-    expect(screen.queryByRole('img')).not.toBeInTheDocument()
   })
 })

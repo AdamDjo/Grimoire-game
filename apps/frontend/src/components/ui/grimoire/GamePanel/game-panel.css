@@ -74,46 +74,46 @@
   min-height: 7rem;
 }
 
-.game-panel--character-form::before,
-.game-panel--character-aside::before,
-.game-panel--character-form-v2::before,
-.game-panel--character-aside-v2::before,
-.game-panel--aveugle-dialogue::before {
+.game-panel--form-frame-legacy::before,
+.game-panel--aside-frame-legacy::before,
+.game-panel--form-frame::before,
+.game-panel--aside-frame::before,
+.game-panel--dialogue-frame::before {
   border: 0;
   filter: none;
   inset: 0;
 }
 
-.game-panel--character-form::before {
+.game-panel--form-frame-legacy::before {
   background: url('/ui-kit/character-create/character-form-frame.webp') center / 100% 100% no-repeat;
 }
 
-.game-panel--character-aside::before {
+.game-panel--aside-frame-legacy::before {
   background: url('/ui-kit/character-create/character-aside-frame.webp') center / 100% 100%
     no-repeat;
 }
 
-.game-panel--character-form-v2::before {
+.game-panel--form-frame::before {
   background: url('/ui-kit/character-create/character-form-frame-v2.webp') center / 100% 100%
     no-repeat;
 }
 
-.game-panel--aveugle-dialogue::before {
+.game-panel--dialogue-frame::before {
   background: url('/ui-kit/character-create/character-form-frame-v2.webp') center / 100% 100%
     no-repeat;
   z-index: 0;
 }
 
-.game-panel--character-aside-v2::before {
+.game-panel--aside-frame::before {
   background: url('/ui-kit/character-create/character-aside-frame-v2.webp') center / 100% 100%
     no-repeat;
 }
 
-.game-panel--character-form::after,
-.game-panel--character-aside::after,
-.game-panel--character-form-v2::after,
-.game-panel--character-aside-v2::after,
-.game-panel--aveugle-dialogue::after {
+.game-panel--form-frame-legacy::after,
+.game-panel--aside-frame-legacy::after,
+.game-panel--form-frame::after,
+.game-panel--aside-frame::after,
+.game-panel--dialogue-frame::after {
   display: none;
 }
 
@@ -142,7 +142,7 @@
   filter: brightness(1.08) saturate(1.12);
 }
 
-.game-panel--blood {
+.game-panel--danger {
   --game-panel-accent: var(--blood, #c0392b);
   --game-panel-accent-light: color-mix(
     in srgb,
@@ -151,7 +151,7 @@
   );
 }
 
-.game-panel--soul {
+.game-panel--aqua {
   --game-panel-accent: var(--soul, #35c4ac);
   --game-panel-accent-light: color-mix(
     in srgb,
@@ -160,7 +160,7 @@
   );
 }
 
-.game-panel--cendre {
+.game-panel--ember {
   --game-panel-accent: var(--cendre, #e3b341);
   --game-panel-accent-light: color-mix(
     in srgb,
@@ -206,25 +206,25 @@
 }
 
 @media (max-width: 900px) {
-  .game-panel--character-aside::before {
+  .game-panel--aside-frame-legacy::before {
     background-image: url('/ui-kit/character-create/character-aside-frame-mobile.webp');
   }
 
-  .game-panel--character-aside-v2::before {
+  .game-panel--aside-frame::before {
     background-image: url('/ui-kit/character-create/character-aside-frame-v2-mobile.webp');
   }
 
-  .game-panel--aveugle-dialogue::before {
+  .game-panel--dialogue-frame::before {
     background-image: url('/ui-kit/character-create/character-form-frame-v2-mobile.webp');
   }
 }
 
 @media (max-width: 640px) {
-  .game-panel--character-form::before {
+  .game-panel--form-frame-legacy::before {
     background-image: url('/ui-kit/character-create/character-form-frame-mobile.webp');
   }
 
-  .game-panel--character-form-v2::before {
+  .game-panel--form-frame::before {
     background-image: url('/ui-kit/character-create/character-form-frame-v2-mobile.webp');
   }
 

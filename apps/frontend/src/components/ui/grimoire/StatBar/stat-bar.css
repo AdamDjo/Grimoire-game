@@ -8,17 +8,17 @@
   width: 100%;
 }
 
-.stat-bar--sang {
+.stat-bar--danger {
   --stat-bar-color: var(--blood, #c0392b);
   --stat-bar-light: color-mix(in srgb, var(--blood, #c0392b) 68%, var(--parchment, #e8dcc0));
 }
 
-.stat-bar--souffle {
+.stat-bar--aqua {
   --stat-bar-color: var(--soul, #35c4ac);
   --stat-bar-light: color-mix(in srgb, var(--soul, #35c4ac) 68%, var(--parchment, #e8dcc0));
 }
 
-.stat-bar--cendre {
+.stat-bar--ember {
   --stat-bar-color: var(--cendre, #e3b341);
   --stat-bar-light: color-mix(in srgb, var(--cendre, #e3b341) 72%, var(--parchment, #e8dcc0));
 }

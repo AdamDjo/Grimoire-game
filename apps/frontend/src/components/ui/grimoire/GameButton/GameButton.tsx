@@ -16,7 +16,7 @@ export type GameButtonVariant =
   | 'landing'
   | 'landing-ghost'
   | 'landing-gameplay'
-export type GameButtonTone = 'gold' | 'blood' | 'soul' | 'cendre'
+export type GameButtonTone = 'gold' | 'danger' | 'aqua' | 'ember'
 export type GameButtonSize = 'sm' | 'md' | 'lg'
 
 export interface GameButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

@@ -11,7 +11,7 @@ export interface GameInputProps extends InputHTMLAttributes<HTMLInputElement> {
   trailingAction?: ReactNode
   invalid?: boolean
   inputClassName?: string
-  variant?: 'default' | 'character' | 'character-v2'
+  variant?: 'default' | 'framed' | 'framed-v2'
 }
 
 export const GameInput = forwardRef<HTMLInputElement, GameInputProps>(function GameInput(
