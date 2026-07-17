@@ -606,6 +606,16 @@ body:has(.character-create) .main-navigation {
   text-wrap: pretty;
 }
 
+.character-create__summary-error {
+  color: var(--blood, #c0392b);
+  font-family: var(--font-game-ui);
+  font-size: var(--text-game-body-sm);
+  line-height: 1.55;
+  margin: 0 auto;
+  max-width: 56ch;
+  text-align: center;
+}
+
 .character-create__summary-actions {
   align-items: center;
   display: flex;

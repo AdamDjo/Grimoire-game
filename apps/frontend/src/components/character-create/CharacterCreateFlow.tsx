@@ -23,6 +23,7 @@ import {
   getPeopleOption,
   getVocationOption,
 } from './_data/character-create-options'
+import { createCharacter } from './_lib/api'
 import {
   CHARACTER_CREATE_STEPS,
   CHARACTER_DRAFT_STORAGE_KEY,
@@ -149,6 +150,7 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
   const [isDirty, setIsDirty] = useState(false)
   const [announcement, setAnnouncement] = useState('')
   const [previewedVocationId, setPreviewedVocationId] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const completedSteps = useMemo(() => getCompletedSteps(currentStep, draft), [currentStep, draft])
   const currentMeta = STEP_CONTENT[currentStep]
@@ -266,12 +268,30 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
     moveToStep('identity')
   }
 
-  const finishCreation = () => {
+  const finishCreation = async () => {
     const result = createCharacterResult(draft)
-    window.localStorage.setItem(CHARACTER_RESULT_STORAGE_KEY, JSON.stringify(result))
-    window.sessionStorage.removeItem(CHARACTER_DRAFT_STORAGE_KEY)
-    setIsDirty(false)
-    router.push(buildAveugleHref(campaignId, true))
+    setError(null)
+    setIsSubmitting(true)
+
+    try {
+      await createCharacter(result)
+      // Kept as the hub's client-side read model (`aveugle-hub-model.ts`) —
+      // the backend `Character` created above is now the source of truth,
+      // this local copy only drives the Forge/hub display until the hub
+      // reads the character from the API too.
+      window.localStorage.setItem(CHARACTER_RESULT_STORAGE_KEY, JSON.stringify(result))
+      window.sessionStorage.removeItem(CHARACTER_DRAFT_STORAGE_KEY)
+      setIsDirty(false)
+      router.push(buildAveugleHref(campaignId, true))
+    } catch (submissionError) {
+      setError(
+        submissionError instanceof Error
+          ? submissionError.message
+          : 'L’Aveugle n’a pas pu retenir ce portrait. Réessaie.'
+      )
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const leaveCreation = () => {
@@ -581,11 +601,22 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                       hors de cette interface.
                     </p>
 
+                    {error ? (
+                      <p className="character-create__summary-error" role="alert">
+                        {error}
+                      </p>
+                    ) : null}
+
                     <div className="character-create__summary-actions">
-                      <GameButton onClick={replayCreation} size="sm" variant="ghost">
+                      <GameButton
+                        disabled={isSubmitting}
+                        onClick={replayCreation}
+                        size="sm"
+                        variant="ghost"
+                      >
                         Rejouer la création
                       </GameButton>
-                      <GameButton onClick={finishCreation} variant="radiant">
+                      <GameButton loading={isSubmitting} onClick={finishCreation} variant="radiant">
                         Retourner auprès de L’Aveugle
                       </GameButton>
                     </div>

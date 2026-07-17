@@ -82,4 +82,5 @@ export interface CreateCharacterInput {
   people: string;
   vocation: string;
   freeConcept?: string;
+  backstory?: string;
 }

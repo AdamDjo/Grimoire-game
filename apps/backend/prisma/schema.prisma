@@ -62,6 +62,10 @@ model Character {
 
   createdAt DateTime @default(now())
   sessions  GameSession[]
+
+  /// One character per user for now (no multi-character roster yet) — also
+  /// closes the createCharacter() findFirst/create race condition.
+  @@unique([userId])
 }
 
 model GameSession {
