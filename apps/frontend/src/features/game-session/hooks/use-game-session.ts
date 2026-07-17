@@ -45,6 +45,7 @@ export function useGameSession<TWorldState, TResponse extends GameSessionRespons
   resumeHref,
 }: UseGameSessionOptions<TWorldState, TResponse>): UseGameSessionResult<TWorldState, TResponse> {
   const [state, setState] = useState<GameSessionState<TWorldState, TResponse>>({
+    endReason: null,
     ending: false,
     error: null,
     gameOver: false,
@@ -55,6 +56,7 @@ export function useGameSession<TWorldState, TResponse extends GameSessionRespons
     roll: null,
     response: null,
     scene: null,
+    sessionId: null,
     selectedChoiceId: null,
     source: undefined,
     turn: 0,
@@ -77,6 +79,7 @@ export function useGameSession<TWorldState, TResponse extends GameSessionRespons
         ...current,
         error: null,
         ending: false,
+        endReason: response.scene.consequences?.gameOver === true ? 'death' : null,
         gameOver: response.scene.consequences?.gameOver === true,
         inventory: response.updatedInventory,
         limitReached: false,
@@ -84,6 +87,7 @@ export function useGameSession<TWorldState, TResponse extends GameSessionRespons
         roll: response.diceRoll ?? null,
         response,
         scene: response.scene,
+        sessionId: response.scene.sessionId,
         selectedChoiceId: null,
         source: response.source,
         turn: current.turn + 1,
@@ -225,6 +229,7 @@ export function useGameSession<TWorldState, TResponse extends GameSessionRespons
       setState((current) => ({
         ...current,
         ending: false,
+        endReason: 'abandon',
         gameOver: true,
         loading: false,
       }))

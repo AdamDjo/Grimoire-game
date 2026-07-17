@@ -44,6 +44,7 @@ const caveat = Caveat({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://grimoire.game'),
   title: 'GRIMOIRE - Of Ash and Salt',
   description:
     'GRIMOIRE est un roguelike narratif par IA. Explore Velkhar, fais des choix libres, lance les des aux pivots et laisse une trace dans un monde qui se souvient.',
