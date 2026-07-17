@@ -27,6 +27,8 @@ updated: 2026-07-17
 
 ## Gaps v0.1.0
 
+- #167 — unifier l'interface en anglais/français, avec anglais principal et fallback ;
+- #168 — détecter la locale navigateur et la transmettre au contrat IA ;
 - intégrer les contrats réels de l'Auberge lorsque #147 sera livré ;
 - décider avec #152 si le concept libre est livré ou masqué pour v0.1.0 ;
 - configurer le domaine/API/redirects de production avec #161 ;

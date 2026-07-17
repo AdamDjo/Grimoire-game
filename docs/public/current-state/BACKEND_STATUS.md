@@ -30,6 +30,7 @@ updated: 2026-07-17
 - #147 — retirer les fixtures autoritatives de l'Auberge ;
 - #101 — fallback multi-modèles face aux 429 OpenRouter ;
 - #152 — résolution canonique du concept libre ;
+- #168 — locale navigateur BCP-47 validée et cohérence de toutes les sorties IA ;
 - #161 — hébergement API, migrations, secrets, CORS et healthcheck ;
 - #162 — vulnérabilités critiques/hautes ;
 - #129 — golden path contre les services réels.

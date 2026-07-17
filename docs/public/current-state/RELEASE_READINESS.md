@@ -19,6 +19,8 @@ La checklist opérationnelle détaillée vit dans l'issue #163.
 | UI Kit                  | Livré                | #93 / PR #121  |
 | Epic frontend           | En cours             | #123           |
 | Auth/conversion anonyme | PR prête, non mergée | #135 / PR #160 |
+| Interface EN/FR         | À faire              | #167           |
+| Langue IA navigateur    | À faire              | #168           |
 | Epic backend            | En cours             | #165           |
 | Auberge réelle          | En cours             | #147           |
 | Disponibilité IA        | À faire              | #101           |
@@ -35,5 +37,6 @@ World events et échange Souvenir/lore.
 
 ## Go / No-Go
 
-`NO-GO` tant que l'API n'est pas déployée, que les risques critiques ne sont pas traités et que
-le golden path #129 n'est pas vert sur l'environnement de release.
+`NO-GO` tant que l'interface EN/FR et la locale IA ne sont pas cohérentes, que l'API n'est pas
+déployée, que les risques critiques ne sont pas traités et que le golden path #129 n'est pas vert
+sur l'environnement de release.
