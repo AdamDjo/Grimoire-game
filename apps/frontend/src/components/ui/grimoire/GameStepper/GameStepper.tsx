@@ -21,7 +21,7 @@ export interface GameStepperProps {
   onStepChange?: (id: string) => void
   className?: string
   ariaLabel?: string
-  variant?: 'default' | 'character'
+  variant?: 'default' | 'creation'
 }
 
 export function GameStepper({

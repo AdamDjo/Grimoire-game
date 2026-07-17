@@ -2,6 +2,7 @@ import { GameLink } from '@/components/ui/game-link'
 import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
 import { GamePanel } from '@/components/ui/grimoire/GamePanel/GamePanel'
 import { GameSectionHeading } from '@/components/ui/grimoire/GameSectionHeading/GameSectionHeading'
+import { WORLD_ROUTES } from '@/config/worlds'
 import { getAuthHref } from '@/lib/internal-navigation'
 
 import type { DashboardViewModel } from '../../_data/dashboard-view-model'
@@ -57,14 +58,14 @@ export function DashboardContent({ tier, viewModel }: DashboardContentProps) {
           <div className="dashboard-content__actions">
             {viewModel.activeRun ? (
               <GameLink
-                href={`/velkhar/campaign/${viewModel.activeRun.campaignId}`}
+                href={`${WORLD_ROUTES.velkhar.campaign}/${viewModel.activeRun.campaignId}`}
                 trailingIcon={<GameIcon decorative name="arrow" size={24} />}
               >
                 Reprendre le récit
               </GameLink>
             ) : (
               <GameLink
-                href="/velkhar/campaign/nouvelle-chronique"
+                href={`${WORLD_ROUTES.velkhar.campaign}/nouvelle-chronique`}
                 trailingIcon={<GameIcon decorative name="arrow" size={24} />}
               >
                 Franchir le seuil

@@ -1,20 +1,25 @@
+import { WORLD_ROUTES } from '@/config/worlds'
+
 const INTERNAL_ORIGIN = 'https://grimoire.local'
 
 const ALLOWED_DESTINATIONS = [
   '/',
   '/dashboard',
-  '/velkhar/aveugle',
-  '/velkhar/character-create',
-  '/velkhar/world',
+  WORLD_ROUTES.velkhar.aveugle,
+  WORLD_ROUTES.velkhar.characterCreate,
+  WORLD_ROUTES.velkhar.world,
 ] as const
-const ALLOWED_DYNAMIC_DESTINATION = /^\/velkhar\/(campaign|session)\/[^/]+$/
+const ALLOWED_DYNAMIC_DESTINATIONS = [
+  `${WORLD_ROUTES.velkhar.campaign}/`,
+  `${WORLD_ROUTES.velkhar.session}/`,
+] as const
 
 type SearchParamValue = string | string[] | null | undefined
 
 function isAllowedPathname(pathname: string): boolean {
   return (
     ALLOWED_DESTINATIONS.some((destination) => pathname === destination) ||
-    ALLOWED_DYNAMIC_DESTINATION.test(pathname)
+    ALLOWED_DYNAMIC_DESTINATIONS.some((prefix) => pathname.startsWith(prefix))
   )
 }
 

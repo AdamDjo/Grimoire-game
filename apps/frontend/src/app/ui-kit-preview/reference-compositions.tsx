@@ -221,13 +221,13 @@ export function GameSessionComposition() {
 
       <GameHudDock className="ui-kit-proof__session-hud">
         <div className="ui-kit-proof__stats">
-          <StatBar label="Sang" max={14} tone="sang" value={12} />
-          <StatBar label="Souffle" max={10} tone="souffle" value={8} />
-          <StatBar label="Cendre" max={10} tone="cendre" value={6} />
+          <StatBar label="Sang" max={14} tone="danger" value={12} />
+          <StatBar label="Souffle" max={10} tone="aqua" value={8} />
+          <StatBar label="Cendre" max={10} tone="ember" value={6} />
         </div>
         <div className="ui-kit-proof__rings">
-          <GameProgressRing label="Soif" max={100} tone="souffle" value={78} />
-          <GameProgressRing label="Faim" max={100} tone="cendre" value={60} />
+          <GameProgressRing label="Soif" max={100} tone="aqua" value={78} />
+          <GameProgressRing label="Faim" max={100} tone="ember" value={60} />
           <GameProgressRing label="Fatigue" max={100} value={45} />
           <GameProgressRing
             className="ui-kit-proof__calamine-ring"

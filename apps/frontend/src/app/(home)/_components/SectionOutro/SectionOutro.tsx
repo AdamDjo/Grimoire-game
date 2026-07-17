@@ -1,5 +1,6 @@
 import { MediaLayer } from '@/components/ui'
 import { GameLink } from '@/components/ui/game-link'
+import { WORLD_ROUTES } from '@/config/worlds'
 
 import {
   LANDING_FOOTER_LINKS,
@@ -61,7 +62,7 @@ export function SectionOutro() {
         <div data-motion="reveal">
           <GameLink
             data-magnetic
-            href="/velkhar/aveugle?transition=home"
+            href={`${WORLD_ROUTES.velkhar.aveugle}?transition=home`}
             prefetch={false}
             variant="landing"
           >

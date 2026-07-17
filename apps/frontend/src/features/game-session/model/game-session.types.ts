@@ -1,0 +1,85 @@
+import type { Locale } from '@grimoire/shared'
+
+export type GameSessionRiskLevel = 'safe' | 'low' | 'medium' | 'high' | 'deadly'
+
+export interface GameSessionChoice {
+  id: string
+  text: string
+  type: 'action' | 'dialog' | 'combat' | 'flee' | 'use_item' | 'skill'
+  riskLevel?: GameSessionRiskLevel
+}
+
+export interface GameSessionDiceRoll {
+  critical?: 'success' | 'failure' | null
+  modifier: number
+  roll: number
+  success: boolean
+  target: number
+  total: number
+}
+
+export interface GameSessionInventoryItem {
+  id: string
+  name: string
+  quantity: number
+}
+
+export interface GameSessionNotification {
+  message: string
+}
+
+export interface GameSessionScene {
+  choices: GameSessionChoice[]
+  consequences?: {
+    gameOver?: boolean
+  }
+  id: string
+  imageUrl?: string
+  location: string
+  narrative: string
+  sessionId: string
+}
+
+export interface GameSessionResponse {
+  diceRoll?: GameSessionDiceRoll
+  notifications: GameSessionNotification[]
+  scene: GameSessionScene
+  source?: 'ai' | 'stub'
+  updatedInventory: GameSessionInventoryItem[]
+  updatedStats: Record<string, number>
+}
+
+export interface PendingGameAction {
+  choice?: GameSessionChoice
+  freeAction?: string
+}
+
+export interface GameSessionApi<TResponse extends GameSessionResponse = GameSessionResponse> {
+  createSession: (locale: Locale) => Promise<TResponse>
+  postGameAction: (input: {
+    sessionId: string
+    locale: Locale
+    choiceId?: string
+    chosenActionText?: string
+    freeAction?: string
+  }) => Promise<TResponse>
+}
+
+export interface GameSessionState<
+  TWorldState,
+  TResponse extends GameSessionResponse = GameSessionResponse,
+> {
+  error: string | null
+  gameOver: boolean
+  inventory: GameSessionInventoryItem[]
+  limitReached: boolean
+  loading: boolean
+  online: boolean
+  response: TResponse | null
+  roll: GameSessionDiceRoll | null
+  scene: TResponse['scene'] | null
+  selectedChoiceId: string | null
+  source?: GameSessionResponse['source']
+  turn: number
+  worldState: TWorldState
+}

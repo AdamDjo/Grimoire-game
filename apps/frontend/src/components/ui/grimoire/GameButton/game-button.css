@@ -246,7 +246,7 @@
   --game-button-accent-light: var(--gold-light, #f0d48a);
 }
 
-.game-button--blood {
+.game-button--danger {
   --game-button-accent: var(--blood, #c0392b);
   --game-button-accent-light: color-mix(
     in srgb,
@@ -255,7 +255,7 @@
   );
 }
 
-.game-button--soul {
+.game-button--aqua {
   --game-button-accent: var(--soul, #35c4ac);
   --game-button-accent-light: color-mix(
     in srgb,
@@ -264,7 +264,7 @@
   );
 }
 
-.game-button--cendre {
+.game-button--ember {
   --game-button-accent: var(--cendre, #e3b341);
   --game-button-accent-light: color-mix(
     in srgb,

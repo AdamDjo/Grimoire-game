@@ -94,13 +94,13 @@
   z-index: 1;
 }
 
-.game-stepper--character .game-stepper__frame::before {
+.game-stepper--creation .game-stepper__frame::before {
   background-image: url('/ui-kit/character-create/character-medallion.webp');
   filter: grayscale(0.18) brightness(0.8);
   inset: -18%;
 }
 
-.game-stepper--character .game-stepper__item--active .game-stepper__frame::before {
+.game-stepper--creation .game-stepper__item--active .game-stepper__frame::before {
   filter: brightness(1.18) saturate(1.12);
 }
 
@@ -213,7 +213,7 @@
 }
 
 @media (max-width: 720px) {
-  .game-stepper--character .game-stepper__frame::before {
+  .game-stepper--creation .game-stepper__frame::before {
     background-image: url('/ui-kit/character-create/character-medallion-mobile.webp');
   }
 

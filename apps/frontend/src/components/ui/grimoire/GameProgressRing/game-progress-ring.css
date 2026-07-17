@@ -11,9 +11,9 @@
   min-width: var(--game-ring-size);
 }
 
-.game-progress-ring--sang { --game-ring-color: var(--blood); }
-.game-progress-ring--souffle { --game-ring-color: var(--soul); }
-.game-progress-ring--cendre { --game-ring-color: var(--cendre); }
+.game-progress-ring--danger { --game-ring-color: var(--blood); }
+.game-progress-ring--aqua { --game-ring-color: var(--soul); }
+.game-progress-ring--ember { --game-ring-color: var(--cendre); }
 .game-progress-ring--sm { --game-ring-size: 68px; }
 .game-progress-ring--lg { --game-ring-size: 104px; }
 

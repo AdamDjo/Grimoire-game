@@ -14,6 +14,16 @@ source_of_truth: true
 - **Frontend = display only** : aucun calcul de jeu critique côté client.
 - **Shared = contracts** : types, constantes et contrats communs.
 
+## Frontend multi-univers
+
+- Toutes les routes d'un monde sont regroupées sous `app/(game)/<world>/`.
+- Les fonctionnalités partagées entre mondes vivent dans `features/`.
+- Les primitives UI ne connaissent ni les mondes, ni les features, ni les stores métier.
+- Les composants spécifiques à un monde restent colocalisés sous sa route.
+- Les routes publiques des mondes sont centralisées dans `config/worlds.ts`.
+- Direction des imports : `app → features/world components → components/ui`.
+- Détail : [`FRONTEND_ARCHITECTURE.md`](FRONTEND_ARCHITECTURE.md).
+
 ## API
 
 - Toutes les réponses API suivent `{ success, data?, error? }`.
