@@ -1,3 +1,5 @@
+import { useTranslations } from 'next-intl'
+
 import { NarrativePassage } from '@/components/ui/grimoire/NarrativePassage/NarrativePassage'
 
 interface NarrativePanelProps {
@@ -7,6 +9,7 @@ interface NarrativePanelProps {
 
 /** The Game Master's prose remains the visual and reading focus of every turn. */
 export function NarrativePanel({ narrative, loading }: NarrativePanelProps) {
+  const t = useTranslations('Session')
   const paragraphs = narrative.split(/\n{2,}/).filter(Boolean)
 
   return (
@@ -23,7 +26,7 @@ export function NarrativePanel({ narrative, loading }: NarrativePanelProps) {
       </NarrativePassage>
       {loading ? (
         <span className="game-session-narrative__loading" role="status">
-          The world is answering…
+          {t('worldAnswering')}
         </span>
       ) : null}
     </article>

@@ -1,11 +1,13 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 
 import { createClient } from '@/lib/supabase/client'
 
 export function SignOutButton() {
+  const t = useTranslations('Auth')
   const router = useRouter()
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle')
 
@@ -27,10 +29,10 @@ export function SignOutButton() {
   return (
     <div className="auth-sign-out">
       <button disabled={status === 'loading'} onClick={() => void handleSignOut()} type="button">
-        {status === 'loading' ? 'Fermeture de la session…' : 'Se déconnecter'}
+        {status === 'loading' ? t('signingOut') : t('signOut')}
       </button>
       <span aria-live="polite" role={status === 'error' ? 'alert' : 'status'}>
-        {status === 'error' ? 'La déconnexion a échoué. Réessayez.' : null}
+        {status === 'error' ? t('signOutError') : null}
       </span>
     </div>
   )

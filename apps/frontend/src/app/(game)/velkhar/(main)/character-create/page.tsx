@@ -1,10 +1,12 @@
+import { getTranslations } from 'next-intl/server'
+
 import { CharacterCreateFlow } from './_components/CharacterCreateFlow'
 
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = {
-  title: 'La Forge de L’Aveugle · GRIMOIRE',
-  description: 'Créez votre personnage dans le prologue de L’Aveugle.',
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('Forge')
+  return { title: t('metadataTitle'), description: t('metadataDescription') }
 }
 
 interface VelkharCharacterCreatePageProps {

@@ -26,11 +26,12 @@ const EMPTY_DASHBOARD_SNAPSHOT: DashboardSnapshot = {
 export function createDashboardViewModel(
   tier: ViewerTier,
   displayName: string | null,
-  snapshot: DashboardSnapshot = EMPTY_DASHBOARD_SNAPSHOT
+  snapshot: DashboardSnapshot = EMPTY_DASHBOARD_SNAPSHOT,
+  labels: { traveler: string; visitor: string } = { traveler: 'Voyageur', visitor: 'Visiteur' }
 ): DashboardViewModel {
   return {
     activeRun: snapshot.activeRun,
     recentChronicles: snapshot.recentChronicles,
-    viewerLabel: displayName ?? (tier === 'anonymous' ? 'Visiteur' : 'Voyageur'),
+    viewerLabel: displayName ?? (tier === 'anonymous' ? labels.visitor : labels.traveler),
   }
 }

@@ -16,7 +16,7 @@ export function GameTopBar({
   center,
   className = '',
   end,
-  label = 'Navigation principale',
+  label = 'Main navigation',
   start,
   variant = 'default',
   ...props

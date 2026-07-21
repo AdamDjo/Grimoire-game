@@ -1,5 +1,6 @@
 'use client'
 
+import { useLocale, useTranslations } from 'next-intl'
 import { useRef, useState } from 'react'
 
 import { DialogueChoice } from '@/components/ui/grimoire/DialogueChoice/DialogueChoice'
@@ -10,7 +11,11 @@ import { GamePanel } from '@/components/ui/grimoire/GamePanel/GamePanel'
 import { NarrativeComposer } from '@/components/ui/grimoire/NarrativeComposer/NarrativeComposer'
 import { gsap, useGSAP } from '@/lib/gsap-init'
 
-import { AVEUGLE_MEMORIES, AVEUGLE_OMENS, AVEUGLE_TOPICS } from '../_data/aveugle-hub-fixtures'
+import {
+  getAveugleMemories,
+  getAveugleOmens,
+  getAveugleTopics,
+} from '../_data/aveugle-hub-fixtures'
 import { addSeenId, type AubergePreparationState } from '../_lib/auberge-preparation'
 
 import type { AveugleMemoryId, AveugleOmenId, AveugleTopicId } from '../_data/aveugle-hub-fixtures'
@@ -26,12 +31,6 @@ interface AubergeDockProps {
   preparation: AubergePreparationState
 }
 
-const PANEL_META = {
-  dialogue: { icon: 'eye', title: 'L’Aveugle' },
-  memories: { icon: 'memory', title: 'Souvenirs' },
-  omen: { icon: 'moon', title: 'Présage' },
-} as const
-
 export function AubergeDock({
   activePanel,
   isActiveSession,
@@ -40,6 +39,8 @@ export function AubergeDock({
   openingLine,
   preparation,
 }: AubergeDockProps) {
+  const locale = useLocale()
+  const t = useTranslations('Auberge')
   const [selectedTopicId, setSelectedTopicId] = useState<AveugleTopicId | null>(null)
   const [selectedMemoryId, setSelectedMemoryId] = useState<AveugleMemoryId | null>(null)
   const [customAction, setCustomAction] = useState('')
@@ -49,18 +50,25 @@ export function AubergeDock({
   const rootRef = useRef<HTMLDivElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
   const emblemRef = useRef<HTMLDivElement>(null)
+  const topics = getAveugleTopics(locale)
+  const memories = getAveugleMemories(locale)
+  const omens = getAveugleOmens(locale)
+  const panelMeta = {
+    dialogue: { icon: 'eye' as const, title: t('blindOne') },
+    memories: { icon: 'memory' as const, title: t('memories') },
+    omen: { icon: 'moon' as const, title: t('omen') },
+  }[activePanel]
 
-  const selectedTopic = AVEUGLE_TOPICS.find((topic) => topic.id === selectedTopicId)
-  const selectedMemory = AVEUGLE_MEMORIES.find((memory) => memory.id === selectedMemoryId)
-  const selectedOmen = AVEUGLE_OMENS.find((omen) => omen.id === preparation.selectedOmenId)
+  const selectedTopic = topics.find((topic) => topic.id === selectedTopicId)
+  const selectedMemory = memories.find((memory) => memory.id === selectedMemoryId)
+  const selectedOmen = omens.find((omen) => omen.id === preparation.selectedOmenId)
   const dialogueResponse = customResponse ?? selectedTopic?.response ?? openingLine
   const dialogueMode =
     selectedTopic || customResponse ? 'answer' : isComposerOpen ? 'composer' : 'topics'
-  const panelMeta = PANEL_META[activePanel]
-  const unreadTopicCount = AVEUGLE_TOPICS.filter(
+  const unreadTopicCount = topics.filter(
     (topic) => topic.isNew && !preparation.seenTopicIds.includes(topic.id)
   ).length
-  const unreadMemoryCount = AVEUGLE_MEMORIES.filter(
+  const unreadMemoryCount = memories.filter(
     (memory) => memory.isNew && !preparation.seenMemoryIds.includes(memory.id)
   ).length
   const contentKey = [
@@ -150,7 +158,7 @@ export function AubergeDock({
   const submitCustomAction = () => {
     if (!customAction.trim()) return
     setSelectedTopicId(null)
-    setCustomResponse('Garde cette pensée. La route lui donnera un sens.')
+    setCustomResponse(t('customResponse'))
     setIsComposerOpen(false)
     setCustomAction('')
   }
@@ -164,7 +172,7 @@ export function AubergeDock({
 
   return (
     <div ref={rootRef} className="aveugle-hub__dock">
-      <nav className="aveugle-hub__dock-nav" aria-label="Espaces de l’auberge">
+      <nav className="aveugle-hub__dock-nav" aria-label={t('dockNavigation')}>
         <GameButton
           aria-pressed={activePanel === 'dialogue'}
           leadingIcon={<GameIcon decorative name="dialogue" size={24} />}
@@ -172,7 +180,8 @@ export function AubergeDock({
           size="sm"
           variant="ghost"
         >
-          Parler{unreadTopicCount > 0 ? ` · ${unreadTopicCount}` : ''}
+          {t('talk')}
+          {unreadTopicCount > 0 ? ` · ${unreadTopicCount}` : ''}
         </GameButton>
         <GameButton
           aria-pressed={activePanel === 'memories'}
@@ -181,18 +190,19 @@ export function AubergeDock({
           size="sm"
           variant="ghost"
         >
-          Souvenirs{unreadMemoryCount > 0 ? ` · ${unreadMemoryCount}` : ''}
+          {t('memories')}
+          {unreadMemoryCount > 0 ? ` · ${unreadMemoryCount}` : ''}
         </GameButton>
         {!isActiveSession ? (
           <GameButton
-            aria-label={selectedOmen ? 'Présage choisi' : 'Ouvrir les présages'}
+            aria-label={selectedOmen ? t('omenSelected') : t('openOmens')}
             aria-pressed={activePanel === 'omen'}
             leadingIcon={<GameIcon decorative name="moon" size={24} />}
             onClick={() => onActivePanelChange('omen')}
             size="sm"
             variant="ghost"
           >
-            Présage
+            {t('omen')}
           </GameButton>
         ) : null}
       </nav>
@@ -217,22 +227,22 @@ export function AubergeDock({
                 <blockquote aria-live="polite">« {dialogueResponse} »</blockquote>
 
                 {dialogueMode === 'topics' ? (
-                  <DialogueChoiceGroup label="Sujets à aborder avec L’Aveugle">
-                    {AVEUGLE_TOPICS.map((topic) => {
+                  <DialogueChoiceGroup label={t('topicsLabel')}>
+                    {topics.map((topic) => {
                       const isUnread = Boolean(
                         topic.isNew && !preparation.seenTopicIds.includes(topic.id)
                       )
                       return (
                         <DialogueChoice
                           key={topic.id}
-                          aria-label={`${topic.label}${isUnread ? ', nouveau' : ''}`}
+                          aria-label={isUnread ? t('newAria', { label: topic.label }) : topic.label}
                           data-dialogue-action
                           icon={<GameIcon decorative name={topic.icon} size={32} />}
                           onClick={() => selectTopic(topic.id)}
                         >
                           <span className="aveugle-hub__choice-copy">
                             <span>{topic.label}</span>
-                            {isUnread ? <small>Nouveau</small> : null}
+                            {isUnread ? <small>{t('new')}</small> : null}
                           </span>
                         </DialogueChoice>
                       )
@@ -248,7 +258,7 @@ export function AubergeDock({
                     size="sm"
                     variant="ghost"
                   >
-                    Autre question…
+                    {t('otherQuestion')}
                   </GameButton>
                 ) : null}
 
@@ -256,14 +266,14 @@ export function AubergeDock({
                   <div className="aveugle-hub__composer" data-dialogue-action>
                     <NarrativeComposer
                       actionDisabled={!customAction.trim()}
-                      actionLabel="Parler"
+                      actionLabel={t('speak')}
                       onAction={submitCustomAction}
                       onChange={(event) => setCustomAction(event.target.value)}
-                      placeholder="Pose ta question…"
+                      placeholder={t('questionPlaceholder')}
                       value={customAction}
                     />
                     <GameButton onClick={returnToTopics} size="sm" variant="ghost">
-                      Revenir aux sujets
+                      {t('backToTopics')}
                     </GameButton>
                   </div>
                 ) : null}
@@ -280,7 +290,7 @@ export function AubergeDock({
                         size="sm"
                         variant="secondary"
                       >
-                        Approfondir
+                        {t('goDeeper')}
                       </GameButton>
                     ) : null}
                     <GameButton
@@ -289,7 +299,7 @@ export function AubergeDock({
                       size="sm"
                       variant="ghost"
                     >
-                      Autres sujets
+                      {t('otherTopics')}
                     </GameButton>
                   </div>
                 ) : null}
@@ -306,28 +316,30 @@ export function AubergeDock({
                     size="sm"
                     variant="ghost"
                   >
-                    Revoir les souvenirs
+                    {t('reviewMemories')}
                   </GameButton>
                 </>
               ) : (
                 <>
-                  <blockquote>« Ce que tu rapportes ne dort jamais tout à fait. »</blockquote>
-                  <DialogueChoiceGroup label="Souvenirs rapportés à l’auberge">
-                    {AVEUGLE_MEMORIES.map((memory) => {
+                  <blockquote>« {t('memoryIntro')} »</blockquote>
+                  <DialogueChoiceGroup label={t('memoriesLabel')}>
+                    {memories.map((memory) => {
                       const isUnread = Boolean(
                         memory.isNew && !preparation.seenMemoryIds.includes(memory.id)
                       )
                       return (
                         <DialogueChoice
                           key={memory.id}
-                          aria-label={`${memory.title}${isUnread ? ', nouveau' : ''}`}
+                          aria-label={
+                            isUnread ? t('newAria', { label: memory.title }) : memory.title
+                          }
                           data-dialogue-action
                           icon={<GameIcon decorative name={memory.icon} size={32} />}
                           onClick={() => selectMemory(memory.id)}
                         >
                           <span className="aveugle-hub__choice-copy">
                             <span>{memory.title}</span>
-                            {isUnread ? <small>Nouveau</small> : null}
+                            {isUnread ? <small>{t('new')}</small> : null}
                           </span>
                         </DialogueChoice>
                       )
@@ -349,7 +361,7 @@ export function AubergeDock({
                       size="sm"
                       variant="secondary"
                     >
-                      Changer de présage
+                      {t('changeOmen')}
                     </GameButton>
                     <GameButton
                       data-dialogue-action
@@ -357,17 +369,15 @@ export function AubergeDock({
                       size="sm"
                       variant="ghost"
                     >
-                      Parler à L’Aveugle
+                      {t('talkToBlindOne')}
                     </GameButton>
                   </div>
                 </>
               ) : (
                 <>
-                  <blockquote>
-                    « Deux chemins se présentent. Choisis ce que tu veux savoir. »
-                  </blockquote>
-                  <DialogueChoiceGroup label="Présages du prochain run">
-                    {AVEUGLE_OMENS.map((omen) => (
+                  <blockquote>« {t('omenIntro')} »</blockquote>
+                  <DialogueChoiceGroup label={t('omensLabel')}>
+                    {omens.map((omen) => (
                       <DialogueChoice
                         key={omen.id}
                         data-dialogue-action

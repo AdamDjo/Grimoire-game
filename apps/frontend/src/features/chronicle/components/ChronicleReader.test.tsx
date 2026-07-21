@@ -27,14 +27,14 @@ describe('ChronicleReader', () => {
     expect(screen.getByRole('heading', { level: 1, name: CHRONICLE.title })).toBeInTheDocument()
     expect(screen.getByRole('heading', { level: 2, name: 'Le dernier seuil' })).toBeInTheDocument()
     expect(
-      screen.getByRole('img', { name: 'Illustration mélancolique de Velkhar' })
+      screen.getByRole('img', { name: 'melancholic illustration of Velkhar' })
     ).toBeInTheDocument()
-    expect(screen.getByRole('list', { name: 'Moments marquants' })).toHaveTextContent(
+    expect(screen.getByRole('list', { name: 'Defining moments' })).toHaveTextContent(
       'Le puits sans fond'
     )
-    expect(screen.getByRole('link', { name: 'Revenir à l’Aveugle' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Créer un nouveau personnage' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Retrouver mes traces' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Return to The Blind One' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Create a new character' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Find my journeys' })).toBeInTheDocument()
   })
 
   it('copie le lien public avec un retour explicite', async () => {
@@ -43,18 +43,16 @@ describe('ChronicleReader', () => {
     Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } })
     render(<ChronicleReader chronicle={CHRONICLE} />)
 
-    await user.click(screen.getByRole('button', { name: 'Copier le lien' }))
+    await user.click(screen.getByRole('button', { name: 'Copy link' }))
 
     expect(writeText).toHaveBeenCalledWith(window.location.href)
-    expect(screen.getByRole('button', { name: 'Lien copié' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Link copied' })).toBeInTheDocument()
   })
 
   it('ne propose pas de partage inline avant attribution du slug public', () => {
     render(<ChronicleReader chronicle={{ ...CHRONICLE, slug: undefined }} inline />)
 
-    expect(screen.queryByLabelText('Partager cette Chronique')).not.toBeInTheDocument()
-    expect(
-      screen.getByRole('link', { name: 'Garder cette trace gratuitement' })
-    ).toBeInTheDocument()
+    expect(screen.queryByLabelText('Share this Chronicle')).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Keep this journey for free' })).toBeInTheDocument()
   })
 })

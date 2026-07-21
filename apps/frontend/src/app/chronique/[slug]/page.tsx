@@ -1,3 +1,5 @@
+import { getTranslations } from 'next-intl/server'
+
 import { ChroniclePublicPage } from './ChroniclePublicPage'
 
 import type { Metadata } from 'next'
@@ -9,24 +11,25 @@ interface ChroniclePageProps {
 }
 
 export async function generateMetadata({ params }: ChroniclePageProps): Promise<Metadata> {
+  const t = await getTranslations('Chronicle')
   const { slug } = await params
   const canonical = `/chronique/${encodeURIComponent(slug)}`
 
   return {
-    title: 'Une Chronique de Velkhar | GRIMOIRE',
-    description: 'Le récit d’une route parcourue dans Velkhar, conservé par le Grimoire.',
+    title: t('metadataTitle'),
+    description: t('metadataDescription'),
     alternates: { canonical },
     openGraph: {
-      title: 'Une Chronique de Velkhar',
-      description: 'Une trace laissée dans le monde de GRIMOIRE.',
-      images: [{ url: '/scenes/doigt-casse-session.webp', alt: 'Les cendres de Velkhar' }],
+      title: t('socialTitle'),
+      description: t('socialDescription'),
+      images: [{ url: '/scenes/doigt-casse-session.webp', alt: t('socialImageAlt') }],
       type: 'article',
       url: canonical,
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Une Chronique de Velkhar',
-      description: 'Une trace laissée dans le monde de GRIMOIRE.',
+      title: t('socialTitle'),
+      description: t('socialDescription'),
       images: ['/scenes/doigt-casse-session.webp'],
     },
   }

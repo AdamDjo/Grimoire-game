@@ -1,3 +1,5 @@
+import { getTranslations } from 'next-intl/server'
+
 import { getSafeInternalDestination } from '@/lib/internal-navigation'
 import { getViewerSummary } from '@/lib/viewer'
 
@@ -5,9 +7,9 @@ import { SignupForm } from './SignupForm'
 
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = {
-  title: 'Créer une chronique · GRIMOIRE',
-  description: 'Créez votre chronique et préparez votre entrée dans Velkhar.',
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('Auth')
+  return { title: t('signupMetadataTitle'), description: t('signupMetadataDescription') }
 }
 
 interface SignupPageProps {

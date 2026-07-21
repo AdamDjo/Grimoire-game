@@ -1,5 +1,6 @@
 'use client'
 
+import { useLocale, useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { GameLink } from '@/components/ui/game-link'
@@ -18,7 +19,6 @@ import {
   parseStoredCharacterResult,
   type CharacterCreateDraft,
 } from '../../character-create/_lib/character-create-model'
-import { AVEUGLE_RESOURCES } from '../_data/aveugle-hub-fixtures'
 import {
   AUBERGE_PREPARATION_STORAGE_KEY,
   EMPTY_AUBERGE_PREPARATION,
@@ -48,13 +48,6 @@ interface AveugleHubProps {
   transitionFromHome?: boolean
 }
 
-const STAGE_COPY: Record<AveugleHubStage, string> = {
-  'character-create': 'Approche. Avant la route, donne-moi ton nom.',
-  ready: 'Ton nom est inscrit. La route, elle, ne l’est pas encore.',
-  'active-session': 'Ta place est encore chaude. Reprends la route là où tu l’as laissée.',
-  'run-return': 'Tu reviens changé. La nuit de Vane t’a suivi jusqu’ici.',
-}
-
 function readActiveSessionCookie(): boolean {
   const cookie = document.cookie
     .split('; ')
@@ -62,7 +55,10 @@ function readActiveSessionCookie(): boolean {
   return hasActiveGameSession(cookie?.split('=')[1])
 }
 
-function readCharacter(characterReadyHint: boolean): CharacterCreateDraft | null {
+function readCharacter(
+  characterReadyHint: boolean,
+  fallbackName: string
+): CharacterCreateDraft | null {
   const persisted = parseStoredCharacterResult(
     window.localStorage.getItem(CHARACTER_RESULT_STORAGE_KEY)
   )
@@ -77,7 +73,7 @@ function readCharacter(characterReadyHint: boolean): CharacterCreateDraft | null
     return legacy
   }
 
-  return characterReadyHint ? getFallbackHubCharacter() : null
+  return characterReadyHint ? getFallbackHubCharacter(fallbackName) : null
 }
 
 export function AveugleHub({
@@ -88,6 +84,8 @@ export function AveugleHub({
   previewIntro = false,
   transitionFromHome = false,
 }: AveugleHubProps) {
+  const locale = useLocale()
+  const t = useTranslations('Auberge')
   const [hydrated, setHydrated] = useState(false)
   const [character, setCharacter] = useState<CharacterCreateDraft | null>(null)
   const [hasActiveSessionState, setHasActiveSessionState] = useState(false)
@@ -97,9 +95,20 @@ export function AveugleHub({
   const ambienceRef = useRef<HTMLDivElement>(null)
   const fireGlowRef = useRef<HTMLDivElement>(null)
   const departureRef = useRef<HTMLDivElement>(null)
+  const stageCopy: Record<AveugleHubStage, string> = {
+    'character-create': t('stageCharacterCreate'),
+    ready: t('stageReady'),
+    'active-session': t('stageActiveSession'),
+    'run-return': t('stageRunReturn'),
+  }
+  const resources = [
+    { icon: 'coin' as const, label: t('saltResource'), value: 125 },
+    { icon: 'memory' as const, label: t('memoriesResource'), value: 0 },
+    { icon: 'artifact' as const, label: t('artifactsResource'), value: 0 },
+  ]
 
   useEffect(() => {
-    const nextCharacter = readCharacter(characterReadyHint)
+    const nextCharacter = readCharacter(characterReadyHint, t('traveler'))
     setCharacter(nextCharacter)
     setHasActiveSessionState(readActiveSessionCookie())
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -115,7 +124,7 @@ export function AveugleHub({
       window.localStorage.setItem(AUBERGE_PREPARATION_STORAGE_KEY, JSON.stringify(nextPreparation))
     }
     setHydrated(true)
-  }, [characterReadyHint, isRunReturn, previewIntro])
+  }, [characterReadyHint, isRunReturn, previewIntro, t])
 
   const snapshot = useMemo(
     () =>
@@ -124,10 +133,19 @@ export function AveugleHub({
         character,
         hasActiveSession: hasActiveSessionState,
         isRunReturn,
+        labels: {
+          answerBlindOne: t('answerBlindOne'),
+          freeConcept: t('freeConcept'),
+          prepareDeparture: t('prepareDeparture'),
+          resumeRoad: t('resumeRoad'),
+          startRun: t('startRun'),
+          unknownPeople: t('unknownPeople'),
+        },
+        locale,
       }),
-    [campaignId, character, hasActiveSessionState, isRunReturn]
+    [campaignId, character, hasActiveSessionState, isRunReturn, locale, t]
   )
-  const openingLine = STAGE_COPY[snapshot.stage]
+  const openingLine = stageCopy[snapshot.stage]
   const isActiveSession = snapshot.stage === 'active-session'
   const departureHref =
     preparation.selectedOmenId && !isActiveSession
@@ -217,8 +235,9 @@ export function AveugleHub({
             size="sm"
           />
         }
+        label={t('characterIdentity', { name: snapshot.character.name })}
         name={snapshot.character.name}
-        resources={AVEUGLE_RESOURCES.map((resource) => (
+        resources={resources.map((resource) => (
           <ResourceCounter
             key={resource.label}
             compact
@@ -289,7 +308,7 @@ export function AveugleHub({
                 trailingIcon={<GameIcon decorative name="moon" size={24} />}
                 variant="radiant"
               >
-                Choisir un présage
+                {t('chooseOmen')}
               </GameButton>
             )}
           </div>
@@ -299,11 +318,11 @@ export function AveugleHub({
           <div className="aveugle-hub__stage" data-velkhar-enter>
             <LocationIdentity
               icon={<GameIcon decorative name="fire" size={32} />}
-              place="L’Auberge de L’Aveugle"
+              place={t('innName')}
               world="Velkhar"
             />
             <div className="aveugle-hub__scene-caption">
-              <p>Le feu baisse. Tissan disparaît sous la poussière.</p>
+              <p>{t('sceneCaption')}</p>
             </div>
           </div>
         }

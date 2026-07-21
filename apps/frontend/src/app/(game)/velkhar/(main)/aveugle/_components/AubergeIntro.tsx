@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import './auberge-intro.css'
@@ -31,6 +32,7 @@ function rememberAubergeIntro(): void {
 }
 
 export function AubergeIntro({ onComplete, preview = false }: AubergeIntroProps) {
+  const t = useTranslations('Auberge')
   const videoRef = useRef<HTMLVideoElement>(null)
   const completionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const hasFinishedRef = useRef(false)
@@ -95,7 +97,7 @@ export function AubergeIntro({ onComplete, preview = false }: AubergeIntroProps)
 
   return (
     <section
-      aria-label="Introduction à l’Auberge de L’Aveugle"
+      aria-label={t('introLabel')}
       aria-modal="true"
       className="auberge-intro"
       data-exiting={isExiting}
@@ -120,18 +122,18 @@ export function AubergeIntro({ onComplete, preview = false }: AubergeIntroProps)
 
       <header className="auberge-intro__location">
         <span>Velkhar</span>
-        <strong>L’Auberge de L’Aveugle</strong>
+        <strong>{t('innName')}</strong>
       </header>
 
       <div className="auberge-intro__controls">
         <button
-          aria-label={isMuted ? 'Activer le son' : 'Couper le son'}
+          aria-label={isMuted ? t('enableSound') : t('muteSound')}
           aria-pressed={!isMuted}
           className="auberge-intro__control auberge-intro__sound"
           onClick={toggleSound}
           type="button"
         >
-          {isMuted ? 'Son désactivé' : 'Son activé'}
+          {isMuted ? t('soundOff') : t('soundOn')}
         </button>
         <button
           className="auberge-intro__control auberge-intro__skip"
@@ -139,13 +141,13 @@ export function AubergeIntro({ onComplete, preview = false }: AubergeIntroProps)
           onClick={finishIntro}
           type="button"
         >
-          Passer <span aria-hidden="true">→</span>
+          {t('skip')} <span aria-hidden="true">→</span>
         </button>
       </div>
 
       {isPlaybackBlocked ? (
         <button className="auberge-intro__play" onClick={startPlayback} type="button">
-          Entrer dans l’auberge
+          {t('enterInn')}
         </button>
       ) : null}
     </section>

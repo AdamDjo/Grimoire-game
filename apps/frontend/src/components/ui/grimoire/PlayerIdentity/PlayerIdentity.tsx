@@ -4,6 +4,7 @@ import './player-identity.css'
 
 export interface PlayerIdentityProps {
   name: string
+  label?: string
   subtitle?: string
   avatar?: ReactNode
   resources?: ReactNode
@@ -15,13 +16,14 @@ export function PlayerIdentity({
   avatar,
   className = '',
   compact = false,
+  label,
   name,
   resources,
   subtitle,
 }: PlayerIdentityProps) {
   return (
     <section
-      aria-label={`Personnage : ${name}`}
+      aria-label={label ?? `Character: ${name}`}
       className={`player-identity ${compact ? 'player-identity--compact' : ''} ${className}`}
     >
       {avatar ? <div className="player-identity__avatar">{avatar}</div> : null}

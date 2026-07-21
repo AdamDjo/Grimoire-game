@@ -1,12 +1,14 @@
+import { getTranslations } from 'next-intl/server'
+
 import { getSafeInternalDestination } from '@/lib/internal-navigation'
 
 import { ForgotPasswordForm } from './ForgotPasswordForm'
 
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = {
-  title: 'Retrouver votre accès · GRIMOIRE',
-  description: 'Recevez un nouveau lien sécurisé pour retrouver l’accès à votre chronique.',
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('Auth')
+  return { title: t('recoveryMetadataTitle'), description: t('recoveryMetadataDescription') }
 }
 
 interface ForgotPasswordPageProps {

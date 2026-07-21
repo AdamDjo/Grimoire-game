@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 
 import { getAuthHref } from '@/lib/internal-navigation'
 
@@ -13,21 +14,21 @@ interface ChronicleReaderProps {
   inline?: boolean
 }
 
-const MOOD_LABELS: Record<ChronicleView['mood'], string> = {
-  absurd: 'Étrange',
-  epic: 'Épique',
-  melancholic: 'Mélancolique',
-  serene: 'Sereine',
-  tragic: 'Tragique',
-}
-
 export function ChronicleReader({ chronicle, inline = false }: ChronicleReaderProps) {
+  const t = useTranslations('Chronicle')
+  const moodLabels: Record<ChronicleView['mood'], string> = {
+    absurd: t('moodAbsurd'),
+    epic: t('moodEpic'),
+    melancholic: t('moodMelancholic'),
+    serene: t('moodSerene'),
+    tragic: t('moodTragic'),
+  }
+  const mood = moodLabels[chronicle.mood]
+
   return (
     <article className="chronicle-reader" data-inline={inline} data-mood={chronicle.mood}>
       <header className="chronicle-reader__header">
-        <p className="chronicle-reader__eyebrow">
-          Chronique de Velkhar · {MOOD_LABELS[chronicle.mood]}
-        </p>
+        <p className="chronicle-reader__eyebrow">{t('eyebrow', { mood })}</p>
         <h1>{chronicle.title}</h1>
         <p className="chronicle-reader__tagline">{chronicle.tagline}</p>
       </header>
@@ -39,7 +40,7 @@ export function ChronicleReader({ chronicle, inline = false }: ChronicleReaderPr
         aria-label={
           chronicle.illustrationUrl
             ? undefined
-            : `Illustration ${MOOD_LABELS[chronicle.mood].toLowerCase()} de Velkhar`
+            : t('fallbackIllustration', { mood: mood.toLowerCase() })
         }
       >
         {chronicle.illustrationUrl ? (
@@ -56,7 +57,7 @@ export function ChronicleReader({ chronicle, inline = false }: ChronicleReaderPr
       </div>
 
       {chronicle.keyMoments.length > 0 ? (
-        <ol className="chronicle-reader__moments" aria-label="Moments marquants">
+        <ol className="chronicle-reader__moments" aria-label={t('keyMoments')}>
           {chronicle.keyMoments.slice(0, 4).map((moment) => (
             <li key={`${moment.sceneRef}-${moment.label}`}>{moment.label}</li>
           ))}
@@ -68,18 +69,18 @@ export function ChronicleReader({ chronicle, inline = false }: ChronicleReaderPr
       <footer className="chronicle-reader__footer">
         {!inline || chronicle.slug ? <ChronicleShare title={chronicle.title} /> : null}
         <div className="chronicle-reader__after">
-          <p>La route s’arrête ici. La trace, elle, demeure.</p>
-          <nav aria-label="Après la Chronique">
-            <Link href="/velkhar/aveugle?return=chronicle">Revenir à l’Aveugle</Link>
-            <Link href="/velkhar/character-create">Créer un nouveau personnage</Link>
-            <Link href="/dashboard">Retrouver mes traces</Link>
+          <p>{t('endingLine')}</p>
+          <nav aria-label={t('afterNavigation')}>
+            <Link href="/velkhar/aveugle?return=chronicle">{t('returnBlindOne')}</Link>
+            <Link href="/velkhar/character-create">{t('newCharacter')}</Link>
+            <Link href="/dashboard">{t('findTraces')}</Link>
           </nav>
         </div>
         {inline ? (
           <p className="chronicle-reader__account-note">
-            Joueur anonyme ?{' '}
+            {t('anonymousQuestion')}{' '}
             <Link href={getAuthHref('/signup', '/velkhar/aveugle?return=chronicle')}>
-              Garder cette trace gratuitement
+              {t('keepTrace')}
             </Link>
           </p>
         ) : null}

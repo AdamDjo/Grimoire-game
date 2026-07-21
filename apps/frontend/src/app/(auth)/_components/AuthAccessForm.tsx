@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 
 import { GameButton } from '@/components/ui/grimoire/GameButton/GameButton'
@@ -26,25 +27,6 @@ interface AuthAccessFormProps {
   nextPath: string
 }
 
-const COPY = {
-  login: {
-    icon: 'key',
-    eyebrow: 'Les portes de Velkhar',
-    title: 'Reprendre votre chronique',
-    description: 'Vos choix, vos souvenirs et les traces laissées dans le monde vous attendent.',
-    submit: 'Recevoir le lien d’accès',
-    sent: 'Si cette adresse possède un compte, un lien d’accès vient d’être envoyé.',
-  },
-  signup: {
-    icon: 'book',
-    eyebrow: 'Une trace qui demeure',
-    title: 'Conserver votre chronique',
-    description: 'Ajoutez un accès à votre voyage sans recommencer votre aventure.',
-    submit: 'Conserver avec mon email',
-    sent: 'Lien envoyé. Confirmez cette adresse pour conserver vos traces.',
-  },
-} as const
-
 function createCallbackUrl(nextPath: string): string {
   const callbackUrl = new URL('/auth/callback', window.location.origin)
   callbackUrl.searchParams.set('next', nextPath)
@@ -57,9 +39,27 @@ export function AuthAccessForm({
   mode,
   nextPath,
 }: AuthAccessFormProps) {
+  const t = useTranslations('Auth')
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<FormStatus>(initialError ? 'error' : 'idle')
-  const copy = COPY[mode]
+  const copy =
+    mode === 'login'
+      ? {
+          icon: 'key' as const,
+          eyebrow: t('loginEyebrow'),
+          title: t('loginTitle'),
+          description: t('loginDescription'),
+          submit: t('loginSubmit'),
+          sent: t('loginSent'),
+        }
+      : {
+          icon: 'book' as const,
+          eyebrow: t('signupEyebrow'),
+          title: t('signupTitle'),
+          description: t('signupDescription'),
+          submit: t('signupSubmit'),
+          sent: t('signupSent'),
+        }
   const isConversion = mode === 'signup' && anonymousSession
 
   async function handleMagicLink(event: FormEvent<HTMLFormElement>) {
@@ -111,32 +111,30 @@ export function AuthAccessForm({
       </header>
 
       {isConversion ? (
-        <aside className="login-form__preservation" aria-label="Données conservées">
+        <aside className="login-form__preservation" aria-label={t('preservedDataLabel')}>
           <GameIcon decorative name="memory" size={24} />
-          <p>
-            Votre personnage, le run en cours, vos Souvenirs et votre Chronique restent attachés à
-            cette même trace.
-          </p>
+          <p>{t('preservedData')}</p>
         </aside>
       ) : null}
 
       {mode === 'login' && anonymousSession ? (
         <p className="login-form__account-switch">
-          Cette connexion ouvre un compte existant. Pour rattacher la trace actuelle,{' '}
-          <Link href={getAuthHref('/signup', nextPath)}>créez plutôt votre accès</Link>.
+          {t('existingAccountBefore')}{' '}
+          <Link href={getAuthHref('/signup', nextPath)}>{t('createAccess')}</Link>{' '}
+          {t('existingAccountAfter')}
         </p>
       ) : null}
 
       <GameDivider size="sm" />
 
       <form className="login-form__fields" onSubmit={handleMagicLink}>
-        <GameField label="Adresse de messager">
+        <GameField label={t('emailLabel')}>
           <GameInput
             autoComplete="email"
             disabled={status === 'loading' || status === 'sent'}
             leadingIcon={<GameIcon decorative name="envelope" size={24} />}
             name="email"
-            placeholder="vous@exemple.fr"
+            placeholder={t('emailPlaceholder')}
             required
             type="email"
             value={email}
@@ -156,18 +154,18 @@ export function AuthAccessForm({
 
         {mode === 'login' ? (
           <p className="login-form__recovery-link">
-            <Link href={getAccessRecoveryHref(nextPath)}>Renvoyer un lien d’accès</Link>
+            <Link href={getAccessRecoveryHref(nextPath)}>{t('resendLink')}</Link>
           </p>
         ) : null}
 
-        <div className="login-form__oauth" aria-label="Accès avec un service externe">
+        <div className="login-form__oauth" aria-label={t('externalAccess')}>
           <GameButton
             disabled={status === 'loading' || status === 'sent'}
             onClick={() => handleOAuth('google')}
             type="button"
             variant="secondary"
           >
-            Continuer avec Google
+            {t('continueGoogle')}
           </GameButton>
           <GameButton
             disabled={status === 'loading' || status === 'sent'}
@@ -175,7 +173,7 @@ export function AuthAccessForm({
             type="button"
             variant="secondary"
           >
-            Continuer avec Discord
+            {t('continueDiscord')}
           </GameButton>
         </div>
 
@@ -185,21 +183,20 @@ export function AuthAccessForm({
           role={status === 'error' ? 'alert' : 'status'}
         >
           {status === 'sent' ? <p>{copy.sent}</p> : null}
-          {status === 'error' ? (
-            <p>La demande n’a pas abouti. Vérifiez votre connexion puis réessayez.</p>
-          ) : null}
+          {status === 'error' ? <p>{t('requestError')}</p> : null}
         </div>
       </form>
 
       <p className="login-form__footer">
         {mode === 'login' ? (
           <>
-            Première visite ?{' '}
-            <Link href={getAuthHref('/signup', nextPath)}>Conserver votre trace</Link>
+            {t('firstVisit')}{' '}
+            <Link href={getAuthHref('/signup', nextPath)}>{t('keepJourney')}</Link>
           </>
         ) : (
           <>
-            Chronique existante ? <Link href={getAuthHref('/login', nextPath)}>Se connecter</Link>
+            {t('existingChronicle')}{' '}
+            <Link href={getAuthHref('/login', nextPath)}>{t('signIn')}</Link>
           </>
         )}
       </p>

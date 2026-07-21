@@ -3,6 +3,7 @@
 import { getPeople, getVocation } from '@grimoire/shared'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useLocale, useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState, type KeyboardEvent } from 'react'
 
 import { GameAvatar } from '@/components/ui/grimoire/GameAvatar/GameAvatar'
@@ -59,7 +60,14 @@ function formatChange(value: number): string {
   return value > 0 ? `+${value}` : `${value}`
 }
 
-function consequenceMessages(response: SceneResponse | null): string[] {
+interface ConsequenceCopy {
+  found: (item: string) => string
+  iron: (value: string) => string
+  lost: (item: string) => string
+  stat: (stat: string, value: string) => string
+}
+
+function consequenceMessages(response: SceneResponse | null, copy: ConsequenceCopy): string[] {
   if (!response) return []
 
   const messages = response.notifications.map(
@@ -70,17 +78,19 @@ function consequenceMessages(response: SceneResponse | null): string[] {
   if (!consequences) return messages
 
   for (const [stat, value] of Object.entries(consequences.survivalChanges ?? {})) {
-    messages.push(`${stat}: ${formatChange(value)}`)
+    messages.push(copy.stat(stat, formatChange(value)))
   }
-  for (const item of consequences.itemsGained ?? []) messages.push(`Found: ${item}`)
-  for (const item of consequences.itemsLost ?? []) messages.push(`Lost: ${item}`)
-  if (consequences.ironGained) messages.push(`Iron: ${formatChange(consequences.ironGained)}`)
+  for (const item of consequences.itemsGained ?? []) messages.push(copy.found(item))
+  for (const item of consequences.itemsLost ?? []) messages.push(copy.lost(item))
+  if (consequences.ironGained) messages.push(copy.iron(formatChange(consequences.ironGained)))
 
   return messages
 }
 
 /** Velkhar composition for the shared game-session controller and components. */
 export function VelkharSession({ initialCharacter, locale = 'en' }: VelkharSessionProps) {
+  const uiLocale = useLocale()
+  const t = useTranslations('Session')
   const [freeAction, setFreeAction] = useState('')
   const [openTool, setOpenTool] = useState<VelkharSessionTool | null>(null)
   const reduceWorldState = useCallback(
@@ -100,9 +110,24 @@ export function VelkharSession({ initialCharacter, locale = 'en' }: VelkharSessi
 
   const people = getPeople(initialCharacter.people)
   const vocation = getVocation(initialCharacter.vocation)
-  const descriptor = [people?.name.en, vocation?.name.en].filter(Boolean).join(' · ')
-  const narrative = session.scene?.narrative ?? 'The salt road stretches ahead…'
-  const notifications = useMemo(() => consequenceMessages(session.response), [session.response])
+  const descriptor = [people?.name[uiLocale], vocation?.name[uiLocale]].filter(Boolean).join(' · ')
+  const narrative = session.scene?.narrative ?? t('openingNarrative')
+  const notifications = useMemo(() => {
+    const statLabels: Record<string, string> = {
+      ash: t('calamine'),
+      calamine: t('calamine'),
+      energy: t('fatigue'),
+      hp: t('health'),
+      hunger: t('hunger'),
+      thirst: t('thirst'),
+    }
+    return consequenceMessages(session.response, {
+      found: (item) => t('found', { item }),
+      iron: (value) => t('ironChange', { value }),
+      lost: (item) => t('lost', { item }),
+      stat: (stat, value) => `${statLabels[stat] ?? stat}: ${value}`,
+    })
+  }, [session.response, t])
 
   useEffect(() => {
     setFreeAction('')
@@ -138,7 +163,7 @@ export function VelkharSession({ initialCharacter, locale = 'en' }: VelkharSessi
         variant="immersive"
         background={
           <Image
-            alt={VELKHAR_WORLD.session.backgroundAlt}
+            alt={t('backgroundAlt')}
             className="velkhar-session__background"
             fill
             priority
@@ -149,11 +174,12 @@ export function VelkharSession({ initialCharacter, locale = 'en' }: VelkharSessi
         top={
           <GameTopBar
             className="velkhar-session__topbar"
+            label={t('mainNavigation')}
             variant="transparent"
             start={
               <LocationIdentity
                 icon={<GameIcon decorative name="compass" size={32} />}
-                place={session.scene?.location ?? 'The Salt Road'}
+                place={session.scene?.location ?? t('saltRoad')}
                 world={VELKHAR_WORLD.name}
               />
             }
@@ -163,6 +189,7 @@ export function VelkharSession({ initialCharacter, locale = 'en' }: VelkharSessi
                   <GameAvatar alt="" size="sm" src="/ui-kit/icons/stranger.webp" state="active" />
                 }
                 compact
+                label={t('characterIdentity', { name: initialCharacter.name })}
                 name={initialCharacter.name}
                 subtitle={descriptor}
               />
@@ -171,7 +198,7 @@ export function VelkharSession({ initialCharacter, locale = 'en' }: VelkharSessi
               <div className="velkhar-session__topbar-end">
                 {session.source ? <SourceBadge source={session.source} /> : null}
                 <Link href={`${VELKHAR_WORLD.routes.aveugle}?return=run`}>
-                  Return to the Blind One
+                  {t('returnBlindOne')}
                 </Link>
               </div>
             }
@@ -185,21 +212,19 @@ export function VelkharSession({ initialCharacter, locale = 'en' }: VelkharSessi
               {session.limitReached ? (
                 <div className="velkhar-session__state" role="alert">
                   <GameIcon decorative name="lock" size={48} />
-                  <h1>Your Chronicle is waiting</h1>
-                  <p>Create a free account to keep this run and continue playing.</p>
+                  <h1>{t('chronicleWaiting')}</h1>
+                  <p>{t('limitBody')}</p>
                   <Link href={getAuthHref('/signup', `${VELKHAR_WORLD.routes.session}/resume`)}>
-                    Create account
+                    {t('createAccount')}
                   </Link>
                 </div>
               ) : session.error ? (
                 <div className="velkhar-session__state" role="alert">
                   <GameIcon decorative name={session.online ? 'warning' : 'hourglass'} size={48} />
-                  <h1>
-                    {session.online ? 'The Game Master fell silent' : 'The road is out of reach'}
-                  </h1>
-                  <p>{session.error}</p>
+                  <h1>{session.online ? t('gameMasterSilent') : t('roadUnavailable')}</h1>
+                  <p>{t('requestError')}</p>
                   <button type="button" onClick={session.retry} disabled={!session.online}>
-                    Try again
+                    {t('retry')}
                   </button>
                 </div>
               ) : session.gameOver ? (
@@ -220,19 +245,17 @@ export function VelkharSession({ initialCharacter, locale = 'en' }: VelkharSessi
                       />
 
                       <NarrativeComposer
-                        aria-label="Describe another action"
+                        aria-label={t('describeAction')}
                         actionDisabled={session.loading || freeAction.trim().length === 0}
-                        actionLabel="Attempt this action"
+                        actionLabel={t('attemptAction')}
                         maxLength={500}
-                        placeholder="Another action… describe what you want to attempt"
+                        placeholder={t('actionPlaceholder')}
                         value={freeAction}
                         onAction={() => submitFreeAction()}
                         onChange={(event) => setFreeAction(event.target.value)}
                         onKeyDown={handleComposerKeyDown}
                       />
-                      <p className="velkhar-session__composer-hint">
-                        Enter to act · Shift + Enter for a new line
-                      </p>
+                      <p className="velkhar-session__composer-hint">{t('composerHint')}</p>
                     </>
                   ) : null}
                 </>

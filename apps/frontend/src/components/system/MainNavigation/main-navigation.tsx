@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -31,19 +32,6 @@ interface NavigationLink {
   priority?: boolean
 }
 
-const MARKETING_LINKS: readonly NavigationLink[] = [
-  { href: '#velkhar', label: 'Découvrir' },
-  { href: '#gameplay', label: 'Gameplay' },
-  { href: '#world', label: 'Univers' },
-]
-
-const GAME_AUBERGE_LINK: NavigationLink = {
-  href: WORLD_ROUTES.velkhar.aveugle,
-  label: 'L’Auberge',
-}
-const GAME_CHRONICLES_LINK: NavigationLink = { href: '/dashboard', label: 'Chroniques' }
-const BASE_GAME_LINKS: readonly NavigationLink[] = [GAME_AUBERGE_LINK, GAME_CHRONICLES_LINK]
-
 function isCurrentPath(pathname: string, href: string): boolean {
   if (href === '/dashboard') return pathname === href
   if (href.startsWith(WORLD_ROUTES.velkhar.aveugle)) {
@@ -58,6 +46,7 @@ function isCurrentPath(pathname: string, href: string): boolean {
 }
 
 export function MainNavigation(props: MainNavigationProps) {
+  const t = useTranslations('Navigation')
   const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
@@ -66,22 +55,32 @@ export function MainNavigation(props: MainNavigationProps) {
   const isMarketing = props.context === 'marketing'
   const onMenuOpenChange = props.context === 'marketing' ? props.onMenuOpenChange : undefined
   const hasAccount = props.context === 'game' && props.tier !== 'anonymous'
+  const marketingLinks: readonly NavigationLink[] = [
+    { href: '#velkhar', label: t('discover') },
+    { href: '#gameplay', label: t('gameplay') },
+    { href: '#world', label: t('world') },
+  ]
+  const gameAubergeLink: NavigationLink = {
+    href: WORLD_ROUTES.velkhar.aveugle,
+    label: t('inn'),
+  }
+  const gameChroniclesLink: NavigationLink = { href: '/dashboard', label: t('chronicles') }
   const links = isMarketing
-    ? MARKETING_LINKS
+    ? marketingLinks
     : props.context === 'game' && props.resumeHref
       ? [
-          GAME_AUBERGE_LINK,
-          { href: props.resumeHref, label: 'Reprendre la partie', priority: true },
-          GAME_CHRONICLES_LINK,
+          gameAubergeLink,
+          { href: props.resumeHref, label: t('resume'), priority: true },
+          gameChroniclesLink,
         ]
-      : BASE_GAME_LINKS
+      : [gameAubergeLink, gameChroniclesLink]
   const brandHref = isMarketing ? '/' : hasAccount ? '/dashboard' : WORLD_ROUTES.velkhar.aveugle
   const accountHref = isMarketing
     ? '/login'
     : hasAccount
       ? '/dashboard'
       : '/login?next=%2Fdashboard'
-  const accountLabel = isMarketing ? 'Se connecter' : hasAccount ? 'Votre espace' : 'Se connecter'
+  const accountLabel = hasAccount ? t('yourSpace') : t('signIn')
 
   useEffect(() => {
     setIsMounted(true)
@@ -148,7 +147,7 @@ export function MainNavigation(props: MainNavigationProps) {
     <GameTopBar
       className={cn('main-navigation', `main-navigation--${props.context}`)}
       data-motion={isMarketing ? 'chrome' : undefined}
-      label={isMarketing ? 'Navigation du site' : 'Navigation du jeu'}
+      label={isMarketing ? t('siteNavigation') : t('gameNavigation')}
       variant="transparent"
       start={
         <Link
@@ -157,7 +156,7 @@ export function MainNavigation(props: MainNavigationProps) {
             isMarketing && 'main-navigation__brand--marketing'
           )}
           href={brandHref}
-          aria-label={isMarketing ? 'GRIMOIRE, accueil du site' : 'GRIMOIRE, accueil du jeu'}
+          aria-label={isMarketing ? t('siteHome') : t('gameHome')}
         >
           {isMarketing ? (
             <span className="main-navigation__marketing-logo" aria-hidden="true" />
@@ -167,7 +166,7 @@ export function MainNavigation(props: MainNavigationProps) {
         </Link>
       }
       center={
-        <nav aria-label={isMarketing ? 'Découvrir GRIMOIRE' : 'Espaces du jeu'}>
+        <nav aria-label={isMarketing ? t('siteDiscovery') : t('gameSpaces')}>
           <ul className="main-navigation__links">
             {links.map((link) => {
               const isCurrent = !isMarketing && isCurrentPath(pathname, link.href)
@@ -193,7 +192,7 @@ export function MainNavigation(props: MainNavigationProps) {
           <Link
             className="main-navigation__account main-navigation__account--desktop"
             href={accountHref}
-            aria-label={!isMarketing && hasAccount ? 'Ouvrir votre espace' : accountLabel}
+            aria-label={!isMarketing && hasAccount ? t('openSpace') : accountLabel}
           >
             {!isMarketing ? (
               <GameIcon decorative name={hasAccount ? 'book' : 'key'} size={24} />
@@ -205,7 +204,7 @@ export function MainNavigation(props: MainNavigationProps) {
             ref={menuTriggerRef}
             aria-controls="main-navigation-mobile-menu"
             aria-expanded={isMobileMenuOpen}
-            aria-label={isMobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+            aria-label={isMobileMenuOpen ? t('closeMenu') : t('openMenu')}
             className="main-navigation__menu-trigger"
             onClick={() => setIsMobileMenuOpen((isOpen) => !isOpen)}
             type="button"
@@ -218,14 +217,14 @@ export function MainNavigation(props: MainNavigationProps) {
             ? createPortal(
                 <div
                   ref={menuRef}
-                  aria-label={isMarketing ? 'Menu du site' : 'Menu du jeu'}
+                  aria-label={isMarketing ? t('siteMenu') : t('gameMenu')}
                   aria-modal="true"
                   className="main-navigation__mobile-menu"
                   id="main-navigation-mobile-menu"
                   role="dialog"
                 >
                   <button
-                    aria-label="Fermer la navigation"
+                    aria-label={t('closeNavigation')}
                     className="main-navigation__mobile-menu-close"
                     onClick={closeMobileMenu}
                     type="button"
@@ -233,7 +232,7 @@ export function MainNavigation(props: MainNavigationProps) {
                     <span />
                     <span />
                   </button>
-                  <nav aria-label="Navigation mobile">
+                  <nav aria-label={t('mobileNavigation')}>
                     <ul>
                       {links.map((link) => {
                         const isCurrent = !isMarketing && isCurrentPath(pathname, link.href)

@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { useLocale, useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { ArchetypeCard } from '@/components/ui/grimoire/ArchetypeCard/ArchetypeCard'
@@ -18,11 +19,13 @@ import { GameTextarea } from '@/components/ui/grimoire/GameTextarea/GameTextarea
 
 import { VELKHAR_WORLD } from '../../../_config/velkhar-world'
 import {
-  CHARACTER_HISTORY_OPTIONS,
-  CHARACTER_PEOPLE_OPTIONS,
-  CHARACTER_VOCATION_OPTIONS,
+  getCharacterHistoryOptions,
+  getCharacterPeopleOptions,
+  getCharacterVocationOptions,
+  getLocalizedHistoryValue,
   getPeopleOption,
   getVocationOption,
+  isHistoryOptionSelected,
 } from '../_data/character-create-options'
 import { createCharacter } from '../_lib/api'
 import {
@@ -30,10 +33,8 @@ import {
   CHARACTER_DRAFT_STORAGE_KEY,
   CHARACTER_RESULT_STORAGE_KEY,
   EMPTY_CHARACTER_DRAFT,
-  backstorySchema,
-  characterNameSchema,
+  createCharacterSchemas,
   createCharacterResult,
-  freeConceptSchema,
   getCompletedSteps,
   getResumeStep,
   parseStoredCharacterDraft,
@@ -48,34 +49,6 @@ import './character-create-flow.css'
 interface CharacterCreateFlowProps {
   campaignId?: string
 }
-
-const STEP_CONTENT = {
-  identity: {
-    description: 'Chaque légende commence par un nom.',
-    icon: 'stranger',
-    label: 'Identité',
-  },
-  people: {
-    description: 'Le sang garde la mémoire des routes anciennes.',
-    icon: 'mage',
-    label: 'Peuple',
-  },
-  vocation: {
-    description: 'Choisis une lentille sur le monde, ou décris la tienne.',
-    icon: 'crossed-swords',
-    label: 'Vocation',
-  },
-  history: {
-    description: 'Toute route commence avec une dette, une peur ou une absence.',
-    icon: 'journal',
-    label: 'Histoire',
-  },
-  summary: {
-    description: 'L’Aveugle relit les traces que tu lui as confiées.',
-    icon: 'book',
-    label: 'Résumé',
-  },
-} as const
 
 const STEP_INDEX = new Map(CHARACTER_CREATE_STEPS.map((step, index) => [step, index]))
 
@@ -99,29 +72,6 @@ const STEP_MOTION_VARIANTS: Variants = {
   }),
 }
 
-const STEP_GUIDANCE: Record<CharacterCreateStep, { title: string; body: string }> = {
-  identity: {
-    title: 'Le nom',
-    body: 'C’est le nom que L’Aveugle et le récit utiliseront. Il ne change aucune règle du jeu.',
-  },
-  people: {
-    title: 'Le peuple',
-    body: 'Ton peuple raconte d’où tu viens. Ce n’est ni une classe ni un métier : choisis surtout l’origine qui t’inspire.',
-  },
-  vocation: {
-    title: 'La vocation',
-    body: 'Une vocation décrit ta manière d’affronter le monde. Passe d’une voie à l’autre : ce repère t’explique son rôle avec des mots simples.',
-  },
-  history: {
-    title: 'La trace du passé',
-    body: 'Cette réponse donne une prise au récit. Elle est facultative et ne te retire aucun point ni avantage.',
-  },
-  summary: {
-    title: 'La relecture',
-    body: 'Vérifie simplement que ce portrait te ressemble. Les règles du personnage seront confirmées plus tard par le jeu.',
-  },
-}
-
 function buildAveugleHref(campaignId: string | undefined, ready = false): string {
   const params = new URLSearchParams()
   if (campaignId) params.set('campaign', campaignId)
@@ -130,16 +80,18 @@ function buildAveugleHref(campaignId: string | undefined, ready = false): string
   return query ? `${VELKHAR_WORLD.routes.aveugle}?${query}` : VELKHAR_WORLD.routes.aveugle
 }
 
-function getErrorMessage(error: unknown): string {
+function getErrorMessage(error: unknown, fallback: string): string {
   if (error && typeof error === 'object' && 'issues' in error) {
     const issues = (error as { issues?: { message?: string }[] }).issues
-    return issues?.[0]?.message ?? 'Cette réponse ne peut pas être retenue.'
+    return issues?.[0]?.message ?? fallback
   }
 
-  return 'Cette réponse ne peut pas être retenue.'
+  return fallback
 }
 
 export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
+  const locale = useLocale()
+  const t = useTranslations('Forge')
   const router = useRouter()
   const reduceMotion = useReducedMotion()
   const stageRef = useRef<HTMLDivElement>(null)
@@ -152,16 +104,65 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
   const [announcement, setAnnouncement] = useState('')
   const [previewedVocationId, setPreviewedVocationId] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const schemas = useMemo(
+    () =>
+      createCharacterSchemas({
+        backstoryTooLong: t('backstoryTooLong'),
+        conceptTooLong: t('conceptTooLong'),
+        conceptTooShort: t('conceptTooShort'),
+        nameRequired: t('nameRequired'),
+        nameTooLong: t('nameTooLong'),
+      }),
+    [t]
+  )
+  const stepContent = {
+    identity: {
+      description: t('identityDescription'),
+      icon: 'stranger' as const,
+      label: t('identityLabel'),
+    },
+    people: {
+      description: t('peopleDescription'),
+      icon: 'mage' as const,
+      label: t('peopleLabel'),
+    },
+    vocation: {
+      description: t('vocationDescription'),
+      icon: 'crossed-swords' as const,
+      label: t('vocationLabel'),
+    },
+    history: {
+      description: t('historyDescription'),
+      icon: 'journal' as const,
+      label: t('historyLabel'),
+    },
+    summary: {
+      description: t('summaryDescription'),
+      icon: 'book' as const,
+      label: t('summaryLabel'),
+    },
+  }
+  const stepGuidance: Record<CharacterCreateStep, { title: string; body: string }> = {
+    identity: { title: t('identityGuideTitle'), body: t('identityGuideBody') },
+    people: { title: t('peopleGuideTitle'), body: t('peopleGuideBody') },
+    vocation: { title: t('vocationGuideTitle'), body: t('vocationGuideBody') },
+    history: { title: t('historyGuideTitle'), body: t('historyGuideBody') },
+    summary: { title: t('summaryGuideTitle'), body: t('summaryGuideBody') },
+  }
+  const peopleOptions = getCharacterPeopleOptions(locale)
+  const vocationOptions = getCharacterVocationOptions(locale)
 
   const completedSteps = useMemo(() => getCompletedSteps(currentStep, draft), [currentStep, draft])
-  const currentMeta = STEP_CONTENT[currentStep]
-  const people = getPeopleOption(draft.peopleId)
-  const vocation = getVocationOption(draft.vocationId)
-  const previewedVocation = previewedVocationId ? getVocationOption(previewedVocationId) : undefined
+  const currentMeta = stepContent[currentStep]
+  const people = getPeopleOption(draft.peopleId, locale)
+  const vocation = getVocationOption(draft.vocationId, locale)
+  const previewedVocation = previewedVocationId
+    ? getVocationOption(previewedVocationId, locale)
+    : undefined
   const guidance = previewedVocation
     ? { title: previewedVocation.name, body: previewedVocation.guidance }
-    : STEP_GUIDANCE[currentStep]
-  const historyOptions = draft.vocationId ? (CHARACTER_HISTORY_OPTIONS[draft.vocationId] ?? []) : []
+    : stepGuidance[currentStep]
+  const historyOptions = getCharacterHistoryOptions(draft.vocationId, locale)
 
   useEffect(() => {
     const storedDraft = parseStoredCharacterDraft(
@@ -171,11 +172,11 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
     if (storedDraft) {
       setDraft(storedDraft)
       setCurrentStep(getResumeStep(storedDraft))
-      setAnnouncement('Brouillon de création repris.')
+      setAnnouncement(t('draftResumed'))
     }
 
     setHydrated(true)
-  }, [])
+  }, [t])
 
   useEffect(() => {
     if (!hydrated || !isDirty) return
@@ -216,18 +217,18 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
     setPreviewedVocationId(null)
     setCurrentStep(step)
     setError(null)
-    setAnnouncement(`${STEP_CONTENT[step].label}. ${STEP_CONTENT[step].description}`)
+    setAnnouncement(`${stepContent[step].label}. ${stepContent[step].description}`)
   }
 
   const submitIdentity = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     try {
-      const name = characterNameSchema.parse(draft.name)
+      const name = schemas.name.parse(draft.name)
       updateDraft({ name })
       moveToStep('people')
     } catch (validationError) {
-      setError(getErrorMessage(validationError))
+      setError(getErrorMessage(validationError, t('invalidAnswer')))
     }
   }
 
@@ -243,21 +244,21 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
 
   const continueCustomConcept = () => {
     try {
-      const freeConcept = freeConceptSchema.parse(draft.freeConcept)
+      const freeConcept = schemas.freeConcept.parse(draft.freeConcept)
       updateDraft({ freeConcept, historyReviewed: false, vocationId: '', vocationPath: 'custom' })
       moveToStep('history')
     } catch (validationError) {
-      setError(getErrorMessage(validationError))
+      setError(getErrorMessage(validationError, t('invalidAnswer')))
     }
   }
 
   const continueHistory = () => {
     try {
-      const backstory = backstorySchema.parse(draft.backstory)
+      const backstory = schemas.backstory.parse(draft.backstory)
       updateDraft({ backstory, historyReviewed: true })
       moveToStep('summary')
     } catch (validationError) {
-      setError(getErrorMessage(validationError))
+      setError(getErrorMessage(validationError, t('invalidAnswer')))
     }
   }
 
@@ -284,19 +285,15 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
       window.sessionStorage.removeItem(CHARACTER_DRAFT_STORAGE_KEY)
       setIsDirty(false)
       router.push(buildAveugleHref(campaignId, true))
-    } catch (submissionError) {
-      setError(
-        submissionError instanceof Error
-          ? submissionError.message
-          : 'L’Aveugle n’a pas pu retenir ce portrait. Réessaie.'
-      )
+    } catch {
+      setError(t('submissionError'))
     } finally {
       setIsSubmitting(false)
     }
   }
 
   const leaveCreation = () => {
-    if (isDirty && !window.confirm('Quitter la création ? Ton brouillon restera disponible.')) {
+    if (isDirty && !window.confirm(t('leaveConfirmation'))) {
       return
     }
 
@@ -304,7 +301,7 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
   }
 
   const stepperItems = CHARACTER_CREATE_STEPS.map((step) => {
-    const meta = STEP_CONTENT[step]
+    const meta = stepContent[step]
     const currentIndex = STEP_INDEX.get(currentStep) ?? 0
     const stepIndex = STEP_INDEX.get(step) ?? 0
 
@@ -336,7 +333,7 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
       <div className="character-create__veil" aria-hidden="true" />
       <button className="character-create__exit" type="button" onClick={leaveCreation}>
         <GameIcon decorative name="arrow" size={24} />
-        Retour à L’Aveugle
+        {t('backToInn')}
       </button>
 
       <div className="character-create__composition">
@@ -365,7 +362,7 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
         >
           <div className="character-create__stepper-surface">
             <GameStepper
-              ariaLabel="Création du personnage"
+              ariaLabel={t('creationLabel')}
               completedIds={completedSteps}
               currentId={currentStep}
               items={stepperItems}
@@ -395,13 +392,13 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
 
                 {currentStep === 'identity' ? (
                   <form className="character-create__form" onSubmit={submitIdentity} noValidate>
-                    <GameField error={error ?? undefined} label="Nom du personnage" required>
+                    <GameField error={error ?? undefined} label={t('nameLabel')} required>
                       <GameInput
                         autoComplete="off"
                         invalid={Boolean(error)}
                         maxLength={30}
                         onChange={(event) => updateDraft({ name: event.target.value })}
-                        placeholder="Entre ton nom…"
+                        placeholder={t('namePlaceholder')}
                         variant="framed-v2"
                         value={draft.name}
                       />
@@ -411,14 +408,14 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                       type="submit"
                       variant="radiant"
                     >
-                      Suivant
+                      {t('next')}
                     </GameButton>
                   </form>
                 ) : null}
 
                 {currentStep === 'people' ? (
                   <div className="character-create__choice-grid character-create__choice-grid--people">
-                    {CHARACTER_PEOPLE_OPTIONS.map((option) => (
+                    {peopleOptions.map((option) => (
                       <DialogueChoice
                         className="character-create__people-choice"
                         icon={<GameIcon decorative name={option.icon} size={32} />}
@@ -443,22 +440,22 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                         <GameIcon decorative name="quill" size={24} />
                       </span>
                       <span>
-                        <small>Tu as déjà ton idée ?</small>
-                        <strong>Écris directement ton propre concept</strong>
+                        <small>{t('customShortcutEyebrow')}</small>
+                        <strong>{t('customShortcutTitle')}</strong>
                       </span>
-                      <span className="character-create__custom-shortcut-action">Commencer</span>
+                      <span className="character-create__custom-shortcut-action">{t('start')}</span>
                     </a>
 
                     <div className="character-create__choice-grid character-create__choice-grid--vocations">
-                      {CHARACTER_VOCATION_OPTIONS.map((option) => (
+                      {vocationOptions.map((option) => (
                         <ArchetypeCard
-                          actionLabel="Suivre cette voie"
+                          actionLabel={t('followPath')}
                           description={option.description}
                           eyebrow={option.eyebrow}
                           id={option.id}
                           illustration={
                             <Image
-                              alt={`Portrait représentant la voie ${option.name}`}
+                              alt={t('vocationPortrait', { name: option.name })}
                               className="character-create__vocation-image"
                               height={640}
                               sizes="(max-width: 640px) 100vw, 22vw"
@@ -473,6 +470,7 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                           selected={
                             draft.vocationPath === 'preset' && draft.vocationId === option.id
                           }
+                          selectedLabel={t('selectedPath')}
                           title={option.name}
                         />
                       ))}
@@ -485,21 +483,18 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                         </span>
                         <div>
                           <span className="character-create__custom-eyebrow">
-                            Aucune voie ne te ressemble ?
+                            {t('customEyebrow')}
                           </span>
-                          <h3>Écris ton propre concept</h3>
-                          <p>
-                            Décris ton personnage avec tes mots. L’Aveugle traduira ensuite cette
-                            idée dans les règles du jeu.
-                          </p>
+                          <h3>{t('customTitle')}</h3>
+                          <p>{t('customDescription')}</p>
                         </div>
                       </div>
 
                       <div className="character-create__custom-form">
                         <GameField
                           error={error ?? undefined}
-                          hint="Quelques phrases suffisent : une origine, un talent et ce que ton personnage recherche."
-                          label="Ton idée de personnage"
+                          hint={t('customHint')}
+                          label={t('customLabel')}
                           required
                         >
                           <GameTextarea
@@ -512,13 +507,13 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                                 vocationPath: 'custom',
                               })
                             }
-                            placeholder="Une vieille chasseuse de Calcinés qui cherche un dernier monstre…"
+                            placeholder={t('customPlaceholder')}
                             rows={4}
                             value={draft.freeConcept}
                           />
                         </GameField>
                         <GameButton onClick={continueCustomConcept} size="sm" variant="secondary">
-                          Confier ce concept à L’Aveugle
+                          {t('submitConcept')}
                         </GameButton>
                       </div>
                     </div>
@@ -531,12 +526,12 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                       <div className="character-create__history-options">
                         {historyOptions.map((history) => (
                           <DialogueChoice
-                            key={history}
+                            key={history.id}
                             icon={<GameIcon decorative name="memory" size={32} />}
-                            onClick={() => updateDraft({ backstory: history })}
-                            selected={draft.backstory === history}
+                            onClick={() => updateDraft({ backstory: history.label })}
+                            selected={isHistoryOptionSelected(draft.backstory, history)}
                           >
-                            {history}
+                            {history.label}
                           </DialogueChoice>
                         ))}
                       </div>
@@ -544,24 +539,24 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
 
                     <GameField
                       error={error ?? undefined}
-                      hint="Facultatif. Tu peux préciser une dette, une peur ou une personne laissée derrière toi."
+                      hint={t('historyHint')}
                       label={
                         historyOptions.length > 0
-                          ? 'Ou raconte-le autrement'
-                          : 'Ce que tu laisses derrière toi'
+                          ? t('historyAlternativeLabel')
+                          : t('historyFreeLabel')
                       }
                     >
                       <GameTextarea
                         invalid={Boolean(error)}
                         maxLength={500}
                         onChange={(event) => updateDraft({ backstory: event.target.value })}
-                        placeholder="Quelques mots suffisent…"
+                        placeholder={t('historyPlaceholder')}
                         rows={3}
                         value={draft.backstory}
                       />
                     </GameField>
                     <GameButton onClick={continueHistory} variant="radiant">
-                      {draft.backstory ? 'Retenir cette histoire' : 'Garder le silence'}
+                      {draft.backstory ? t('keepHistory') : t('keepSilence')}
                     </GameButton>
                   </div>
                 ) : null}
@@ -570,37 +565,38 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                   <div className="character-create__summary">
                     <dl>
                       <div>
-                        <dt>Nom</dt>
+                        <dt>{t('nameSummary')}</dt>
                         <dd>{draft.name}</dd>
                       </div>
                       <div>
-                        <dt>Peuple</dt>
-                        <dd>{people?.name ?? 'Non choisi'}</dd>
+                        <dt>{t('peopleSummary')}</dt>
+                        <dd>{people?.name ?? t('notChosenMasculine')}</dd>
                       </div>
                       <div>
-                        <dt>Voie</dt>
+                        <dt>{t('pathSummary')}</dt>
                         <dd>
                           {draft.vocationPath === 'custom'
-                            ? 'Concept libre, vocation hôte à confirmer par L’Aveugle'
-                            : (vocation?.name ?? 'Non choisie')}
+                            ? t('customPathPending')
+                            : (vocation?.name ?? t('notChosenFeminine'))}
                         </dd>
                       </div>
                       {draft.freeConcept ? (
                         <div>
-                          <dt>Concept</dt>
+                          <dt>{t('conceptSummary')}</dt>
                           <dd>{draft.freeConcept}</dd>
                         </div>
                       ) : null}
                       <div>
-                        <dt>Trace</dt>
-                        <dd>{draft.backstory || 'Aucune histoire confiée.'}</dd>
+                        <dt>{t('traceSummary')}</dt>
+                        <dd>
+                          {draft.backstory
+                            ? getLocalizedHistoryValue(draft.backstory, locale)
+                            : t('noHistory')}
+                        </dd>
                       </div>
                     </dl>
 
-                    <p className="character-create__summary-note">
-                      Cette fiche est un récapitulatif. Les règles et le triptyque seront validés
-                      hors de cette interface.
-                    </p>
+                    <p className="character-create__summary-note">{t('summaryNote')}</p>
 
                     {error ? (
                       <p className="character-create__summary-error" role="alert">
@@ -615,10 +611,10 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                         size="sm"
                         variant="ghost"
                       >
-                        Rejouer la création
+                        {t('restart')}
                       </GameButton>
                       <GameButton loading={isSubmitting} onClick={finishCreation} variant="radiant">
-                        Retourner auprès de L’Aveugle
+                        {t('returnToInn')}
                       </GameButton>
                     </div>
                   </div>

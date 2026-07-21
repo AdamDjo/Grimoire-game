@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import { useTranslations } from 'next-intl'
 import { useEffect, useRef, useState } from 'react'
 
 import { getLenis } from '@/hooks/use-lenis'
@@ -23,6 +24,7 @@ const MIN_VISIBLE_MS = 1100
 const CAP_MS = 2500
 
 export function LandingPreloader({ onDone }: LandingPreloaderProps) {
+  const t = useTranslations('Landing')
   const rootRef = useRef<HTMLDivElement>(null)
   const veilRef = useRef<HTMLDivElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
@@ -207,7 +209,7 @@ export function LandingPreloader({ onDone }: LandingPreloaderProps) {
             />
           </div>
           <div className="landing-preloader__status">
-            <span className="landing-preloader__status-label">Chargement</span>
+            <span className="landing-preloader__status-label">{t('loading')}</span>
             <span className="landing-preloader__status-marks">
               <span />
               <span />
@@ -215,7 +217,7 @@ export function LandingPreloader({ onDone }: LandingPreloaderProps) {
             </span>
           </div>
         </div>
-        <span className="sr-only">Chargement de l’expérience</span>
+        <span className="sr-only">{t('loadingExperience')}</span>
       </div>
     </div>
   )

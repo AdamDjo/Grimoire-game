@@ -1,3 +1,5 @@
+import { useTranslations } from 'next-intl'
+
 import { GameLink } from '@/components/ui/game-link'
 import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
 import { GamePanel } from '@/components/ui/grimoire/GamePanel/GamePanel'
@@ -17,19 +19,23 @@ interface DashboardContentProps {
 }
 
 export function DashboardContent({ tier, viewModel }: DashboardContentProps) {
+  const t = useTranslations('Dashboard')
+
   return (
     <main className="dashboard-content">
       <header className="dashboard-content__intro">
-        <p className="dashboard-content__welcome">Bienvenue, {viewModel.viewerLabel}</p>
+        <p className="dashboard-content__welcome">
+          {t('welcome', { name: viewModel.viewerLabel })}
+        </p>
         <GameSectionHeading
-          description="Reprenez une trace existante ou franchissez à nouveau le seuil de L’Aveugle."
-          eyebrow="Le monde se souvient"
+          description={t('description')}
+          eyebrow={t('eyebrow')}
           level={1}
-          title="Vos Chroniques"
+          title={t('title')}
         />
       </header>
 
-      <section className="dashboard-content__grid" aria-label="Accès à vos aventures">
+      <section className="dashboard-content__grid" aria-label={t('adventuresLabel')}>
         <GamePanel
           as="article"
           className="dashboard-content__resume"
@@ -41,19 +47,15 @@ export function DashboardContent({ tier, viewModel }: DashboardContentProps) {
           <div className="dashboard-content__panel-heading">
             <GameIcon decorative name={viewModel.activeRun ? 'fire' : 'footprint'} size={48} />
             <div>
-              <p>{viewModel.activeRun ? viewModel.activeRun.progressLabel : 'Aucun run actif'}</p>
-              <h2>
-                {viewModel.activeRun
-                  ? viewModel.activeRun.title
-                  : 'Une nouvelle trace attend d’être laissée'}
-              </h2>
+              <p>{viewModel.activeRun ? viewModel.activeRun.progressLabel : t('noActiveRun')}</p>
+              <h2>{viewModel.activeRun ? viewModel.activeRun.title : t('newTrace')}</h2>
             </div>
           </div>
 
           <p className="dashboard-content__copy">
             {viewModel.activeRun
-              ? `${viewModel.activeRun.lastActivityLabel}. La reprise vous reconduira directement à la scène active.`
-              : 'Le premier run reste accessible sans compte. L’Auberge demeure l’unique point de départ.'}
+              ? t('activeRunCopy', { activity: viewModel.activeRun.lastActivityLabel })
+              : t('emptyRunCopy')}
           </p>
 
           <div className="dashboard-content__actions">
@@ -62,20 +64,20 @@ export function DashboardContent({ tier, viewModel }: DashboardContentProps) {
                 href={`${WORLD_ROUTES.velkhar.campaign}/${viewModel.activeRun.campaignId}`}
                 trailingIcon={<GameIcon decorative name="arrow" size={24} />}
               >
-                Reprendre le récit
+                {t('resumeStory')}
               </GameLink>
             ) : (
               <GameLink
                 href={`${WORLD_ROUTES.velkhar.campaign}/nouvelle-chronique`}
                 trailingIcon={<GameIcon decorative name="arrow" size={24} />}
               >
-                Franchir le seuil
+                {t('crossThreshold')}
               </GameLink>
             )}
 
             {tier === 'anonymous' ? (
               <GameLink href={getAuthHref('/login', '/dashboard')} size="sm" variant="ghost">
-                Retrouver mes traces
+                {t('findTraces')}
               </GameLink>
             ) : null}
           </div>
@@ -85,25 +87,23 @@ export function DashboardContent({ tier, viewModel }: DashboardContentProps) {
           <div className="dashboard-content__panel-heading">
             <GameIcon decorative name="book" size={48} />
             <div>
-              <p>Bibliothèque</p>
-              <h2>Chroniques récentes</h2>
+              <p>{t('library')}</p>
+              <h2>{t('recentChronicles')}</h2>
             </div>
           </div>
 
           {viewModel.recentChronicles.length === 0 ? (
             <div className="dashboard-content__empty">
-              <p>Aucune Chronique n’est encore consignée.</p>
-              <span>Chaque run achevé laissera ici son récit.</span>
+              <p>{t('noChronicle')}</p>
+              <span>{t('chronicleHint')}</span>
             </div>
           ) : null}
         </GamePanel>
       </section>
 
-      <aside className="dashboard-content__boundary" aria-label="Rôle du Dashboard">
+      <aside className="dashboard-content__boundary" aria-label={t('dashboardRole')}>
         <GameIcon decorative name="key" size={32} />
-        <p>
-          Le Dashboard retrouve vos traces. L’Auberge de L’Aveugle reste le seul hub entre les runs.
-        </p>
+        <p>{t('boundary')}</p>
       </aside>
       {tier !== 'anonymous' ? <SignOutButton /> : null}
     </main>

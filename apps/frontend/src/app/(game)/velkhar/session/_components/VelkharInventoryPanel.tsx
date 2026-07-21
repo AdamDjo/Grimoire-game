@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 
 import { GameIcon, type GameIconName } from '@/components/ui/grimoire/GameIcon/GameIcon'
@@ -31,10 +32,11 @@ interface ItemSlotProps {
 }
 
 function ItemSlot({ fallbackIcon, item, label, onSelect, selectedId }: ItemSlotProps) {
+  const t = useTranslations('Session')
   const unavailable = !item || item.state === 'locked' || item.state === 'pending'
   const stateLabel =
-    item?.state === 'locked' ? ', locked' : item?.state === 'pending' ? ', pending' : ''
-  const equippedLabel = item?.equippedSlot ? ', equipped' : ''
+    item?.state === 'locked' ? t('itemLocked') : item?.state === 'pending' ? t('itemPending') : ''
+  const equippedLabel = item?.equippedSlot ? t('itemEquipped') : ''
 
   return (
     <div
@@ -48,7 +50,9 @@ function ItemSlot({ fallbackIcon, item, label, onSelect, selectedId }: ItemSlotP
       <InventorySlot
         disabled={unavailable}
         icon={<GameIcon decorative name={item ? itemIcon(item) : fallbackIcon} size={48} />}
-        label={item ? `${label}: ${item.name}${equippedLabel}${stateLabel}` : `${label}, empty`}
+        label={
+          item ? `${label}: ${item.name}${equippedLabel}${stateLabel}` : t('itemEmpty', { label })
+        }
         quantity={item && item.quantity > 1 ? item.quantity : undefined}
         selected={item?.id === selectedId}
         onClick={() => item && onSelect(item)}
@@ -59,6 +63,7 @@ function ItemSlot({ fallbackIcon, item, label, onSelect, selectedId }: ItemSlotP
 }
 
 export function VelkharInventoryPanel({ iron, items }: VelkharInventoryPanelProps) {
+  const t = useTranslations('Session')
   const inventory = useMemo(() => buildVelkharInventoryView(items), [items])
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const selectedItem = items.find((item) => item.id === selectedId) ?? null
@@ -66,15 +71,31 @@ export function VelkharInventoryPanel({ iron, items }: VelkharInventoryPanelProp
     { length: VELKHAR_BAG_CAPACITY },
     (_, index) => inventory.bagItems[index] ?? null
   )
+  const equipmentLabels: Record<string, string> = {
+    'main-hand': t('mainHand'),
+    'off-hand': t('offHand'),
+    armor: t('armor'),
+    cloak: t('cloak'),
+    head: t('head'),
+    accessory: t('accessory'),
+    belt: t('belt'),
+    feet: t('feet'),
+  }
+  const actionLabels = {
+    use: t('actionUse'),
+    equip: t('actionEquip'),
+    unequip: t('actionUnequip'),
+    inspect: t('actionInspect'),
+  }
 
   return (
     <div className="velkhar-inventory">
-      <div className="velkhar-inventory__summary" aria-label="Inventory summary">
+      <div className="velkhar-inventory__summary" aria-label={t('inventorySummary')}>
         <span>
-          <GameIcon decorative name="coin" size={24} /> Iron <strong>{iron ?? '—'}</strong>
+          <GameIcon decorative name="coin" size={24} /> {t('iron')} <strong>{iron ?? '—'}</strong>
         </span>
         <span>
-          <GameIcon decorative name="chest" size={24} /> Bag{' '}
+          <GameIcon decorative name="chest" size={24} /> {t('bag')}{' '}
           <strong>
             {inventory.bagItems.length}/{VELKHAR_BAG_CAPACITY}
           </strong>
@@ -83,8 +104,8 @@ export function VelkharInventoryPanel({ iron, items }: VelkharInventoryPanelProp
 
       <section aria-labelledby="velkhar-equipment-title">
         <div className="velkhar-session-window__section-heading">
-          <h3 id="velkhar-equipment-title">Worn equipment</h3>
-          <span>8 fixed slots</span>
+          <h3 id="velkhar-equipment-title">{t('wornEquipment')}</h3>
+          <span>{t('fixedSlots')}</span>
         </div>
         <div className="velkhar-inventory__grid velkhar-inventory__grid--equipment">
           {inventory.equipment.map((slot) => (
@@ -92,7 +113,7 @@ export function VelkharInventoryPanel({ iron, items }: VelkharInventoryPanelProp
               key={slot.id}
               fallbackIcon={slot.icon}
               item={slot.item}
-              label={slot.label}
+              label={equipmentLabels[slot.id] ?? slot.label}
               selectedId={selectedId}
               onSelect={(item) => setSelectedId(item.id)}
             />
@@ -102,8 +123,8 @@ export function VelkharInventoryPanel({ iron, items }: VelkharInventoryPanelProp
 
       <section aria-labelledby="velkhar-bag-title">
         <div className="velkhar-session-window__section-heading">
-          <h3 id="velkhar-bag-title">Bag</h3>
-          <span>12 slots</span>
+          <h3 id="velkhar-bag-title">{t('bag')}</h3>
+          <span>{t('bagSlots')}</span>
         </div>
         <div className="velkhar-inventory__grid velkhar-inventory__grid--bag">
           {bagSlots.map((item, index) => (
@@ -111,7 +132,7 @@ export function VelkharInventoryPanel({ iron, items }: VelkharInventoryPanelProp
               key={item?.id ?? `bag-slot-${index}`}
               fallbackIcon="chest"
               item={item}
-              label={`Bag slot ${index + 1}`}
+              label={t('bagSlot', { number: index + 1 })}
               selectedId={selectedId}
               onSelect={(nextItem) => setSelectedId(nextItem.id)}
             />
@@ -121,21 +142,21 @@ export function VelkharInventoryPanel({ iron, items }: VelkharInventoryPanelProp
 
       <div className="velkhar-inventory__specials">
         <section aria-labelledby="velkhar-artifact-title">
-          <h3 id="velkhar-artifact-title">Artifact</h3>
+          <h3 id="velkhar-artifact-title">{t('artifact')}</h3>
           <ItemSlot
             fallbackIcon="artifact"
             item={inventory.artifact}
-            label="Dedicated artifact slot"
+            label={t('artifactSlot')}
             selectedId={selectedId}
             onSelect={(item) => setSelectedId(item.id)}
           />
         </section>
         <section aria-labelledby="velkhar-heirloom-title">
-          <h3 id="velkhar-heirloom-title">Heirloom</h3>
+          <h3 id="velkhar-heirloom-title">{t('heirloom')}</h3>
           <ItemSlot
             fallbackIcon="memory"
             item={inventory.heirloom}
-            label="Inherited item slot"
+            label={t('heirloomSlot')}
             selectedId={selectedId}
             onSelect={(item) => setSelectedId(item.id)}
           />
@@ -145,23 +166,25 @@ export function VelkharInventoryPanel({ iron, items }: VelkharInventoryPanelProp
       <aside className="velkhar-inventory__detail" aria-live="polite">
         {selectedItem ? (
           <>
-            <p className="velkhar-session-window__eyebrow">Item detail</p>
+            <p className="velkhar-session-window__eyebrow">{t('itemDetail')}</p>
             <h3>{selectedItem.name}</h3>
-            <p>{selectedItem.description ?? 'No description has been revealed yet.'}</p>
+            <p>{selectedItem.description ?? t('noDescription')}</p>
             {selectedItem.allowedActions?.length ? (
               <p className="velkhar-inventory__permissions">
-                Authorized now: {selectedItem.allowedActions.join(', ')}
+                {t('authorizedActions', {
+                  actions: selectedItem.allowedActions
+                    .map((action) => actionLabels[action])
+                    .join(', '),
+                })}
               </p>
             ) : (
-              <p className="velkhar-session-window__muted">
-                No action is authorized in this scene.
-              </p>
+              <p className="velkhar-session-window__muted">{t('noAuthorizedAction')}</p>
             )}
           </>
         ) : (
           <div className="velkhar-session-window__empty">
             <GameIcon decorative name="eye" size={48} />
-            <p>Select an available item to inspect it.</p>
+            <p>{t('selectItem')}</p>
           </div>
         )}
       </aside>

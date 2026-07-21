@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 
 interface ChronicleShareProps {
@@ -7,9 +8,10 @@ interface ChronicleShareProps {
 }
 
 export function ChronicleShare({ title }: ChronicleShareProps) {
+  const t = useTranslations('Chronicle')
   const [copied, setCopied] = useState(false)
   const [currentUrl, setCurrentUrl] = useState('')
-  const shareText = `Ma Chronique de Velkhar — ${title}`
+  const shareText = t('shareText', { title })
   const encodedUrl = encodeURIComponent(currentUrl)
   const encodedText = encodeURIComponent(shareText)
 
@@ -26,10 +28,10 @@ export function ChronicleShare({ title }: ChronicleShareProps) {
   }
 
   return (
-    <div className="chronicle-share" aria-label="Partager cette Chronique">
-      <span>Partager la trace</span>
+    <div className="chronicle-share" aria-label={t('shareLabel')}>
+      <span>{t('shareTrace')}</span>
       <button type="button" onClick={() => void copyLink()}>
-        {copied ? 'Lien copié' : 'Copier le lien'}
+        {copied ? t('copied') : t('copyLink')}
       </button>
       <a
         href={`https://x.com/intent/post?text=${encodedText}&url=${encodedUrl}`}
@@ -46,9 +48,9 @@ export function ChronicleShare({ title }: ChronicleShareProps) {
         Bluesky
       </a>
       <a
-        href={`mailto:rgpd@grimoire.game?subject=${encodeURIComponent(`Signalement de Chronique — ${title}`)}`}
+        href={`mailto:rgpd@grimoire.game?subject=${encodeURIComponent(t('reportSubject', { title }))}`}
       >
-        Signaler
+        {t('report')}
       </a>
     </div>
   )

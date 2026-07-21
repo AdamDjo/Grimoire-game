@@ -1,14 +1,41 @@
+import { useTranslations } from 'next-intl'
+
 import { Card, MediaLayer } from '@/components/ui'
 import { GameLink } from '@/components/ui/game-link'
 import { WORLD_ROUTES } from '@/config/worlds'
 
-import { GAMEPLAY_CARDS, GAMEPLAY_COPY, LANDING_MEDIA } from '../../_data/landing-content'
+import { LANDING_MEDIA } from '../../_data/landing-content'
 
 import { GameplayStatsBar } from './GameplayStatsBar'
 
 import './section-gameplay.css'
 
 export function SectionGameplay() {
+  const t = useTranslations('Landing')
+  const cards = [
+    {
+      index: '1',
+      title: t('cardActionTitle'),
+      body: t('cardActionBody'),
+      tone: 'gold' as const,
+    },
+    {
+      index: '2',
+      title: t('cardAnswerTitle'),
+      accent: t('cardAnswerAccent'),
+      body: t('cardAnswerBody'),
+      tone: 'soul' as const,
+    },
+    {
+      index: '3',
+      title: t('cardMemoryTitle'),
+      body: t('cardMemoryBody'),
+      tone: 'ash' as const,
+    },
+  ]
+  const titleLines = [t('gameplayTitle1'), t('gameplayTitle2'), t('gameplayTitle3')]
+  const body = [t('gameplayBody1'), t('gameplayBody2'), t('gameplayBody3')]
+
   return (
     <section
       className="landing-section gameplay-section"
@@ -29,24 +56,24 @@ export function SectionGameplay() {
       />
 
       <div className="gameplay-section__cards relative z-[2] grid gap-[18px] self-center">
-        {GAMEPLAY_CARDS.map((card) => (
+        {cards.map((card) => (
           <Card key={card.index} {...card} />
         ))}
       </div>
 
       <div className="gameplay-section__copy relative z-[3] self-center opacity-0">
         <p className="gameplay-section__label" data-motion="reveal">
-          <strong className="font-medium text-parchment">{GAMEPLAY_COPY.label}</strong>
+          <strong className="font-medium text-parchment">{t('gameplayLabel')}</strong>
         </p>
         <h2
           id="gameplay-title"
           className="gameplay-section__title m-0 font-accent text-h2 font-medium text-parchment"
           data-motion="title"
         >
-          {GAMEPLAY_COPY.titleLines.map((line, index) => (
+          {titleLines.map((line, index) => (
             <span
               key={line}
-              className={`block ${index === GAMEPLAY_COPY.titleLines.length - 1 ? 'text-gold-soft' : ''}`}
+              className={`block ${index === titleLines.length - 1 ? 'text-gold-soft' : ''}`}
             >
               {line}
             </span>
@@ -56,7 +83,7 @@ export function SectionGameplay() {
           className="gameplay-section__body font-serif text-body-editorial text-[rgba(239,225,194,0.86)]"
           data-motion="reveal"
         >
-          {GAMEPLAY_COPY.body.map((line) => (
+          {body.map((line) => (
             <p key={line} className="m-0">
               {line}
             </p>
@@ -69,7 +96,7 @@ export function SectionGameplay() {
             prefetch={false}
             variant="landing-gameplay"
           >
-            {GAMEPLAY_COPY.cta}
+            {t('gameplayCta')}
           </GameLink>
         </div>
       </div>

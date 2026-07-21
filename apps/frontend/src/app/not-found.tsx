@@ -1,11 +1,15 @@
+import { getTranslations } from 'next-intl/server'
+
 import { SystemState } from '@/components/system/SystemState/SystemState'
 
-export default function NotFound() {
+export default async function NotFound() {
+  const t = await getTranslations('System')
+
   return (
     <SystemState
-      eyebrow="Fragment introuvable"
-      title="Cette page s’est perdue dans les cendres."
-      body="Le passage que vous cherchez n’appartient plus à ce récit."
+      eyebrow={t('notFoundEyebrow')}
+      title={t('notFoundTitle')}
+      body={t('notFoundBody')}
     />
   )
 }

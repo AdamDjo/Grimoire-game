@@ -1,0 +1,45 @@
+.language-switcher {
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  z-index: 80;
+}
+
+.language-switcher select {
+  appearance: none;
+  backdrop-filter: blur(12px);
+  background:
+    linear-gradient(135deg, rgba(217, 164, 65, 0.1), transparent 55%),
+    rgba(10, 8, 6, 0.88);
+  border: 1px solid color-mix(in srgb, var(--gold) 46%, transparent);
+  border-radius: 0;
+  color: var(--parchment);
+  cursor: pointer;
+  font-family: var(--font-game-ui);
+  font-size: var(--text-game-label);
+  min-height: 44px;
+  padding: 0.55rem 2.25rem 0.55rem 0.85rem;
+}
+
+.language-switcher::after {
+  border-bottom: 1px solid var(--gold-light);
+  border-right: 1px solid var(--gold-light);
+  content: '';
+  height: 0.45rem;
+  pointer-events: none;
+  position: absolute;
+  right: 0.9rem;
+  top: 50%;
+  transform: translateY(-70%) rotate(45deg);
+  width: 0.45rem;
+}
+
+.language-switcher select:focus-visible {
+  outline: 2px solid var(--gold-light);
+  outline-offset: 3px;
+}
+
+.language-switcher select:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
