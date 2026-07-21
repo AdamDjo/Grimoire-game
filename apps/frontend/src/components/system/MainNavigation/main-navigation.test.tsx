@@ -9,6 +9,7 @@ const scrollToLandingAnchorMock = vi.fn((_href: string) => true)
 
 vi.mock('next/navigation', () => ({
   usePathname: () => pathnameMock(),
+  useRouter: () => ({ refresh: vi.fn() }),
 }))
 
 vi.mock('next/image', () => ({
@@ -96,6 +97,7 @@ describe('MainNavigation', () => {
     expect(dialog).toBeInTheDocument()
     expect(document.documentElement.style.overflow).toBe('hidden')
     expect(within(dialog).getByRole('link', { name: 'The Inn' })).toHaveFocus()
+    expect(within(dialog).getByRole('group', { name: 'Interface language' })).toBeInTheDocument()
 
     await user.keyboard('{Escape}')
 

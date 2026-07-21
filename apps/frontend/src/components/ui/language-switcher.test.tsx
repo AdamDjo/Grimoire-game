@@ -31,6 +31,7 @@ describe('LanguageSwitcher', () => {
     mocks.refresh.mockReset()
     mocks.updateUser.mockReset()
     document.cookie = `${UI_LOCALE_COOKIE}=; Path=/; Max-Age=0`
+    window.history.replaceState({}, '', '/velkhar/aveugle?return=run#dialogue')
   })
 
   it('persists the selection in the cookie and the signed-in account without navigating away', async () => {
@@ -47,6 +48,9 @@ describe('LanguageSwitcher', () => {
         data: { [UI_LOCALE_METADATA_KEY]: 'fr' },
       })
       expect(mocks.refresh).toHaveBeenCalledOnce()
+      expect(`${window.location.pathname}${window.location.search}${window.location.hash}`).toBe(
+        '/velkhar/aveugle?return=run#dialogue'
+      )
     })
   })
 

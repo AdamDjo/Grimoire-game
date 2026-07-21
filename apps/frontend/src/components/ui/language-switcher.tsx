@@ -11,7 +11,11 @@ import './language-switcher.css'
 
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 365
 
-export function LanguageSwitcher() {
+interface LanguageSwitcherProps {
+  variant?: 'header' | 'menu' | 'standalone'
+}
+
+export function LanguageSwitcher({ variant = 'header' }: LanguageSwitcherProps) {
   const locale = useLocale()
   const router = useRouter()
   const t = useTranslations('LanguageSwitcher')
@@ -41,32 +45,38 @@ export function LanguageSwitcher() {
   }
 
   return (
-    <div aria-label={t('label')} aria-busy={isSaving} className="language-switcher" role="group">
-      <span aria-hidden="true" className="language-switcher__ornament" />
-      <button
-        aria-label={t('english')}
-        aria-pressed={locale === 'en'}
-        className="language-switcher__option"
-        data-active={locale === 'en'}
-        disabled={isSaving}
-        onClick={() => void selectLocale('en')}
-        type="button"
-      >
-        EN
-      </button>
-      <span aria-hidden="true" className="language-switcher__divider" />
-      <button
-        aria-label={t('french')}
-        aria-pressed={locale === 'fr'}
-        className="language-switcher__option"
-        data-active={locale === 'fr'}
-        aria-busy={isSaving}
-        disabled={isSaving}
-        onClick={() => void selectLocale('fr')}
-        type="button"
-      >
-        FR
-      </button>
+    <div
+      aria-label={t('label')}
+      aria-busy={isSaving}
+      className={`language-switcher language-switcher--${variant}`}
+      role="group"
+    >
+      <span className="language-switcher__label">{t('label')}</span>
+      <span className="language-switcher__options">
+        <button
+          aria-label={t('english')}
+          aria-pressed={locale === 'en'}
+          className="language-switcher__option"
+          data-active={locale === 'en'}
+          disabled={isSaving}
+          onClick={() => void selectLocale('en')}
+          type="button"
+        >
+          EN
+        </button>
+        <span aria-hidden="true" className="language-switcher__divider" />
+        <button
+          aria-label={t('french')}
+          aria-pressed={locale === 'fr'}
+          className="language-switcher__option"
+          data-active={locale === 'fr'}
+          disabled={isSaving}
+          onClick={() => void selectLocale('fr')}
+          type="button"
+        >
+          FR
+        </button>
+      </span>
       <span aria-live="polite" className="sr-only">
         {isSaving ? t('saving') : null}
       </span>

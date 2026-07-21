@@ -187,7 +187,6 @@
 .main-navigation__actions {
   align-items: center;
   display: flex;
-  padding-inline-end: clamp(7rem, 9vw, 8.5rem);
   position: relative;
 }
 
@@ -336,6 +335,12 @@
   text-shadow: 0 0 22px rgba(217, 164, 65, 0.24);
 }
 
+.main-navigation__mobile-language {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
 @keyframes main-navigation-menu-enter {
   from {
     opacity: 0;
@@ -365,10 +370,6 @@
 
   .main-navigation__account--desktop {
     display: none;
-  }
-
-  .main-navigation__actions {
-    padding-inline-end: 6.5rem;
   }
 
   .main-navigation__menu-trigger,

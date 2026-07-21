@@ -3,7 +3,16 @@ import { vi } from 'vitest'
 
 import englishMessages from '../../messages/en.json'
 
+import type * as NextNavigation from 'next/navigation'
 import type * as NextIntl from 'next-intl'
+
+vi.mock('next/navigation', async (importOriginal) => {
+  const actual = await importOriginal<typeof NextNavigation>()
+  return {
+    ...actual,
+    useRouter: () => ({ refresh: vi.fn() }),
+  }
+})
 
 vi.mock('next-intl', async (importOriginal) => {
   const actual = await importOriginal<typeof NextIntl>()

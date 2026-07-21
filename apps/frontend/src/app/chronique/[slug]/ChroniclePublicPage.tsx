@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 
+import { LanguageSwitcher } from '@/components/ui/language-switcher'
 import { ChronicleReader } from '@/features/chronicle/components/ChronicleReader'
 import { ChronicleState } from '@/features/chronicle/components/ChronicleState'
 import { useChronicle } from '@/features/chronicle/hooks/use-chronicle'
@@ -22,7 +23,10 @@ export function ChroniclePublicPage({ slug }: ChroniclePublicPageProps) {
         <Link href="/" aria-label={t('home')}>
           GRIMOIRE
         </Link>
-        <span>{t('velkharTrace')}</span>
+        <div className="chronicle-page__nav-actions">
+          <span>{t('velkharTrace')}</span>
+          <LanguageSwitcher variant="standalone" />
+        </div>
       </nav>
       {status === 'ready' && chronicle ? (
         <ChronicleReader chronicle={chronicle} />

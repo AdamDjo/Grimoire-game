@@ -62,7 +62,6 @@
   align-items: center;
   display: flex;
   gap: clamp(0.75rem, 1.5vw, 1.5rem);
-  padding-inline-end: clamp(7rem, 9vw, 8.5rem);
 }
 
 .velkhar-session__topbar-end > a {
@@ -878,14 +877,6 @@
 
   .velkhar-session__topbar .game-top-bar__end {
     justify-content: flex-start;
-  }
-
-  .velkhar-session__topbar .game-top-bar__start {
-    padding-inline-end: 6.75rem;
-  }
-
-  .velkhar-session__topbar-end {
-    padding-inline-end: 0;
   }
 
   .velkhar-session__topbar .location-identity {

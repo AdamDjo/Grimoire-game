@@ -13,6 +13,7 @@ import { GameTopBar } from '@/components/ui/grimoire/GameTopBar/GameTopBar'
 import { LocationIdentity } from '@/components/ui/grimoire/LocationIdentity/LocationIdentity'
 import { NarrativeComposer } from '@/components/ui/grimoire/NarrativeComposer/NarrativeComposer'
 import { PlayerIdentity } from '@/components/ui/grimoire/PlayerIdentity/PlayerIdentity'
+import { LanguageSwitcher } from '@/components/ui/language-switcher'
 import { SoftSignupPrompt } from '@/features/auth/components/SoftSignupPrompt/SoftSignupPrompt'
 import { ChronicleEndExperience } from '@/features/chronicle/components/ChronicleEndExperience'
 import { gameSessionApi } from '@/features/game-session/api/game-session-api'
@@ -196,6 +197,7 @@ export function VelkharSession({ initialCharacter, locale = 'en' }: VelkharSessi
             }
             end={
               <div className="velkhar-session__topbar-end">
+                <LanguageSwitcher />
                 {session.source ? <SourceBadge source={session.source} /> : null}
                 <Link href={`${VELKHAR_WORLD.routes.aveugle}?return=run`}>
                   {t('returnBlindOne')}

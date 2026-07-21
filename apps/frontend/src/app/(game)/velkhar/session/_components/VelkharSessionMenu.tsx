@@ -6,6 +6,7 @@ import { useState } from 'react'
 
 import { GameButton } from '@/components/ui/grimoire/GameButton/GameButton'
 import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
+import { LanguageSwitcher } from '@/components/ui/language-switcher'
 
 import { VELKHAR_WORLD } from '../../_config/velkhar-world'
 
@@ -49,6 +50,7 @@ export function VelkharSessionMenu({
 
   return (
     <div className="velkhar-session-menu">
+      <LanguageSwitcher variant="menu" />
       <p className="velkhar-session-menu__status">
         <span aria-hidden="true" data-online={source === 'ai'} />
         {t('gameMasterStatus', {

@@ -9,6 +9,7 @@ import { createPortal } from 'react-dom'
 import { GameBrand } from '@/components/ui/grimoire/GameBrand/GameBrand'
 import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
 import { GameTopBar } from '@/components/ui/grimoire/GameTopBar/GameTopBar'
+import { LanguageSwitcher } from '@/components/ui/language-switcher'
 import { WORLD_ROUTES } from '@/config/worlds'
 import { cn } from '@/lib/utils'
 
@@ -189,6 +190,7 @@ export function MainNavigation(props: MainNavigationProps) {
       }
       end={
         <div className="main-navigation__actions">
+          <LanguageSwitcher />
           <Link
             className="main-navigation__account main-navigation__account--desktop"
             href={accountHref}
@@ -252,6 +254,9 @@ export function MainNavigation(props: MainNavigationProps) {
                           </li>
                         )
                       })}
+                      <li className="main-navigation__mobile-language">
+                        <LanguageSwitcher variant="menu" />
+                      </li>
                       <li>
                         <Link
                           className="main-navigation__mobile-account"
