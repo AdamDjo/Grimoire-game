@@ -2,14 +2,14 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 // ---------------------------------------------------------------------------
-// Vision domaine complète (voir docs/private/raw/*.md) — NON migrée ici :
+// Vision domaine complète (voir docs/public/raw/*.md) — NON migrée ici :
 // Peuples, Vocations (catalogues statiques, pas de table), Factions/réputation,
-// Quêtes, Inventaire/Items, Chroniques (résumé fin de run). Ces modèles
-// arriveront avec les écrans qui en ont besoin (Character Create, Auberge,
-// World Map).
+// Quêtes, Inventaire/Items complet, Traces, World Events. Ces modèles
+// arriveront avec les écrans qui en ont besoin (World Map, inventaire complet).
 //
-// Migré maintenant (coeur du world-state de session) : User, Character,
-// GameSession, SceneLog, MemoryChunk, Souvenir.
+// Migré aujourd'hui (coeur du world-state de session + méta) : User, Character
+// (avec fer et topics vus de l'Aveugle), GameSession, SceneLog, MemoryChunk,
+// Souvenir (anonyme ou nommé), Chronicle.
 // ---------------------------------------------------------------------------
 
 generator client {
@@ -59,6 +59,14 @@ model Character {
 
   /// États altérés persistants (Condition[]), ex: "fever", "poisoned".
   conditions String[]
+
+  /// Fer (🪙), monnaie in-game de Velkhar. Aucune mécanique de gain/dépense
+  /// n'est encore branchée ailleurs dans le backend — champ persistant seul.
+  iron Int @default(0)
+
+  /// Ids des topics du catalogue statique de L'Aveugle déjà vus par ce joueur
+  /// (le contenu des topics reste statique côté frontend, seul l'état "vu" persiste).
+  aveugleSeenTopics String[] @default([])
 
   createdAt DateTime @default(now())
   sessions  GameSession[]
@@ -149,8 +157,19 @@ model Souvenir {
   /// SceneLog.sceneType's convention — no Prisma enum in this schema.
   type  String
 
-  /// Placeholder for the future Aveugle Souvenir-for-lore exchange (#133). Unused for now.
+  /// True for an anonymous Souvenir (generic lore fragment, spendable as
+  /// currency with L'Aveugle — 11-INVENTORY-ECONOMY.md §3). False (default)
+  /// for a named Souvenir (a specific marked act of the player, narrative
+  /// only, never spendable). The player-facing word "Souvenir" covers both
+  /// sub-types on purpose (canon); this flag is the only backend distinction.
+  anonymous Boolean @default(false)
+
+  /// True once this Souvenir has been spent with L'Aveugle in exchange for
+  /// lore (#147). Only ever set on an anonymous Souvenir.
   sharedWithAveugle Boolean @default(false)
+  /// AI-generated lore text produced when this Souvenir was spent, kept for
+  /// display history. Null until `sharedWithAveugle` is set to true.
+  aveugleLoreResult String?
 
   createdAt DateTime @default(now())
 }

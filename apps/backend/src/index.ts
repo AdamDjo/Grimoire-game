@@ -5,6 +5,7 @@ import rateLimit from 'express-rate-limit'
 
 import { env } from './config/env'
 import { requireAuth } from './middleware/auth.middleware'
+import { aveugleRouter } from './routes/aveugle.routes'
 import { characterRouter } from './routes/character.routes'
 import { chronicleRouter } from './routes/chronicle.routes'
 import { gameRouter } from './routes/game.routes'
@@ -50,6 +51,8 @@ app.use('/api/game', gameLimiter, requireAuth, gameRouter)
 app.use('/api/character', apiLimiter, requireAuth, characterRouter)
 app.use('/api/souvenirs', apiLimiter, requireAuth, souvenirRouter)
 app.use('/api/chronicles', apiLimiter, requireAuth, chronicleRouter)
+// Aveugle's router also applies its own stricter per-route limiter on AI-backed endpoints.
+app.use('/api/aveugle', apiLimiter, requireAuth, aveugleRouter)
 
 // Health check
 app.get('/api/health', (_req, res) => {
