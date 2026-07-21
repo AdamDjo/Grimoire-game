@@ -54,3 +54,8 @@ export function getAuthHref(pathname: '/login' | '/signup', next: string): strin
   const safeNext = getSafeInternalDestination(next)
   return `${pathname}?next=${encodeURIComponent(safeNext)}`
 }
+
+export function getAccessRecoveryHref(next: string): string {
+  const safeNext = getSafeInternalDestination(next)
+  return `/forgot-password?next=${encodeURIComponent(safeNext)}`
+}

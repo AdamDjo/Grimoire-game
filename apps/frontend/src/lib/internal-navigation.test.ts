@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
-import { getAuthHref, getSafeInternalDestination } from './internal-navigation'
+import {
+  getAccessRecoveryHref,
+  getAuthHref,
+  getSafeInternalDestination,
+} from './internal-navigation'
 
 describe('getSafeInternalDestination', () => {
   it.each([
@@ -32,6 +36,12 @@ describe('getAuthHref', () => {
   it('encodes a validated return destination', () => {
     expect(getAuthHref('/login', '/velkhar/session/resume?from=dashboard')).toBe(
       '/login?next=%2Fvelkhar%2Fsession%2Fresume%3Ffrom%3Ddashboard'
+    )
+  })
+
+  it('construit une récupération qui conserve une destination validée', () => {
+    expect(getAccessRecoveryHref('/velkhar/aveugle?return=chronicle')).toBe(
+      '/forgot-password?next=%2Fvelkhar%2Faveugle%3Freturn%3Dchronicle'
     )
   })
 })

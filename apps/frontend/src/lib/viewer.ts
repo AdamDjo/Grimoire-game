@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 
 export interface ViewerSummary {
   displayName: string | null
+  hasSession: boolean
   tier: ViewerTier
 }
 
@@ -30,8 +31,8 @@ export const getViewerSummary = cache(async (): Promise<ViewerSummary> => {
           ? user.email.split('@')[0]
           : null
 
-    return { displayName, tier }
+    return { displayName, hasSession: user !== null, tier }
   } catch {
-    return { displayName: null, tier: 'anonymous' }
+    return { displayName: null, hasSession: false, tier: 'anonymous' }
   }
 })

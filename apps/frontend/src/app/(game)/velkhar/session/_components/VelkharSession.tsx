@@ -21,6 +21,7 @@ import { DiceRoll } from '@/features/game-session/components/DiceRoll'
 import { NarrativePanel } from '@/features/game-session/components/NarrativePanel'
 import { SourceBadge } from '@/features/game-session/components/SourceBadge'
 import { useGameSession } from '@/features/game-session/hooks/use-game-session'
+import { getAuthHref } from '@/lib/internal-navigation'
 
 import { VELKHAR_WORLD } from '../../_config/velkhar-world'
 
@@ -186,7 +187,9 @@ export function VelkharSession({ initialCharacter, locale = 'en' }: VelkharSessi
                   <GameIcon decorative name="lock" size={48} />
                   <h1>Your Chronicle is waiting</h1>
                   <p>Create a free account to keep this run and continue playing.</p>
-                  <Link href="/signup">Create account</Link>
+                  <Link href={getAuthHref('/signup', `${VELKHAR_WORLD.routes.session}/resume`)}>
+                    Create account
+                  </Link>
                 </div>
               ) : session.error ? (
                 <div className="velkhar-session__state" role="alert">

@@ -49,6 +49,43 @@
   margin-block: 1rem 1.15rem;
 }
 
+.login-form__preservation {
+  align-items: flex-start;
+  background: rgba(53, 196, 172, 0.07);
+  border: 1px solid color-mix(in srgb, var(--soul) 32%, transparent);
+  color: var(--ink-2);
+  display: flex;
+  gap: 0.7rem;
+  margin-top: 1.2rem;
+  padding: 0.8rem 0.9rem;
+}
+
+.login-form__preservation .game-icon {
+  flex: none;
+}
+
+.login-form__preservation p,
+.login-form__account-switch {
+  font-family: var(--font-game-ui);
+  font-size: 0.84rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.login-form__account-switch {
+  color: var(--ink-2);
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.login-form__account-switch a,
+.login-form__recovery-link a {
+  color: var(--gold-light);
+  text-decoration: underline;
+  text-decoration-color: rgba(240, 212, 138, 0.32);
+  text-underline-offset: 0.25em;
+}
+
 .login-form__fields {
   display: grid;
   gap: 0.85rem;
@@ -151,6 +188,13 @@
   width: 100%;
 }
 
+.login-form__recovery-link {
+  font-family: var(--font-game-ui);
+  font-size: 0.82rem;
+  margin: -0.2rem 0 0.15rem;
+  text-align: center;
+}
+
 .login-form__status {
   color: var(--gold-light);
   font-family: var(--font-ui);
@@ -160,6 +204,10 @@
 
 .login-form__status p {
   margin: 0;
+}
+
+.login-form__status[role='alert'] {
+  color: color-mix(in srgb, var(--blood) 58%, var(--parchment));
 }
 
 .login-form__footer {
