@@ -15,6 +15,7 @@ import { GamePanel } from '@/components/ui/grimoire/GamePanel/GamePanel'
 import { GameSectionHeading } from '@/components/ui/grimoire/GameSectionHeading/GameSectionHeading'
 import { GameStepper } from '@/components/ui/grimoire/GameStepper/GameStepper'
 import { GameTextarea } from '@/components/ui/grimoire/GameTextarea/GameTextarea'
+import { ensureAnonymousSession } from '@/lib/supabase/ensure-session'
 
 import { VELKHAR_WORLD } from '../../../_config/velkhar-world'
 import {
@@ -275,6 +276,11 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
     setIsSubmitting(true)
 
     try {
+      // Anonymous visitors reaching the Forge first have no Supabase session
+      // yet; without one the `/api/character` proxy sends a tokenless request
+      // and the backend rejects it ("Missing bearer token"). Guarantee a
+      // session before the protected call.
+      await ensureAnonymousSession()
       await createCharacter(result)
       // Kept as the hub's client-side read model (`aveugle-hub-model.ts`) —
       // the backend `Character` created above is now the source of truth,
