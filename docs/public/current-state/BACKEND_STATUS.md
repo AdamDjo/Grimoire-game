@@ -4,17 +4,15 @@ visibility: public
 rag: true
 source_of_truth: true
 owner: backend
-updated: 2026-07-17
+updated: 2026-07-21
 ---
 
 # Backend Status
 
 ## Actif
 
-- Issue : #147 — brancher l'Auberge de L'Aveugle à la base et aux contrats API.
-- Branche connue : `feature/147-auberge-aveugle-backend`.
-- Le ticket reste volontairement unique pendant son chantier actif pour éviter un redécoupage
-  concurrent ; il est suivi par l'epic backend #165.
+- Aucun chantier backend en cours : #147 est terminé et attend la revue/merge de
+  [PR #174](https://github.com/AdamDjo/Grimoire-game/pull/174) → `develop`.
 
 ## Livré sur develop
 
@@ -25,9 +23,14 @@ updated: 2026-07-17
 - #115 et #116 — Souvenirs nommés et Chronique de fin de run.
 - #154 et #155 — gestion des erreurs asynchrones et délimitation du texte libre dans le prompt.
 
+## En attente de merge
+
+- #147 — Auberge de L'Aveugle branchée à la base et aux contrats API (`aveugle.service.ts`,
+  `aveugle.routes.ts`, hub/talk/spend). [PR #174](https://github.com/AdamDjo/Grimoire-game/pull/174)
+  → `develop`, 152/152 tests, type-check et lint clean.
+
 ## Gaps v0.1.0
 
-- #147 — retirer les fixtures autoritatives de l'Auberge ;
 - #101 — fallback multi-modèles face aux 429 OpenRouter ;
 - #152 — résolution canonique du concept libre ;
 - #168 — locale navigateur BCP-47 validée et cohérence de toutes les sorties IA ;
