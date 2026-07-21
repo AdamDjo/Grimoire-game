@@ -1,11 +1,7 @@
+import { localeDisplayName } from '@grimoire/shared'
+
 import type { MemoryChunkModel, SouvenirModel } from '../generated/prisma/models'
 import type { Character, Locale } from '@grimoire/shared'
-
-/** Human-readable language name for the locale, injected into the prompt. */
-const LOCALE_NAME: Record<Locale, string> = {
-  en: 'English',
-  fr: 'French',
-}
 
 /** Narrow projection of a `SceneLog` used for the N1 recent-turns window. */
 export interface RecentTurnSummary {
@@ -94,7 +90,7 @@ export function buildSystemPrompt(
   recentTurns: RecentTurnSummary[] = [],
   souvenirs: SouvenirModel[] = []
 ): string {
-  const languageName = LOCALE_NAME[locale]
+  const languageName = localeDisplayName(locale)
 
   return [
     'You are the Game Master of Velkhar, a harsh desert survival RPG (world: "Of Ash and Salt").',

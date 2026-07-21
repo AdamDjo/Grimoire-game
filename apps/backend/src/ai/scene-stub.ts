@@ -6,7 +6,11 @@ import type { Character, Locale } from '@grimoire/shared'
  * Used to unblock the session screen and when the AI is unavailable or malformed.
  */
 export function buildStubScene(character: Character, locale: Locale): AiScenePayload {
-  if (locale === 'fr') {
+  // Localized stubs are keyed by primary language subtag; every other locale
+  // gets the universal English stub. See #168.
+  const language = locale.toLowerCase().split('-')[0]
+
+  if (language === 'fr') {
     return {
       narrative: [
         `Le sel crisse sous les bottes de ${character.name}. Le vent du Makhzen porte une odeur de cendre froide.`,

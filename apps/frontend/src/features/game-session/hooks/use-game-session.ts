@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { forgetActiveGameSession, rememberActiveGameSession } from '@/lib/active-game-session'
-import { createClient } from '@/lib/supabase/client'
+import { ensureAnonymousSession } from '@/lib/supabase/ensure-session'
 import { useSessionStore } from '@/stores/session-store'
 
 import type {
@@ -18,7 +18,8 @@ import type { Locale } from '@grimoire/shared'
 interface UseGameSessionOptions<TWorldState, TResponse extends GameSessionResponse> {
   api: GameSessionApi<TResponse>
   initialWorldState: TWorldState
-  locale: Locale
+  /** Browser-detected narration language; resolved and persisted server-side (#168). */
+  locale?: Locale
   reduceWorldState: (previous: TWorldState, response: TResponse) => TWorldState
   resumeHref: string
 }
@@ -146,7 +147,6 @@ export function useGameSession<TWorldState, TResponse extends GameSessionRespons
       try {
         const response = await api.postGameAction({
           sessionId,
-          locale,
           ...(action.choice
             ? { choiceId: action.choice.id, chosenActionText: action.choice.text }
             : {}),
@@ -158,7 +158,7 @@ export function useGameSession<TWorldState, TResponse extends GameSessionRespons
         handleRequestError(error)
       }
     },
-    [api, applyResponse, handleRequestError, incrementAnonymousRequestCount, locale]
+    [api, applyResponse, handleRequestError, incrementAnonymousRequestCount]
   )
 
   useEffect(() => {
@@ -185,12 +185,7 @@ export function useGameSession<TWorldState, TResponse extends GameSessionRespons
     startedRef.current = true
 
     void (async () => {
-      const supabase = createClient()
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
-
-      if (!session) await supabase.auth.signInAnonymously()
+      await ensureAnonymousSession()
       await openSession()
     })()
   }, [openSession])

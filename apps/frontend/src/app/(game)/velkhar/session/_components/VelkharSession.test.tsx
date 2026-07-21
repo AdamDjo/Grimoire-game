@@ -160,7 +160,6 @@ describe('VelkharSession', () => {
     expect(postGameActionMock).toHaveBeenCalledTimes(1)
     expect(postGameActionMock).toHaveBeenCalledWith({
       sessionId: 'session-1',
-      locale: 'en',
       choiceId: 'choice-1',
       chosenActionText: 'Approach the stranger',
     })
@@ -182,7 +181,6 @@ describe('VelkharSession', () => {
     await waitFor(() =>
       expect(postGameActionMock).toHaveBeenCalledWith({
         sessionId: 'session-1',
-        locale: 'en',
         freeAction: 'I inspect the tracks',
       })
     )

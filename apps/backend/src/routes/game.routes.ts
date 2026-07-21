@@ -37,8 +37,11 @@ gameRouter.post('/session', async (req: Request, res: Response<ApiResponse<Scene
     return
   }
 
-  const context = await getOrCreateSession(req.auth!.userId)
-  const response = await buildOpeningScene(context, parsed.data.locale)
+  const context = await getOrCreateSession(req.auth!.userId, {
+    explicitLocale: parsed.data.explicitLocale,
+    browserLocale: parsed.data.locale,
+  })
+  const response = await buildOpeningScene(context)
 
   res.json({ success: true, data: response })
 })
@@ -59,7 +62,7 @@ gameRouter.post('/action', async (req: Request, res: Response<ApiResponse<SceneR
     return
   }
 
-  const { sessionId, choiceId, chosenActionText, freeAction, locale } = parsed.data
+  const { sessionId, choiceId, chosenActionText, freeAction } = parsed.data
   const userId = req.auth!.userId
 
   // Scope the session to the caller — a user can only act on their own session.
@@ -90,7 +93,6 @@ gameRouter.post('/action', async (req: Request, res: Response<ApiResponse<SceneR
     choice,
     chosenActionText,
     freeAction,
-    locale,
   })
 
   res.json({ success: true, data: response })

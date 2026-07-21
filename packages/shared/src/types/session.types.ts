@@ -1,14 +1,12 @@
 import type { CharacterStats } from "./character.types";
 import type { Inventory } from "./inventory.types";
+import type { Locale } from "./locale.types";
 import type { QuestState } from "./quest.types";
 
 export type SessionStatus = "active" | "ended";
 
 /** Why a session ended. Only bridge to the A3 narrative memory layer. */
 export type SessionEndReason = "death" | "inn" | "abandon";
-
-/** Player language for the Game Master's narration. Default 'en'. */
-export type Locale = "en" | "fr";
 
 export interface WorldState {
   currentRegionId: string;

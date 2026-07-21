@@ -8,7 +8,15 @@ import type { Character } from '@grimoire/shared'
 
 const COMPRESSION_TIMEOUT_MS = 8000
 
-/** Builds the exact canon compression prompt (docs/private/raw/16-MEMORY.md §5). */
+/**
+ * Builds the canon compression prompt (docs/public/raw/16-MEMORY.md §5).
+ *
+ * Internal memory is stored in a fixed English pivot, independent of the
+ * player's narration locale (#168): summaries and facts must stay stable and
+ * language-agnostic so that a mid-run language change can never translate or
+ * corrupt the canon. Only the player-facing narration is localized; this
+ * compression output never reaches the player verbatim.
+ */
 function buildCompressionPrompt(character: Character, location: string, turns: SceneLog[]): string {
   const rawTurns = turns
     .slice()
@@ -17,30 +25,32 @@ function buildCompressionPrompt(character: Character, location: string, turns: S
     .join('\n')
 
   return [
-    'Tu compresses 8 tours de jeu en un résumé structuré.',
+    'You compress 8 game turns into a structured summary.',
+    'Always write the summary and facts in English — this is an internal memory',
+    'record, never shown to the player, and must stay language-independent.',
     '',
-    '[CONTEXTE]',
-    `${character.name}, ${character.vocation}, ${character.people}, à Velkhar.`,
-    `Lieu actuel : ${location}.`,
+    '[CONTEXT]',
+    `${character.name}, ${character.vocation}, ${character.people}, in Velkhar.`,
+    `Current location: ${location}.`,
     '',
-    '[TOURS BRUTS]',
+    '[RAW TURNS]',
     rawTurns,
     '',
     '[INSTRUCTION]',
-    'Génère STRICTEMENT en JSON :',
+    'Output STRICTLY as JSON:',
     '{',
-    '  "summary": "150 tokens max, narratif 3e personne",',
-    '  "key_facts": ["fait 1", "fait 2", "fait 3"],',
-    '  "key_facts_pinned": [/* faits critiques selon règles */],',
+    '  "summary": "150 tokens max, third-person narrative",',
+    '  "key_facts": ["fact 1", "fact 2", "fact 3"],',
+    '  "key_facts_pinned": [/* critical facts per rules */],',
     '  "mood": "calm | tense | festive | sacred | dangerous",',
     '  "npcs_evolution": [{"name": "...", "status": "...", "last_seen": "..."}]',
     '}',
     '',
-    'Règles de pinning automatique :',
-    '- PNJ mort → key_facts_pinned',
-    '- Artefact obtenu/perdu → key_facts_pinned',
-    '- Quête activée → key_facts_pinned',
-    '- Choix moral majeur → key_facts_pinned',
+    'Automatic pinning rules:',
+    '- NPC death → key_facts_pinned',
+    '- Artifact gained/lost → key_facts_pinned',
+    '- Quest activated → key_facts_pinned',
+    '- Major moral choice → key_facts_pinned',
   ].join('\n')
 }
 
