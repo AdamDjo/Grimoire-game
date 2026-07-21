@@ -4,7 +4,7 @@ visibility: public
 rag: true
 source_of_truth: true
 owner: release-coordination
-updated: 2026-07-17
+updated: 2026-07-21
 ---
 
 # Release Readiness — v0.1.0
@@ -12,23 +12,23 @@ updated: 2026-07-17
 Ce fichier est mis à jour après merge sur `develop`, pas depuis une branche frontend ou backend.
 La checklist opérationnelle détaillée vit dans l'issue #163.
 
-## État au 17 juillet 2026
+## État au 21 juillet 2026
 
-| Bloc                    | État                 | Référence      |
-| ----------------------- | -------------------- | -------------- |
-| UI Kit                  | Livré                | #93 / PR #121  |
-| Epic frontend           | En cours             | #123           |
-| Auth/conversion anonyme | PR prête, non mergée | #135 / PR #160 |
-| Interface EN/FR         | À faire              | #167           |
-| Langue IA navigateur    | À faire              | #168           |
-| Epic backend            | En cours             | #165           |
-| Auberge réelle          | En cours             | #147           |
-| Disponibilité IA        | À faire              | #101           |
-| Concept libre           | À trancher/livrer    | #152           |
-| Déploiement API         | À faire              | #161           |
-| Sécurité dépendances    | Bloquant             | #162           |
-| Golden path réel        | À faire              | #129           |
-| Checklist de livraison  | Ouverte              | #163           |
+| Bloc                    | État              | Référence      |
+| ----------------------- | ----------------- | -------------- |
+| UI Kit                  | Livré             | #93 / PR #121  |
+| Epic frontend           | En cours          | #123           |
+| Auth/conversion anonyme | Livré             | #135 / PR #160 |
+| Interface EN/FR         | À faire           | #167           |
+| Langue IA navigateur    | À faire           | #168           |
+| Epic backend            | En cours          | #165           |
+| Auberge réelle          | En cours          | #147           |
+| Disponibilité IA        | À faire           | #101           |
+| Concept libre           | À trancher/livrer | #152           |
+| Déploiement API         | À faire           | #161           |
+| Sécurité dépendances    | Bloquant          | #162           |
+| Golden path réel        | À faire           | #129           |
+| Checklist de livraison  | Ouverte           | #163           |
 
 ## Hors scope de la première release
 
