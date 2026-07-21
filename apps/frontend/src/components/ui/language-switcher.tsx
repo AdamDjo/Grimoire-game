@@ -41,21 +41,32 @@ export function LanguageSwitcher() {
   }
 
   return (
-    <div className="language-switcher">
-      <label className="sr-only" htmlFor="ui-language">
-        {t('label')}
-      </label>
-      <select
-        aria-busy={isSaving}
-        aria-label={t('label')}
+    <div aria-label={t('label')} aria-busy={isSaving} className="language-switcher" role="group">
+      <span aria-hidden="true" className="language-switcher__ornament" />
+      <button
+        aria-label={t('english')}
+        aria-pressed={locale === 'en'}
+        className="language-switcher__option"
+        data-active={locale === 'en'}
         disabled={isSaving}
-        id="ui-language"
-        onChange={(event) => void selectLocale(event.target.value as UiLocale)}
-        value={locale}
+        onClick={() => void selectLocale('en')}
+        type="button"
       >
-        <option value="en">{t('english')}</option>
-        <option value="fr">{t('french')}</option>
-      </select>
+        EN
+      </button>
+      <span aria-hidden="true" className="language-switcher__divider" />
+      <button
+        aria-label={t('french')}
+        aria-pressed={locale === 'fr'}
+        className="language-switcher__option"
+        data-active={locale === 'fr'}
+        aria-busy={isSaving}
+        disabled={isSaving}
+        onClick={() => void selectLocale('fr')}
+        type="button"
+      >
+        FR
+      </button>
       <span aria-live="polite" className="sr-only">
         {isSaving ? t('saving') : null}
       </span>

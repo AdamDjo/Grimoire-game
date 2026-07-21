@@ -39,7 +39,7 @@ describe('LanguageSwitcher', () => {
     mocks.updateUser.mockResolvedValue({ data: {}, error: null })
 
     render(<LanguageSwitcher />)
-    await user.selectOptions(screen.getByRole('combobox', { name: 'Interface language' }), 'fr')
+    await user.click(screen.getByRole('button', { name: 'Français' }))
 
     await waitFor(() => {
       expect(document.cookie).toContain(`${UI_LOCALE_COOKIE}=fr`)
@@ -55,7 +55,7 @@ describe('LanguageSwitcher', () => {
     mocks.getSession.mockResolvedValue({ data: { session: null } })
 
     render(<LanguageSwitcher />)
-    await user.selectOptions(screen.getByRole('combobox', { name: 'Interface language' }), 'fr')
+    await user.click(screen.getByRole('button', { name: 'Français' }))
 
     await waitFor(() => expect(mocks.refresh).toHaveBeenCalledOnce())
     expect(document.cookie).toContain(`${UI_LOCALE_COOKIE}=fr`)

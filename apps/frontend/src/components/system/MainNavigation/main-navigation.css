@@ -187,6 +187,7 @@
 .main-navigation__actions {
   align-items: center;
   display: flex;
+  padding-inline-end: clamp(7rem, 9vw, 8.5rem);
   position: relative;
 }
 
@@ -366,6 +367,10 @@
     display: none;
   }
 
+  .main-navigation__actions {
+    padding-inline-end: 6.5rem;
+  }
+
   .main-navigation__menu-trigger,
   .main-navigation__mobile-menu {
     display: flex;
@@ -400,6 +405,13 @@
 
   .main-navigation--marketing.is-scrolled .main-navigation__marketing-logo {
     width: 8.625rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .main-navigation__brand .game-brand,
+  .main-navigation--marketing .main-navigation__marketing-logo {
+    width: 7.5rem;
   }
 }
 
