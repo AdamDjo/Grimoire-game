@@ -27,7 +27,9 @@ souvenirRouter.get('/', async (req: Request, res: Response<ApiResponse<Souvenir[
     title: row.title,
     body: row.body,
     type: row.type as SouvenirType,
+    anonymous: row.anonymous,
     sharedWithAveugle: row.sharedWithAveugle,
+    aveugleLoreResult: row.aveugleLoreResult ?? undefined,
     createdAt: row.createdAt.toISOString(),
   }))
 

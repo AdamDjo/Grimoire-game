@@ -43,7 +43,9 @@ function souvenir(overrides: Partial<SouvenirModel>): SouvenirModel {
     title: 'The Trader Who Never Lied',
     body: 'Yarel watched the old trader take his last breath by the dry well.',
     type: 'npc-death',
+    anonymous: false,
     sharedWithAveugle: false,
+    aveugleLoreResult: null,
     createdAt: new Date(),
     ...overrides,
   }
