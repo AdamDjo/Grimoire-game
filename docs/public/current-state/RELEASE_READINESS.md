@@ -12,7 +12,7 @@ updated: 2026-07-21
 Ce fichier est mis à jour après merge sur `develop`, pas depuis une branche frontend ou backend.
 La checklist opérationnelle détaillée vit dans l'issue #163.
 
-## État au 21 juillet 2026
+## État au 21 juillet 2026 (soir)
 
 | Bloc                    | État              | Référence      |
 | ----------------------- | ----------------- | -------------- |
@@ -22,7 +22,7 @@ La checklist opérationnelle détaillée vit dans l'issue #163.
 | Interface EN/FR         | À faire           | #167           |
 | Langue IA navigateur    | À faire           | #168           |
 | Epic backend            | En cours          | #165           |
-| Auberge réelle          | En cours          | #147           |
+| Auberge réelle          | Livré             | #147 / PR #174 |
 | Disponibilité IA        | À faire           | #101           |
 | Concept libre           | À trancher/livrer | #152           |
 | Déploiement API         | À faire           | #161           |

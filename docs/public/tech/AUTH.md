@@ -52,6 +52,7 @@ Backend Express  requireAuth (middleware, monté sur /api/game)
   prisma.user.upsert({ id: userId })  +  cap anonyme
 ```
 
+- **Point de contact protégé le plus précoce** : depuis le branchement `character-create → POST /api/character` (#146), la Forge tape une route `requireAuth` **avant** le mount du `SessionClient`. La garantie de session anonyme est donc extraite dans `lib/supabase/ensure-session.ts` (`ensureAnonymousSession`) et appelée par tout premier point d'entrée protégé (Forge, hub de L'Aveugle, session de jeu) — sinon la requête part sans token et le backend renvoie `Missing bearer token`.
 - **Cookies, pas localStorage** : `@supabase/ssr` stocke la session dans des cookies
   `sb-<ref>-auth-token.0/.1` (chunkés), lisibles server-side par le proxy.
 - **JWKS** : `createRemoteJWKSet` instancié une fois au chargement du module ; `jose`
