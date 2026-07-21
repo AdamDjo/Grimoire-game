@@ -2,21 +2,21 @@
 type: actions
 visibility: public
 rag: true
-updated: 2026-07-17
+updated: 2026-07-21
 ---
 
 # Next Actions
 
 ## Immédiat
 
-1. **Finaliser #132** : relire et livrer la fin de run, l’attente de génération et le lecteur de
-   Chronique public, puis ouvrir la PR vers `develop`.
+1. **Reviewer et merger #135** : PR [#160](https://github.com/AdamDjo/Grimoire-game/pull/160)
+   vers `develop` pour l'auth frontend passwordless et la conversion anonyme.
 
 ## EPIC frontend #123 — ordre recommandé
 
-2. [#135](https://github.com/AdamDjo/Grimoire-game/issues/135) — **Auth complète et conversion anonyme**.
-3. [#136](https://github.com/AdamDjo/Grimoire-game/issues/136) — **Profil, Paramètres et confidentialité**.
-4. [#130](https://github.com/AdamDjo/Grimoire-game/issues/130), [#131](https://github.com/AdamDjo/Grimoire-game/issues/131), [#127](https://github.com/AdamDjo/Grimoire-game/issues/127), puis [#129](https://github.com/AdamDjo/Grimoire-game/issues/129).
+2. [#136](https://github.com/AdamDjo/Grimoire-game/issues/136) — **Profil, Paramètres et confidentialité**.
+3. [#130](https://github.com/AdamDjo/Grimoire-game/issues/130), [#131](https://github.com/AdamDjo/Grimoire-game/issues/131), [#127](https://github.com/AdamDjo/Grimoire-game/issues/127), puis [#129](https://github.com/AdamDjo/Grimoire-game/issues/129).
+4. [#159](https://github.com/AdamDjo/Grimoire-game/issues/159) — **Linking multi-provider avancé**, différé vers la fin du chantier auth.
 
 ## A3 — mémoire narrative, suite (après merge #111)
 

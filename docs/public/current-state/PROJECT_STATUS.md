@@ -3,7 +3,7 @@ type: status
 visibility: public
 rag: true
 source_of_truth: true
-updated: 2026-07-17
+updated: 2026-07-21
 ---
 
 # Project Status
@@ -12,16 +12,21 @@ updated: 2026-07-17
 
 - Projet : **GRIMOIRE — Of Ash and Salt**
 - Phase actuelle : **Phase 1B — parcours frontend Velkhar** (EPIC #123), après livraison du moteur backend et de la mémoire narrative principale.
-- Branche active : `feature/132-fin-run-chronique`.
-- Priorité active : compléter la fin de run, l’attente de génération et le lecteur public de
-  Chronique sans introduire de dépendance au futur contrat de publication backend.
-- Ordre recommandé ensuite : #135 auth complète, puis #136 profil et confidentialité.
+- Branche active : `feature/135-auth-conversion-anonyme`.
+- Priorité active : review/merge de la PR #160 pour l'auth frontend passwordless et la conversion anonyme.
+- Ordre recommandé ensuite : #136 profil et confidentialité, puis écrans frontend restants #130/#131/#127/#129.
 
 ## Livré récemment
 
 - **#134 — inventaire, fiche et menu de session** : ✅ mergée (PR #153 → `develop`). Le HUD
   multi-univers partage désormais ses jauges, ressources, inventaire rapide et commandes, tandis
   que Velkhar injecte ses statistiques et son équipement canonique 8+12.
+- **#132 — fin de run + Chronique publique** : ✅ mergée (PR #156 → `develop`). La fin de session
+  affiche l'attente de génération, le lecteur public et le retour vers L'Aveugle sans dépendre
+  d'un contrat backend de publication complet.
+- **#135 — auth complète et conversion anonyme** : 🔎 en PR [#160](https://github.com/AdamDjo/Grimoire-game/pull/160) → `develop`.
+  Login/signup partagés, magic link passwordless, conversion anonyme, récupération par renvoi de
+  lien, prompt progressif avant limite anonyme et logout dashboard.
 - **#149 — architecture frontend multi-univers** : ✅ mergée (PR #150 → `develop`). Velkhar
   est colocalisé sous `(game)`, la boucle de session est partagée et les frontières ESLint
   empêchent les dépendances inversées.
@@ -34,7 +39,7 @@ updated: 2026-07-17
 - **#128 — dashboard, reprise et navigation** : ✅ mergée (PR #139 → `develop`).
 - **#115 — Souvenirs nommés** et **#116 — Chronique de fin de run** : ✅ mergés (PR #138 et #140 → `develop`).
 - **EPIC #95 — vertical slice gamesession Velkhar** : ✅ mergée sur `develop` (PR #102, commit `9bb37a5`). Ferme #95→#100.
-- **#107 — auth Supabase** : ✅ livrée, en PR [#108](https://github.com/AdamDjo/Grimoire-game/pull/108) → `develop`. Tier anonyme (`signInAnonymously`), magic link + OAuth Google/Discord, JWT vérifié via JWKS dans `requireAuth`, cap 30 req anonymes → 403. Vérifiée live. Détail : [[../tech/AUTH]].
+- **#107 — auth Supabase** : ✅ mergée. Tier anonyme (`signInAnonymously`), magic link + OAuth Google/Discord, JWT vérifié via JWKS dans `requireAuth`, cap 30 req anonymes → 403. Vérifiée live. Détail : [[../tech/AUTH]].
 - **#109 — moteur de session durci (A1+A2)** : ✅ mergé (PR #110 → `develop`). D20 + conséquences rapatriés côté backend, world-state persistant, `endReason` posé sur `GameSession`.
 - **#111 — mémoire narrative N2 (compression de scène)** : ✅ mergé (PR #118 → `develop`). Compression fire-and-forget tous les 8 tours via Mistral Small (fallback Llama 3.3), stockage `MemoryChunk`, injection des chunks récents + faits épinglés dans le prompt système.
 
@@ -51,6 +56,7 @@ Chantier découpé en sous-tickets indépendants, tous rattachés à A3 :
 ## Dette / non-autoritatif à durcir
 
 - #101 (fallback multi-modèles OpenRouter pour le Game Master principal) : ouvert, non implémenté.
+- #159 (linking multi-provider avancé) : ouvert, différé vers la fin du chantier auth.
 - 91 vulnérabilités Dependabot sur `develop` (3 critiques) — à traiter dans un ticket dédié.
 - **Cap anonyme contournable** (#107) : vider les cookies `sb-*` réinitialise le quota (nouvel `auth.users.id`). Dette V1 assumée (friction, pas sécurité). Détail : [[../tech/AUTH]].
 - **RLS Postgres** différé (#107, décision #7) : autorisation V1 = filtrage `userId` explicite côté Express.
