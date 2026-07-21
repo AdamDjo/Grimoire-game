@@ -51,8 +51,8 @@ app.use('/api/game', gameLimiter, requireAuth, gameRouter)
 app.use('/api/character', apiLimiter, requireAuth, characterRouter)
 app.use('/api/souvenirs', apiLimiter, requireAuth, souvenirRouter)
 app.use('/api/chronicles', apiLimiter, requireAuth, chronicleRouter)
-// Aveugle's own router applies per-route limiters (mix of read-only and AI-backed endpoints).
-app.use('/api/aveugle', requireAuth, aveugleRouter)
+// Aveugle's router also applies its own stricter per-route limiter on AI-backed endpoints.
+app.use('/api/aveugle', apiLimiter, requireAuth, aveugleRouter)
 
 // Health check
 app.get('/api/health', (_req, res) => {
