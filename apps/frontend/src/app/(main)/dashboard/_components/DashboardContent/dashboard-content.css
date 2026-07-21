@@ -116,6 +116,43 @@
   text-wrap: pretty;
 }
 
+.auth-sign-out {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.auth-sign-out button {
+  background: transparent;
+  border: 0;
+  color: var(--ink-2);
+  cursor: pointer;
+  font-family: var(--font-game-ui);
+  font-size: 0.82rem;
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  text-decoration: underline;
+  text-decoration-color: rgba(232, 220, 192, 0.24);
+  text-underline-offset: 0.3em;
+}
+
+.auth-sign-out button:hover {
+  color: var(--gold-light);
+}
+
+.auth-sign-out button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.auth-sign-out span {
+  color: color-mix(in srgb, var(--blood) 58%, var(--parchment));
+  font-family: var(--font-game-ui);
+  font-size: 0.8rem;
+}
+
 @media (max-width: 900px) {
   .dashboard-content__grid {
     grid-template-columns: 1fr;

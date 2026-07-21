@@ -13,7 +13,8 @@ Feature to implement: $ARGUMENTS
 
 ### Step 1: Understand
 
-- Read `docs/public/current-state/PROJECT_STATUS.md` and `docs/public/current-state/NEXT_ACTIONS.md` to know current phase and project state
+- Read `docs/public/current-state/PROJECT_STATUS.md`, then only the matching domain pair:
+  `FRONTEND_STATUS.md` + `FRONTEND_NEXT.md` or `BACKEND_STATUS.md` + `BACKEND_NEXT.md`
 - Read relevant CLAUDE.md files for the target workspace
 - Read existing related code to understand patterns
 - Identify which files need to be created or modified
@@ -46,5 +47,6 @@ Feature to implement: $ARGUMENTS
 
 ### Step 6: Update Progress
 
-- Update `docs/public/current-state/PROJECT_STATUS.md` and `docs/public/current-state/NEXT_ACTIONS.md` to reflect completed items and new project state
+- Update only the matching domain status/actions files when progress documentation is in scope
+- Never update `PROJECT_STATUS.md`, `NEXT_ACTIONS.md` or `RELEASE_READINESS.md` from a feature branch
 - Report what was done and what's next

@@ -1,6 +1,6 @@
-# PLAN — Vertical-slice gamesession Velkhar (MJ IA) · Phase 1B
+# PLAN — Vertical-slice gamesession Velkhar (MJ IA) · Phase 1B — archivé
 
-> **Doc de reprise.** Si je reviens plus tard, je lis ce fichier + l'EPIC [#95](https://github.com/AdamDjo/Grimoire-game/issues/95) et je reprends où j'en étais.
+> **Statut : livré.** EPIC #95 fermée. Conservé pour historique ; ne pas utiliser comme doc de reprise.
 > **Dernière mise à jour** : 2026-07-11.
 
 ---
@@ -155,7 +155,7 @@ UI déjà dispo : `Heading`, `NavBar`, `Footer`, `Section`, `PageShell`, `StatIt
 - `docs/public/raw/06-SURVIVAL.md` — 4 jauges + Calamine + conditions + biomes + équipement.
 - `docs/public/raw/14-META-WORLD.md` §2 — Souvenirs.
 - `docs/public/tech/TECH_STACK.md` — Express+TS, OpenRouter, Supabase+pgvector, flux de tour.
-- `docs/public/plans-actifs/PHASE-1B-BACKLOG.md` — bloqueurs B1/B2/B3, écrans, tests.
+- `docs/public/archive/plans/PHASE-1B-BACKLOG.md` — photographie historique des bloqueurs B1/B2/B3.
 
 ---
 

@@ -3,7 +3,7 @@ type: tech-auth
 visibility: public
 rag: true
 source_of_truth: true
-updated: 2026-07-12
+updated: 2026-07-21
 ---
 
 # Authentification (#107)
@@ -19,8 +19,22 @@ appel réseau par requête.
 3. **Connexion** : magic link email + OAuth Google + OAuth Discord.
 4. **Vérif backend** : JWT Supabase vérifié en local via JWKS (`jose`), pas d'appel réseau par requête.
 5. **Identité** : `User.id` (Prisma) = `auth.users.id` (Supabase), même UUID. L'id n'est jamais généré par Prisma.
-6. **Migration anonyme → compte** : rattachement transparent (`linkIdentity`). Câblage complet différé (voir Dette).
+6. **Migration anonyme → compte** : rattachement frontend par email ou OAuth depuis `/signup`, avec conservation explicite de la trace.
 7. **Autorisation V1** : filtrage `userId` explicite côté Express. RLS Postgres différé (dette explicite).
+
+## Flux frontend passwordless (#135)
+
+- `/login` et `/signup` partagent le composant `AuthAccessForm`.
+- Connexion email : `signInWithOtp` avec magic link, sans mot de passe.
+- Signup email sans session : `signInWithOtp` avec `shouldCreateUser: true`.
+- Conversion email depuis une session anonyme : `updateUser({ email })` avec redirect sécurisé.
+- OAuth Google/Discord :
+  - session anonyme sur `/signup` → `linkIdentity`;
+  - session absente ou non anonyme → `signInWithOAuth`.
+- Récupération d'accès : `/forgot-password` renvoie un nouveau magic link avec
+  `shouldCreateUser: false`; il n'y a pas de route `/reset-password`.
+- Callback auth : `/auth/callback` échange le code Supabase puis redirige uniquement vers
+  une destination interne validée par `getSafeInternalDestination`.
 
 ## Flux runtime
 
@@ -50,8 +64,9 @@ Backend Express  requireAuth (middleware, monté sur /api/game)
 - Limite : **`ANONYMOUS_REQUEST_LIMIT = 30`** (`auth.middleware.ts`).
 - Au-delà : `403 { success: false, error: 'Anonymous limit reached' }`. Le frontend
   bascule sur un blocage forcé (message + lien `/signup`, choix masqués).
-- Le compteur UI Zustand (`session-store.ts`) est **cosmétique** (soft-prompt) ; la
-  vérité du cap est en base, côté backend.
+- Le compteur UI Zustand (`session-store.ts`) est **cosmétique** : rappel progressif
+  à partir de 20 requêtes anonymes, puis mur dur quand le backend renvoie 403. La
+  vérité du cap reste en base, côté backend.
 
 ## Séparation des erreurs dans `requireAuth`
 
@@ -84,8 +99,9 @@ jamais seulement `typeof === 'string'`.
   **À durcir** avec un rate-limit / cap par IP (backend) **quand l'IA payante
   remplacera le stub** — c'est là que l'abus aura un coût. Fingerprint device écarté
   (RGPD/consentement + dépendance tierce). Décision prise le 2026-07-12.
-- **`linkIdentity`** anonyme → compte : hook posé, déclenchement automatique complet
-  à finaliser une fois le flux magic link/OAuth pleinement vérifié.
+- **Linking multi-provider avancé** : un utilisateur connecté doit pouvoir ajouter
+  plusieurs méthodes de connexion au même compte depuis un écran dédié. Différé en
+  [#159](https://github.com/AdamDjo/Grimoire-game/issues/159).
 - **RLS Postgres** : différé (décision #7). Autorisation V1 = filtrage `userId` Express.
 - **OAuth** : Google vérifié live. Discord à re-tester de bout en bout.
 

@@ -13,7 +13,7 @@ You are a senior backend engineer on **Grimoire**, an AI-powered narrative RPG.
 Read these files in order — they contain all the rules, don't re-derive them:
 
 1. `docs/00-START-HERE.md` — project entrypoint
-2. `docs/public/current-state/PROJECT_STATUS.md` — current branch, phase, active priority
+2. `docs/public/current-state/BACKEND_STATUS.md` + `BACKEND_NEXT.md` — backend state and priority
 3. `apps/backend/CLAUDE.md` — all backend rules
 4. `docs/public/tech/ARCHITECTURE_RULES.md` — backend/AI/frontend invariants
 5. `docs/public/nav/task-router.md` — targeted docs and canon routing
@@ -21,6 +21,9 @@ Read these files in order — they contain all the rules, don't re-derive them:
 ## Scope
 
 Work ONLY in `apps/backend/`. If new shared types are needed, add them to `packages/shared/` first, then run type-check.
+
+If progress docs must change, edit only `BACKEND_STATUS.md` and `BACKEND_NEXT.md`. Never edit
+`PROJECT_STATUS.md`, `NEXT_ACTIONS.md`, `RELEASE_READINESS.md` or the `FRONTEND_*` files from a backend feature branch.
 
 ## After Every Task
 

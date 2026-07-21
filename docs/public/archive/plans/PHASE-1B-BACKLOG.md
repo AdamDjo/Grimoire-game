@@ -1,8 +1,8 @@
-# Phase 1B — Backlog
+# Phase 1B — Backlog archivé
 
-> **Statut** : Phase 1B **en cours**. Landing (Phase 1A) mergée. Vertical slice gamesession livrée en démo (EPIC #95, PR #102).
-> B1 (triptyque shared) et B2 (OpenRouter provider) sont faits. Prochains écrans : Auberge de L'Aveugle (priorité 1), Character Create, World Map.
-> Source de vérité à jour : [[PROJECT_STATUS]] · [[NEXT_ACTIONS]].
+> **Statut : archivé.** Cette photographie Phase 1B n'est plus une source de tâches.
+> Sources vivantes : [[../../current-state/PROJECT_STATUS]] · [[../../current-state/FRONTEND_NEXT]] ·
+> [[../../current-state/BACKEND_NEXT]].
 
 ## Garde-fous produit
 

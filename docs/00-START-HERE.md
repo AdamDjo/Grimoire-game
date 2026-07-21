@@ -11,11 +11,13 @@ Point d'entrée stable pour tout agent IA. Ne pas y stocker l'état vivant du pr
 
 ## Lecture minimale
 
-1. Statut actuel : [[public/current-state/PROJECT_STATUS]]
-2. Prochaines actions : [[public/current-state/NEXT_ACTIONS]]
-3. Routeur de tâche : [[public/nav/task-router]]
-4. Règles d'architecture : [[public/tech/ARCHITECTURE_RULES]]
-5. Politique canon privé : [[public/nav/PRIVATE_CANON_POLICY]]
+1. Index d'état : [[public/current-state/PROJECT_STATUS]]
+2. Préparation release : [[public/current-state/RELEASE_READINESS]]
+3. Statut du domaine concerné : [[public/current-state/FRONTEND_STATUS]] ou [[public/current-state/BACKEND_STATUS]]
+4. Prochaines actions du domaine : [[public/current-state/FRONTEND_NEXT]] ou [[public/current-state/BACKEND_NEXT]]
+5. Routeur de tâche : [[public/nav/task-router]]
+6. Règles d'architecture : [[public/tech/ARCHITECTURE_RULES]]
+7. Politique canon privé : [[public/nav/PRIVATE_CANON_POLICY]]
 
 ## Règles absolues
 
@@ -29,6 +31,7 @@ Point d'entrée stable pour tout agent IA. Ne pas y stocker l'état vivant du pr
 docs/
 ├── 00-HOME.md              # dashboard Obsidian humain
 ├── 00-START-HERE.md        # point d'entrée IA stable
+├── public/current-state/   # états séparés frontend/backend/release
 ├── public/                 # docs partageables, routables, versionnées (canon inclus)
 └── private/                # plans en cours, assets lourds, archives — gitignored
 ```

@@ -1,119 +1,20 @@
 'use client'
 
-import Link from 'next/link'
-import { useState } from 'react'
-
-import { GameButton } from '@/components/ui/grimoire/GameButton/GameButton'
-import { GameDivider } from '@/components/ui/grimoire/GameDivider/GameDivider'
-import { GameField } from '@/components/ui/grimoire/GameField/GameField'
-import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
-import { GameInput } from '@/components/ui/grimoire/GameInput/GameInput'
-import { GamePanel } from '@/components/ui/grimoire/GamePanel/GamePanel'
-import { getAuthHref } from '@/lib/internal-navigation'
-import { createClient } from '@/lib/supabase/client'
-
-import type { FormEvent } from 'react'
-
-import './login-form.css'
+import { AuthAccessForm } from '../_components/AuthAccessForm'
 
 interface LoginFormProps {
+  anonymousSession: boolean
+  callbackError?: boolean
   nextPath: string
 }
 
-export function LoginForm({ nextPath }: LoginFormProps) {
-  const [email, setEmail] = useState('')
-  const [status, setStatus] = useState<'idle' | 'loading' | 'sent' | 'error'>('idle')
-
-  async function handleMagicLink(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    setStatus('loading')
-
-    const supabase = createClient()
-    const callbackUrl = new URL('/auth/callback', window.location.origin)
-    callbackUrl.searchParams.set('next', nextPath)
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: callbackUrl.toString() },
-    })
-
-    setStatus(error ? 'error' : 'sent')
-  }
-
-  async function handleOAuth(provider: 'google' | 'discord') {
-    setStatus('loading')
-    const supabase = createClient()
-    const callbackUrl = new URL('/auth/callback', window.location.origin)
-    callbackUrl.searchParams.set('next', nextPath)
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider,
-      options: { redirectTo: callbackUrl.toString() },
-    })
-
-    if (error) setStatus('error')
-  }
-
+export function LoginForm({ anonymousSession, callbackError = false, nextPath }: LoginFormProps) {
   return (
-    <GamePanel className="login-form" ornament="diamond" padding="lg" variant="main">
-      <header className="login-form__header">
-        <GameIcon decorative name="key" size={48} />
-        <p className="login-form__eyebrow">Les portes de Velkhar</p>
-        <h1>Reprendre votre chronique</h1>
-        <p>Vos choix, vos souvenirs et les traces laissées dans le monde vous attendent.</p>
-      </header>
-
-      <GameDivider size="sm" />
-
-      <form className="login-form__fields" onSubmit={handleMagicLink}>
-        <GameField label="Adresse de messager">
-          <GameInput
-            autoComplete="email"
-            leadingIcon={<GameIcon decorative name="envelope" size={24} />}
-            name="email"
-            placeholder="vous@exemple.fr"
-            required
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
-        </GameField>
-
-        <GameButton
-          className="login-form__submit"
-          loading={status === 'loading'}
-          size="lg"
-          type="submit"
-        >
-          Recevoir le lien d’accès
-        </GameButton>
-
-        <div className="login-form__oauth" aria-label="Connexion avec un service externe">
-          <GameButton
-            disabled={status === 'loading'}
-            onClick={() => handleOAuth('google')}
-            type="button"
-            variant="secondary"
-          >
-            Continuer avec Google
-          </GameButton>
-          <GameButton
-            disabled={status === 'loading'}
-            onClick={() => handleOAuth('discord')}
-            type="button"
-            variant="secondary"
-          >
-            Continuer avec Discord
-          </GameButton>
-        </div>
-
-        <div aria-live="polite" className="login-form__status">
-          {status === 'sent' && <p>Lien envoyé. Vérifiez votre boîte mail.</p>}
-          {status === 'error' && <p>Une erreur est survenue. Réessayez.</p>}
-        </div>
-      </form>
-
-      <p className="login-form__footer">
-        Première visite ? <Link href={getAuthHref('/signup', nextPath)}>Créer votre chronique</Link>
-      </p>
-    </GamePanel>
+    <AuthAccessForm
+      anonymousSession={anonymousSession}
+      initialError={callbackError}
+      mode="login"
+      nextPath={nextPath}
+    />
   )
 }

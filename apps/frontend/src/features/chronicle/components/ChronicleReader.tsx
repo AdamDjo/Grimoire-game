@@ -1,6 +1,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
+import { getAuthHref } from '@/lib/internal-navigation'
+
 import { ChronicleBody } from './ChronicleBody'
 import { ChronicleShare } from './ChronicleShare'
 
@@ -76,7 +78,9 @@ export function ChronicleReader({ chronicle, inline = false }: ChronicleReaderPr
         {inline ? (
           <p className="chronicle-reader__account-note">
             Joueur anonyme ?{' '}
-            <Link href="/signup?return=chronicle">Garder cette trace gratuitement</Link>
+            <Link href={getAuthHref('/signup', '/velkhar/aveugle?return=chronicle')}>
+              Garder cette trace gratuitement
+            </Link>
           </p>
         ) : null}
       </footer>

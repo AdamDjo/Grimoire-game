@@ -7,9 +7,12 @@ allowed-tools: Read, Glob
 
 Show the current project status by:
 
-1. Read `docs/public/current-state/PROJECT_STATUS.md` and `docs/public/current-state/NEXT_ACTIONS.md` from the project root
-2. Count completed vs total tasks in each phase
-3. Present a clean summary:
+1. Read `docs/public/current-state/PROJECT_STATUS.md`.
+2. Read `RELEASE_READINESS.md` for a global/release request, or only the matching
+   `FRONTEND_STATUS.md` + `FRONTEND_NEXT.md` / `BACKEND_STATUS.md` + `BACKEND_NEXT.md` pair.
+3. Never infer an active branch from `PROJECT_STATUS.md`; use git status when needed.
+4. Count completed vs total release blockers from the selected status file.
+5. Present a clean summary:
 
 Format:
 
@@ -28,5 +31,5 @@ NEXT TASKS:
 - [ ] Task 3
 ```
 
-4. Also check git status to see if there are uncommitted changes
-5. Report any blockers or issues found
+5. Also check git status to see if there are uncommitted changes.
+6. Report any blockers or issues found.

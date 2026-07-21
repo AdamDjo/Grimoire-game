@@ -3,6 +3,7 @@ import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
 import { GamePanel } from '@/components/ui/grimoire/GamePanel/GamePanel'
 import { GameSectionHeading } from '@/components/ui/grimoire/GameSectionHeading/GameSectionHeading'
 import { WORLD_ROUTES } from '@/config/worlds'
+import { SignOutButton } from '@/features/auth/components/SignOutButton/SignOutButton'
 import { getAuthHref } from '@/lib/internal-navigation'
 
 import type { DashboardViewModel } from '../../_data/dashboard-view-model'
@@ -104,6 +105,7 @@ export function DashboardContent({ tier, viewModel }: DashboardContentProps) {
           Le Dashboard retrouve vos traces. L’Auberge de L’Aveugle reste le seul hub entre les runs.
         </p>
       </aside>
+      {tier !== 'anonymous' ? <SignOutButton /> : null}
     </main>
   )
 }
