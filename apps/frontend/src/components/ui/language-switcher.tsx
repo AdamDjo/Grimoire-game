@@ -1,13 +1,13 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
-import { startTransition, useState } from 'react'
+import { useState } from 'react'
 
 import { type UiLocale, UI_LOCALE_COOKIE, UI_LOCALE_METADATA_KEY } from '@/i18n/config'
 import { createClient } from '@/lib/supabase/client'
 
 import './language-switcher.css'
+import { reloadCurrentPage } from './reload-current-page'
 
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 365
 
@@ -17,7 +17,6 @@ interface LanguageSwitcherProps {
 
 export function LanguageSwitcher({ variant = 'header' }: LanguageSwitcherProps) {
   const locale = useLocale()
-  const router = useRouter()
   const t = useTranslations('LanguageSwitcher')
   const [isSaving, setIsSaving] = useState(false)
 
@@ -37,10 +36,7 @@ export function LanguageSwitcher({ variant = 'header' }: LanguageSwitcherProps) 
     } catch {
       // The cookie remains authoritative when account preference persistence is unavailable.
     } finally {
-      startTransition(() => {
-        router.refresh()
-        setIsSaving(false)
-      })
+      reloadCurrentPage()
     }
   }
 
