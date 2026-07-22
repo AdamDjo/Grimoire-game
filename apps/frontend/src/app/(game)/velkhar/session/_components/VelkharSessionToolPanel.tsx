@@ -1,3 +1,5 @@
+import { useTranslations } from 'next-intl'
+
 import { GameWindow } from '@/components/ui/grimoire/GameWindow/GameWindow'
 
 import { VelkharCharacterSheet } from './VelkharCharacterSheet'
@@ -31,25 +33,28 @@ export function VelkharSessionToolPanel({
   source,
   survival,
 }: VelkharSessionToolPanelProps) {
+  const t = useTranslations('Session')
   if (!openTool) return null
 
   return (
     <GameWindow
       className="velkhar-session-window"
+      closeLabel={t('closePanel')}
+      dismissLabel={t('closePanel')}
       label={
         openTool === 'inventory'
-          ? 'Inventory panel'
+          ? t('inventoryPanel')
           : openTool === 'character'
-            ? 'Character panel'
-            : 'Session menu'
+            ? t('characterPanel')
+            : t('sessionMenu')
       }
       onClose={onClose}
       title={
         openTool === 'inventory'
-          ? 'Field kit'
+          ? t('fieldKit')
           : openTool === 'character'
             ? character.name
-            : 'Session menu'
+            : t('sessionMenu')
       }
     >
       {openTool === 'inventory' ? <VelkharInventoryPanel iron={iron} items={inventory} /> : null}

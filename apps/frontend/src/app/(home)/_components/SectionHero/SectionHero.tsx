@@ -1,6 +1,8 @@
+import { useTranslations } from 'next-intl'
+
 import { GameLink } from '@/components/ui/game-link'
 
-import { HERO_COPY, LANDING_MEDIA } from '../../_data/landing-content'
+import { LANDING_MEDIA } from '../../_data/landing-content'
 import { FrameSequenceCanvas } from '../FrameSequenceCanvas/FrameSequenceCanvas'
 
 import { HeroScrollCta } from './HeroScrollCta'
@@ -8,6 +10,10 @@ import { HeroScrollCta } from './HeroScrollCta'
 import './section-hero.css'
 
 export function SectionHero() {
+  const t = useTranslations('Landing')
+  const titleLines = [t('heroTitle1'), t('heroTitle2')]
+  const body = [t('heroBody1'), t('heroBody2')]
+
   return (
     <section
       className="landing-section hero-section"
@@ -46,36 +52,36 @@ export function SectionHero() {
           className="section-eyebrow relative m-0 mb-[42px] font-accent text-accroche font-medium"
           data-motion="reveal"
         >
-          {HERO_COPY.eyebrow}
+          {t('heroEyebrow')}
         </p>
         <h1
           id="hero-title"
           className="hero-title m-0 font-display text-h1 font-medium normal-case"
           data-motion="title"
         >
-          {HERO_COPY.titleLines.map((line) => (
+          {titleLines.map((line) => (
             <span key={line} className="block whitespace-nowrap text-inherit">
               {line}
             </span>
           ))}
         </h1>
         <div className="hero-copy mt-[30px] font-serif text-body-editorial" data-motion="reveal">
-          {HERO_COPY.body.map((line) => (
+          {body.map((line) => (
             <p key={line} className="m-0">
               {line}
             </p>
           ))}
         </div>
         <div className="hero-actions mt-9 flex" data-motion="hero-actions">
-          <HeroScrollCta href="#outro">{HERO_COPY.primaryCta}</HeroScrollCta>
+          <HeroScrollCta href="#outro">{t('heroPrimaryCta')}</HeroScrollCta>
           <GameLink disabled href="#gameplay" variant="landing-ghost">
-            {HERO_COPY.secondaryCta}
+            {t('heroSecondaryCta')}
           </GameLink>
         </div>
       </div>
 
       <div className="hero-scroll-hint" data-hero-scroll-hint aria-hidden="true">
-        <span className="hero-scroll-hint__label">{HERO_COPY.scrollHint}</span>
+        <span className="hero-scroll-hint__label">{t('heroScrollHint')}</span>
         <span className="hero-scroll-hint__rail">
           <span className="hero-scroll-hint__ember" />
         </span>

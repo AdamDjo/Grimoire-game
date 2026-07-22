@@ -1,5 +1,7 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
+
 import { SystemState } from '@/components/system/SystemState/SystemState'
 import { GameButton } from '@/components/ui/grimoire/GameButton/GameButton'
 
@@ -9,14 +11,16 @@ interface MainErrorProps {
 }
 
 export default function MainError({ reset }: MainErrorProps) {
+  const t = useTranslations('System')
+
   return (
     <SystemState
-      eyebrow="La trace s’est interrompue"
-      title="Vos Chroniques ne répondent pas."
-      body="Aucune progression n’a été modifiée. Vous pouvez tenter de rouvrir cet espace."
+      eyebrow={t('mainErrorEyebrow')}
+      title={t('mainErrorTitle')}
+      body={t('mainErrorBody')}
       action={
         <GameButton onClick={reset} size="sm" variant="secondary">
-          Réessayer
+          {t('retry')}
         </GameButton>
       }
     />

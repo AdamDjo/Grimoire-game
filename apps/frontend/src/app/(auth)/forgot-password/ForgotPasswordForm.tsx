@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 
 import { GameButton } from '@/components/ui/grimoire/GameButton/GameButton'
@@ -21,6 +22,7 @@ interface ForgotPasswordFormProps {
 }
 
 export function ForgotPasswordForm({ nextPath }: ForgotPasswordFormProps) {
+  const t = useTranslations('Auth')
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'sent' | 'error'>('idle')
 
@@ -48,19 +50,19 @@ export function ForgotPasswordForm({ nextPath }: ForgotPasswordFormProps) {
     <GamePanel className="login-form" ornament="diamond" padding="lg" variant="main">
       <header className="login-form__header">
         <GameIcon decorative name="unlock" size={48} />
-        <p className="login-form__eyebrow">Lien refermé</p>
-        <h1>Retrouver votre accès</h1>
-        <p>Recevez un nouveau lien de connexion à l’adresse liée à votre chronique.</p>
+        <p className="login-form__eyebrow">{t('recoveryEyebrow')}</p>
+        <h1>{t('recoveryTitle')}</h1>
+        <p>{t('recoveryDescription')}</p>
       </header>
       <GameDivider size="sm" />
       <form className="login-form__fields" onSubmit={handleSubmit}>
-        <GameField label="Adresse de messager">
+        <GameField label={t('emailLabel')}>
           <GameInput
             autoComplete="email"
             disabled={status === 'loading' || status === 'sent'}
             leadingIcon={<GameIcon decorative name="envelope" size={24} />}
             name="email"
-            placeholder="vous@exemple.fr"
+            placeholder={t('emailPlaceholder')}
             required
             type="email"
             value={email}
@@ -74,23 +76,19 @@ export function ForgotPasswordForm({ nextPath }: ForgotPasswordFormProps) {
           size="lg"
           type="submit"
         >
-          Envoyer un nouveau lien
+          {t('recoverySubmit')}
         </GameButton>
         <div
           aria-live="polite"
           className="login-form__status"
           role={status === 'error' ? 'alert' : 'status'}
         >
-          {status === 'sent' ? (
-            <p>Si cette adresse possède un compte, un nouveau lien d’accès vient d’être envoyé.</p>
-          ) : null}
-          {status === 'error' ? (
-            <p>La demande n’a pas abouti. Vérifiez votre connexion puis réessayez.</p>
-          ) : null}
+          {status === 'sent' ? <p>{t('recoverySent')}</p> : null}
+          {status === 'error' ? <p>{t('requestError')}</p> : null}
         </div>
       </form>
       <p className="login-form__footer">
-        <Link href={getAuthHref('/login', nextPath)}>Retour à la connexion</Link>
+        <Link href={getAuthHref('/login', nextPath)}>{t('backToSignIn')}</Link>
       </p>
     </GamePanel>
   )

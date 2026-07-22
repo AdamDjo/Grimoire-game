@@ -1,4 +1,5 @@
 import { ATTRIBUTE_LABELS, attributeModifier, getPeople, getVocation } from '@grimoire/shared'
+import { useLocale, useTranslations } from 'next-intl'
 
 import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
 
@@ -11,32 +12,34 @@ interface VelkharCharacterSheetProps {
 
 const ATTRIBUTE_ORDER = ['blood', 'breath', 'ash'] as const
 
-const CONDITION_LABELS: Record<Condition, string> = {
-  fever: 'Fever',
-  poisoned: 'Poisoned',
-  wounded: 'Wounded',
-  frozen: 'Frozen',
-  stunned: 'Stunned',
-  blinded: 'Blinded',
-  marsh_sickness: 'Marsh sickness',
-  ash_corrupted: 'Ash-corrupted',
-  shaken_mind: 'Shaken mind',
-  slow_petrification: 'Slow petrification',
-}
-
 export function VelkharCharacterSheet({ character, survival }: VelkharCharacterSheetProps) {
+  const locale = useLocale()
+  const t = useTranslations('Session')
   const people = getPeople(character.people)
   const vocation = getVocation(character.vocation)
+  const conditionLabels: Record<Condition, string> = {
+    fever: t('conditionFever'),
+    poisoned: t('conditionPoisoned'),
+    wounded: t('conditionWounded'),
+    frozen: t('conditionFrozen'),
+    stunned: t('conditionStunned'),
+    blinded: t('conditionBlinded'),
+    marsh_sickness: t('conditionMarshSickness'),
+    ash_corrupted: t('conditionAshCorrupted'),
+    shaken_mind: t('conditionShakenMind'),
+    slow_petrification: t('conditionSlowPetrification'),
+  }
 
   return (
     <div className="velkhar-character-sheet">
       <header className="velkhar-character-sheet__identity">
         <GameIcon decorative name="stranger" size={64} />
         <div>
-          <p className="velkhar-session-window__eyebrow">Character sheet</p>
+          <p className="velkhar-session-window__eyebrow">{t('characterSheet')}</p>
           <h3>{character.name}</h3>
           <p>
-            {people?.name.en ?? character.people} · {vocation?.name.en ?? character.vocation}
+            {people?.name[locale] ?? character.people} ·{' '}
+            {vocation?.name[locale] ?? character.vocation}
           </p>
         </div>
       </header>
@@ -46,14 +49,14 @@ export function VelkharCharacterSheet({ character, survival }: VelkharCharacterS
       ) : null}
 
       <section aria-labelledby="velkhar-attributes-title">
-        <h4 id="velkhar-attributes-title">Triptych</h4>
+        <h4 id="velkhar-attributes-title">{t('triptych')}</h4>
         <dl className="velkhar-session-window__attributes">
           {ATTRIBUTE_ORDER.map((attribute) => {
             const value = character.stats.attributes[attribute]
             const modifier = attributeModifier(value)
             return (
               <div key={attribute} data-attribute={attribute}>
-                <dt>{ATTRIBUTE_LABELS[attribute].en}</dt>
+                <dt>{ATTRIBUTE_LABELS[attribute][locale]}</dt>
                 <dd>
                   {value} <small>{modifier >= 0 ? `+${modifier}` : modifier}</small>
                 </dd>
@@ -64,43 +67,43 @@ export function VelkharCharacterSheet({ character, survival }: VelkharCharacterS
       </section>
 
       <section aria-labelledby="velkhar-survival-title">
-        <h4 id="velkhar-survival-title">Survival</h4>
+        <h4 id="velkhar-survival-title">{t('survival')}</h4>
         <dl className="velkhar-character-sheet__survival">
           <div>
-            <dt>Health</dt>
+            <dt>{t('health')}</dt>
             <dd>
               {survival.hp}/{survival.maxHp}
             </dd>
           </div>
           <div>
-            <dt>Thirst</dt>
+            <dt>{t('thirst')}</dt>
             <dd>{survival.thirst}%</dd>
           </div>
           <div>
-            <dt>Hunger</dt>
+            <dt>{t('hunger')}</dt>
             <dd>{survival.hunger}%</dd>
           </div>
           <div>
-            <dt>Fatigue</dt>
+            <dt>{t('fatigue')}</dt>
             <dd>{100 - survival.energy}%</dd>
           </div>
           <div data-danger={survival.calamine >= 75}>
-            <dt>Calamine</dt>
+            <dt>{t('calamine')}</dt>
             <dd>{survival.calamine}%</dd>
           </div>
         </dl>
       </section>
 
       <section aria-labelledby="velkhar-conditions-title">
-        <h4 id="velkhar-conditions-title">Conditions</h4>
+        <h4 id="velkhar-conditions-title">{t('conditions')}</h4>
         {character.stats.conditions.length > 0 ? (
           <ul className="velkhar-character-sheet__conditions">
             {character.stats.conditions.map((condition) => (
-              <li key={condition}>{CONDITION_LABELS[condition]}</li>
+              <li key={condition}>{conditionLabels[condition]}</li>
             ))}
           </ul>
         ) : (
-          <p className="velkhar-session-window__muted">No active condition.</p>
+          <p className="velkhar-session-window__muted">{t('noCondition')}</p>
         )}
       </section>
     </div>

@@ -14,6 +14,7 @@ export interface ArchetypeCardProps {
   eyebrow?: string
   illustration?: ReactNode
   selected?: boolean
+  selectedLabel?: string
   disabled?: boolean
   actionLabel?: string
   onSelect?: (id: string) => void
@@ -23,7 +24,7 @@ export interface ArchetypeCardProps {
 }
 
 export function ArchetypeCard({
-  actionLabel = 'Choisir',
+  actionLabel = 'Choose',
   className = '',
   description,
   disabled = false,
@@ -34,6 +35,7 @@ export function ArchetypeCard({
   onPreviewEnd,
   onSelect,
   selected = false,
+  selectedLabel = 'Selected',
   title,
 }: ArchetypeCardProps) {
   return (
@@ -68,7 +70,7 @@ export function ArchetypeCard({
         onClick={() => onSelect?.(id)}
         aria-pressed={selected}
       >
-        {selected ? 'Sélectionnée' : actionLabel}
+        {selected ? selectedLabel : actionLabel}
       </GameButton>
     </GamePanel>
   )

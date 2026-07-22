@@ -44,22 +44,41 @@ const storedDraftSchema = z.object({
   historyReviewed: z.boolean(),
 })
 
-export const characterNameSchema = z
-  .string()
-  .trim()
-  .min(1, 'L’Aveugle attend un nom.')
-  .max(30, 'Le nom doit tenir en 30 caractères.')
+interface CharacterValidationMessages {
+  backstoryTooLong: string
+  conceptTooLong: string
+  conceptTooShort: string
+  nameRequired: string
+  nameTooLong: string
+}
 
-export const freeConceptSchema = z
-  .string()
-  .trim()
-  .min(12, 'Décris ton concept en quelques mots de plus.')
-  .max(500, 'Le concept doit tenir en 500 caractères.')
+const DEFAULT_VALIDATION_MESSAGES: CharacterValidationMessages = {
+  backstoryTooLong: 'This history must fit within 500 characters.',
+  conceptTooLong: 'The concept must fit within 500 characters.',
+  conceptTooShort: 'Describe your concept in a few more words.',
+  nameRequired: 'The Blind One is waiting for a name.',
+  nameTooLong: 'The name must fit within 30 characters.',
+}
 
-export const backstorySchema = z
-  .string()
-  .trim()
-  .max(500, 'Cette histoire doit tenir en 500 caractères.')
+export function createCharacterSchemas(
+  messages: CharacterValidationMessages = DEFAULT_VALIDATION_MESSAGES
+) {
+  return {
+    backstory: z.string().trim().max(500, messages.backstoryTooLong),
+    freeConcept: z
+      .string()
+      .trim()
+      .min(12, messages.conceptTooShort)
+      .max(500, messages.conceptTooLong),
+    name: z.string().trim().min(1, messages.nameRequired).max(30, messages.nameTooLong),
+  }
+}
+
+export const {
+  backstory: backstorySchema,
+  freeConcept: freeConceptSchema,
+  name: characterNameSchema,
+} = createCharacterSchemas()
 
 export const CHARACTER_DRAFT_STORAGE_KEY = 'grimoire.character-create.draft.v1'
 export const CHARACTER_RESULT_STORAGE_KEY = 'grimoire.character-create.result.v1'

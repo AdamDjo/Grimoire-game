@@ -36,30 +36,28 @@ describe('CharacterCreateFlow', () => {
 
     render(<CharacterCreateFlow campaignId="nouvelle-chronique" />)
 
-    const nameInput = await screen.findByLabelText('Nom du personnage *')
+    const nameInput = await screen.findByLabelText('Character name *')
     await user.type(nameInput, 'Amani')
-    await user.click(screen.getByRole('button', { name: 'Suivant' }))
+    await user.click(screen.getByRole('button', { name: 'Next' }))
 
-    await screen.findByRole('heading', { name: 'Peuple' })
-    await user.click(screen.getByRole('button', { name: /Sahélin/ }))
+    await screen.findByRole('heading', { name: 'People' })
+    await user.click(screen.getByRole('button', { name: /Sahelin/ }))
 
-    const vocationHeading = await screen.findByRole('heading', { name: 'Marcheur-du-Sel' })
+    const vocationHeading = await screen.findByRole('heading', { name: 'Salt-Walker' })
     const vocationCard = vocationHeading.closest('article')
     expect(vocationCard).not.toBeNull()
     fireEvent.mouseEnter(vocationCard!)
-    expect(screen.getAllByText(/Choisis cette voie si tu veux jouer un voyageur/)).not.toHaveLength(
-      0
-    )
-    await user.click(within(vocationCard!).getByRole('button', { name: 'Suivre cette voie' }))
+    expect(screen.getAllByText(/Choose this path to play a traveler/)).not.toHaveLength(0)
+    await user.click(within(vocationCard!).getByRole('button', { name: 'Follow this path' }))
 
-    await screen.findByRole('heading', { name: 'Histoire' })
+    await screen.findByRole('heading', { name: 'History' })
     await user.click(
-      screen.getByRole('button', { name: 'Une caravane entière a péri par ta faute.' })
+      screen.getByRole('button', { name: 'An entire caravan perished because of you.' })
     )
-    await user.click(screen.getByRole('button', { name: 'Retenir cette histoire' }))
+    await user.click(screen.getByRole('button', { name: 'Keep this history' }))
 
-    expect(await screen.findByRole('heading', { name: 'Résumé' })).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: 'Retourner auprès de L’Aveugle' }))
+    expect(await screen.findByRole('heading', { name: 'Summary' })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Return to The Blind One' }))
 
     await waitFor(() => {
       expect(pushMock).toHaveBeenCalledWith(
@@ -90,7 +88,7 @@ describe('CharacterCreateFlow', () => {
     render(<CharacterCreateFlow />)
 
     expect(await screen.findByRole('heading', { name: 'Vocation' })).toBeInTheDocument()
-    expect(screen.getByText('Brouillon de création repris.')).toBeInTheDocument()
+    expect(screen.getByText('Character draft resumed.')).toBeInTheDocument()
   })
 
   it('protects a dirty draft before returning to L’Aveugle', async () => {
@@ -99,14 +97,14 @@ describe('CharacterCreateFlow', () => {
 
     render(<CharacterCreateFlow campaignId="nouvelle-chronique" />)
 
-    await user.type(await screen.findByLabelText('Nom du personnage *'), 'Naïra')
-    await user.click(screen.getByRole('button', { name: 'Retour à L’Aveugle' }))
+    await user.type(await screen.findByLabelText('Character name *'), 'Naïra')
+    await user.click(screen.getByRole('button', { name: 'Back to The Blind One' }))
 
     expect(confirmMock).toHaveBeenCalledOnce()
     expect(pushMock).not.toHaveBeenCalled()
 
     confirmMock.mockReturnValue(true)
-    await user.click(screen.getByRole('button', { name: 'Retour à L’Aveugle' }))
+    await user.click(screen.getByRole('button', { name: 'Back to The Blind One' }))
 
     expect(pushMock).toHaveBeenCalledWith('/velkhar/aveugle?campaign=nouvelle-chronique')
     confirmMock.mockRestore()

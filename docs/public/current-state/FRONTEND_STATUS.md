@@ -11,7 +11,9 @@ updated: 2026-07-21
 
 ## Actif
 
-- Prochain chantier frontend avant v0.1.0 : #167 — interface anglais/français.
+- #167 est implémentée sur `feature/167-interface-en-fr` et en validation avant PR :
+  `next-intl`, anglais principal/fallback, français détecté à la première visite, sélecteur
+  persistant cookie/compte et golden path traduit sans changer la locale de narration IA.
 - #135 est mergée via PR #160 ; l'auth frontend passwordless est livrée sur `develop`.
 
 ## Livré sur develop
@@ -29,9 +31,9 @@ updated: 2026-07-21
 
 ## Gaps v0.1.0
 
-- #167 — unifier l'interface en anglais/français, avec anglais principal et fallback ;
-- #168 — détecter la locale navigateur et la transmettre au contrat IA ;
-- intégrer les contrats réels de l'Auberge lorsque #147 sera livré ;
+- merger #167 après validation de la PR ;
+- #168 — transmettre séparément la préférence de narration au contrat IA ;
+- intégrer les contrats réels de l'Auberge maintenant que #147 est livré ;
 - décider avec #152 si le concept libre est livré ou masqué pour v0.1.0 ;
 - configurer le domaine/API/redirects de production avec #161 ;
 - valider le golden path réel dans #129.

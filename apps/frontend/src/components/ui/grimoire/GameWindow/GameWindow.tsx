@@ -13,6 +13,8 @@ import './game-window.css'
 export interface GameWindowProps {
   children: ReactNode
   className?: string
+  closeLabel?: string
+  dismissLabel?: string
   label: string
   onClose: () => void
   title: ReactNode
@@ -22,7 +24,15 @@ export interface GameWindowProps {
  * Accessible world-agnostic overlay window.
  * Worlds customize its frame through class names and CSS variables.
  */
-export function GameWindow({ children, className, label, onClose, title }: GameWindowProps) {
+export function GameWindow({
+  children,
+  className,
+  closeLabel = 'Close panel',
+  dismissLabel = 'Dismiss panel',
+  label,
+  onClose,
+  title,
+}: GameWindowProps) {
   const closeRef = useRef<HTMLButtonElement>(null)
   const dialogRef = useRef<HTMLElement>(null)
 
@@ -74,7 +84,7 @@ export function GameWindow({ children, className, label, onClose, title }: GameW
   return (
     <div className={cn('game-window-layer', className)}>
       <button
-        aria-label="Dismiss panel"
+        aria-label={dismissLabel}
         aria-hidden="true"
         className="game-window-layer__backdrop"
         onClick={onClose}
@@ -93,7 +103,7 @@ export function GameWindow({ children, className, label, onClose, title }: GameW
           <h2>{title}</h2>
           <GameButton
             ref={closeRef}
-            aria-label="Close panel"
+            aria-label={closeLabel}
             onClick={onClose}
             size="sm"
             variant="icon"

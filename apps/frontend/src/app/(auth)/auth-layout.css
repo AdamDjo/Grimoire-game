@@ -46,6 +46,13 @@
   opacity: 1;
 }
 
+.auth-layout__language {
+  position: absolute;
+  right: clamp(1.25rem, 3vw, 3rem);
+  top: clamp(0.9rem, 2vw, 1.9rem);
+  z-index: 2;
+}
+
 .auth-layout__content {
   margin: 0 auto;
   max-width: 38rem;
@@ -60,6 +67,11 @@
     background-position: 62% center;
     overflow: auto;
     padding: 5.5rem 0.75rem 1rem;
+  }
+
+  .auth-layout__language {
+    right: 0.75rem;
+    top: 0.55rem;
   }
 }
 

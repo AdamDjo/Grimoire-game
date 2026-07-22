@@ -1,3 +1,5 @@
+import { useTranslations } from 'next-intl'
+
 import { MediaLayer } from '@/components/ui'
 import { GameLink } from '@/components/ui/game-link'
 import { WORLD_ROUTES } from '@/config/worlds'
@@ -6,12 +8,14 @@ import {
   LANDING_FOOTER_LINKS,
   LANDING_MEDIA,
   LANDING_SUPPORT_LINK,
-  OUTRO_COPY,
 } from '../../_data/landing-content'
 
 import './section-outro.css'
 
 export function SectionOutro() {
+  const t = useTranslations('Landing')
+  const quote = [t('outroQuote1'), t('outroQuote2'), t('outroQuote3')]
+
   return (
     <section
       className="landing-section outro-section"
@@ -34,7 +38,7 @@ export function SectionOutro() {
       />
 
       <blockquote className="outro-quote z-3 m-0 text-center" data-motion="reveal">
-        {OUTRO_COPY.quote.map((line) => (
+        {quote.map((line) => (
           <span key={line} className="block">
             {line}
           </span>
@@ -54,10 +58,10 @@ export function SectionOutro() {
           className="m-0 font-medium tracking-normal leading-none normal-case"
           data-motion="title"
         >
-          {OUTRO_COPY.title}
+          {t('outroTitle')}
         </h2>
         <p className="m-0" data-motion="reveal">
-          {OUTRO_COPY.body}
+          {t('outroBody')}
         </p>
         <div data-motion="reveal">
           <GameLink
@@ -66,7 +70,7 @@ export function SectionOutro() {
             prefetch={false}
             variant="landing"
           >
-            {OUTRO_COPY.cta}
+            {t('outroCta')}
           </GameLink>
         </div>
       </div>
@@ -74,26 +78,26 @@ export function SectionOutro() {
       <footer className="outro-footer absolute z-4 border-t-0" data-motion="reveal">
         <div className="outro-footer__made">
           <span>
-            Créé avec{' '}
+            {t('madeBy')}{' '}
             <span className="outro-footer__heart" aria-hidden="true">
               ♥
             </span>{' '}
-            par Adem
+            {t('by')}
           </span>
           <span className="outro-footer__copyright">© 2026 Grimoire</span>
         </div>
 
         <a
           className="outro-footer__support"
-          href={LANDING_SUPPORT_LINK.href}
+          href={LANDING_SUPPORT_LINK}
           target="_blank"
           rel="noreferrer"
         >
           <span aria-hidden="true">✦</span>
-          {LANDING_SUPPORT_LINK.label}
+          {t('support')}
         </a>
 
-        <nav className="outro-footer__links" aria-label="Navigation du pied de page">
+        <nav className="outro-footer__links" aria-label={t('footerNavigation')}>
           {LANDING_FOOTER_LINKS.map((link) =>
             link.href ? (
               <a
@@ -108,7 +112,7 @@ export function SectionOutro() {
               <span
                 key={link.label}
                 className="outro-footer__link-disabled"
-                aria-label={`${link.label}, bientôt disponible`}
+                aria-label={t('comingSoon', { label: link.label })}
                 aria-disabled="true"
               >
                 {link.label}

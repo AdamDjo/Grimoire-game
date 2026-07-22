@@ -1,3 +1,5 @@
+import { useTranslations } from 'next-intl'
+
 import { GameLink } from '@/components/ui/game-link'
 import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
 import { GamePanel } from '@/components/ui/grimoire/GamePanel/GamePanel'
@@ -29,6 +31,8 @@ export function AveugleThreshold({
   isCharacterFlow = false,
   transitionFromHome = false,
 }: AveugleThresholdProps) {
+  const t = useTranslations('Auberge')
+
   return (
     <VelkharMotionShell animateEntrance={transitionFromHome} className="aveugle-threshold">
       <div className="aveugle-threshold__scene" data-velkhar-scene aria-hidden="true" />
@@ -36,7 +40,7 @@ export function AveugleThreshold({
 
       <section className="aveugle-threshold__dialogue" aria-labelledby="aveugle-title">
         <p className="aveugle-threshold__location" data-velkhar-enter>
-          Velkhar · L’Auberge de L’Aveugle
+          {t('thresholdLocation')}
         </p>
         <div className="aveugle-threshold__portrait" data-velkhar-enter aria-hidden="true" />
 
@@ -49,13 +53,11 @@ export function AveugleThreshold({
         >
           <div className="aveugle-threshold__speaker" data-velkhar-enter>
             <GameIcon decorative name={isCharacterFlow ? 'quill' : 'eye'} size={48} />
-            <h1 id="aveugle-title">{isCharacterFlow ? 'Le registre de L’Aveugle' : 'L’Aveugle'}</h1>
+            <h1 id="aveugle-title">{isCharacterFlow ? t('registerTitle') : t('blindOne')}</h1>
           </div>
 
           <blockquote data-velkhar-enter>
-            {isCharacterFlow
-              ? '« Un nom d’abord. Le reste viendra sur la route. »'
-              : '« Approche, voyageur. Avant la route, donne-moi ton nom. »'}
+            {isCharacterFlow ? t('registerQuote') : t('thresholdQuote')}
           </blockquote>
 
           <div className="aveugle-threshold__actions" data-velkhar-enter>
@@ -67,7 +69,7 @@ export function AveugleThreshold({
               }
               trailingIcon={<GameIcon decorative name="arrow" size={24} />}
             >
-              {isCharacterFlow ? 'Donner mon nom' : 'Répondre'}
+              {isCharacterFlow ? t('giveName') : t('answer')}
             </GameLink>
           </div>
         </GamePanel>

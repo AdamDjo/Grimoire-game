@@ -217,8 +217,8 @@ describe('Grimoire UI primitives', () => {
       />
     )
 
-    expect(screen.getByRole('banner', { name: 'Navigation principale' })).toBeInTheDocument()
-    expect(screen.getByRole('region', { name: 'Personnage : Aerion' })).toBeInTheDocument()
+    expect(screen.getByRole('banner', { name: 'Main navigation' })).toBeInTheDocument()
+    expect(screen.getByRole('region', { name: 'Character: Aerion' })).toBeInTheDocument()
     expect(screen.getByLabelText('Velkhar, Tissan')).toBeInTheDocument()
     expect(screen.getByRole('navigation', { name: 'Étapes du parcours' })).toBeInTheDocument()
   })
@@ -267,7 +267,7 @@ describe('Grimoire UI primitives', () => {
       'narrative-passage--drop-cap'
     )
     expect(screen.getByText('Le serment')).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: 'Choisir' }))
+    await user.click(screen.getByRole('button', { name: 'Choose' }))
     expect(handleSelect).toHaveBeenCalledWith('sentinelle')
   })
 

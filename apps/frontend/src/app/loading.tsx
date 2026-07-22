@@ -1,11 +1,15 @@
+import { getTranslations } from 'next-intl/server'
+
 import { SystemState } from '@/components/system/SystemState/SystemState'
 
-export default function Loading() {
+export default async function Loading() {
+  const t = await getTranslations('System')
+
   return (
     <SystemState
-      eyebrow="Le monde se souvient"
-      title="Le récit prend forme."
-      body="Les cendres remuent, les voix se rassemblent…"
+      eyebrow={t('loadingEyebrow')}
+      title={t('loadingTitle')}
+      body={t('loadingBody')}
       isLoading
     />
   )

@@ -32,12 +32,19 @@
   letter-spacing: 0.16em;
 }
 
-.chronicle-page__nav span {
+.chronicle-page__nav > span,
+.chronicle-page__nav-actions > span {
   color: var(--ink-2);
   font-family: var(--font-game-ui);
   font-size: 0.76rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.chronicle-page__nav-actions {
+  align-items: center;
+  display: flex;
+  gap: clamp(1rem, 3vw, 2.5rem);
 }
 
 .chronicle-reader {
@@ -378,7 +385,7 @@
 @keyframes chronicle-copy { from { opacity: 0; translate: 0 0.6rem; } 40%, 80% { opacity: 1; translate: 0; } to { opacity: 0; } }
 
 @media (max-width: 640px) {
-  .chronicle-page__nav span { display: none; }
+  .chronicle-page__nav-actions > span { display: none; }
   .chronicle-reader__moments { grid-template-columns: 1fr; }
   .chronicle-reader__moments li + li { border-top: 1px solid rgba(217, 164, 65, 0.12); }
   .chronicle-reader__after nav { align-items: stretch; flex-direction: column; }
@@ -389,4 +396,3 @@
   .chronicle-transition p,
   .chronicle-transition span { animation: none; }
 }
-

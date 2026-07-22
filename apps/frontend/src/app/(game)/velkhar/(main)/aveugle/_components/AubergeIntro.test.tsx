@@ -21,16 +21,16 @@ describe('AubergeIntro', () => {
     render(<AubergeIntro onComplete={vi.fn()} />)
 
     expect(
-      screen.getByRole('dialog', { name: 'Introduction à l’Auberge de L’Aveugle' })
+      screen.getByRole('dialog', { name: "Introduction to The Blind One's Inn" })
     ).toBeInTheDocument()
-    expect(screen.getByText('L’Auberge de L’Aveugle')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Passer/ })).toBeDisabled()
+    expect(screen.getByText("The Blind One's Inn")).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Skip/ })).toBeDisabled()
 
     act(() => {
       vi.advanceTimersByTime(1_000)
     })
 
-    expect(screen.getByRole('button', { name: /Passer/ })).toBeEnabled()
+    expect(screen.getByRole('button', { name: /Skip/ })).toBeEnabled()
   })
 
   it('mémorise le visionnage et termine après le fondu de sortie', () => {
@@ -40,7 +40,7 @@ describe('AubergeIntro', () => {
     act(() => {
       vi.advanceTimersByTime(1_000)
     })
-    fireEvent.click(screen.getByRole('button', { name: /Passer/ }))
+    fireEvent.click(screen.getByRole('button', { name: /Skip/ }))
 
     expect(hasSeenAubergeIntro()).toBe(true)
     expect(onComplete).not.toHaveBeenCalled()
@@ -81,10 +81,10 @@ describe('AubergeIntro', () => {
   it('active le son uniquement après une action du joueur', () => {
     render(<AubergeIntro onComplete={vi.fn()} />)
 
-    const soundButton = screen.getByRole('button', { name: 'Activer le son' })
+    const soundButton = screen.getByRole('button', { name: 'Enable sound' })
     fireEvent.click(soundButton)
 
-    expect(screen.getByRole('button', { name: 'Couper le son' })).toHaveAttribute(
+    expect(screen.getByRole('button', { name: 'Mute sound' })).toHaveAttribute(
       'aria-pressed',
       'true'
     )

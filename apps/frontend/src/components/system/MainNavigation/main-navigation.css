@@ -335,6 +335,12 @@
   text-shadow: 0 0 22px rgba(217, 164, 65, 0.24);
 }
 
+.main-navigation__mobile-language {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
 @keyframes main-navigation-menu-enter {
   from {
     opacity: 0;
@@ -400,6 +406,13 @@
 
   .main-navigation--marketing.is-scrolled .main-navigation__marketing-logo {
     width: 8.625rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .main-navigation__brand .game-brand,
+  .main-navigation--marketing .main-navigation__marketing-logo {
+    width: 7.5rem;
   }
 }
 

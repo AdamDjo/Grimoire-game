@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 
 import { useChronicle } from '../hooks/use-chronicle'
@@ -13,6 +14,7 @@ interface ChronicleEndExperienceProps {
 }
 
 export function ChronicleEndExperience({ sessionId, turnCount }: ChronicleEndExperienceProps) {
+  const t = useTranslations('Session')
   const [transitionComplete, setTransitionComplete] = useState(false)
   const { chronicle, retry, status } = useChronicle({
     kind: 'session',
@@ -30,7 +32,7 @@ export function ChronicleEndExperience({ sessionId, turnCount }: ChronicleEndExp
     return (
       <section className="chronicle-transition" role="status" aria-live="polite">
         <span aria-hidden="true" />
-        <p>Ton aventure prend fin…</p>
+        <p>{t('chronicleTransition')}</p>
       </section>
     )
   }

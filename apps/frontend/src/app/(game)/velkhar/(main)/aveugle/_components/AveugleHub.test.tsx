@@ -45,14 +45,14 @@ describe('AveugleHub', () => {
   it('conserve le seuil narratif quand aucun personnage n’existe', async () => {
     render(<AveugleHub campaignId="nouvelle-chronique" />)
 
-    expect(await screen.findByRole('heading', { name: 'L’Aveugle' })).toBeInTheDocument()
-    expect(screen.getByText(/Avant la route, donne-moi ton nom/)).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /Répondre/ })).toHaveAttribute(
+    expect(await screen.findByRole('heading', { name: 'The Blind One' })).toBeInTheDocument()
+    expect(screen.getByText(/Before the road, give me your name/)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Answer/ })).toHaveAttribute(
       'href',
       '/velkhar/aveugle?flow=character-create&campaign=nouvelle-chronique'
     )
     expect(
-      screen.queryByRole('group', { name: 'Sujets à aborder avec L’Aveugle' })
+      screen.queryByRole('group', { name: 'Topics to discuss with The Blind One' })
     ).not.toBeInTheDocument()
   })
 
@@ -60,9 +60,9 @@ describe('AveugleHub', () => {
     render(<AveugleHub campaignId="nouvelle-chronique" isCharacterFlow />)
 
     expect(
-      await screen.findByRole('heading', { name: 'Le registre de L’Aveugle' })
+      await screen.findByRole('heading', { name: "The Blind One's register" })
     ).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /Donner mon nom/ })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /Give my name/ })).toHaveAttribute(
       'href',
       '/velkhar/character-create?campaign=nouvelle-chronique'
     )
@@ -74,21 +74,21 @@ describe('AveugleHub', () => {
 
     render(<AveugleHub />)
 
-    expect(await screen.findByLabelText('Personnage : Amani')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Choisir un présage' })).toBeInTheDocument()
+    expect(await screen.findByLabelText('Character: Amani')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Choose an omen' })).toBeInTheDocument()
 
-    await user.click(screen.getByRole('button', { name: /Les Calcinés/ }))
-    expect(screen.getByText(/Les Calcinés n’écoutent plus la Cendre/)).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /The Calcined Ones/ }))
+    expect(screen.getByText(/The Calcined Ones no longer listen to Ash/)).toBeInTheDocument()
     expect(
-      screen.queryByRole('group', { name: 'Sujets à aborder avec L’Aveugle' })
+      screen.queryByRole('group', { name: 'Topics to discuss with The Blind One' })
     ).not.toBeInTheDocument()
 
-    await user.click(screen.getByRole('button', { name: 'Approfondir' }))
-    expect(screen.getByText(/Quand la Cendre prononce ton nom/)).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Go deeper' }))
+    expect(screen.getByText(/When Ash speaks your name/)).toBeInTheDocument()
 
-    await user.click(screen.getByRole('button', { name: 'Autres sujets' }))
-    await user.click(screen.getByRole('button', { name: 'Autre question…' }))
-    expect(screen.getByPlaceholderText('Pose ta question…')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Other topics' }))
+    await user.click(screen.getByRole('button', { name: 'Another question…' }))
+    expect(screen.getByPlaceholderText('Ask your question…')).toBeInTheDocument()
   })
 
   it('lance l’introduction au premier passage même sans personnage', async () => {
@@ -97,7 +97,7 @@ describe('AveugleHub', () => {
     render(<AveugleHub previewIntro />)
 
     expect(
-      await screen.findByRole('dialog', { name: 'Introduction à l’Auberge de L’Aveugle' })
+      await screen.findByRole('dialog', { name: "Introduction to The Blind One's Inn" })
     ).toBeInTheDocument()
   })
 
@@ -107,11 +107,11 @@ describe('AveugleHub', () => {
 
     render(<AveugleHub />)
 
-    await user.click(await screen.findByRole('button', { name: 'Choisir un présage' }))
-    await user.click(screen.getByRole('button', { name: /Suivre la fumée/ }))
+    await user.click(await screen.findByRole('button', { name: 'Choose an omen' }))
+    await user.click(screen.getByRole('button', { name: /Follow the smoke/ }))
 
-    expect(screen.getByText(/rencontre cachée pourra apparaître/)).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /Partir en run/ })).toHaveAttribute(
+    expect(screen.getByText(/hidden encounter may appear/)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Begin the run/ })).toHaveAttribute(
       'href',
       '/velkhar/session/new?omen=follow-smoke'
     )
@@ -123,13 +123,13 @@ describe('AveugleHub', () => {
 
     render(<AveugleHub />)
 
-    await user.click(await screen.findByRole('button', { name: /Souvenirs/ }))
+    await user.click(await screen.findByRole('button', { name: /Memories/ }))
     expect(
-      screen.queryByRole('group', { name: 'Sujets à aborder avec L’Aveugle' })
+      screen.queryByRole('group', { name: 'Topics to discuss with The Blind One' })
     ).not.toBeInTheDocument()
 
-    await user.click(screen.getByRole('button', { name: /La nuit de Vane/ }))
-    expect(screen.getByText(/Son silence voyage encore avec toi/)).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /The night of Vane/ }))
+    expect(screen.getByText(/His silence still travels with you/)).toBeInTheDocument()
   })
 
   it('oriente une session active vers la reprise', async () => {
@@ -138,8 +138,8 @@ describe('AveugleHub', () => {
 
     render(<AveugleHub />)
 
-    expect(await screen.findByText(/Ta place est encore chaude/)).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /Reprendre la route/ })).toHaveAttribute(
+    expect(await screen.findByText(/Your seat is still warm/)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Resume the road/ })).toHaveAttribute(
       'href',
       '/velkhar/session/resume'
     )

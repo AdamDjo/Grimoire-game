@@ -1,5 +1,14 @@
+import { getTranslations } from 'next-intl/server'
+
 import { VelkharSession } from '../_components/VelkharSession'
 import { MOCK_CHARACTER } from '../_data/mock-character'
+
+import type { Metadata } from 'next'
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('Session')
+  return { title: t('metadataTitle') }
+}
 
 interface VelkharSessionPageProps {
   params: Promise<{ id: string }>

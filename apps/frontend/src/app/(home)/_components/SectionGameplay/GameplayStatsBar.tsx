@@ -1,4 +1,6 @@
-import { GAMEPLAY_STATS, GAMEPLAY_STATS_CAPTION } from '../../_data/landing-content'
+import { useTranslations } from 'next-intl'
+
+import { GAMEPLAY_STATS } from '../../_data/landing-content'
 
 const TONE_TEXT_CLASS: Record<(typeof GAMEPLAY_STATS)[number]['tone'], string> = {
   blood: 'text-blood',
@@ -7,23 +9,28 @@ const TONE_TEXT_CLASS: Record<(typeof GAMEPLAY_STATS)[number]['tone'], string> =
 }
 
 export function GameplayStatsBar() {
+  const landing = useTranslations('Landing')
+  const attributes = useTranslations('Attributes')
+
   return (
     <>
       <aside
         className="gameplay-stats absolute z-[4] grid max-w-[1040px] items-stretch opacity-0 shadow-[0_18px_55px_rgba(0,0,0,0.5)]"
-        aria-label="État du personnage"
+        aria-label={landing('characterStatus')}
         data-motion="stats"
       >
         {GAMEPLAY_STATS.map((stat) => (
           <div
-            key={stat.label}
+            key={stat.labelKey}
             className={`gameplay-stat grid min-w-0 items-center gap-3 ${TONE_TEXT_CLASS[stat.tone]}`}
           >
             <span
               className="gameplay-stat__sigil relative inline-block aspect-square w-8 rotate-45"
               aria-hidden="true"
             />
-            <span className="gameplay-stat__label text-stat-label">{stat.label}</span>
+            <span className="gameplay-stat__label text-stat-label">
+              {attributes(stat.labelKey)}
+            </span>
             <span className="gameplay-stat__value text-stat-value">{stat.value}</span>
             <span
               className="gameplay-stat__track grid grid-cols-[repeat(6,minmax(10px,1fr))] gap-1"
@@ -40,7 +47,7 @@ export function GameplayStatsBar() {
       {/* Légende hors du cadre art (l'aside est absolute dans un cadre à ratio
           fixe) : élément frère ancré juste sous le cadre. */}
       <p className="gameplay-stats__caption absolute z-[4]" data-motion="stats">
-        {GAMEPLAY_STATS_CAPTION}
+        {landing('statsCaption')}
       </p>
     </>
   )

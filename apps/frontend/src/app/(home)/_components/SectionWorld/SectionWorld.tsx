@@ -1,11 +1,19 @@
+import { useTranslations } from 'next-intl'
+
 import { MediaLayer } from '@/components/ui'
 
-import { LANDING_MEDIA, WORLD_COPY } from '../../_data/landing-content'
+import { LANDING_MEDIA } from '../../_data/landing-content'
 
 import './section-world.css'
 
 export function SectionWorld() {
-  const lastLine = WORLD_COPY.titleLines.length - 1
+  const t = useTranslations('Landing')
+  const titleLines = [t('worldTitle1'), t('worldTitle2')]
+  const pillars = [
+    { label: t('worldPillarMemoryTitle'), body: t('worldPillarMemoryBody') },
+    { label: t('worldPillarReplayTitle'), body: t('worldPillarReplayBody') },
+  ]
+  const lastLine = titleLines.length - 1
 
   return (
     <section
@@ -28,7 +36,7 @@ export function SectionWorld() {
 
       <div className="world-section__content relative z-[3] self-center">
         <p className="world-section__label" data-motion="reveal">
-          {WORLD_COPY.label}
+          {t('worldLabel')}
         </p>
 
         <h2
@@ -36,7 +44,7 @@ export function SectionWorld() {
           className="world-section__title m-0 font-display font-medium text-h2 text-parchment"
           data-motion="title"
         >
-          {WORLD_COPY.titleLines.map((line, index) => (
+          {titleLines.map((line, index) => (
             <span key={line} className={`block ${index === lastLine ? 'text-gold-soft' : ''}`}>
               {line}
             </span>
@@ -44,11 +52,11 @@ export function SectionWorld() {
         </h2>
 
         <p className="world-section__body font-serif text-accroche" data-motion="reveal">
-          {WORLD_COPY.body}
+          {t('worldBody')}
         </p>
 
         <div className="world-section__pillars">
-          {WORLD_COPY.pillars.map((pillar) => (
+          {pillars.map((pillar) => (
             <div key={pillar.label} className="world-pillar" data-motion="reveal">
               <p className="world-pillar__label">{pillar.label}</p>
               <p className="world-pillar__body font-serif text-body-editorial">{pillar.body}</p>

@@ -1,11 +1,14 @@
+import { getTranslations } from 'next-intl/server'
+
 import { AveugleHub } from './_components/AveugleHub'
 
 import type { Metadata } from 'next'
 
 import './aveugle.css'
 
-export const metadata: Metadata = {
-  title: 'L’Auberge de L’Aveugle · GRIMOIRE',
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('Auberge')
+  return { title: t('metadataTitle') }
 }
 
 interface AveuglePageProps {

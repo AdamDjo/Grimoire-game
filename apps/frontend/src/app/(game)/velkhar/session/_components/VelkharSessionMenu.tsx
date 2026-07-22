@@ -1,10 +1,12 @@
 'use client'
 
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 
 import { GameButton } from '@/components/ui/grimoire/GameButton/GameButton'
 import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
+import { LanguageSwitcher } from '@/components/ui/language-switcher'
 
 import { VELKHAR_WORLD } from '../../_config/velkhar-world'
 
@@ -21,6 +23,7 @@ export function VelkharSessionMenu({
   onResume,
   source,
 }: VelkharSessionMenuProps) {
+  const t = useTranslations('Session')
   const [confirmingAbandon, setConfirmingAbandon] = useState(false)
 
   if (confirmingAbandon) {
@@ -28,20 +31,17 @@ export function VelkharSessionMenu({
       <div
         className="velkhar-session-menu__confirmation"
         role="alertdialog"
-        aria-label="Confirm abandon run"
+        aria-label={t('confirmAbandonLabel')}
       >
         <GameIcon decorative name="warning" size={64} />
-        <h3>Abandon this run?</h3>
-        <p>
-          This ends the current character’s journey and starts Chronicle generation. It cannot be
-          undone.
-        </p>
+        <h3>{t('abandonTitle')}</h3>
+        <p>{t('abandonBody')}</p>
         <div className="velkhar-session-menu__confirmation-actions">
           <GameButton disabled={ending} onClick={() => setConfirmingAbandon(false)} variant="ghost">
-            Keep playing
+            {t('keepPlaying')}
           </GameButton>
           <GameButton loading={ending} onClick={() => void onAbandon()} tone="danger">
-            Confirm abandon
+            {t('confirmAbandon')}
           </GameButton>
         </div>
       </div>
@@ -50,13 +50,16 @@ export function VelkharSessionMenu({
 
   return (
     <div className="velkhar-session-menu">
+      <LanguageSwitcher variant="menu" />
       <p className="velkhar-session-menu__status">
         <span aria-hidden="true" data-online={source === 'ai'} />
-        The Game Master is {source === 'ai' ? 'alive and listening' : 'using its fallback tale'}.
+        {t('gameMasterStatus', {
+          status: source === 'ai' ? t('gameMasterAlive') : t('gameMasterFallback'),
+        })}
       </p>
 
       <GameButton leadingIcon={<GameIcon decorative name="arrow" size={24} />} onClick={onResume}>
-        Resume the journey
+        {t('resumeJourney')}
       </GameButton>
 
       <GameButton
@@ -64,7 +67,7 @@ export function VelkharSessionMenu({
         leadingIcon={<GameIcon decorative name="crafting" size={24} />}
         variant="ghost"
       >
-        Settings — coming soon
+        {t('settingsSoon')}
       </GameButton>
 
       <Link
@@ -72,7 +75,7 @@ export function VelkharSessionMenu({
         href={`${VELKHAR_WORLD.routes.aveugle}?return=run`}
       >
         <GameIcon decorative name="hourglass" size={24} />
-        Return to the Blind One
+        {t('returnBlindOne')}
       </Link>
 
       <button
@@ -80,7 +83,7 @@ export function VelkharSessionMenu({
         onClick={() => setConfirmingAbandon(true)}
         type="button"
       >
-        Abandon this run
+        {t('abandonRun')}
       </button>
     </div>
   )

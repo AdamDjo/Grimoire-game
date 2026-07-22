@@ -1,3 +1,5 @@
+import { getTranslations } from 'next-intl/server'
+
 import { getSafeInternalDestination } from '@/lib/internal-navigation'
 import { getViewerSummary } from '@/lib/viewer'
 
@@ -5,9 +7,9 @@ import { LoginForm } from './LoginForm'
 
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = {
-  title: 'Connexion · GRIMOIRE',
-  description: 'Reprenez votre chronique et retournez dans le monde de Velkhar.',
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('Auth')
+  return { title: t('loginMetadataTitle'), description: t('loginMetadataDescription') }
 }
 
 interface LoginPageProps {

@@ -1,4 +1,6 @@
 import { Alegreya_Sans, Caveat, Cinzel, Cormorant_Garamond, EB_Garamond } from 'next/font/google'
+import { NextIntlClientProvider } from 'next-intl'
+import { getLocale, getTranslations } from 'next-intl/server'
 
 import { GlobalExperience } from '@/components/ui/global-experience'
 
@@ -43,23 +45,30 @@ const caveat = Caveat({
   display: 'swap',
 })
 
-export const metadata: Metadata = {
-  metadataBase: new URL('https://grimoire.game'),
-  title: 'GRIMOIRE - Of Ash and Salt',
-  description:
-    'GRIMOIRE est un roguelike narratif par IA. Explore Velkhar, fais des choix libres, lance les des aux pivots et laisse une trace dans un monde qui se souvient.',
-  keywords: ['RPG', 'tabletop', 'AI', 'narrative', 'Velkhar', 'Grimoire'],
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('Metadata')
+
+  return {
+    metadataBase: new URL('https://grimoire.game'),
+    title: t('title'),
+    description: t('description'),
+    keywords: ['RPG', 'tabletop', 'AI', 'narrative', 'Velkhar', 'Grimoire'],
+  }
 }
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const locale = await getLocale()
+
   return (
     <html
-      lang="fr"
+      lang={locale}
       className={`${cinzel.variable} ${cormorantGaramond.variable} ${ebGaramond.variable} ${alegreyaSans.variable} ${caveat.variable}`}
     >
       <body>
-        <GlobalExperience />
-        {children}
+        <NextIntlClientProvider>
+          <GlobalExperience />
+          {children}
+        </NextIntlClientProvider>
       </body>
     </html>
   )
