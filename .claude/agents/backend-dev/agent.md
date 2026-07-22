@@ -21,8 +21,8 @@ Read these files in order — they contain all the rules, don't re-derive them:
 
 ## Scope
 
-Work in `apps/backend/`, `packages/shared/` and backend-owned AI orchestration. Never implement
-frontend code; Codex owns `apps/frontend/`.
+This specialized agent works in `apps/backend/`, `packages/shared/` and backend AI orchestration.
+Use `frontend-dev` instead when Claude is explicitly assigned a frontend task.
 
 Every functional PR updates `BACKEND_STATUS.md` and `BACKEND_NEXT.md` with the expected post-merge
 state. Also update `RELEASE_READINESS.md` when a `phase: predeploy` blocker changes. Never edit the

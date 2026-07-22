@@ -19,11 +19,19 @@ réglages personnels ou régénérables.
 
 Le statut ne doit jamais être recopié dans `MEMORY.md`, les fichiers agents ou les skills.
 
+## Attribution souple
+
+- Claude est assigné par défaut au backend/shared/IA et Codex au frontend.
+- Ce choix réduit les conflits, mais ne constitue pas une permission exclusive.
+- Une demande utilisateur explicite peut confier n'importe quel domaine à Claude ou Codex.
+- L'agent assigné suit toujours les instructions et la paire `STATUS/NEXT` du domaine, indépendamment
+  de son identité.
+
 ## Ressources toujours versionnées
 
 - `MEMORY.md`, `AGENTS.md`, `CLAUDE.md` et les fichiers `CLAUDE.md` des workspaces ;
 - `docs/00-HOME.md`, `docs/00-START-HERE.md` et tout `docs/public/` ;
-- les agents projet dans `.claude/agents/` ;
+- les agents projet frontend, backend et code-review dans `.claude/agents/` ;
 - les skills projet `bug`, `check`, `design-taste-frontend`, `feature`, `hotfix`, `implement`, `pr`,
   `release`, `status` et `sync` dans `.claude/skills/` et `.agents/skills/` ;
 - les workflows GitHub, templates de PR et scripts qui contrôlent cette politique.

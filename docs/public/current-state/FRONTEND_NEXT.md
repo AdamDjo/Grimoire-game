@@ -3,7 +3,8 @@ type: frontend-actions
 visibility: public
 rag: true
 source_of_truth: true
-owner: frontend-codex
+owner: frontend
+default_agent: codex
 updated: 2026-07-22
 ---
 
@@ -26,5 +27,6 @@ updated: 2026-07-22
 4. #127 — World Map progressive.
 5. #159 — linking multi-provider.
 
-Chaque PR frontend Codex met à jour ce fichier et `FRONTEND_STATUS.md` selon l'état attendu après
-merge. Si elle change un bloqueur pré-déploiement, elle met aussi à jour `RELEASE_READINESS.md`.
+Chaque PR frontend, qu'elle soit menée par Codex ou Claude, met à jour ce fichier et
+`FRONTEND_STATUS.md` selon l'état attendu après merge. Si elle change un bloqueur pré-déploiement,
+elle met aussi à jour `RELEASE_READINESS.md`.

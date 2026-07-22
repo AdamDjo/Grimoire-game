@@ -21,10 +21,13 @@ produit.
 5. `docs/public/nav/task-router.md` pour charger le canon ciblé
 6. `docs/public/nav/AI_WORKFLOW.md` pour la politique de mémoire et des skills versionnés
 
-## Propriété
+## Attribution des agents
 
-- Claude : backend, contrats shared et orchestration IA.
-- Codex : frontend.
+- Par défaut : Claude prend backend/shared/IA et Codex prend frontend.
+- Cette répartition optimise le travail parallèle, elle ne limite jamais les capacités : une demande
+  explicite peut confier n'importe quel domaine à Claude ou Codex.
+- L'agent assigné charge et met à jour la paire `STATUS/NEXT` du domaine travaillé.
+- Ne jamais faire modifier les mêmes fichiers par deux agents en parallèle.
 
 `docs/public/raw/16-MEMORY.md` décrit la mémoire narrative du jeu, pas la mémoire de travail des
 agents. Les sources vivantes restent les fichiers `current-state` ci-dessus.

@@ -168,8 +168,9 @@ réelles, la configuration de production et le golden path ; les écrans seconda
 ## 2026-07-22 — Mémoire projet et état post-merge par PR
 
 La mémoire opérationnelle est désormais routée par un `MEMORY.md` racine sans état dupliqué, puis
-par `00-START-HERE.md` et les sources `current-state`. Claude possède backend/shared/IA ; Codex
-possède frontend.
+par `00-START-HERE.md` et les sources `current-state`. Claude prend backend/shared/IA par défaut et
+Codex prend frontend par défaut, mais l'utilisateur peut assigner chaque agent à n'importe quel
+domaine. L'agent frontend Claude est conservé et protégé contre une suppression accidentelle.
 
 - chaque PR fonctionnelle met à jour la paire `STATUS/NEXT` de son domaine selon l'état attendu
   après merge ;

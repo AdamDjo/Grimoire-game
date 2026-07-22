@@ -3,7 +3,8 @@ type: backend-actions
 visibility: public
 rag: true
 source_of_truth: true
-owner: backend-claude
+owner: backend
+default_agent: claude
 updated: 2026-07-22
 ---
 
@@ -30,6 +31,6 @@ Ordre de dépendance :
 2. #117 — World events scriptés.
 3. #133 — échange Souvenir contre lore.
 
-Chaque PR backend/shared/IA Claude met à jour ce fichier et `BACKEND_STATUS.md` selon l'état attendu
-après merge. Si elle change un bloqueur pré-déploiement, elle met aussi à jour
-`RELEASE_READINESS.md`.
+Chaque PR backend/shared/IA, qu'elle soit menée par Claude ou Codex, met à jour ce fichier et
+`BACKEND_STATUS.md` selon l'état attendu après merge. Si elle change un bloqueur pré-déploiement,
+elle met aussi à jour `RELEASE_READINESS.md`.

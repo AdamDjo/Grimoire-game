@@ -18,7 +18,7 @@ Closes #<!-- numéro d'issue -->
 
 - **Phase** : <!-- renseigner exactement un label de phase autorisé -->
 - **Domaine** : <!-- domain: frontend / domain: backend / domain: ai -->
-- **Propriétaire** : <!-- Codex frontend OU Claude backend/shared/AI -->
+- **Propriétaire** : <!-- agent réellement assigné + domaine -->
 
 Phases autorisées : `phase: predeploy` ou `phase: postdeploy`. Remplacer le commentaire sur la
 ligne **Phase** par une seule valeur.

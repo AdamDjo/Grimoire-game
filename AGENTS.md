@@ -5,15 +5,16 @@
 > État vivant : `docs/public/current-state/PROJECT_STATUS.md`, puis statut du domaine.
 > Routeur : `docs/public/nav/task-router.md`.
 
-## Mémoire et propriété
+## Mémoire et attribution
 
 - `MEMORY.md` est l'unique nœud d'entrée générique. Ne pas chercher ou créer un autre fichier
   mémoire opérationnel.
 - `docs/public/raw/16-MEMORY.md` concerne la mémoire narrative du jeu, pas celle des agents.
-- Claude possède le backend, `packages/shared`, l'orchestration IA et les fichiers `BACKEND_*`.
-- Codex possède le frontend et les fichiers `FRONTEND_*`.
+- Attribution par défaut : Claude sur backend/shared/IA, Codex sur frontend.
+- Ce défaut n'est pas une restriction : si l'utilisateur assigne Codex au backend ou Claude au
+  frontend, suivre les règles et les fichiers `STATUS/NEXT` du domaine demandé.
 - Un contrat shared/backend est livré avant sa consommation dans une PR frontend distincte.
-- Claude et Codex ne modifient pas le même chantier fonctionnel en parallèle.
+- Deux agents ne modifient jamais le même chantier fonctionnel en parallèle.
 
 ## Sources de vérité
 

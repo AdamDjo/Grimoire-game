@@ -3,7 +3,8 @@ type: frontend-status
 visibility: public
 rag: true
 source_of_truth: true
-owner: frontend-codex
+owner: frontend
+default_agent: codex
 updated: 2026-07-22
 ---
 
@@ -40,5 +41,5 @@ updated: 2026-07-22
 - #127 — World Map progressive.
 - #159 — linking multi-provider.
 
-Propriétaire d'implémentation : **Codex**. Coordination backend/shared/IA : #165, propriétaire
-**Claude**. Epic frontend : #123. Checklist release : #163.
+Agent assigné par défaut : **Codex**, remplaçable par Claude sur demande explicite. Coordination
+backend/shared/IA : #165. Epic frontend : #123. Checklist release : #163.

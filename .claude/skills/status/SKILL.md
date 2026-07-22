@@ -22,12 +22,12 @@ PROJECT STATUS: Grimoire
 PREDEPLOY:  <completed>/<total> blockers delivered
 POSTDEPLOY: <count> planned improvements
 
-OWNER: Claude backend/shared/AI | Codex frontend
+DEFAULT AGENT: Claude backend/shared/AI | Codex frontend (overridable by explicit assignment)
 NEXT TASKS:
 - [ ] Task 1
 - [ ] Task 2
 - [ ] Task 3
 ```
 
-5. Also check git status to see if there are uncommitted changes.
-6. Report any blockers or issues found.
+6. Also check git status to see if there are uncommitted changes.
+7. Report any blockers or issues found.

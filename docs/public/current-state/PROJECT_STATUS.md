@@ -40,6 +40,8 @@ Landing → Auberge → Forge → Session → fin de run → Chronique, avec con
 - Une PR frontend met à jour les fichiers `FRONTEND_*` selon son état attendu après merge.
 - Une PR backend/shared/IA met à jour les fichiers `BACKEND_*` selon son état attendu après merge.
 - Une PR qui change un bloqueur `phase: predeploy` met aussi à jour `RELEASE_READINESS.md`.
-- Claude possède backend/shared/IA ; Codex possède frontend. Les contrats sont livrés avant leur
-  consommation frontend afin d'éviter des modifications concurrentes du même chantier.
+- Attribution par défaut : Claude sur backend/shared/IA, Codex sur frontend. Une assignation
+  explicite peut inverser ce choix sans changer les règles documentaires du domaine.
+- Les contrats sont livrés avant leur consommation frontend afin d'éviter des modifications
+  concurrentes du même chantier.
 - Ce fichier change seulement si l'objectif global ou la structure des sources change.

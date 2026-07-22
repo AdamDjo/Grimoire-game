@@ -25,6 +25,7 @@ const REQUIRED_FILES = [
   "docs/public/nav/task-router.md",
   ".claude/agents/backend-dev/agent.md",
   ".claude/agents/code-reviewer/agent.md",
+  ".claude/agents/frontend-dev/agent.md",
   ...PROJECT_SKILLS.flatMap((skill) => [
     `.claude/skills/${skill}/SKILL.md`,
     `.agents/skills/${skill}/SKILL.md`,

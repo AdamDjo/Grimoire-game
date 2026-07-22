@@ -10,10 +10,11 @@ source_of_truth: true
 Point d'entrée stable pour tout agent IA. Ne pas y stocker l'état vivant du projet.
 `../MEMORY.md` est le shim universel qui conduit ici ; il ne duplique aucune information vivante.
 
-## Propriété des chantiers
+## Attribution des chantiers
 
-- Claude : backend, contrats shared et orchestration IA.
-- Codex : frontend.
+- Par défaut : Claude sur backend/shared/IA, Codex sur frontend.
+- L'utilisateur peut assigner n'importe quel domaine à Claude ou Codex ; les règles du domaine
+  restent identiques quel que soit l'agent.
 - Les contrats backend/shared sont mergés avant leur consommation dans une PR frontend distincte.
 
 ## Lecture minimale

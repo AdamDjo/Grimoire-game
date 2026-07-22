@@ -13,10 +13,11 @@
 
 ## Scope
 
-Travailler uniquement dans `apps/frontend/`, sauf changement de contrat partagé dans `packages/shared/`.
-Le frontend est implémenté par Codex. Toute PR frontend met à jour `FRONTEND_STATUS.md` et
-`FRONTEND_NEXT.md` selon l'état attendu après merge, ainsi que `RELEASE_READINESS.md` si elle
-change un bloqueur `phase: predeploy`.
+Travailler uniquement dans `apps/frontend/`, sauf changement de contrat partagé explicitement inclus
+dans la tâche. Codex est assigné au frontend par défaut, mais Claude suit exactement ces mêmes règles
+lorsqu'il reçoit une tâche frontend. Toute PR frontend met à jour `FRONTEND_STATUS.md` et
+`FRONTEND_NEXT.md` selon l'état attendu après merge, ainsi que `RELEASE_READINESS.md` si elle change
+un bloqueur `phase: predeploy`.
 
 ## Architecture — colocation
 

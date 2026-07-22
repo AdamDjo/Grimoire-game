@@ -45,8 +45,8 @@ source_of_truth: true
 
 ## Agents & skills
 
-- Claude : `.claude/agents/backend-dev/agent.md`, dédié au backend, shared et à l'IA.
-- Codex : propriétaire des chantiers `apps/frontend/`.
+- Claude : `.claude/agents/frontend-dev/agent.md` et `backend-dev/agent.md` selon le domaine assigné.
+- Codex : frontend par défaut, mais autorisé sur tout domaine explicitement demandé.
 - `.claude/agents/code-reviewer/agent.md` : revue de code avant PR.
 - `.claude/skills/` et `.agents/skills/` : les workflows propres au projet sont versionnés ; ils
   lisent le statut du domaine et écrivent l'état attendu après merge dans la même PR.

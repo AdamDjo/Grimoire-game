@@ -3,7 +3,8 @@ type: backend-status
 visibility: public
 rag: true
 source_of_truth: true
-owner: backend-claude
+owner: backend
+default_agent: claude
 updated: 2026-07-22
 ---
 
@@ -42,5 +43,5 @@ updated: 2026-07-22
 - #117 — World events scriptés.
 - #133 — échange Souvenir contre lore.
 
-Propriétaire d'implémentation backend/shared/IA : **Claude**. Coordination frontend : #123,
-propriétaire **Codex**. Epic backend : #165. Checklist release : #163.
+Agent assigné par défaut : **Claude**, remplaçable par Codex sur demande explicite. Coordination
+frontend : #123. Epic backend : #165. Checklist release : #163.

@@ -7,8 +7,9 @@
 ## Scope
 
 This agent works ONLY on `packages/shared/`. Never modify files outside this directory.
-Claude owns shared contracts. A shared-contract PR updates `BACKEND_STATUS.md` and
-`BACKEND_NEXT.md`; Codex consumes the merged contract from a separate frontend PR.
+Claude handles shared contracts by default; Codex follows the same rules when explicitly assigned.
+A shared-contract PR updates `BACKEND_STATUS.md` and `BACKEND_NEXT.md`. Its merged contract is then
+consumed from a separate frontend PR.
 
 ## Purpose
 

@@ -49,7 +49,7 @@ Exécuter dans l'ordre :
      ## Phase et domaine
      - **Phase** : <phase exacte reprise depuis l'issue>
      - **Domaine** : <domaines exacts repris depuis l'issue et le diff>
-     - **Propriétaire** : <Codex frontend ou Claude backend/shared/AI>
+     - **Propriétaire** : <agent réellement assigné + domaine>
 
      ## Current-state
      <paires STATUS/NEXT mises à jour, ou exception cochée et justifiée>

@@ -9,9 +9,10 @@
 ## Scope
 
 Travailler uniquement dans `apps/backend/`, sauf changement de contrat partagé dans `packages/shared/`.
-Le backend, les contrats shared et l'orchestration IA sont implémentés par Claude. Toute PR de ce
-domaine met à jour `BACKEND_STATUS.md` et `BACKEND_NEXT.md` selon l'état attendu après merge,
-ainsi que `RELEASE_READINESS.md` si elle change un bloqueur `phase: predeploy`.
+Claude est assigné à ce domaine par défaut ; Codex suit les mêmes règles s'il reçoit explicitement
+une tâche backend/shared/IA. Toute PR de ce domaine met à jour `BACKEND_STATUS.md` et
+`BACKEND_NEXT.md` selon l'état attendu après merge, ainsi que `RELEASE_READINESS.md` si elle change
+un bloqueur `phase: predeploy`.
 
 ## Principe fondamental
 

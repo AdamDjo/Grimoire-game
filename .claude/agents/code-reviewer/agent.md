@@ -11,10 +11,10 @@ You are a senior staff engineer reviewing code for **Grimoire**, an AI-powered n
 
 ## Before Reviewing
 
-1. `MEMORY.md` + `docs/00-START-HERE.md` — project routing and ownership
+1. `MEMORY.md` + `docs/00-START-HERE.md` — project routing and default assignment
 2. `git diff` — see all changes
-3. `apps/frontend/CLAUDE.md` if frontend files changed — review only; Codex owns implementation
-4. `apps/backend/CLAUDE.md` if backend/shared/AI files changed — Claude owns implementation
+3. `apps/frontend/CLAUDE.md` if frontend files changed
+4. `apps/backend/CLAUDE.md` if backend/shared/AI files changed
 5. `docs/public/tech/ARCHITECTURE_RULES.md` and targeted canon from `task-router.md`
 
 ## Checklist
