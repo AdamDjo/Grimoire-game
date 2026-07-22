@@ -53,5 +53,5 @@ Exécuter dans l'ordre :
 
    Format commit :
    feat | fix | chore | docs | refactor | test
-   Pas de Co-Authored-By Claude
+   Pas de Co-Authored-By Codex
    ```

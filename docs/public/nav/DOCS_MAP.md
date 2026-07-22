@@ -9,6 +9,7 @@ source_of_truth: true
 
 ## Entrées
 
+- `MEMORY.md` : shim universel pour les agents, sans état vivant.
 - `docs/00-HOME.md` : dashboard Obsidian humain.
 - `docs/00-START-HERE.md` : point d'entrée IA.
 
@@ -23,6 +24,7 @@ source_of_truth: true
 - `archive/plans/` : anciens plans UI Kit, Game Session, moteur et backlog Phase 1B ; historique uniquement.
 - `nav/PRIVATE_CANON_POLICY.md` : règle public/privé.
 - `nav/RAG_RULES.md` : conventions RAG/mémoire.
+- `nav/AI_WORKFLOW.md` : politique de versionnement de la mémoire, des agents et des skills.
 - `nav/DOCS_MAP.md` : cette carte.
 - `nav/canon-index.md` : index du canon (`raw/`).
 - `nav/task-router.md` : pour faire X, lire Y.
@@ -41,9 +43,12 @@ source_of_truth: true
 - `assets/` : mockups, keyframes, sources lourdes.
 - `archive/` : anciennes versions et historiques.
 
-## Agents & skills (Claude Code)
+## Agents & skills
 
-- `.claude/agents/backend-dev/agent.md` : agent dédié `apps/backend/`.
-- `.claude/agents/frontend-dev/agent.md` : agent dédié `apps/frontend/`.
+- Claude : `.claude/agents/backend-dev/agent.md`, dédié au backend, shared et à l'IA.
+- Codex : propriétaire des chantiers `apps/frontend/`.
 - `.claude/agents/code-reviewer/agent.md` : revue de code avant PR.
-- `.claude/skills/` : commandes slash (`status`, `implement`, `feature`, `bug`, `hotfix`, `release`, `pr`, `check`, `sync`) — elles doivent lire le statut du domaine concerné.
+- `.claude/skills/` et `.agents/skills/` : les workflows propres au projet sont versionnés ; ils
+  lisent le statut du domaine et écrivent l'état attendu après merge dans la même PR.
+- Les skills tiers installés localement et les réglages personnels restent ignorés. Voir
+  [[AI_WORKFLOW]] pour la frontière exacte.

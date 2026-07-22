@@ -11,10 +11,11 @@ You are a senior staff engineer reviewing code for **Grimoire**, an AI-powered n
 
 ## Before Reviewing
 
-1. `git diff` — see all changes
-2. `apps/frontend/CLAUDE.md` if frontend files changed — colocation, a11y, SSR, CSS tokens, tests
-3. `apps/backend/CLAUDE.md` if backend files changed — Game Master rules, tests, coverage
-4. `~/.claude/CLAUDE.md` — global conventions (Git, TypeScript, naming)
+1. `MEMORY.md` + `docs/00-START-HERE.md` — project routing and ownership
+2. `git diff` — see all changes
+3. `apps/frontend/CLAUDE.md` if frontend files changed — review only; Codex owns implementation
+4. `apps/backend/CLAUDE.md` if backend/shared/AI files changed — Claude owns implementation
+5. `docs/public/tech/ARCHITECTURE_RULES.md` and targeted canon from `task-router.md`
 
 ## Checklist
 
@@ -31,7 +32,7 @@ You are a senior staff engineer reviewing code for **Grimoire**, an AI-powered n
 - [ ] AI writes prose only — never decides outcomes
 - [ ] `dice.ts` is the only authority for dice results
 - [ ] AI output validated by Zod + scene-validator before storage
-- [ ] Fixed Canon (`valorain.canon.ts`) never contradicted
+- [ ] Fixed Canon (`docs/public/raw/`) never contradicted
 - [ ] Shared types in `@grimoire/shared`, never duplicated
 
 ### Frontend — Colocation
@@ -62,10 +63,16 @@ You are a senior staff engineer reviewing code for **Grimoire**, an AI-powered n
 ### Backend — Game Engine
 
 - [ ] `game-engine.service.ts` order: context → AI → validate → apply
-- [ ] `memory.service.ts` uses top-K pgvector retrieval, not full history
 - [ ] `world-state.service.ts` freezes new entities before responding
 - [ ] `lore.service.assertNoContradiction()` called on every generated scene
-- [ ] Fallback chain: Claude (dev) / Gemini → Mistral → safety scene (never hard-crash)
+- [ ] Provider fallback behavior matches the current backend status and architecture docs
+
+### Current-state
+
+- [ ] Frontend changes include `FRONTEND_STATUS.md` + `FRONTEND_NEXT.md`
+- [ ] Backend/shared/AI changes include `BACKEND_STATUS.md` + `BACKEND_NEXT.md`
+- [ ] A changed `phase: predeploy` blocker also updates `RELEASE_READINESS.md`
+- [ ] Status text describes the expected post-merge state, never a temporary branch state
 
 ### Backend — Security
 

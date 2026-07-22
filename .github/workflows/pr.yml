@@ -5,42 +5,87 @@ on:
     types: [opened, reopened, edited, synchronize]
 
 jobs:
+  current-state:
+    name: Current State
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Test current-state guard
+        run: node --test scripts/check-current-state.test.mjs
+      - name: Check public documentation links
+        run: node scripts/check-doc-links.mjs
+      - name: Check project memory and skills
+        run: node scripts/check-project-memory.mjs
+      - name: Check current-state files
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: node scripts/check-current-state.mjs "$BASE_SHA" "$HEAD_SHA"
+
   label:
     name: Auto Label
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      issues: write
       pull-requests: write
     steps:
       - uses: actions/labeler@v6
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Apply declared phase label
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          PHASE=$(printf '%s\n' "$PR_BODY" | sed -n 's/^- \*\*Phase\*\* : phase: \(predeploy\|postdeploy\)[[:space:]]*$/\1/p' | head -n 1)
+
+          if [[ -n "$PHASE" ]]; then
+            if [[ "$PHASE" == "predeploy" ]]; then
+              OTHER_PHASE="postdeploy"
+            else
+              OTHER_PHASE="predeploy"
+            fi
+
+            if gh pr view "$PR_NUMBER" --json labels --jq '.labels[].name' | grep -Fxq "phase: $OTHER_PHASE"; then
+              gh pr edit "$PR_NUMBER" --remove-label "phase: $OTHER_PHASE"
+            fi
+
+            gh pr edit "$PR_NUMBER" --add-label "phase: $PHASE"
+          else
+            echo "No supported phase declared; no phase label applied."
+          fi
 
   milestone:
     name: Assign Milestone
     runs-on: ubuntu-latest
     permissions:
+      issues: write
       pull-requests: write
     steps:
-      - name: Assign milestone based on branch name
+      - name: Assign milestone from declared phase
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           BRANCH: ${{ github.head_ref }}
           REPO: ${{ github.repository }}
+          PR_BODY: ${{ github.event.pull_request.body }}
         run: |
-          if [[ "$BRANCH" == feature/phase-1a-* ]] || [[ "$BRANCH" == fix/phase-1a-* ]] || [[ "$BRANCH" == hotfix/phase-1a-* ]]; then
-            MILESTONE="Phase 1A - Frontend UI"
-          elif [[ "$BRANCH" == feature/phase-1b-* ]] || [[ "$BRANCH" == fix/phase-1b-* ]] || [[ "$BRANCH" == hotfix/phase-1b-* ]]; then
-            MILESTONE="Phase 1B - Backend Foundation"
-          elif [[ "$BRANCH" == feature/phase-2b-* ]] || [[ "$BRANCH" == fix/phase-2b-* ]] || [[ "$BRANCH" == hotfix/phase-2b-* ]]; then
-            MILESTONE="Phase 2B - Multi-Universe"
-          elif [[ "$BRANCH" == feature/phase-2-* ]] || [[ "$BRANCH" == fix/phase-2-* ]] || [[ "$BRANCH" == hotfix/phase-2-* ]]; then
-            MILESTONE="Phase 2 - MVP"
-          elif [[ "$BRANCH" == feature/phase-3-* ]] || [[ "$BRANCH" == fix/phase-3-* ]] || [[ "$BRANCH" == hotfix/phase-3-* ]]; then
-            MILESTONE="Phase 3 - Polish & UGC"
+          PHASE=$(printf '%s\n' "$PR_BODY" | sed -n 's/^- \*\*Phase\*\* : phase: \(predeploy\|postdeploy\)[[:space:]]*$/\1/p' | head -n 1)
+
+          if [[ "$PHASE" == "predeploy" ]]; then
+            MILESTONE="v0.1.0 - Première version jouable"
+          elif [[ "$PHASE" == "postdeploy" ]]; then
+            echo "Post-deploy PR: no v0.1.0 milestone."
+            exit 0
           else
-            echo "No milestone to assign for branch: $BRANCH"
+            echo "No supported phase found in PR body for branch: $BRANCH"
             exit 0
           fi
 

@@ -1,7 +1,7 @@
 # Frontend — Next.js App Router
 
-> Lire d'abord : `../../docs/00-START-HERE.md`, puis `../../docs/public/current-state/PROJECT_STATUS.md`.
-> Statut vivant : `../../docs/public/current-state/PROJECT_STATUS.md`.
+> Lire d'abord : `../../MEMORY.md`, puis `../../docs/00-START-HERE.md`.
+> Statut vivant : `../../docs/public/current-state/FRONTEND_STATUS.md` + `FRONTEND_NEXT.md`.
 > Design/gameplay : `../../docs/public/design/GAME_DESIGN.md`.
 > Tokens UI : `../../docs/public/design/DESIGN_TOKENS.md`.
 > Architecture/API : `../../docs/public/tech/ARCHITECTURE_RULES.md`.
@@ -14,6 +14,9 @@
 ## Scope
 
 Travailler uniquement dans `apps/frontend/`, sauf changement de contrat partagé dans `packages/shared/`.
+Le frontend est implémenté par Codex. Toute PR frontend met à jour `FRONTEND_STATUS.md` et
+`FRONTEND_NEXT.md` selon l'état attendu après merge, ainsi que `RELEASE_READINESS.md` si elle
+change un bloqueur `phase: predeploy`.
 
 ## Architecture — colocation
 

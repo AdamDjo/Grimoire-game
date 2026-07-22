@@ -1,7 +1,7 @@
 # Backend — Express + Game Master
 
-> Lire d'abord : `../../docs/00-START-HERE.md`, puis `../../docs/public/current-state/PROJECT_STATUS.md`.
-> Statut vivant : `../../docs/public/current-state/PROJECT_STATUS.md`.
+> Lire d'abord : `../../MEMORY.md`, puis `../../docs/00-START-HERE.md`.
+> Statut vivant : `../../docs/public/current-state/BACKEND_STATUS.md` + `BACKEND_NEXT.md`.
 > Architecture active : `../../docs/public/tech/ARCHITECTURE_RULES.md`.
 > Routeur : `../../docs/public/nav/task-router.md`.
 > Canon ciblé : `../../docs/public/nav/canon-index.md` → `../../docs/public/raw/*`.
@@ -9,6 +9,9 @@
 ## Scope
 
 Travailler uniquement dans `apps/backend/`, sauf changement de contrat partagé dans `packages/shared/`.
+Le backend, les contrats shared et l'orchestration IA sont implémentés par Claude. Toute PR de ce
+domaine met à jour `BACKEND_STATUS.md` et `BACKEND_NEXT.md` selon l'état attendu après merge,
+ainsi que `RELEASE_READINESS.md` si elle change un bloqueur `phase: predeploy`.
 
 ## Principe fondamental
 

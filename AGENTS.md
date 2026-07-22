@@ -1,9 +1,19 @@
 # GRIMOIRE — Of Ash and Salt
 
 > Fichier projet lu par les outils IA.
-> Lire d'abord : `docs/00-START-HERE.md`.
+> Lire d'abord : `MEMORY.md`, puis `docs/00-START-HERE.md`.
 > État vivant : `docs/public/current-state/PROJECT_STATUS.md`, puis statut du domaine.
 > Routeur : `docs/public/nav/task-router.md`.
+
+## Mémoire et propriété
+
+- `MEMORY.md` est l'unique nœud d'entrée générique. Ne pas chercher ou créer un autre fichier
+  mémoire opérationnel.
+- `docs/public/raw/16-MEMORY.md` concerne la mémoire narrative du jeu, pas celle des agents.
+- Claude possède le backend, `packages/shared`, l'orchestration IA et les fichiers `BACKEND_*`.
+- Codex possède le frontend et les fichiers `FRONTEND_*`.
+- Un contrat shared/backend est livré avant sa consommation dans une PR frontend distincte.
+- Claude et Codex ne modifient pas le même chantier fonctionnel en parallèle.
 
 ## Sources de vérité
 
@@ -26,10 +36,14 @@ Voir `docs/public/tech/ARCHITECTURE_RULES.md`.
 
 ## Propriété des docs d'état
 
-- Un chantier frontend modifie uniquement `FRONTEND_STATUS.md` et `FRONTEND_NEXT.md`.
-- Un chantier backend modifie uniquement `BACKEND_STATUS.md` et `BACKEND_NEXT.md`.
+- Une PR frontend met à jour `FRONTEND_STATUS.md` et `FRONTEND_NEXT.md` dans la même branche.
+- Une PR backend/shared/IA met à jour `BACKEND_STATUS.md` et `BACKEND_NEXT.md` dans la même branche.
+- Les documents décrivent l'état attendu après merge : ne pas laisser « branche active »,
+  « en validation » ou « attend le merge » dans le commit destiné à `develop`.
+- Une PR qui change un bloqueur `phase: predeploy` met aussi à jour `RELEASE_READINESS.md`.
+- Une PR sans impact produit peut déclarer `current-state` non applicable avec justification.
 - `PROJECT_STATUS.md` est un index stable, sans branche active.
-- `RELEASE_READINESS.md` se met à jour après merge sur `develop`, pas depuis une branche fonctionnelle.
+- En cas de conflit sur `RELEASE_READINESS.md`, la seconde PR se rebase sur `develop` avant merge.
 
 ## Stack courte
 

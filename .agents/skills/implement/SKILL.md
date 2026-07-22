@@ -15,7 +15,7 @@ Feature to implement: $ARGUMENTS
 
 - Read `MEMORY.md`, `docs/public/current-state/PROJECT_STATUS.md`, then only the matching domain pair:
   `FRONTEND_STATUS.md` + `FRONTEND_NEXT.md` or `BACKEND_STATUS.md` + `BACKEND_NEXT.md`
-- Read relevant CLAUDE.md files for the target workspace
+- Read relevant AGENTS.md files for the target workspace
 - Read existing related code to understand patterns
 - Identify which files need to be created or modified
 
@@ -37,7 +37,7 @@ Feature to implement: $ARGUMENTS
 - Follow the established patterns in the codebase
 - One file at a time, in dependency order
 - Use zod for all input validation
-- Follow naming conventions from CLAUDE.md
+- Follow naming conventions from AGENTS.md
 
 ### Step 5: Verify
 

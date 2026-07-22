@@ -3,7 +3,7 @@
   "extends": ["config:recommended"],
   "timezone": "Europe/Paris",
   "schedule": ["every weekend"],
-  "labels": ["type: chore", "domain: devops"],
+  "labels": ["type: chore"],
   "assignees": ["AdamDjo"],
   "pnpm": {
     "enabled": true
@@ -25,12 +25,14 @@
     {
       "description": "Group frontend deps",
       "matchFileNames": ["apps/frontend/package.json"],
-      "groupName": "frontend dependencies"
+      "groupName": "frontend dependencies",
+      "addLabels": ["domain: frontend"]
     },
     {
       "description": "Group backend deps",
       "matchFileNames": ["apps/backend/package.json"],
-      "groupName": "backend dependencies"
+      "groupName": "backend dependencies",
+      "addLabels": ["domain: backend"]
     },
     {
       "description": "Group tooling deps",
@@ -40,13 +42,14 @@
     {
       "description": "Group shared packages",
       "matchFileNames": ["packages/**/package.json"],
-      "groupName": "shared packages"
+      "groupName": "shared packages",
+      "addLabels": ["domain: backend"]
     },
     {
       "description": "Never auto-merge major updates",
       "matchUpdateTypes": ["major"],
       "autoMerge": false,
-      "labels": ["type: chore", "domain: devops", "priority: high"]
+      "addLabels": ["priority: high"]
     },
     {
       "description": "Pin GitHub Actions to digest",

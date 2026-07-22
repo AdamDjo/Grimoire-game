@@ -39,9 +39,13 @@ updated: 2026-07-04
 
 ## Lecture IA
 
-1. Lire `docs/00-START-HERE.md`.
-2. Lire `docs/public/current-state/PROJECT_STATUS.md`.
-3. Lire `RELEASE_READINESS.md` seulement pour une question de livraison globale.
-4. Lire les fichiers `FRONTEND_*` ou `BACKEND_*`, jamais les deux sans besoin transverse.
-5. Utiliser `docs/public/nav/task-router.md` pour choisir les fichiers ciblés.
-6. Lire le canon (`docs/public/raw/`) via `task-router.md`, seulement les fichiers ciblés par la tâche.
+1. Lire `MEMORY.md`, pointeur court sans état vivant.
+2. Lire `docs/00-START-HERE.md`.
+3. Lire `docs/public/current-state/PROJECT_STATUS.md`.
+4. Lire `RELEASE_READINESS.md` seulement pour une question de pré-déploiement ou de release.
+5. Lire les fichiers `FRONTEND_*` ou `BACKEND_*`, jamais les deux sans besoin transverse.
+6. Utiliser `docs/public/nav/task-router.md` pour choisir les fichiers ciblés.
+7. Lire le canon (`docs/public/raw/`) via `task-router.md`, seulement les fichiers ciblés par la tâche.
+
+`docs/public/raw/16-MEMORY.md` appartient au canon gameplay : ce n'est pas une mémoire de travail
+pour les agents. `docs/public/nav/log.md` est un historique append-only, jamais une source d'état.
