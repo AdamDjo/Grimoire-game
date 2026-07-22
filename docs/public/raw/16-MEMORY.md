@@ -215,34 +215,43 @@ Un **service backend dédié** : `memoryService.compressScene(run_id, turns[])`.
 
 ### Le prompt de compression
 
+> **Langue pivot anglaise (#168).** La mémoire interne (résumés N2, `key_facts`,
+> `npcs_evolution`) est **toujours** générée et stockée en anglais, quelle que soit
+> la langue de narration du joueur. Ce niveau n'est jamais affiché tel quel : seule
+> la narration présentée au joueur est localisée. Ce pivot fixe garantit qu'un
+> changement de langue en cours de run ne traduit ni ne corrompt jamais le canon
+> accumulé.
+
 ```
-Tu compresses 8 tours de jeu en un résumé structuré.
+You compress 8 game turns into a structured summary.
+Always write the summary and facts in English — this is an internal memory
+record, never shown to the player, and must stay language-independent.
 
-[CONTEXTE]
-{character_name}, {vocation}, {peuple}, à Velkhar.
-Lieu actuel : {location}.
+[CONTEXT]
+{character_name}, {vocation}, {people}, in Velkhar.
+Current location: {location}.
 
-[TOURS BRUTS]
+[RAW TURNS]
 {turn_1}
 {turn_2}
 ...
 {turn_8}
 
 [INSTRUCTION]
-Génère STRICTEMENT en JSON :
+Output STRICTLY as JSON:
 {
-  "summary": "150 tokens max, narratif 3ᵉ personne",
-  "key_facts": ["fait 1", "fait 2", "fait 3"],  // 3-5 max
-  "key_facts_pinned": [/* faits critiques selon règles */],
+  "summary": "150 tokens max, third-person narrative",
+  "key_facts": ["fact 1", "fact 2", "fact 3"],  // 3-5 max
+  "key_facts_pinned": [/* critical facts per rules */],
   "mood": "calm | tense | festive | sacred | dangerous",
   "npcs_evolution": [{"name": "...", "status": "...", "last_seen": "..."}]
 }
 
-Règles de pinning automatique :
-- PNJ mort → key_facts_pinned
-- Artefact obtenu/perdu → key_facts_pinned
-- Quête activée → key_facts_pinned
-- Choix moral majeur → key_facts_pinned
+Automatic pinning rules:
+- NPC death → key_facts_pinned
+- Artifact gained/lost → key_facts_pinned
+- Quest activated → key_facts_pinned
+- Major moral choice → key_facts_pinned
 ```
 
 ### Coût

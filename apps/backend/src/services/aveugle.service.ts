@@ -1,4 +1,4 @@
-import { getPeople, getVocation } from '@grimoire/shared'
+import { getPeople, getVocation, localeDisplayName, resolveLocale } from '@grimoire/shared'
 
 import {
   type AveugleLoreOutput,
@@ -10,7 +10,7 @@ import { callOpenRouter } from '../ai/openrouter.provider'
 import { env } from '../config/env'
 import { prisma } from '../lib/prisma'
 
-import type { AveugleExchangeType, AveugleHubState, SouvenirType } from '@grimoire/shared'
+import type { AveugleExchangeType, AveugleHubState, Locale, SouvenirType } from '@grimoire/shared'
 
 const AVEUGLE_TIMEOUT_MS = 8000
 
@@ -39,6 +39,31 @@ const AVEUGLE_TALK_FALLBACK_REPLIES = [
   'Pas maintenant. Même la lampe à huile a besoin de repos avant de brûler à nouveau.',
 ]
 
+/**
+ * English fallback replies, same canon voice as {@link AVEUGLE_TALK_FALLBACK_REPLIES}.
+ * Served for every non-French locale so the player never sees a French line on a
+ * failed AI call. Other locales pivot to English rather than shipping a per-locale
+ * bank (English is always the safe default — #168).
+ */
+const AVEUGLE_TALK_FALLBACK_REPLIES_EN = [
+  'The wind carries poorly tonight, traveler. Ask me again later, by the fire.',
+  'My tongue is as dry as the sand right now. Come back when the tea has steeped.',
+  'The words are hiding, like bones under the dune. Give me time to find them again.',
+  'Not now. Even the oil lamp needs rest before it burns anew.',
+]
+
+/**
+ * Picks a static fallback reply in the player's language. French keeps its native
+ * bank; every other locale falls back to English (the global default per #168).
+ */
+function pickFallbackReply(locale: Locale): string {
+  const bank =
+    locale.toLowerCase().split('-')[0] === 'fr'
+      ? AVEUGLE_TALK_FALLBACK_REPLIES
+      : AVEUGLE_TALK_FALLBACK_REPLIES_EN
+  return pickRandom(bank)
+}
+
 /** Canon price table for Souvenir-for-lore exchanges (11-INVENTORY-ECONOMY.md §3). */
 const EXCHANGE_PRICES: Record<AveugleExchangeType, number> = {
   'lore-fragment': 1,
@@ -62,6 +87,26 @@ export class SouvenirNotFoundError extends Error {}
 
 function pickRandom<T>(items: readonly T[]): T {
   return items[Math.floor(Math.random() * items.length)]
+}
+
+/**
+ * Resolves the narration locale for an Aveugle interaction (#168). The player's
+ * active game session is the source of truth for the language (`GameSession.locale`,
+ * persisted at session creation); we fall back to the account preference, then to
+ * English. The Aveugle hub has no session of its own — it reuses the run's locale so
+ * the innkeeper always speaks the same language as the Game Master.
+ */
+async function resolvePlayerLocale(userId: string): Promise<Locale> {
+  const [session, user] = await Promise.all([
+    prisma.gameSession.findFirst({
+      where: { character: { userId }, status: 'active' },
+      orderBy: { createdAt: 'desc' },
+      select: { locale: true },
+    }),
+    prisma.user.findUnique({ where: { id: userId }, select: { preferredLocale: true } }),
+  ])
+
+  return resolveLocale(session?.locale, user?.preferredLocale)
 }
 
 /**
@@ -124,8 +169,10 @@ function buildAveugleTalkPrompt(params: {
   vocationLabel: string
   namedSouvenirs: { title: string; body: string }[]
   playerMessage: string
+  languageName: string
 }): string {
-  const { characterName, peopleLabel, vocationLabel, namedSouvenirs, playerMessage } = params
+  const { characterName, peopleLabel, vocationLabel, namedSouvenirs, playerMessage, languageName } =
+    params
 
   return [
     "Tu es L'Aveugle, aubergiste-prophète du Doigt-Cassé, à Velkhar.",
@@ -157,6 +204,10 @@ function buildAveugleTalkPrompt(params: {
     '',
     '[INSTRUCTION]',
     'Réponds STRICTEMENT en JSON : { "reply": "..." }. Une réplique courte (2-4 phrases), en voix de L\'Aveugle uniquement.',
+    // The canon phrases above define L'Aveugle's VOICE (warm, ironic, tutoie,
+    // desert proverbs); this final line sets the OUTPUT language (#168). The
+    // voice stays; only the language of the reply follows the player's locale.
+    `Write the reply in ${languageName}. Keep L'Aveugle's voice — warm, ironic, informal, short desert proverbs. English is the default.`,
   ].join('\n')
 }
 
@@ -190,10 +241,13 @@ export async function generateAveugleTalkResponse(
   userId: string,
   playerMessage: string
 ): Promise<{ reply: string; isFallback: boolean }> {
-  const character = await prisma.character.findFirst({ where: { userId } })
+  const [character, locale] = await Promise.all([
+    prisma.character.findFirst({ where: { userId } }),
+    resolvePlayerLocale(userId),
+  ])
 
   if (!character) {
-    return { reply: pickRandom(AVEUGLE_TALK_FALLBACK_REPLIES), isFallback: true }
+    return { reply: pickFallbackReply(locale), isFallback: true }
   }
 
   const [people, vocation, namedSouvenirRows] = await Promise.all([
@@ -212,12 +266,13 @@ export async function generateAveugleTalkResponse(
     vocationLabel: vocation?.name.fr ?? character.vocation,
     namedSouvenirs: namedSouvenirRows.map((s) => ({ title: s.title, body: s.body })),
     playerMessage,
+    languageName: localeDisplayName(locale),
   })
 
   const output = await tryGenerateTalk(prompt)
   if (!output) {
     console.warn(`[Aveugle] talk generation failed for user ${userId}, using static fallback`)
-    return { reply: pickRandom(AVEUGLE_TALK_FALLBACK_REPLIES), isFallback: true }
+    return { reply: pickFallbackReply(locale), isFallback: true }
   }
 
   return { reply: output.reply, isFallback: false }
@@ -230,8 +285,16 @@ function buildAveugleLorePrompt(params: {
   vocationLabel: string
   exchangeType: AveugleExchangeType
   spentSouvenirTitle: string
+  languageName: string
 }): string {
-  const { characterName, peopleLabel, vocationLabel, exchangeType, spentSouvenirTitle } = params
+  const {
+    characterName,
+    peopleLabel,
+    vocationLabel,
+    exchangeType,
+    spentSouvenirTitle,
+    languageName,
+  } = params
 
   return [
     "Tu es L'Aveugle, aubergiste-prophète du Doigt-Cassé, à Velkhar. Un voyageur t'échange un Souvenir contre du savoir.",
@@ -250,6 +313,7 @@ function buildAveugleLorePrompt(params: {
     '',
     '[INSTRUCTION]',
     'Réponds STRICTEMENT en JSON : { "loreResult": "..." }. 2-6 phrases, cohérentes avec le canon de Velkhar, jamais de stat ni de décision mécanique.',
+    `Write the loreResult in ${languageName}. Keep L'Aveugle's voice. English is the default.`,
   ].join('\n')
 }
 
@@ -302,7 +366,10 @@ export async function spendSouvenirForLore(
     )
   }
 
-  const character = await prisma.character.findFirst({ where: { userId: souvenir.userId } })
+  const [character, locale] = await Promise.all([
+    prisma.character.findFirst({ where: { userId: souvenir.userId } }),
+    resolvePlayerLocale(userId),
+  ])
 
   const prompt = buildAveugleLorePrompt({
     characterName: character?.name ?? 'le voyageur',
@@ -312,6 +379,7 @@ export async function spendSouvenirForLore(
       : 'inconnue',
     exchangeType,
     spentSouvenirTitle: souvenir.title,
+    languageName: localeDisplayName(locale),
   })
 
   const output = await tryGenerateLore(prompt)

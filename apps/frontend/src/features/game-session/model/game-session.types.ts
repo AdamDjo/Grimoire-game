@@ -66,10 +66,9 @@ export interface PendingGameAction {
 
 export interface GameSessionApi<TResponse extends GameSessionResponse = GameSessionResponse> {
   abandonSession: (sessionId: string) => Promise<GameSessionEndResponse>
-  createSession: (locale: Locale) => Promise<TResponse>
+  createSession: (locale?: Locale) => Promise<TResponse>
   postGameAction: (input: {
     sessionId: string
-    locale: Locale
     choiceId?: string
     chosenActionText?: string
     freeAction?: string

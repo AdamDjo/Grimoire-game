@@ -12,6 +12,10 @@ vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: pushMock }),
 }))
 
+vi.mock('@/lib/supabase/ensure-session', () => ({
+  ensureAnonymousSession: vi.fn().mockResolvedValue(undefined),
+}))
+
 describe('CharacterCreateFlow', () => {
   beforeEach(() => {
     window.localStorage.clear()

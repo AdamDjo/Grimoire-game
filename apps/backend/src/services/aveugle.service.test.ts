@@ -9,6 +9,8 @@ const souvenirFindFirst = vi.fn()
 const souvenirFindMany = vi.fn()
 const souvenirUpdate = vi.fn()
 const souvenirFindFirstOrThrow = vi.fn()
+const gameSessionFindFirst = vi.fn()
+const userFindUnique = vi.fn()
 vi.mock('../lib/prisma', () => ({
   prisma: {
     character: { findFirst: characterFindFirst, update: characterUpdate },
@@ -18,6 +20,8 @@ vi.mock('../lib/prisma', () => ({
       update: souvenirUpdate,
       findFirstOrThrow: souvenirFindFirstOrThrow,
     },
+    gameSession: { findFirst: gameSessionFindFirst },
+    user: { findUnique: userFindUnique },
   },
 }))
 
@@ -49,6 +53,9 @@ beforeEach(() => {
   souvenirFindMany.mockReset().mockResolvedValue([])
   souvenirUpdate.mockReset()
   souvenirFindFirstOrThrow.mockReset()
+  // No active session and no account preference by default → English fallback.
+  gameSessionFindFirst.mockReset().mockResolvedValue(null)
+  userFindUnique.mockReset().mockResolvedValue(null)
   vi.spyOn(console, 'warn').mockImplementation(() => undefined)
 })
 
@@ -264,6 +271,108 @@ describe('spendSouvenirForLore', () => {
       'ai_generation_failed'
     )
     expect(souvenirUpdate).not.toHaveBeenCalled()
+  })
+})
+
+describe('Aveugle locale wiring (#168)', () => {
+  /** Reads the single prompt string passed to the mocked OpenRouter call. */
+  function lastPrompt(): string {
+    const messages = callOpenRouter.mock.calls.at(-1)?.[0] as { content: string }[] | undefined
+    return messages?.[0]?.content ?? ''
+  }
+
+  it('injects the session locale language into the talk prompt', async () => {
+    gameSessionFindFirst.mockResolvedValue({ locale: 'es-ES' })
+    callOpenRouter.mockResolvedValue({
+      success: true,
+      content: JSON.stringify({ reply: 'hola' }),
+    })
+
+    await generateAveugleTalkResponse('user1', 'Quién eres?')
+
+    expect(lastPrompt()).toContain('Write the reply in European Spanish')
+  })
+
+  it('prefers the active session locale over the account preference', async () => {
+    gameSessionFindFirst.mockResolvedValue({ locale: 'fr' })
+    userFindUnique.mockResolvedValue({ preferredLocale: 'de' })
+    callOpenRouter.mockResolvedValue({
+      success: true,
+      content: JSON.stringify({ reply: 'Bonjour' }),
+    })
+
+    await generateAveugleTalkResponse('user1', 'Qui es-tu ?')
+
+    expect(lastPrompt()).toContain('Write the reply in French')
+  })
+
+  it('falls back to the account preference when no session is active', async () => {
+    userFindUnique.mockResolvedValue({ preferredLocale: 'de' })
+    callOpenRouter.mockResolvedValue({
+      success: true,
+      content: JSON.stringify({ reply: 'Hallo' }),
+    })
+
+    await generateAveugleTalkResponse('user1', 'Wer bist du?')
+
+    expect(lastPrompt()).toContain('Write the reply in German')
+  })
+
+  it('defaults the talk prompt to English when no locale is known', async () => {
+    callOpenRouter.mockResolvedValue({
+      success: true,
+      content: JSON.stringify({ reply: 'hi' }),
+    })
+
+    await generateAveugleTalkResponse('user1', 'Who are you?')
+
+    expect(lastPrompt()).toContain('Write the reply in English')
+  })
+
+  it('serves an English fallback reply for a non-French locale on AI failure', async () => {
+    gameSessionFindFirst.mockResolvedValue({ locale: 'en' })
+    callOpenRouter.mockResolvedValue({ success: false, error: 'timeout' })
+
+    const result = await generateAveugleTalkResponse('user1', 'Who are you?')
+
+    expect(result.isFallback).toBe(true)
+    // The English bank has no accented characters; the French bank always does.
+    expect(result.reply).not.toMatch(/[éèêàû]/)
+  })
+
+  it('serves a French fallback reply for a French session on AI failure', async () => {
+    gameSessionFindFirst.mockResolvedValue({ locale: 'fr' })
+    callOpenRouter.mockResolvedValue({ success: false, error: 'timeout' })
+
+    const result = await generateAveugleTalkResponse('user1', 'Qui es-tu ?')
+
+    expect(result.isFallback).toBe(true)
+    expect(result.reply).toMatch(/étranger|sable|dune|lampe/)
+  })
+
+  it('injects the session locale language into the lore-exchange prompt', async () => {
+    gameSessionFindFirst.mockResolvedValue({ locale: 'fr' })
+    souvenirFindFirst.mockResolvedValue({
+      id: 'sv1',
+      userId: 'user1',
+      characterId: 'char1',
+      sessionId: 'sess1',
+      title: 'La brume dorée tue',
+      body: 'b',
+      type: 'secret-discovery',
+      anonymous: true,
+      sharedWithAveugle: false,
+      aveugleLoreResult: null,
+      createdAt: new Date(),
+    })
+    callOpenRouter.mockResolvedValue({
+      success: true,
+      content: JSON.stringify({ loreResult: 'Un fragment.' }),
+    })
+
+    await spendSouvenirForLore('user1', 'sv1', 'lore-fragment')
+
+    expect(lastPrompt()).toContain('Write the loreResult in French')
   })
 })
 
