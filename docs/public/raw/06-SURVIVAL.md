@@ -57,20 +57,35 @@ Au-delà des jauges, le perso peut subir des **conditions** — altérations tem
 
 ### Types de conditions
 
-| Condition                  | Cause                                | Effet                                  | Durée                     |
-| -------------------------- | ------------------------------------ | -------------------------------------- | ------------------------- |
-| 🔥 **Fièvre**              | Faim/soif à 0, maladie, marais       | -2 à tous les jets                     | Jusqu'au soin             |
-| 💀 **Empoisonnement**      | Créature, poison, eau corrompue      | -1d4 PV/tour (combat), -1 hors combat  | Jusqu'au soin             |
-| 🩸 **Blessure**            | Combat (réduit à 0 PV ou proche)     | -1 aux jets SANG, limite le portage    | Jusqu'au repos long       |
-| 🧊 **Gel**                 | Nuit dans le désert, haute montagne  | -1 SOUFFLE, malus mouvement            | Jusqu'à source de chaleur |
-| 🌀 **Étourdissement**      | Coup à la tête, explosion            | Perte d'un tour (combat)               | Court                     |
-| 😵 **Cécité temporaire**   | Ventre-Gris, lumière archontique     | -2 SOUFFLE (perception)                | Court                     |
-| 🤢 **Maladie des marais**  | Marais de Lekh                       | -1 à tous, fatigue double              | Long, soin spécifique     |
-| 🔮 **Cendre-corrompu**     | Magie excessive (Tisse-Verbe)        | Progresse vers Calamine                | Voir §4                   |
-| 🧠 **Raison ébranlée**     | Trauma, mort d'un proche, révélation | -1 CENDRE, hallucinations              | Variable                  |
-| 🪨 **Pétrification lente** | Veilleur archontique                 | Malus progressifs → mort si non soigné | Mortel                    |
+| id (moteur)      | Condition                  | Cause                                | Effet                                     | Durée                     | Source      |
+| ---------------- | -------------------------- | ------------------------------------ | ----------------------------------------- | ------------------------- | ----------- |
+| `fever`          | 🔥 **Fièvre**              | Faim/soif à 0, maladie, marais       | Désavantage à tous les jets               | Jusqu'au soin             | **BACKEND** |
+| `poison`         | 💀 **Empoisonnement**      | Créature, poison, eau corrompue      | -1d4 PV/tour (combat), -1 hors combat     | Jusqu'au soin             | IA-PROPOSÉE |
+| `wound`          | 🩸 **Blessure**            | Combat (réduit à 0 PV ou proche)     | Désavantage aux jets SANG, limite portage | Jusqu'au repos long       | **BACKEND** |
+| `freeze`         | 🧊 **Gel**                 | Nuit dans le désert, haute montagne  | -1 SOUFFLE, malus mouvement               | Jusqu'à source de chaleur | IA-PROPOSÉE |
+| `stun`           | 🌀 **Étourdissement**      | Coup à la tête, explosion            | Perte d'un tour (combat)                  | Court                     | IA-PROPOSÉE |
+| `blindness`      | 😵 **Cécité temporaire**   | Ventre-Gris, lumière archontique     | Désavantage SOUFFLE (perception)          | Court                     | IA-PROPOSÉE |
+| `marsh_disease`  | 🤢 **Maladie des marais**  | Marais de Lekh                       | Désavantage à tous, fatigue double        | Long, soin spécifique     | IA-PROPOSÉE |
+| `cendre_corrupt` | 🔮 **Cendre-corrompu**     | Magie excessive (Tisse-Verbe)        | Progresse vers Calamine                   | Voir §4                   | IA-PROPOSÉE |
+| `shaken_reason`  | 🧠 **Raison ébranlée**     | Trauma, mort d'un proche, révélation | -1 CENDRE, hallucinations                 | Variable                  | IA-PROPOSÉE |
+| `petrification`  | 🪨 **Pétrification lente** | Veilleur archontique                 | Malus progressifs → mort si non soigné    | Mortel                    | IA-PROPOSÉE |
 
 🟢 _Le joueur peut subir plusieurs conditions simultanément — mais le MJ IA évite l'empilement punitif._
+
+### Les deux familles de conditions (contrat moteur)
+
+Le backend possède toutes les règles (cf. `15-GAME-MASTER §0`). Les conditions se répartissent en deux familles selon **qui décide de leur application** :
+
+- **[BACKEND]** — appliquée **automatiquement par le moteur** sur franchissement d'un seuil mesurable. L'IA ne les propose jamais ; elle les **narre** seulement une fois appliquées.
+  - `fever` : déclenchée quand `faim ≤ 0` **ou** `soif ≤ 0`.
+  - `wound` : déclenchée quand le perso tombe à `PV ≤ 0` puis est ramené (inconscience survécue), ou sur un coup critique en combat.
+- **[IA-PROPOSÉE]** — l'IA **propose** l'application via le champ `applyCondition` (cf. `15-GAME-MASTER §4.5`), le backend la **valide** (whitelist d'ids ci-dessus + plausibilité biome/contexte) avant de l'appliquer. Exemple : `poison` n'est acceptée que si le contexte narratif la justifie (créature venimeuse, eau corrompue, piège).
+
+🟢 _Règle : une condition non présente dans la table ci-dessus (id inconnu) est **rejetée** par le backend. L'IA ne peut pas inventer de condition._
+
+### Traduction mécanique de l'effet « désavantage »
+
+Les conditions sévères n'appliquent **pas** de malus plat au d20. Elles imposent le **Désavantage** (2d20, garder le pire) — le mécanisme canon décrit dans `08-DICE-RESOLUTION §5`. Cela remplace toute lecture « -1 / -2 au jet » de la table pour l'implémentation moteur : le moteur applique le désavantage, l'affichage indique au joueur pourquoi.
 
 ---
 
@@ -101,6 +116,20 @@ Le joueur peut **se reposer** pour restaurer les jauges. Trois types de repos :
 
 🟢 _Le repos est l'occasion de scènes calmes — dialogue PNJ, contemplation, choix réfléchi._
 
+### Taux de repos (contrat moteur)
+
+Valeurs normatives appliquées par le backend (`game-rules/rest.ts`). Toutes les jauges sont clampées à `[0, 100]`.
+
+| Type de repos    | id moteur | Fatigue | Faim | Soif | PV                         | Calamine | Risque       |
+| ---------------- | --------- | ------- | ---- | ---- | -------------------------- | -------- | ------------ |
+| 🛌 Repos court   | `short`   | +20     | —    | —    | +1d4 (si bandages)         | —        | différé (V2) |
+| 🔥 Repos au feu  | `fire`    | +60     | +60  | +60  | +1d4 + mod SANG (bandages) | −10      | différé (V2) |
+| 🏠 Repos auberge | `inn`     | +100    | +100 | +100 | 100 % (complet)            | −10      | nul (payant) |
+
+- « +60 faim/soif » ne s'applique **que si le perso a des provisions** (nourriture/eau en inventaire) — sinon la récupération faim/soif est nulle.
+- Le **risque de repos** (embuscade, rencontre nocturne) est **différé à un ticket V2** : en V1 le repos est sûr.
+- L'IA **propose** le repos via `restRequested` (cf. `15-GAME-MASTER §4.5`) ; le backend applique les taux ci-dessus et fait narrer une scène calme.
+
 ---
 
 ## 4. La Cendre et la Calamine
@@ -127,6 +156,26 @@ La magie n'est jamais gratuite (voir `02-WORLD-BIBLE.md`). **Tout usage d'artefa
 - 🟢 **Artefact purificateur** (rare) : -50 Cendre une fois
 
 🟢 _Tout aventurier qui touche aux artefacts gère un compte à rebours. Le Tisse-Verbe vit ce dilemme à chaque scène (éveiller = puissance immédiate, Calamine plus proche), les autres vocations ne le rencontrent qu'aux moments où elles décident d'activer un artefact trouvé._
+
+### Sources d'accumulation de Cendre (contrat moteur)
+
+La Cendre **ne monte jamais toute seule** : pas de drain passif par tour. Elle augmente uniquement sur un **événement source** identifié. Le backend applique le delta ; l'IA ne peut le **proposer** (via `applyCondition` avec `id: "cendre_corrupt"`) que si le contexte correspond à l'une des sources canon ci-dessous — sinon le delta est **rejeté**.
+
+| Source                                           | Delta indicatif | Qui déclenche         |
+| ------------------------------------------------ | --------------- | --------------------- |
+| 🔮 Usage d'artefact — pouvoir de base            | +5              | BACKEND (résolution)  |
+| 🔮 Éveil d'artefact (Tisse-Verbe)                | +10             | BACKEND (résolution)  |
+| ☀️ Exposition à la **lumière archontique**       | +5 à +15        | IA-PROPOSÉE (validée) |
+| 🌫️ Contact avec une créature/lieu **corrompu**   | +5 à +10        | IA-PROPOSÉE (validée) |
+| 👁️ Regard/présence d'un **Veilleur archontique** | +10 à +20       | IA-PROPOSÉE (validée) |
+| 🩸 Rituel/magie **excessive** hors artefact      | +5 à +15        | IA-PROPOSÉE (validée) |
+
+- Le backend **plafonne** un delta IA-proposé à +20 par tour (garde-fou anti-abus).
+- Toute source hors de cette liste → delta **ignoré** (l'IA reste libre de narrer, mais la jauge ne bouge pas).
+
+### Paliers de Calamine (contrat moteur)
+
+Le backend applique les effets de palier automatiquement dès franchissement du seuil (cf. table §4 « jauge de Cendre »). À **100**, la transformation en Calciné est **immédiate et non réversible** → fin de run avec `endReason: "calcined"` (cf. `09-ACTION-LOOP §7`). Pas d'héritage transmis (artefact corrompu).
 
 ---
 

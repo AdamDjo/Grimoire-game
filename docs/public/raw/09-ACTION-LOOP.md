@@ -226,6 +226,19 @@ Le joueur **décide** quand son histoire est finie. Pas le système.
 
 Si la Cendre atteint 100 → transformation en Calciné → le perso devient un monstre du bestiaire. Run terminé, Chronique générée avec **fin spéciale** ("Tu es devenu ce que tu chassais"). Pas d'héritage transmis (l'artefact est corrompu).
 
+### Contrat moteur — `endReason`
+
+Chaque fin de run porte un `endReason` distinct, transmis à la Chronique (`17-RUN-CHRONICLE`, `chronicle.service.ts`) pour adapter le récit :
+
+| `endReason` | Déclencheur                                         | Héritage                             |
+| ----------- | --------------------------------------------------- | ------------------------------------ |
+| `inn`       | Fin choisie à l'auberge (L'Aveugle)                 | transmis                             |
+| `death`     | Mort effective à 0 PV (l'IA tranche l'inconscience) | transmis                             |
+| `abandon`   | Abandon du perso (inactivité ou clic explicite)     | transmis                             |
+| `calcined`  | Calamine atteint 100 → transformation en Calciné    | **non transmis** (artefact corrompu) |
+
+🟢 _`calcined` est la seule fin sans héritage. La Chronique reçoit ce `endReason` et bascule sur la fin spéciale « Tu es devenu ce que tu chassais »._
+
 ---
 
 ## 8. Risques & garde-fous
