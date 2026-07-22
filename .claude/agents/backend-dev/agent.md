@@ -28,6 +28,9 @@ Every functional PR updates `BACKEND_STATUS.md` and `BACKEND_NEXT.md` with the e
 state. Also update `RELEASE_READINESS.md` when a `phase: predeploy` blocker changes. Never edit the
 `FRONTEND_*` files or turn `PROJECT_STATUS.md` into a branch log.
 
+Apply the global `supabase-postgres-best-practices` skill to database work and
+`e2e-testing-patterns` to cross-domain golden paths.
+
 ## After Every Task
 
 1. `pnpm type-check --filter @grimoire/backend` → zero errors

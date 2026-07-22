@@ -62,6 +62,8 @@ src/
 - Utiliser les tokens de `../../docs/public/design/DESIGN_TOKENS.md` et les variables CSS existantes.
 - Pas de logique de jeu critique côté client.
 - Textes UI/code en anglais, conversation utilisateur en français.
+- Appliquer le skill global `vercel-react-best-practices` pour tout code React/Next.js.
+- Appliquer `e2e-testing-patterns` aux golden paths, tests Cypress et régressions navigateur.
 
 ## Accessibilité
 

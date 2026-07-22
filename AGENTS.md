@@ -9,6 +9,8 @@
 
 - `MEMORY.md` est l'unique nœud d'entrée générique. Ne pas chercher ou créer un autre fichier
   mémoire opérationnel.
+- Les skills globaux attendus et leurs commandes de restauration sont documentés dans
+  `docs/public/nav/AI_WORKFLOW.md`.
 - `docs/public/raw/16-MEMORY.md` concerne la mémoire narrative du jeu, pas celle des agents.
 - Attribution par défaut : Claude sur backend/shared/IA, Codex sur frontend.
 - Ce défaut n'est pas une restriction : si l'utilisateur assigne Codex au backend ou Claude au

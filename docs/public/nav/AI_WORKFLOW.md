@@ -49,6 +49,27 @@ Codex. Les références spécifiques à l'outil (`CLAUDE.md` ou `AGENTS.md`) peu
 Un nouveau skill doit être rendu public s'il encode une convention, une commande ou une procédure
 propre à GRIMOIRE. Un skill tiers inchangé reste local et doit être réinstallé depuis sa source.
 
+## Skills globaux utilisés par GRIMOIRE
+
+Ces skills tiers sont installés globalement pour Claude Code et Codex. Leur contenu n'est pas copié
+dans le dépôt ; les commandes suivantes constituent la procédure de restauration sur une nouvelle
+machine.
+
+| Skill                              | Usage projet                                      | Source               |
+| ---------------------------------- | ------------------------------------------------- | -------------------- |
+| `supabase-postgres-best-practices` | schémas, migrations, requêtes, index et RLS       | officiel Supabase    |
+| `e2e-testing-patterns`             | Cypress/Playwright, golden paths et accessibilité | wshobson/agents      |
+| `vercel-react-best-practices`      | React, Next.js, rendu, data fetching et bundles   | officiel Vercel Labs |
+
+```bash
+npx skills add supabase/agent-skills --skill supabase-postgres-best-practices --agent claude-code codex --global --yes
+npx skills add wshobson/agents --skill e2e-testing-patterns --agent claude-code codex --global --yes
+npx skills add vercel-labs/agent-skills --skill vercel-react-best-practices --agent claude-code codex --global --yes
+```
+
+Les skills globaux complètent les règles du projet sans les remplacer. En cas de contradiction,
+`AGENTS.md`, `CLAUDE.md`, l'architecture et le canon GRIMOIRE gagnent.
+
 ## Contrôle automatique
 
 `pnpm check:project-memory` vérifie en CI que les points d'entrée et chaque skill projet existent

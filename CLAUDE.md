@@ -18,6 +18,7 @@ charger les deux domaines sans besoin transverse explicite.
 - Stack : `docs/public/tech/TECH_STACK.md`
 - Canon : `docs/public/nav/canon-index.md`
 - RAG : `docs/public/nav/RAG_RULES.md`
+- Skills globaux : `docs/public/nav/AI_WORKFLOW.md`
 
 ## App Docs
 

@@ -51,6 +51,9 @@ Utiliser `../../docs/public/nav/task-router.md`.
 - Unitaires : `game-rules/`, `scene-validator`, `output-parser`, `lore.service`, `intent-analyzer`.
 - Intégration : game engine avec provider IA mocké, routes avec validation Zod, memory retrieval avec seed data.
 - Ne pas tester les providers IA externes directement.
+- Appliquer le skill global `supabase-postgres-best-practices` aux schémas, migrations, requêtes,
+  index et politiques RLS.
+- Appliquer `e2e-testing-patterns` aux parcours réels qui traversent frontend, API et persistance.
 
 ## Commandes
 

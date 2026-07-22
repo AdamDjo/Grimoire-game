@@ -31,6 +31,8 @@ turn `PROJECT_STATUS.md` into a branch log or edit `BACKEND_*` for a frontend-on
 
 ## Frontend invariants
 
+- Apply the global `vercel-react-best-practices` skill to React/Next.js implementation and review.
+- Apply `e2e-testing-patterns` to Cypress tests, golden paths and browser regressions.
 - Verify visible lore, labels and gameplay rules against targeted canon before coding.
 - Keep critical game logic on the backend and server state in React Query, not Zustand.
 - Use existing design tokens and semantic, accessible HTML.
