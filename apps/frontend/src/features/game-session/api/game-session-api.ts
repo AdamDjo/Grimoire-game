@@ -1,10 +1,13 @@
 import type { GameSessionEndResponse, GameSessionResponse } from '../model/game-session.types'
 import type { ApiResponse, Locale } from '@grimoire/shared'
 
-/** Payload accepted by the game action route. Mirrors the backend Zod schema. */
+/**
+ * Payload accepted by the game action route. Mirrors the backend Zod schema.
+ * The narration language is resolved once at session creation and persisted
+ * server-side, so a turn never carries a locale (#168).
+ */
 export interface GameActionInput {
   sessionId: string
-  locale: Locale
   choiceId?: string
   /** Label of the choice the player just picked. */
   chosenActionText?: string
@@ -41,15 +44,17 @@ async function readEndResponse(response: Response): Promise<GameSessionEndRespon
 
 /**
  * Creates (or resumes) the player's active session and returns its opening
- * scene with the persisted world-state.
+ * scene with the persisted world-state. `locale` is the browser-detected
+ * narration language; the backend normalizes it, applies its own precedence
+ * and falls back to English, so `undefined` is fine (#168).
  */
 export async function createSession<TResponse extends GameSessionResponse = GameSessionResponse>(
-  locale: Locale
+  locale?: Locale
 ): Promise<TResponse> {
   const response = await fetch('/api/game/session', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ locale }),
+    body: JSON.stringify(locale ? { locale } : {}),
   })
 
   return readSceneResponse<TResponse>(response)

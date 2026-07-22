@@ -55,6 +55,7 @@ function session(turnNumber: number): GameSession {
     characterId: 'char1',
     turnNumber,
     location: 'Calamine',
+    locale: 'en',
     status: 'active',
     endReason: null,
     createdAt: new Date(),
@@ -91,7 +92,7 @@ describe('resolveTurn — N2 compression trigger', () => {
   })
 
   it('does not trigger compression on a turn that is not a multiple of 8', async () => {
-    await resolveTurn({ session: session(6), character, choice, locale: 'en' })
+    await resolveTurn({ session: session(6), character, choice })
     // Flush any fire-and-forget microtasks.
     await new Promise((resolve) => setTimeout(resolve, 0))
 
@@ -100,7 +101,7 @@ describe('resolveTurn — N2 compression trigger', () => {
   })
 
   it('triggers compression fire-and-forget when the next turn is a multiple of 8', async () => {
-    const result = await resolveTurn({ session: session(7), character, choice, locale: 'en' })
+    const result = await resolveTurn({ session: session(7), character, choice })
     expect(result).toBeDefined()
 
     // compressScene is fire-and-forget: resolveTurn must not await it.

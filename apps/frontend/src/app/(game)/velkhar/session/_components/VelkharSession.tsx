@@ -21,6 +21,7 @@ import { DiceRoll } from '@/features/game-session/components/DiceRoll'
 import { NarrativePanel } from '@/features/game-session/components/NarrativePanel'
 import { SourceBadge } from '@/features/game-session/components/SourceBadge'
 import { useGameSession } from '@/features/game-session/hooks/use-game-session'
+import { detectBrowserLocale } from '@/features/game-session/lib/browser-locale'
 import { getAuthHref } from '@/lib/internal-navigation'
 
 import { VELKHAR_WORLD } from '../../_config/velkhar-world'
@@ -80,7 +81,12 @@ function consequenceMessages(response: SceneResponse | null): string[] {
 }
 
 /** Velkhar composition for the shared game-session controller and components. */
-export function VelkharSession({ initialCharacter, locale = 'en' }: VelkharSessionProps) {
+export function VelkharSession({ initialCharacter, locale }: VelkharSessionProps) {
+  // An explicit prop (a future UI language switch) wins; otherwise derive the
+  // narration language from the browser. The backend normalizes and falls back
+  // to English, so an undetected locale stays undefined here (#168).
+  const [detectedLocale] = useState<Locale | undefined>(() => detectBrowserLocale())
+  const effectiveLocale = locale ?? detectedLocale
   const [freeAction, setFreeAction] = useState('')
   const [openTool, setOpenTool] = useState<VelkharSessionTool | null>(null)
   const reduceWorldState = useCallback(
@@ -91,7 +97,7 @@ export function VelkharSession({ initialCharacter, locale = 'en' }: VelkharSessi
   const session = useGameSession<SurvivalStats, SceneResponse>({
     api: gameSessionApi,
     initialWorldState: initialCharacter.stats.survival,
-    locale,
+    locale: effectiveLocale,
     reduceWorldState,
     resumeHref: `${VELKHAR_WORLD.routes.session}/resume`,
   })

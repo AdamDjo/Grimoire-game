@@ -1,3 +1,13 @@
+import {
+  type Attributes,
+  type Choice,
+  type Locale,
+  resolveLocale,
+  type SceneResponse,
+  type SessionEndReason,
+  type SurvivalStats,
+} from '@grimoire/shared'
+
 import { generateScene } from '../ai/game-master.service'
 import { persistedChoicesSchema } from '../ai/scene-validator'
 import { resolveChoice } from '../game-rules/consequences'
@@ -10,14 +20,6 @@ import { assembleScene } from './scene-assembler'
 import { validateAndPersistSouvenirCandidate } from './souvenir.service'
 
 import type { Character as DbCharacter, GameSession } from '../generated/prisma/client'
-import type {
-  Attributes,
-  Choice,
-  Locale,
-  SceneResponse,
-  SessionEndReason,
-  SurvivalStats,
-} from '@grimoire/shared'
 
 /**
  * Fallback seed character (Yarel of the Salt Roads), the same canon build the
@@ -85,16 +87,47 @@ export interface SessionContext {
 }
 
 /**
+ * Locale inputs carried by a session request: the deliberate player choice
+ * (persisted to the account) and the browser-detected fallback. Both are already
+ * normalized BCP-47 tags or undefined (see `createSessionSchema`).
+ */
+export interface SessionLocaleInput {
+  explicitLocale?: Locale
+  browserLocale?: Locale
+}
+
+/**
  * Returns the user's active session, creating an active session on first
  * play. Idempotent: one character and one active session per user. The
  * world-state lives in the DB — this is the single source of truth.
+ *
+ * Narration locale is resolved and persisted here (#168), in precedence order
+ * explicit choice → account preference → browser → English:
+ * - an explicit choice is also written to `User.preferredLocale` so it survives
+ *   future sessions, anonymous→account conversion, and resume;
+ * - an existing active session keeps its already-persisted locale (a resume must
+ *   not silently switch languages mid-run).
  *
  * The `Character` itself is expected to already exist, created via the Forge
  * (`POST /api/character`, #146) before the player ever reaches the session
  * screen. If none exists — a caller bypassed the Forge — this falls back to
  * the seed build (see `SEED` above) rather than failing the request.
  */
-export async function getOrCreateSession(userId: string): Promise<SessionContext> {
+export async function getOrCreateSession(
+  userId: string,
+  localeInput: SessionLocaleInput = {}
+): Promise<SessionContext> {
+  const { explicitLocale, browserLocale } = localeInput
+
+  // Persist a deliberate choice on the account before anything else, so it wins
+  // for this session and every later one.
+  if (explicitLocale) {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { preferredLocale: explicitLocale },
+    })
+  }
+
   const existing = await prisma.gameSession.findFirst({
     where: { status: 'active', character: { userId } },
     include: { character: true },
@@ -103,6 +136,9 @@ export async function getOrCreateSession(userId: string): Promise<SessionContext
   if (existing) {
     return { session: existing, character: existing.character }
   }
+
+  const user = await prisma.user.findUnique({ where: { id: userId } })
+  const locale = resolveLocale(explicitLocale, user?.preferredLocale, browserLocale)
 
   let character = await prisma.character.findFirst({ where: { userId } })
   if (!character) {
@@ -129,7 +165,7 @@ export async function getOrCreateSession(userId: string): Promise<SessionContext
   }
 
   const session = await prisma.gameSession.create({
-    data: { characterId: character.id },
+    data: { characterId: character.id, locale },
   })
 
   return { session, character }
@@ -185,10 +221,7 @@ async function resumeLatestScene({
  * regeneration, no duplicate turn-1 SceneLog. No choice was taken either way,
  * so no roll and no drain.
  */
-export async function buildOpeningScene(
-  context: SessionContext,
-  locale: Locale
-): Promise<SceneResponse> {
+export async function buildOpeningScene(context: SessionContext): Promise<SceneResponse> {
   const resumed = await resumeLatestScene(context)
   if (resumed) {
     return resumed
@@ -199,7 +232,9 @@ export async function buildOpeningScene(
 
   const gm = await generateScene({
     character: toGmCharacter(character, attributes, survival),
-    locale,
+    // Locale is resolved and persisted at session creation — the DB is the
+    // source of truth, never the per-request client value (#168).
+    locale: session.locale,
     sessionId: session.id,
   })
   const scene = assembleScene({
@@ -279,7 +314,6 @@ export interface ResolveTurnInput {
   choice: Choice
   chosenActionText?: string
   freeAction?: string
-  locale: Locale
 }
 
 /**
@@ -289,14 +323,15 @@ export interface ResolveTurnInput {
  * `endReason='death'`. The AI only narrates. Returns the enriched `SceneResponse`.
  */
 export async function resolveTurn(input: ResolveTurnInput): Promise<SceneResponse> {
-  const { session, character, choice, chosenActionText, freeAction, locale } = input
+  const { session, character, choice, chosenActionText, freeAction } = input
   const { attributes, survival } = readCharacter(character)
 
   const resolution = resolveChoice({ attributes, survival, choice })
 
   const gm = await generateScene({
     character: toGmCharacter(character, attributes, resolution.updatedSurvival),
-    locale,
+    // Persisted session locale is the source of truth (#168).
+    locale: session.locale,
     sessionId: session.id,
     chosenActionText,
     freeAction,

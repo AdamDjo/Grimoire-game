@@ -26,6 +26,10 @@ model User {
   email      String      @unique
   /// Compteur lifetime des requêtes de jeu en tant qu'utilisateur anonyme (cap = 30).
   anonymousRequestCount Int @default(0)
+  /// Préférence de langue de narration IA explicitement choisie par le joueur
+  /// (tag BCP-47 normalisé). Null tant qu'aucun choix explicite : on retombe
+  /// alors sur la locale navigateur puis l'anglais (#168).
+  preferredLocale String?
   createdAt  DateTime    @default(now())
   characters Character[]
   souvenirs  Souvenir[]
@@ -83,6 +87,9 @@ model GameSession {
 
   turnNumber Int      @default(1)
   location   String   @default("auberge-aveugle")
+  /// Langue de narration IA résolue à la création de la session (tag BCP-47
+  /// normalisé). Persistée pour que la reprise garde la même langue (#168).
+  locale     String   @default("en")
   status     String   @default("active") // active | ended
   /// Why the session ended (death | inn | abandon). Null while active. Bridge to A3.
   endReason  String?
