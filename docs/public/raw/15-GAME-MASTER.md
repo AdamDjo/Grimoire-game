@@ -185,6 +185,59 @@ Si l'IA ne répond pas en 12 sec → annulation + bascule modèle suivant dans l
 
 Maximum **2 retries** par tour. Au-delà → fallback à un texte générique pré-écrit (banque de 20 transitions neutres par mood, ex : _« Le silence retombe. L'instant attend ta décision. »_). Préférable à un crash visible.
 
+### 4.5 — Champs mécaniques proposés par l'IA (contrat Survie v2)
+
+L'IA **narre**, mais elle peut **signaler** au moteur qu'un événement mécanique devrait se produire. Elle ne l'applique jamais elle-même : elle remplit un champ optionnel, le **backend décide** (validation + application). Trois champs optionnels s'ajoutent au schéma de sortie (§4.1) :
+
+```ts
+{
+  // ... narration, choices, mood, npcs_present ...
+
+  // L'IA propose une condition narrative (poison, gel, cécité...).
+  // Backend valide : id ∈ whitelist (06-SURVIVAL §2) ET plausibilité biome/contexte.
+  applyCondition?: {
+    id: string,            // ex: "poison" — DOIT être un id canon (06-SURVIVAL §2)
+    reason: string,        // justification narrative courte (piste de plausibilité)
+    calamineDelta?: number // uniquement si id="cendre_corrupt" ; plafonné à +20 (06-SURVIVAL §4)
+  },
+
+  // L'IA signale un objet trouvé par le joueur.
+  // Backend valide : catégorie connue, sac non plein, cohérence tier/contexte, puis persiste.
+  itemGained?: {
+    name: string,
+    category: "equipment" | "bag" | "artifact" | "key",  // 4 catégories (11-INVENTORY §1)
+    slot?: string,         // si category="equipment" : un des 8 slots canon
+    effect?: {             // si consommable / utilitaire (ItemEffect)
+      healAmount?: number,
+      calamineReduction?: number,
+      removesCondition?: string,  // id canon d'une condition à retirer
+      damage?: string,            // dé de dégâts, ex "1d8"
+      attributeModifiers?: Record<string, number>
+    },
+    description?: string
+  },
+
+  // L'IA signale que le joueur demande à se reposer.
+  // Backend applique les taux canon (06-SURVIVAL §3) — l'IA ne calcule pas la récup.
+  restRequested?: {
+    type: "short" | "fire" | "inn"
+  }
+}
+```
+
+**Règles de validation backend (rejet silencieux si non conforme — la narration reste, l'effet est ignoré)** :
+
+| Champ            | Check                                                                  | Si fail                 |
+| ---------------- | ---------------------------------------------------------------------- | ----------------------- |
+| `applyCondition` | `id` ∈ whitelist canon (06-SURVIVAL §2) **et** famille = IA-PROPOSÉE   | Condition non appliquée |
+| `applyCondition` | plausibilité contexte/biome (poison ⇒ créature/eau corrompue, etc.)    | Condition non appliquée |
+| `applyCondition` | `calamineDelta` : source ∈ liste canon (06-SURVIVAL §4), `≤ +20`       | Delta borné ou ignoré   |
+| `itemGained`     | `category` connue, sac non plein (cap 12), `slot` valide si équipement | Objet non ajouté        |
+| `itemGained`     | `effect.removesCondition` / `id` référencé ∈ whitelist canon           | Effet réduit / ignoré   |
+| `restRequested`  | `type` ∈ {short, fire, inn}                                            | Repos ignoré            |
+
+🟢 _Principe inchangé (§0) : l'IA **propose**, le backend **dispose**. Ces champs ne cassent pas la règle d'or — ils la formalisent. Le moteur reste la seule autorité sur les stats, l'inventaire et les conséquences._
+
 ---
 
 ## §5 — Budget de tokens par tour

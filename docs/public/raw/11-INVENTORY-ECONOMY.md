@@ -4,6 +4,18 @@
 
 ---
 
+> **⚙️ Périmètre d'implémentation — Survie v2 (2026-07)**
+> Ce fichier décrit l'économie **cible complète**. Le chantier Survie v2 n'en implémente qu'un **sous-ensemble** :
+>
+> - ✅ **Acquisition** d'objets (l'IA signale un objet trouvé via `itemGained`, cf. `15-GAME-MASTER §4.5` → le backend le persiste dans les 4 catégories §1).
+> - ✅ **Usage / consommation** (appliquer un `ItemEffect` : soin, réduction de Calamine, retrait de condition).
+> - ✅ **Équipement** dans les 8 slots §1.
+> - ⏳ **Différé** (hors périmètre v2) : or 🪙 in-game (§2), marché/négociation (§7), banque de L'Aveugle (§6), artisanat (§8), tiers de rareté économiques (§4), dégradation d'héritage (§5).
+>
+> Autrement dit : v2 branche la **possession et l'usage** des objets, **pas** l'économie monétaire.
+
+---
+
 ## 0. Principe
 
 GRIMOIRE a une économie à **deux niveaux** — l'un meurt avec le perso, l'autre persiste à travers les runs. C'est ce qui rend le roguelike "strict" (tu peux tout perdre) **supportable** : le joueur sait qu'il rebâtira, et ce qui compte vraiment (Souvenirs, artefact, écho) traverse la mort.

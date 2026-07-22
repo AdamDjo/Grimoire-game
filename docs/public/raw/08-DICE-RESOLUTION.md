@@ -132,6 +132,15 @@ Certaines situations donnent **avantage** (lancer 2d20, garder le meilleur) ou *
 
 🟢 _Avantage/désavantage = la principale façon dont l'équipement, les conditions et la préparation influencent les dés._
 
+### Désavantage par condition (contrat moteur)
+
+Le moteur (`game-rules/dice.ts`) applique le **Désavantage** automatiquement quand **au moins une condition sévère active** l'impose. Une condition « sévère » est marquée `disadvantage: true` dans la table canon des conditions (`06-SURVIVAL §2`).
+
+- Implémentation : `roll = min(d20, d20)` (2 tirages, on garde le pire) dès qu'une condition sévère est active pour l'attribut concerné.
+- Le désavantage **ne se cumule pas** : plusieurs conditions sévères = toujours un seul désavantage (2d20 garder le pire), jamais 3d20. C'est un état booléen, pas un empilement.
+- Avantage et Désavantage s'**annulent** : si le contexte donne un avantage et une condition un désavantage, le jet redevient un simple d20.
+- Le résultat exposé au joueur (transparence BG3, §4) indique explicitement « Désavantage » et sa cause (la condition).
+
 ---
 
 ## 6. Compétences et attributs
