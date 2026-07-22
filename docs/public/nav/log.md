@@ -162,3 +162,23 @@ L'issue UI Kit #93 est fermée et sa PR #121 est mergée. Les anciens plans UI K
 Game Session, durcissement moteur et backlog Phase 1B ont été déplacés de `plans-actifs/` vers
 `public/archive/plans/`. Le frontend v0.1 reste ouvert uniquement pour l'auth, les intégrations
 réelles, la configuration de production et le golden path ; les écrans secondaires sont post-v0.1.
+
+---
+
+## 2026-07-22 — Mémoire projet et état post-merge par PR
+
+La mémoire opérationnelle est désormais routée par un `MEMORY.md` racine sans état dupliqué, puis
+par `00-START-HERE.md` et les sources `current-state`. Claude prend backend/shared/IA par défaut et
+Codex prend frontend par défaut, mais l'utilisateur peut assigner chaque agent à n'importe quel
+domaine. L'agent frontend Claude est conservé et protégé contre une suppression accidentelle.
+
+- chaque PR fonctionnelle met à jour la paire `STATUS/NEXT` de son domaine selon l'état attendu
+  après merge ;
+- une PR qui change un bloqueur `phase: predeploy` met aussi à jour `RELEASE_READINESS.md` ;
+- un contrôle CI vérifie cette présence, avec exception explicite et justifiée ;
+- le template PR, le labeler et les skills projet utilisent uniquement `predeploy`/`postdeploy` et
+  les domaines frontend/backend/AI ;
+- les wikilinks publics sont contrôlés automatiquement ;
+- le dashboard Obsidian et les instructions d'agents legacy ont été réparés.
+- `.agents/skills/` est la source canonique unique des skills projet ; `.claude/skills/` utilise des
+  liens relatifs contrôlés en CI, et les 10 skills passent le validateur officiel.

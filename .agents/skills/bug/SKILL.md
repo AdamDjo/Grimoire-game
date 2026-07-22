@@ -1,7 +1,7 @@
 ---
 name: bug
-description: Crée une issue GitHub puis une branche fix depuis develop avec le numéro d'issue. Usage: /bug <nom> — ex: /bug login-crash
-allowed-tools: Bash, mcp__github__create_issue
+description: "Crée une issue GitHub puis une branche fix depuis develop avec le numéro d'issue. Usage : /bug nom, par exemple /bug login-crash."
+allowed-tools: Bash
 ---
 
 L'utilisateur veut corriger un bug. Les args sont le nom de la branche (sans le préfixe `fix/`).
@@ -12,11 +12,10 @@ Exécuter dans l'ordre :
 
 1. **Créer l'issue GitHub**
    - Demander : "Décris le bug en une phrase (pour l'issue GitHub)"
-   - Créer l'issue via mcp**github**create_issue avec :
-     - owner: AdamDjo, repo: Grimoire-game
-     - title: "fix: <description du bug>"
-     - labels: ["type: bug"]
-     - assignees: ["AdamDjo"]
+   - Déduire ou demander la phase : `phase: predeploy` ou `phase: postdeploy`.
+   - Déduire le domaine : `domain: frontend`, `domain: backend` et/ou `domain: ai`.
+   - Créer l'issue avec `gh issue create`, le label `type: bug`, la phase et le domaine, puis
+     l'assigner à `AdamDjo`.
    - Noter le numéro de l'issue créée → `<numéro>`
 
 2. **Ajouter l'issue au projet Scrum Board**

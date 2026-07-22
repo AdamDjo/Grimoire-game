@@ -2,7 +2,8 @@
 type: actions-index
 visibility: public
 rag: true
-updated: 2026-07-21
+source_of_truth: false
+updated: 2026-07-22
 ---
 
 # Next Actions
@@ -13,6 +14,5 @@ Routeur de compatibilité. Ne pas y recopier les files d'attente des chantiers.
 - Travail frontend : [[FRONTEND_NEXT]]
 - Travail backend : [[BACKEND_NEXT]]
 
-Ordre global actuel : terminer/merger #135 et #147, livrer l'interface EN/FR (#167) et la locale IA
-navigateur (#168), déployer l'API (#161), traiter la sécurité (#162), puis valider le golden path
-réel (#129) avant la branche `release/0.1.0` (#163).
+Ce fichier ne contient volontairement aucun ordre global : les trois sources ci-dessus possèdent
+leurs files d'attente et sont mises à jour dans les PR fonctionnelles concernées.

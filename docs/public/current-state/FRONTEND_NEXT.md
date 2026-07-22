@@ -4,26 +4,29 @@ visibility: public
 rag: true
 source_of_truth: true
 owner: frontend
-updated: 2026-07-21
+default_agent: codex
+updated: 2026-07-22
 ---
 
 # Frontend Next
 
-## Avant v0.1.0
+## Phase 1 — pré-déploiement
 
-1. Valider et merger #167 : interface anglaise/française, anglais principal et aucun mélange de
-   langue sur le golden path.
-2. Remplacer les fixtures autoritatives de l'Auberge par les contrats réels livrés dans #147.
-3. Implémenter #168 : transmettre au backend la préférence de langue de narration, distincte de
-   la langue d'interface déjà gérée par #167.
-4. Intégrer #152 ou masquer proprement le concept libre pour la première release.
-5. Participer à #161 pour les variables Vercel et redirects Supabase.
-6. Exécuter #129 contre l'environnement de release, avec sa matrice de langues.
+1. #188 — brancher l'Auberge sur les endpoints réels `hub`, `talk` et `spend` de #147.
+2. #186 — afficher le HUD Survie v2, les conditions, l'inventaire réel, le Désavantage et la fin
+   Calciné ; dépend de #180-#184.
+3. #152 — livrer le flow du concept libre ou masquer l'option sans cul-de-sac pour la V1.
+4. #161 — configurer `NEXT_PUBLIC_API_URL`, le domaine final et les redirects Supabase.
+5. #129 — exécuter les golden paths anonyme, conversion et résilience en EN/FR.
 
-## Après v0.1.0
+## Post-déploiement
 
 1. #136 — Profil, Paramètres et confidentialité.
 2. #130 — Chronologie personnelle.
 3. #131 — Galerie des Souvenirs.
 4. #127 — World Map progressive.
 5. #159 — linking multi-provider.
+
+Chaque PR frontend, qu'elle soit menée par Codex ou Claude, met à jour ce fichier et
+`FRONTEND_STATUS.md` selon l'état attendu après merge. Si elle change un bloqueur pré-déploiement,
+elle met aussi à jour `RELEASE_READINESS.md`.

@@ -1,7 +1,6 @@
 ---
 name: check
-description: Run TypeScript type-check and lint across the entire monorepo. Use this to verify code quality before committing.
-disable-model-invocation: true
+description: "Run TypeScript type-check and lint across the entire monorepo. Use this to verify code quality before committing."
 allowed-tools: Bash
 ---
 
@@ -10,13 +9,13 @@ Run quality checks on the monorepo. Execute these commands sequentially and repo
 1. Run TypeScript type-check:
 
 ```bash
-cd /c/Users/ABM/dev/frontend/grimoire && pnpm type-check
+pnpm type-check
 ```
 
 2. If type-check passes, run lint:
 
 ```bash
-cd /c/Users/ABM/dev/frontend/grimoire && pnpm lint
+pnpm lint
 ```
 
 3. Report results clearly:

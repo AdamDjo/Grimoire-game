@@ -94,21 +94,30 @@ test-results/
 .claude/plans/
 skills-lock.json
 
-# Skills installées localement via `npx skills add` (gsap-*, etc.)
-# On ne track QUE les skills projet (workflow d'équipe).
+# Skills installées localement via `npx skills add` (gsap-*, etc.).
+# `.agents/skills/` contient les sources canoniques projet ; `.claude/skills/` contient leurs liens.
 .agents/skills/*
+!.agents/skills/bug/
+!.agents/skills/check/
 !.agents/skills/design-taste-frontend/
+!.agents/skills/feature/
+!.agents/skills/hotfix/
+!.agents/skills/implement/
+!.agents/skills/pr/
+!.agents/skills/release/
+!.agents/skills/status/
+!.agents/skills/sync/
 .claude/skills/*
-!.claude/skills/bug/
-!.claude/skills/check/
-!.claude/skills/design-taste-frontend/
-!.claude/skills/feature/
-!.claude/skills/hotfix/
-!.claude/skills/implement/
-!.claude/skills/pr/
-!.claude/skills/release/
-!.claude/skills/status/
-!.claude/skills/sync/
+!.claude/skills/bug
+!.claude/skills/check
+!.claude/skills/design-taste-frontend
+!.claude/skills/feature
+!.claude/skills/hotfix
+!.claude/skills/implement
+!.claude/skills/pr
+!.claude/skills/release
+!.claude/skills/status
+!.claude/skills/sync
 
 # Codex (config locale outil externe)
 .codex/
@@ -120,6 +129,7 @@ skills-lock.json
 # Docs — track only the public vault, keep canon and plans private
 # ─────────────────────────────────────────────────────────────
 /docs/*
+!/docs/00-HOME.md
 !/docs/00-START-HERE.md
 !/docs/public/
 !/docs/public/**

@@ -1,7 +1,7 @@
 # Frontend — Next.js App Router
 
-> Lire d'abord : `../../docs/00-START-HERE.md`, puis `../../docs/public/current-state/PROJECT_STATUS.md`.
-> Statut vivant : `../../docs/public/current-state/PROJECT_STATUS.md`.
+> Lire d'abord : `../../MEMORY.md`, puis `../../docs/00-START-HERE.md`.
+> Statut vivant : `../../docs/public/current-state/FRONTEND_STATUS.md` + `FRONTEND_NEXT.md`.
 > Design/gameplay : `../../docs/public/design/GAME_DESIGN.md`.
 > Tokens UI : `../../docs/public/design/DESIGN_TOKENS.md`.
 > Architecture/API : `../../docs/public/tech/ARCHITECTURE_RULES.md`.
@@ -13,7 +13,11 @@
 
 ## Scope
 
-Travailler uniquement dans `apps/frontend/`, sauf changement de contrat partagé dans `packages/shared/`.
+Travailler uniquement dans `apps/frontend/`, sauf changement de contrat partagé explicitement inclus
+dans la tâche. Codex est assigné au frontend par défaut, mais Claude suit exactement ces mêmes règles
+lorsqu'il reçoit une tâche frontend. Toute PR frontend met à jour `FRONTEND_STATUS.md` et
+`FRONTEND_NEXT.md` selon l'état attendu après merge, ainsi que `RELEASE_READINESS.md` si elle change
+un bloqueur `phase: predeploy`.
 
 ## Architecture — colocation
 
@@ -58,6 +62,8 @@ src/
 - Utiliser les tokens de `../../docs/public/design/DESIGN_TOKENS.md` et les variables CSS existantes.
 - Pas de logique de jeu critique côté client.
 - Textes UI/code en anglais, conversation utilisateur en français.
+- Appliquer le skill global `vercel-react-best-practices` pour tout code React/Next.js.
+- Appliquer `e2e-testing-patterns` aux golden paths, tests Cypress et régressions navigateur.
 
 ## Accessibilité
 

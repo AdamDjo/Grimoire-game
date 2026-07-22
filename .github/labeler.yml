@@ -4,38 +4,15 @@
 
 "domain: backend":
   - changed-files:
-      - any-glob-to-any-file: ["apps/backend/**"]
-
-"domain: shared":
-  - changed-files:
       - any-glob-to-any-file:
+          - "apps/backend/**"
           - "packages/shared/**"
           - "packages/eslint-config/**"
           - "packages/prettier-config/**"
 
-"domain: devops":
+"domain: ai":
   - changed-files:
       - any-glob-to-any-file:
-          - ".github/**"
-          - "turbo.json"
-          - "pnpm-workspace.yaml"
-          - "knip.config.ts"
-          - "commitlint.config.js"
-          - ".husky/**"
-          - ".lintstagedrc.js"
-
-"type: docs":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "docs/**"
-          - "*.md"
-          - ".github/ISSUE_TEMPLATE/**"
-          - ".github/PULL_REQUEST_TEMPLATE/**"
-
-"phase: 1a":
-  - changed-files:
-      - any-glob-to-any-file: ["apps/frontend/**"]
-
-"phase: 1b":
-  - changed-files:
-      - any-glob-to-any-file: ["apps/backend/**"]
+          - "apps/backend/src/ai/**"
+          - "apps/backend/src/**/*prompt*"
+          - "apps/backend/src/**/*provider*"

@@ -1,46 +1,60 @@
 ## Résumé
 
-<!-- Décris en 1-3 phrases ce que fait cette PR -->
+<!-- Décris en 1-3 phrases l'état livré une fois cette PR mergée. -->
 
-## Issue(s) liée(s)
+## Issue liée
 
 Closes #<!-- numéro d'issue -->
 
 ## Type de changement
 
-- [ ] Nouvelle fonctionnalité (phase concernée : ___)
+- [ ] Nouvelle fonctionnalité
 - [ ] Bug fix
-- [ ] Refactoring (aucun changement de comportement)
+- [ ] Refactoring sans changement de comportement
 - [ ] Chore / Tooling / Config
 - [ ] Documentation uniquement
 
-## Phase & Domaine
+## Phase et domaine
 
-- **Phase** : <!-- phase: 1a / 1b / 2 / 2b / 3 -->
-- **Domaine** : <!-- domain: frontend / backend / shared / ai / database / devops -->
+- **Phase** : <!-- renseigner exactement un label de phase autorisé -->
+- **Domaine** : <!-- domain: frontend / domain: backend / domain: ai -->
+- **Propriétaire** : <!-- agent réellement assigné + domaine -->
+
+Phases autorisées : `phase: predeploy` ou `phase: postdeploy`. Remplacer le commentaire sur la
+ligne **Phase** par une seule valeur.
+
+## Current-state
+
+Les documents cochés décrivent l'état attendu **après merge**, jamais une branche « en validation ».
+
+- [ ] `FRONTEND_STATUS.md` + `FRONTEND_NEXT.md` mis à jour si frontend
+- [ ] `BACKEND_STATUS.md` + `BACKEND_NEXT.md` mis à jour si backend/shared/AI
+- [ ] `RELEASE_READINESS.md` mis à jour si un bloqueur `phase: predeploy` change
+- [ ] Current-state non applicable
+
+Justification current-state: <!-- obligatoire si « non applicable » est coché -->
 
 ## Checklist technique
 
-- [ ] Code suit les conventions `CLAUDE.md` (naming, patterns)
-- [ ] Types partagés dans `packages/shared` (jamais dupliqués)
-- [ ] `pnpm type-check` passe sans erreur
-- [ ] `pnpm lint` passe sans erreur
+- [ ] Conventions du domaine respectées
+- [ ] Types partagés dans `packages/shared`, jamais dupliqués
+- [ ] Type-check et lint passent
+- [ ] Tests pertinents passent
 - [ ] Aucun `console.log` oublié
-- [ ] Testé manuellement (décrire ci-dessous)
+- [ ] Test manuel décrit ci-dessous
 
 ## Test manuel effectué
 
-<!-- Décris comment tu as testé cette PR -->
-<!-- ex: "Lancé pnpm dev, navigué sur /game, vérifié que les stats s'affichent" -->
+<!-- Commandes et parcours vérifiés. -->
 
-## Captures d'écran (frontend uniquement)
+## Captures d'écran
 
-<!-- Avant / Après si changement d'UI — supprimer si non applicable -->
+<!-- Frontend uniquement, avant/après si pertinent. -->
 
 ## Notes pour la review
 
-<!-- Points d'attention, compromis techniques, décisions prises -->
+<!-- Risques, compromis et décisions. -->
 
 ---
 
-> Labels et milestone assignés automatiquement via CI selon les fichiers modifiés et le nom de branche.
+> Les domaines sont auto-déduits du diff. La phase déclarée dans cette PR pilote le milestone V1.

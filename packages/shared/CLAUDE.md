@@ -1,12 +1,15 @@
 # Shared Package Agent Instructions
 
-> Lire d'abord : `../../docs/00-START-HERE.md`.
-> Statut vivant : `../../docs/public/current-state/PROJECT_STATUS.md`.
+> Lire d'abord : `../../MEMORY.md`, puis `../../docs/00-START-HERE.md`.
+> Statut vivant : `../../docs/public/current-state/BACKEND_STATUS.md` + `BACKEND_NEXT.md`.
 > Contrats actifs : `../../docs/public/tech/ARCHITECTURE_RULES.md`.
 
 ## Scope
 
 This agent works ONLY on `packages/shared/`. Never modify files outside this directory.
+Claude handles shared contracts by default; Codex follows the same rules when explicitly assigned.
+A shared-contract PR updates `BACKEND_STATUS.md` and `BACKEND_NEXT.md`. Its merged contract is then
+consumed from a separate frontend PR.
 
 ## Purpose
 

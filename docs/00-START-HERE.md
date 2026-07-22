@@ -8,6 +8,14 @@ source_of_truth: true
 # 00 — Start Here
 
 Point d'entrée stable pour tout agent IA. Ne pas y stocker l'état vivant du projet.
+`../MEMORY.md` est le shim universel qui conduit ici ; il ne duplique aucune information vivante.
+
+## Attribution des chantiers
+
+- Par défaut : Claude sur backend/shared/IA, Codex sur frontend.
+- L'utilisateur peut assigner n'importe quel domaine à Claude ou Codex ; les règles du domaine
+  restent identiques quel que soit l'agent.
+- Les contrats backend/shared sont mergés avant leur consommation dans une PR frontend distincte.
 
 ## Lecture minimale
 
@@ -18,6 +26,7 @@ Point d'entrée stable pour tout agent IA. Ne pas y stocker l'état vivant du pr
 5. Routeur de tâche : [[public/nav/task-router]]
 6. Règles d'architecture : [[public/tech/ARCHITECTURE_RULES]]
 7. Politique canon privé : [[public/nav/PRIVATE_CANON_POLICY]]
+8. Workflow IA versionné : [[public/nav/AI_WORKFLOW]]
 
 ## Règles absolues
 
@@ -28,6 +37,7 @@ Point d'entrée stable pour tout agent IA. Ne pas y stocker l'état vivant du pr
 ## Structure
 
 ```txt
+MEMORY.md                    # pointeur universel, aucun état vivant
 docs/
 ├── 00-HOME.md              # dashboard Obsidian humain
 ├── 00-START-HERE.md        # point d'entrée IA stable
@@ -40,5 +50,6 @@ docs/
 
 - Carte du vault : [[public/nav/DOCS_MAP]]
 - Règles RAG : [[public/nav/RAG_RULES]]
+- Workflow IA : [[public/nav/AI_WORKFLOW]]
 - Brief public : [[public/project/PUBLIC_BRIEF]]
 - Log : [[public/nav/log]]

@@ -1,7 +1,7 @@
 ---
 name: pr
-description: Pousse la branche courante et ouvre une PR vers la bonne cible. Extrait le numéro d'issue du nom de branche automatiquement.
-allowed-tools: Bash, mcp__github__create_pull_request
+description: "Pousse la branche courante et ouvre une PR vers la bonne cible. Extrait le numéro d'issue du nom de branche automatiquement."
+allowed-tools: Bash
 ---
 
 L'utilisateur veut pousser sa branche courante et ouvrir une PR.
@@ -28,7 +28,7 @@ Exécuter dans l'ordre :
 
 4. **Extraire le numéro d'issue du nom de branche**
    - Le nom de branche suit le pattern : `<préfixe>/<numéro>-<description>`
-   - Exemple : `feature/29-phase-1a-landing-page` → issue #29
+   - Exemple : `feature/29-inventory-consumption` → issue #29
    - Exemple : `fix/30-login-crash` → issue #30
    - Si pas de numéro détecté, demander : "Il y a un numéro d'issue à fermer ? (ou entrée pour passer)"
 
@@ -43,37 +43,43 @@ Exécuter dans l'ordre :
    - Body :
 
      ```
-     ## Summary
+     ## Résumé
      <liste des changements principaux>
 
-     ## Test plan
-     - [ ] lint + type-check passent
-     - [ ] Tests unitaires passent
-     - [ ] Testé en local
+     ## Phase et domaine
+     - **Phase** : <phase exacte reprise depuis l'issue>
+     - **Domaine** : <domaines exacts repris depuis l'issue et le diff>
+     - **Propriétaire** : <agent réellement assigné + domaine>
+
+     ## Current-state
+     <paires STATUS/NEXT mises à jour, ou exception cochée et justifiée>
+
+     ## Tests
+     <commandes exécutées>
 
      Closes #<numéro issue>
      ```
 
-7. **Déterminer les labels selon le préfixe de branche (nomenclature avec préfixe catégorie) :**
-   - `feature/*phase-1a*` ou fichiers dans `apps/frontend/` → `["phase: 1a", "domain: frontend"]`
-   - `feature/*phase-1b*` ou fichiers dans `apps/backend/` → `["phase: 1b", "domain: backend"]`
-   - `feature/*phase-2b*` → `["phase: 2b"]`
-   - `feature/*phase-2*` → `["phase: 2"]`
-   - `feature/*phase-3*` → `["phase: 3"]`
+7. **Déterminer les labels depuis l'issue et le diff :**
+   - Reprendre depuis l'issue liée exactement une phase : `phase: predeploy` ou `phase: postdeploy`.
+   - Fichiers dans `apps/frontend/` → `domain: frontend`.
+   - Fichiers dans `apps/backend/` ou `packages/shared/` → `domain: backend`.
+   - Fichiers d'orchestration/prompt/provider IA → ajouter `domain: ai`.
    - `fix/*` → `["type: bug"]`
    - `hotfix/*` → `["type: bug", "priority: high"]`
    - `chore/*` → `["type: chore"]`
    - `release/*` → `["type: release"]`
-   - Ajouter `domain: devops` si les fichiers modifiés sont dans `.github/`
-   - Ajouter `domain: shared` si les fichiers modifiés sont dans `packages/`
+   - Ne jamais recréer un ancien label de phase ou les domaines `shared`, `database`, `devops`.
 
-8. **Créer la PR via mcp**github**create_pull_request**
+8. **Créer la PR via `gh pr create`**
    - owner: `AdamDjo`
    - repo: `Grimoire-game`
    - head: branche courante
    - base: cible déterminée à l'étape 3
    - assignees: `["AdamDjo"]`
    - reviewers: `["AdamDjo"]` — TOUJOURS assigner AdamDjo comme reviewer
+   - passer tous les labels calculés avec `--label` ; la ligne `Phase` du body doit contenir
+     exactement la même phase pour la CI et le milestone
 
 9. **Assigner la PR au projet Scrum Board et au milestone via CLI**
 
@@ -92,14 +98,8 @@ Exécuter dans l'ordre :
      }
    }'
 
-   # Assigner le milestone selon le pattern de branche (même logique que pr.yml)
-   # feature/*phase-1a* → "Phase 1A - Frontend UI"
-   # feature/*phase-1b* → "Phase 1B - Backend Foundation"
-   # feature/*phase-2b* → "Phase 2B - Multi-Universe"
-   # feature/*phase-2* → "Phase 2 - MVP"
-   # feature/*phase-3* → "Phase 3 - Polish & UGC"
-   MILESTONE_NUMBER=$(gh api repos/AdamDjo/Grimoire-game/milestones --jq '.[] | select(.title == "<MILESTONE_TITLE>") | .number')
-   gh api repos/AdamDjo/Grimoire-game/issues/<PR_NUMBER> --method PATCH --field milestone=$MILESTONE_NUMBER
+   # Une issue `phase: predeploy` utilise le milestone "v0.1.0 - Première version jouable".
+   # Une issue `phase: postdeploy` n'a pas de milestone V1.
    ```
 
 10. **Confirmer à l'utilisateur avec l'URL de la PR**

@@ -4,27 +4,33 @@ visibility: public
 rag: true
 source_of_truth: true
 owner: backend
-updated: 2026-07-21
+default_agent: claude
+updated: 2026-07-22
 ---
 
 # Backend Next
 
-## Avant v0.1.0
+## Phase 1 — pré-déploiement
 
-1. Implémenter #168 : locale IA navigateur validée, persistée et fallback anglais. **En cours.**
-2. Livrer #101 pour éviter qu'un 429 OpenRouter transforme trop souvent une scène en stub.
-3. Résoudre #152 ou fournir au frontend un signal permettant de masquer le concept libre.
-4. Déployer l'API et les migrations avec #161.
-5. Traiter l'audit sécurité #162.
-6. Supporter le golden path réel #129.
+1. #180 — figer les contrats shared Survie v2.
+2. #181 et #183 — livrer en séquence les conditions/Désavantage et l'inventaire réel.
+3. #182 et #184 — brancher la Calamine/fin Calciné et l'action de repos.
+4. #185 — renforcer le danger IA une fois les conséquences mécaniques disponibles.
+5. #101 et #152 — fiabiliser les modèles et résoudre ou désactiver le concept libre.
+6. #162 — traiter les risques sécurité applicables avant exposition publique.
+7. #161 — déployer l'API, appliquer les migrations et vérifier le healthcheck.
+8. #129 — supporter le golden path réel avec le frontend.
 
-## Livré
+Ordre de dépendance :
 
-- [PR #174](https://github.com/AdamDjo/Grimoire-game/pull/174) (#147) — Auberge de L'Aveugle
-  branchée à la base de données. Mergée sur `develop` le 21 juillet 2026.
+`#180 → (#181 + #183) → (#182 + #184) → #185 → (#101 + #152 + #162) → #161 → #129`
 
-## Après v0.1.0
+## Post-déploiement
 
 1. #114 — rappel sémantique pgvector.
 2. #117 — World events scriptés.
 3. #133 — échange Souvenir contre lore.
+
+Chaque PR backend/shared/IA, qu'elle soit menée par Claude ou Codex, met à jour ce fichier et
+`BACKEND_STATUS.md` selon l'état attendu après merge. Si elle change un bloqueur pré-déploiement,
+elle met aussi à jour `RELEASE_READINESS.md`.

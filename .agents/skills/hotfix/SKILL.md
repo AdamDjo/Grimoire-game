@@ -1,7 +1,7 @@
 ---
 name: hotfix
-description: Crée une issue GitHub puis une branche hotfix depuis main avec le numéro d'issue. Usage: /hotfix <nom> — ex: /hotfix auth-crash
-allowed-tools: Bash, mcp__github__create_issue
+description: "Crée une issue GitHub puis une branche hotfix depuis main avec le numéro d'issue. Usage : /hotfix nom, par exemple /hotfix auth-crash."
+allowed-tools: Bash
 ---
 
 L'utilisateur veut corriger un bug urgent en production. Les args sont le nom du hotfix (sans le préfixe `hotfix/`).
@@ -12,11 +12,9 @@ Exécuter dans l'ordre :
 
 1. **Créer l'issue GitHub**
    - Demander : "Décris le problème en production en une phrase"
-   - Créer l'issue via mcp**github**create_issue avec :
-     - owner: AdamDjo, repo: Grimoire-game
-     - title: "hotfix: <description>"
-     - labels: ["type: bug", "priority: high"]
-     - assignees: ["AdamDjo"]
+   - Déduire le domaine : `domain: frontend`, `domain: backend` et/ou `domain: ai`.
+   - Créer l'issue avec `gh issue create`, les labels `type: bug`, `priority: high`,
+     `phase: postdeploy` et le domaine, puis l'assigner à `AdamDjo`.
    - Noter le numéro de l'issue créée → `<numéro>`
 
 2. **Ajouter l'issue au projet Scrum Board**

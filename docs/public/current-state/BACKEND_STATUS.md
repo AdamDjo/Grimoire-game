@@ -4,15 +4,11 @@ visibility: public
 rag: true
 source_of_truth: true
 owner: backend
-updated: 2026-07-21
+default_agent: claude
+updated: 2026-07-22
 ---
 
 # Backend Status
-
-## Actif
-
-- Aucun chantier backend en cours : #147 est terminé et attend la revue/merge de
-  [PR #174](https://github.com/AdamDjo/Grimoire-game/pull/174) → `develop`.
 
 ## Livré sur develop
 
@@ -21,21 +17,31 @@ updated: 2026-07-21
 - #109 — d20, conséquences et world-state souverains côté backend.
 - #111 et #113 — mémoire narrative N2/N1.
 - #115 et #116 — Souvenirs nommés et Chronique de fin de run.
-- #154 et #155 — gestion des erreurs asynchrones et délimitation du texte libre dans le prompt.
+- #147 / PR #174 — Auberge de L'Aveugle branchée à la base et aux contrats API.
+- #154 et #155 — erreurs asynchrones et délimitation du texte libre dans le prompt.
+- #168 / PR #178 — locale IA BCP-47 validée et persistée.
+- #179 / PR #187 — canon et plan Gameplay Survie v2.
+- #189 — mémoire projet, routage Claude/Codex et garde-fous `current-state`.
 
-## En attente de merge
+## Pré-déploiement restant
 
-- #147 — Auberge de L'Aveugle branchée à la base et aux contrats API (`aveugle.service.ts`,
-  `aveugle.routes.ts`, hub/talk/spend). [PR #174](https://github.com/AdamDjo/Grimoire-game/pull/174)
-  → `develop`, 152/152 tests, type-check et lint clean.
-
-## Gaps v0.1.0
-
-- #101 — fallback multi-modèles face aux 429 OpenRouter ;
-- #152 — résolution canonique du concept libre ;
-- #168 — locale navigateur BCP-47 validée et cohérence de toutes les sorties IA ;
-- #161 — hébergement API, migrations, secrets, CORS et healthcheck ;
-- #162 — vulnérabilités critiques/hautes ;
+- #180 — contrats partagés Survie v2.
+- #181 — conditions persistées et Désavantage au d20.
+- #183 — acquisition, consommation et équipement de l'inventaire réel.
+- #182 — paliers de Calamine et fin spéciale `calcined`.
+- #184 — repos court/feu et récupération canonique.
+- #185 — danger IA régulier et crescendo d'intensité.
+- #101 — fallback multi-modèles face aux erreurs OpenRouter.
+- #152 — résolution du concept libre ou signal explicite de masquage V1.
+- #162 — vulnérabilités critiques/hautes applicables.
+- #161 — API, migrations, secrets, CORS et healthcheck de production.
 - #129 — golden path contre les services réels.
 
-Epic : #165. Coordination frontend : #123.
+## Post-déploiement
+
+- #114 — rappel sémantique pgvector.
+- #117 — World events scriptés.
+- #133 — échange Souvenir contre lore.
+
+Agent assigné par défaut : **Claude**, remplaçable par Codex sur demande explicite. Coordination
+frontend : #123. Epic backend : #165. Checklist release : #163.

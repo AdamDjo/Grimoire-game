@@ -1,6 +1,6 @@
 ---
 name: release
-description: Crée et pousse une branche release/X.Y.Z depuis develop. Déclenche le CI + tag + GitHub Release automatiquement. Usage: /release <version> — ex: /release 1.2.3
+description: "Crée et pousse une branche release/X.Y.Z depuis develop. Déclenche le CI, le tag et la GitHub Release. Usage : /release version, par exemple /release 1.2.3."
 allowed-tools: Bash
 ---
 
@@ -15,23 +15,28 @@ Exécuter dans l'ordre :
    - Si format invalide, afficher une erreur et arrêter
 
 2. **Vérifier que develop est propre**
+
    ```bash
    git status --short
    ```
+
    - S'il y a des fichiers non commités, alerter l'utilisateur et arrêter
 
 3. **Mettre develop à jour**
+
    ```bash
    git checkout develop && git pull origin develop
    ```
 
 4. **Créer et pousser la branche release**
+
    ```bash
    git checkout -b release/<version>
    git push origin release/<version>
    ```
 
 5. **Confirmer à l'utilisateur :**
+
    ```
    ✅ release/<version> créée et poussée
 
