@@ -10,6 +10,13 @@ export interface OpenRouterResult {
   /** Raw assistant text content (expected to be JSON). */
   content?: string
   error?: string
+  /**
+   * HTTP status of a failed request, when the failure came from the API rather
+   * than the network. Lets callers distinguish transient failures worth
+   * retrying on another model (429, 5xx) from definitive ones (401, 400).
+   * Absent on success and on network/timeout errors.
+   */
+  status?: number
 }
 
 export interface OpenRouterCallOptions {
@@ -58,7 +65,11 @@ export async function callOpenRouter(
 
     if (!response.ok) {
       // Never surface the request headers (they carry the key) — status only.
-      return { success: false, error: `OpenRouter request failed (${response.status})` }
+      return {
+        success: false,
+        error: `OpenRouter request failed (${response.status})`,
+        status: response.status,
+      }
     }
 
     const data = (await response.json()) as {
