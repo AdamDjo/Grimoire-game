@@ -1,6 +1,6 @@
 ---
 name: bug
-description: Crée une issue GitHub puis une branche fix depuis develop avec le numéro d'issue. Usage: /bug <nom> — ex: /bug login-crash
+description: "Crée une issue GitHub puis une branche fix depuis develop avec le numéro d'issue. Usage : /bug nom, par exemple /bug login-crash."
 allowed-tools: Bash
 ---
 

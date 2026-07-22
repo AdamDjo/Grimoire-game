@@ -1,6 +1,6 @@
 ---
 name: release
-description: Crée et pousse une branche release/X.Y.Z depuis develop. Déclenche le CI + tag + GitHub Release automatiquement. Usage: /release <version> — ex: /release 1.2.3
+description: "Crée et pousse une branche release/X.Y.Z depuis develop. Déclenche le CI, le tag et la GitHub Release. Usage : /release version, par exemple /release 1.2.3."
 allowed-tools: Bash
 ---
 

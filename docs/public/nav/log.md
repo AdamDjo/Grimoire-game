@@ -180,3 +180,5 @@ domaine. L'agent frontend Claude est conservé et protégé contre une suppressi
   les domaines frontend/backend/AI ;
 - les wikilinks publics sont contrôlés automatiquement ;
 - le dashboard Obsidian et les instructions d'agents legacy ont été réparés.
+- `.agents/skills/` est la source canonique unique des skills projet ; `.claude/skills/` utilise des
+  liens relatifs contrôlés en CI, et les 10 skills passent le validateur officiel.

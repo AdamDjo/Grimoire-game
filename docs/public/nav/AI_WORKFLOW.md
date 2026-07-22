@@ -32,12 +32,15 @@ Le statut ne doit jamais être recopié dans `MEMORY.md`, les fichiers agents ou
 - `MEMORY.md`, `AGENTS.md`, `CLAUDE.md` et les fichiers `CLAUDE.md` des workspaces ;
 - `docs/00-HOME.md`, `docs/00-START-HERE.md` et tout `docs/public/` ;
 - les agents projet frontend, backend et code-review dans `.claude/agents/` ;
-- les skills projet `bug`, `check`, `design-taste-frontend`, `feature`, `hotfix`, `implement`, `pr`,
-  `release`, `status` et `sync` dans `.claude/skills/` et `.agents/skills/` ;
+- les sources canoniques des skills projet `bug`, `check`, `design-taste-frontend`, `feature`,
+  `hotfix`, `implement`, `pr`, `release`, `status` et `sync` dans `.agents/skills/` ;
+- les liens relatifs `.claude/skills/` vers ces sources, afin que Claude et Codex exécutent le même
+  workflow sans duplication ;
 - les workflows GitHub, templates de PR et scripts qui contrôlent cette politique.
 
-Une modification fonctionnelle d'un skill commun doit être reportée dans ses variantes Claude et
-Codex. Les références spécifiques à l'outil (`CLAUDE.md` ou `AGENTS.md`) peuvent différer.
+Les skills canoniques utilisent des formulations neutres et chargent `CLAUDE.md` ou `AGENTS.md`
+selon l'outil actif. Une règle réellement spécifique reste dans le fichier d'entrée de l'outil, pas
+dans une copie du skill.
 
 ## Ressources volontairement locales
 
@@ -72,5 +75,5 @@ Les skills globaux complètent les règles du projet sans les remplacer. En cas 
 
 ## Contrôle automatique
 
-`pnpm check:project-memory` vérifie en CI que les points d'entrée et chaque skill projet existent
-encore dans les deux environnements. `pnpm check:doc-links` protège les routes documentaires.
+`pnpm check:project-memory` vérifie en CI les points d'entrée, les sources canoniques et la cible de
+chaque lien Claude. `pnpm check:doc-links` protège les routes documentaires.

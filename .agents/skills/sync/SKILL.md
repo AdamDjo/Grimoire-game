@@ -1,6 +1,6 @@
 ---
 name: sync
-description: Synchronise develop avec main après un merge de hotfix ou release. Usage: /sync
+description: "Synchronise develop avec main après un merge de hotfix ou release. Usage: /sync"
 allowed-tools: Bash
 ---
 

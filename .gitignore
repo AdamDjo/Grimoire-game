@@ -94,8 +94,8 @@ test-results/
 .claude/plans/
 skills-lock.json
 
-# Skills installées localement via `npx skills add` (gsap-*, etc.)
-# On ne track QUE les skills projet (workflow d'équipe).
+# Skills installées localement via `npx skills add` (gsap-*, etc.).
+# `.agents/skills/` contient les sources canoniques projet ; `.claude/skills/` contient leurs liens.
 .agents/skills/*
 !.agents/skills/bug/
 !.agents/skills/check/
@@ -108,16 +108,16 @@ skills-lock.json
 !.agents/skills/status/
 !.agents/skills/sync/
 .claude/skills/*
-!.claude/skills/bug/
-!.claude/skills/check/
-!.claude/skills/design-taste-frontend/
-!.claude/skills/feature/
-!.claude/skills/hotfix/
-!.claude/skills/implement/
-!.claude/skills/pr/
-!.claude/skills/release/
-!.claude/skills/status/
-!.claude/skills/sync/
+!.claude/skills/bug
+!.claude/skills/check
+!.claude/skills/design-taste-frontend
+!.claude/skills/feature
+!.claude/skills/hotfix
+!.claude/skills/implement
+!.claude/skills/pr
+!.claude/skills/release
+!.claude/skills/status
+!.claude/skills/sync
 
 # Codex (config locale outil externe)
 .codex/

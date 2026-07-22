@@ -1,7 +1,6 @@
 ---
 name: implement
-description: Full implementation workflow for a feature. Plans, implements, tests, and reviews. Use with a feature description as argument.
-disable-model-invocation: true
+description: "Full implementation workflow for a feature. Plans, implements, tests, and reviews. Use with a feature description as argument."
 allowed-tools: Read, Edit, Write, Grep, Glob, Bash
 ---
 
@@ -15,7 +14,8 @@ Feature to implement: $ARGUMENTS
 
 - Read `MEMORY.md`, `docs/public/current-state/PROJECT_STATUS.md`, then only the matching domain pair:
   `FRONTEND_STATUS.md` + `FRONTEND_NEXT.md` or `BACKEND_STATUS.md` + `BACKEND_NEXT.md`
-- Read relevant AGENTS.md files for the target workspace
+- Read the relevant tool entry and workspace instructions: `AGENTS.md` for Codex, `CLAUDE.md` for
+  Claude
 - Read existing related code to understand patterns
 - Identify which files need to be created or modified
 
@@ -37,7 +37,7 @@ Feature to implement: $ARGUMENTS
 - Follow the established patterns in the codebase
 - One file at a time, in dependency order
 - Use zod for all input validation
-- Follow naming conventions from AGENTS.md
+- Follow naming conventions from the active tool entry (`AGENTS.md` or `CLAUDE.md`)
 
 ### Step 5: Verify
 

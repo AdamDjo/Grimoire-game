@@ -1,7 +1,6 @@
 ---
 name: check
-description: Run TypeScript type-check and lint across the entire monorepo. Use this to verify code quality before committing.
-disable-model-invocation: true
+description: "Run TypeScript type-check and lint across the entire monorepo. Use this to verify code quality before committing."
 allowed-tools: Bash
 ---
 

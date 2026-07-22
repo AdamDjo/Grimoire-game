@@ -1,6 +1,6 @@
 ---
 name: feature
-description: Crée une issue GitHub puis une branche feature depuis develop avec le numéro d'issue. Usage: /feature <nom> — ex: /feature inventory-consumption
+description: "Crée une issue GitHub puis une branche feature depuis develop avec le numéro d'issue. Usage : /feature nom, par exemple /feature inventory-consumption."
 allowed-tools: Bash
 ---
 
@@ -53,5 +53,5 @@ Exécuter dans l'ordre :
 
    Format commit :
    feat | fix | chore | docs | refactor | test
-   Pas de Co-Authored-By Codex
+   Pas de Co-Authored-By ni de signature automatique d'un agent IA
    ```

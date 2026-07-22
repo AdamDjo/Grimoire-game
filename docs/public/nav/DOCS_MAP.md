@@ -48,7 +48,7 @@ source_of_truth: true
 - Claude : `.claude/agents/frontend-dev/agent.md` et `backend-dev/agent.md` selon le domaine assigné.
 - Codex : frontend par défaut, mais autorisé sur tout domaine explicitement demandé.
 - `.claude/agents/code-reviewer/agent.md` : revue de code avant PR.
-- `.claude/skills/` et `.agents/skills/` : les workflows propres au projet sont versionnés ; ils
-  lisent le statut du domaine et écrivent l'état attendu après merge dans la même PR.
+- `.agents/skills/` : sources canoniques des workflows propres au projet.
+- `.claude/skills/` : liens vers les mêmes sources pour éviter toute divergence Claude/Codex.
 - Les skills tiers installés localement et les réglages personnels restent ignorés. Voir
   [[AI_WORKFLOW]] pour la frontière exacte.

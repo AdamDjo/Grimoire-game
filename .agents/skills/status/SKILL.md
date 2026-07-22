@@ -1,7 +1,6 @@
 ---
 name: status
-description: Show current project progress, active phase, and what needs to be done next. Use to get a quick overview of project state.
-disable-model-invocation: true
+description: "Show current project progress, active phase, and what needs to be done next. Use to get a quick overview of project state."
 allowed-tools: Read, Glob
 ---
 

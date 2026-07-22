@@ -1,6 +1,6 @@
 ---
 name: pr
-description: Pousse la branche courante et ouvre une PR vers la bonne cible. Extrait le numéro d'issue du nom de branche automatiquement.
+description: "Pousse la branche courante et ouvre une PR vers la bonne cible. Extrait le numéro d'issue du nom de branche automatiquement."
 allowed-tools: Bash
 ---
 

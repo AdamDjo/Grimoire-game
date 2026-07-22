@@ -1,6 +1,6 @@
 ---
 name: hotfix
-description: Crée une issue GitHub puis une branche hotfix depuis main avec le numéro d'issue. Usage: /hotfix <nom> — ex: /hotfix auth-crash
+description: "Crée une issue GitHub puis une branche hotfix depuis main avec le numéro d'issue. Usage : /hotfix nom, par exemple /hotfix auth-crash."
 allowed-tools: Bash
 ---
 
