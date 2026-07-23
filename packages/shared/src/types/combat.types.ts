@@ -1,4 +1,4 @@
-import type { Attributes, Condition } from "./character.types";
+import type { Attributes, ConditionId } from "./character.types";
 
 export type CombatAction =
   | "attack"
@@ -13,7 +13,7 @@ export interface CombatParticipant {
   hp: number;
   maxHp: number;
   attributes: Attributes;
-  conditions: Condition[];
+  conditions: ConditionId[];
   isPlayer: boolean;
 }
 

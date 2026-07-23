@@ -5,7 +5,7 @@ rag: true
 source_of_truth: true
 owner: frontend
 default_agent: codex
-updated: 2026-07-22
+updated: 2026-07-24
 ---
 
 # Frontend Next
@@ -14,7 +14,7 @@ updated: 2026-07-22
 
 1. #188 — brancher l'Auberge sur les endpoints réels `hub`, `talk` et `spend` de #147.
 2. #186 — afficher le HUD Survie v2, les conditions, l'inventaire réel, le Désavantage et la fin
-   Calciné ; dépend de #180-#184.
+   Calciné ; dépend de ~~#180~~ (livré, PR #196) et #181-#184.
 3. #152 — livrer le flow du concept libre ou masquer l'option sans cul-de-sac pour la V1.
 4. #161 — configurer `NEXT_PUBLIC_API_URL`, le domaine final et les redirects Supabase.
 5. #129 — exécuter les golden paths anonyme, conversion et résilience en EN/FR.

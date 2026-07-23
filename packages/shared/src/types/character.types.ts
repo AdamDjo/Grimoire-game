@@ -1,6 +1,6 @@
 /**
  * Velkhar character model — canon triptyque + survie.
- * @see docs/private/raw/04-ATTRIBUTES.md, 06-SURVIVAL.md
+ * @see docs/public/raw/04-ATTRIBUTES.md, 06-SURVIVAL.md
  */
 
 /** The three canon attributes (SANG / SOUFFLE / CENDRE). Values range 3–18. */
@@ -29,20 +29,39 @@ export function maxHpFromBlood(blood: number): number {
 }
 
 /**
- * Persistent altered states beyond the gauges.
- * @see docs/private/raw/06-SURVIVAL.md §2
+ * Persistent altered states beyond the gauges. The id is the sole discriminant —
+ * it is also the engine id used by the AI's `applyCondition` proposal.
+ * @see docs/public/raw/06-SURVIVAL.md §2
  */
-export type Condition =
+export type ConditionId =
   | "fever"
-  | "poisoned"
-  | "wounded"
-  | "frozen"
-  | "stunned"
-  | "blinded"
-  | "marsh_sickness"
-  | "ash_corrupted"
-  | "shaken_mind"
-  | "slow_petrification";
+  | "poison"
+  | "wound"
+  | "freeze"
+  | "stun"
+  | "blindness"
+  | "marsh_disease"
+  | "cendre_corrupt"
+  | "shaken_reason"
+  | "petrification";
+
+/** Which side decided to apply the condition. @see docs/public/raw/06-SURVIVAL.md §2 */
+export type ConditionSource = "backend" | "ai";
+
+/**
+ * How an active condition's duration is resolved.
+ * "until_cured": lasts until an explicit heal/cure. "turns": expires after N turns from appliedAtTurn.
+ */
+export type ConditionExpiryRule =
+  | { type: "until_cured" }
+  | { type: "turns"; count: number };
+
+export interface ActiveCondition {
+  id: ConditionId;
+  source: ConditionSource;
+  appliedAtTurn: number;
+  expiresRule: ConditionExpiryRule;
+}
 
 /** Survival gauges (0–100), all tied to the blood attribute. */
 export interface SurvivalStats {
@@ -58,7 +77,7 @@ export interface SurvivalStats {
 export interface CharacterStats {
   attributes: Attributes;
   survival: SurvivalStats;
-  conditions: Condition[];
+  conditions: ActiveCondition[];
 }
 
 export interface Character {

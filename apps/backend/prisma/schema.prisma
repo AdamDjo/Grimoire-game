@@ -61,7 +61,7 @@ model Character {
   energy   Int
   calamine Int
 
-  /// États altérés persistants (Condition[]), ex: "fever", "poisoned".
+  /// États altérés persistants (ConditionId[]), ex: "fever", "poison".
   conditions String[]
 
   /// Fer (🪙), monnaie in-game de Velkhar. Aucune mécanique de gain/dépense

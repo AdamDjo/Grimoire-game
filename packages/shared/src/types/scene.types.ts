@@ -1,5 +1,6 @@
 import type { Attribute } from "./character.types";
 import type { DiceRoll } from "./dice.types";
+import type { ItemGained } from "./inventory.types";
 
 export type SceneType =
   | "exploration"
@@ -62,6 +63,38 @@ export interface SceneResponse {
   diceRoll?: DiceRoll;
   /** Whether the narrative came from the AI or the local stub fallback. */
   source?: "ai" | "stub";
+}
+
+/**
+ * A condition the AI proposes to apply. Raw, unvalidated AI output — the
+ * backend is the sole authority: it checks `id` against the canon whitelist
+ * and narrative plausibility before applying anything.
+ * @see docs/public/raw/15-GAME-MASTER.md §4.5, docs/public/raw/06-SURVIVAL.md §2
+ */
+export interface ConditionProposal {
+  /** Must be a canon condition id (06-SURVIVAL §2) — validated by the backend, not this type. */
+  id: string;
+  /** Short narrative justification, used for the plausibility check. */
+  reason: string;
+  /** Only meaningful when id is "cendre_corrupt". Backend caps this at +20. */
+  calamineDelta?: number;
+}
+
+/** The AI signals the player wants to rest. The backend applies canon rest rates (06-SURVIVAL §3). */
+export interface RestProposal {
+  type: "short" | "fire" | "inn";
+}
+
+/**
+ * Mechanical fields the AI may propose alongside its narration. The AI never
+ * applies these itself — the backend validates and decides. Silent rejection
+ * on validation failure: narration stays, the mechanical effect is dropped.
+ * @see docs/public/raw/15-GAME-MASTER.md §4.5
+ */
+export interface AiSceneProposal {
+  applyCondition?: ConditionProposal;
+  itemGained?: ItemGained;
+  restRequested?: RestProposal;
 }
 
 export interface InventoryItemRef {
