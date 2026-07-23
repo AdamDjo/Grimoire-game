@@ -20,6 +20,8 @@ interface UseGameSessionOptions<TWorldState, TResponse extends GameSessionRespon
   initialWorldState: TWorldState
   /** Browser-detected narration language; resolved and persisted server-side (#168). */
   locale?: Locale
+  /** Deliberate in-game language choice (language switcher); wins over `locale` (#181). */
+  explicitLocale?: Locale
   reduceWorldState: (previous: TWorldState, response: TResponse) => TWorldState
   resumeHref: string
 }
@@ -42,6 +44,7 @@ export function useGameSession<TWorldState, TResponse extends GameSessionRespons
   api,
   initialWorldState,
   locale,
+  explicitLocale,
   reduceWorldState,
   resumeHref,
 }: UseGameSessionOptions<TWorldState, TResponse>): UseGameSessionResult<TWorldState, TResponse> {
@@ -116,12 +119,12 @@ export function useGameSession<TWorldState, TResponse extends GameSessionRespons
   const openSession = useCallback(async () => {
     setState((current) => ({ ...current, error: null, loading: true }))
     try {
-      applyResponse(await api.createSession(locale))
+      applyResponse(await api.createSession({ locale, explicitLocale }))
       lastAttemptRef.current = null
     } catch (error) {
       handleRequestError(error)
     }
-  }, [api, applyResponse, handleRequestError, locale])
+  }, [api, applyResponse, handleRequestError, locale, explicitLocale])
 
   const submitAction = useCallback(
     async (action: PendingGameAction) => {
