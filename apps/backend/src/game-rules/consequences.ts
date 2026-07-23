@@ -1,13 +1,21 @@
+import {
+  applyBackendConditions,
+  clearResolvedBackendConditions,
+  computeDisadvantage,
+  tickConditions,
+} from './conditions'
 import { rollCheck } from './dice'
 import { applyTurnDrain } from './survival'
 
 import type {
+  ActiveCondition,
   Attribute,
   Attributes,
   Choice,
   ChoiceConsequence,
   DiceRoll,
   Difficulty,
+  Locale,
   SurvivalStats,
 } from '@grimoire/shared'
 
@@ -57,12 +65,22 @@ export interface ResolveChoiceInput {
   attributes: Attributes
   survival: SurvivalStats
   choice: Choice
+  /** Conditions active before this turn resolves. */
+  activeConditions: ActiveCondition[]
+  /** Turn number this choice resolves on — stamps newly-applied conditions and drives expiry. */
+  turnNumber: number
+  /** Session locale — determines the language of the Désavantage cause string (#168 source of truth). */
+  locale: Locale
+  /** Context grants advantage this turn (prepared plan, adapted item, ally help, exploited weakness). */
+  advantage?: boolean
   /** Injected for deterministic tests. Defaults to Math.random. */
   rng?: () => number
 }
 
 export interface ResolveChoiceResult {
   updatedSurvival: SurvivalStats
+  /** Conditions active after this turn's ticks, applications and clears. */
+  updatedConditions: ActiveCondition[]
   /** Present only when the choice was risky enough to roll. */
   diceRoll?: DiceRoll
   /** Mechanical consequences applied this turn, for logging and the client. */
@@ -73,14 +91,20 @@ export interface ResolveChoiceResult {
 
 /**
  * Resolves a player's choice mechanically. Pure given `rng`:
- * applies the per-turn survival drain, rolls a d20 for risky choices, and
- * subtracts HP on failure. The backend is the sole source of truth here —
- * the AI only narrates the outcome.
+ * applies the per-turn survival drain, ticks active conditions (damage/turn, expiry),
+ * rolls a d20 (with Désavantage when a severe condition is active) for risky choices, and
+ * subtracts HP on failure. The backend is the sole source of truth here — the AI only
+ * narrates the outcome.
+ * @see docs/public/raw/06-SURVIVAL.md §2, docs/public/raw/08-DICE-RESOLUTION.md §5
  */
 export function resolveChoice({
   attributes,
   survival,
   choice,
+  activeConditions,
+  turnNumber,
+  locale,
+  advantage,
   rng = Math.random,
 }: ResolveChoiceInput): ResolveChoiceResult {
   const risk: Difficulty = choice.riskLevel ?? 'safe'
@@ -94,26 +118,71 @@ export function resolveChoice({
     },
   }
 
-  if (!ROLL_RISKS.has(risk)) {
-    return { updatedSurvival: drained, consequences, gameOver: false }
+  const tick = tickConditions(activeConditions, drained, turnNumber)
+  let conditions = clearResolvedBackendConditions(tick.conditions, tick.survival)
+  const survivalAfterTick = tick.survival
+  if (survivalAfterTick.hp !== drained.hp) {
+    consequences.survivalChanges = {
+      ...consequences.survivalChanges,
+      hp: survivalAfterTick.hp - drained.hp,
+    }
   }
 
-  const diceRoll = rollCheck(attributes, ATTRIBUTE_BY_TYPE[choice.type], risk, rng)
+  if (tick.lethal) {
+    consequences.gameOver = true
+    return {
+      updatedSurvival: survivalAfterTick,
+      updatedConditions: conditions,
+      consequences,
+      gameOver: true,
+    }
+  }
+
+  if (!ROLL_RISKS.has(risk)) {
+    conditions = applyBackendConditions(
+      conditions,
+      { survival: survivalAfterTick, woundingHit: false },
+      turnNumber
+    )
+    return {
+      updatedSurvival: survivalAfterTick,
+      updatedConditions: conditions,
+      consequences,
+      gameOver: false,
+    }
+  }
+
+  const disadvantage = computeDisadvantage(conditions, locale)
+  const diceRoll = rollCheck(attributes, ATTRIBUTE_BY_TYPE[choice.type], risk, rng, {
+    advantage,
+    disadvantage,
+  })
 
   // Canon: combat and sauvegarde (flee) draw blood on failure. A failed
   // persuasion/exploration/skill check stays a narrative complication (the AI
   // narrates it), never an HP penalty.
-  let hp = drained.hp
+  let hp = survivalAfterTick.hp
+  const isCombatCrit = choice.type === 'combat' && diceRoll.critical === 'failure'
   if (!diceRoll.success && PHYSICAL_RISK_TYPES.has(choice.type)) {
-    hp = clamp(drained.hp - PHYSICAL_FAILURE_HP_LOSS[risk], 0, drained.maxHp)
-    consequences.survivalChanges = { ...consequences.survivalChanges, hp: hp - drained.hp }
+    hp = clamp(survivalAfterTick.hp - PHYSICAL_FAILURE_HP_LOSS[risk], 0, survivalAfterTick.maxHp)
+    consequences.survivalChanges = {
+      ...consequences.survivalChanges,
+      hp: (consequences.survivalChanges?.hp ?? 0) + (hp - survivalAfterTick.hp),
+    }
   }
 
-  const updatedSurvival: SurvivalStats = { ...drained, hp }
+  const updatedSurvival: SurvivalStats = { ...survivalAfterTick, hp }
+  const woundingHit = hp <= 0 || isCombatCrit
+  conditions = applyBackendConditions(
+    conditions,
+    { survival: updatedSurvival, woundingHit },
+    turnNumber
+  )
+
   const gameOver = hp <= 0
   if (gameOver) {
     consequences.gameOver = true
   }
 
-  return { updatedSurvival, diceRoll, consequences, gameOver }
+  return { updatedSurvival, updatedConditions: conditions, diceRoll, consequences, gameOver }
 }

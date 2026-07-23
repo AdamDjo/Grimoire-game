@@ -121,3 +121,74 @@ describe('aiSceneSchema — souvenir_candidate (N3, #115)', () => {
     expect(result.success).toBe(false)
   })
 })
+
+describe('aiSceneSchema — apply_condition (#181)', () => {
+  it('accepts a payload with no apply_condition at all (most turns)', () => {
+    const result = aiSceneSchema.safeParse({
+      ...basePayload,
+      turnSummary: 'Yarel keeps walking.',
+    })
+
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts a valid [IA-PROPOSÉE] condition id', () => {
+    const result = aiSceneSchema.safeParse({
+      ...basePayload,
+      turnSummary: 'Yarel wades through the poisonous marsh.',
+      apply_condition: { id: 'poison', reason: 'waded through the poisonous marsh unprotected' },
+    })
+
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects a [BACKEND] condition id (fever) proposed by the AI', () => {
+    const result = aiSceneSchema.safeParse({
+      ...basePayload,
+      turnSummary: 'Something happened.',
+      apply_condition: { id: 'fever', reason: 'trying to sneak in a backend condition' },
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects a [BACKEND] condition id (wound) proposed by the AI', () => {
+    const result = aiSceneSchema.safeParse({
+      ...basePayload,
+      turnSummary: 'Something happened.',
+      apply_condition: { id: 'wound', reason: 'trying to sneak in a backend condition' },
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects an unknown condition id', () => {
+    const result = aiSceneSchema.safeParse({
+      ...basePayload,
+      turnSummary: 'Something happened.',
+      apply_condition: { id: 'not-a-real-condition', reason: 'made up condition' },
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects an apply_condition missing reason', () => {
+    const result = aiSceneSchema.safeParse({
+      ...basePayload,
+      turnSummary: 'Something happened.',
+      apply_condition: { id: 'poison' },
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects an apply_condition with an empty reason', () => {
+    const result = aiSceneSchema.safeParse({
+      ...basePayload,
+      turnSummary: 'Something happened.',
+      apply_condition: { id: 'poison', reason: '' },
+    })
+
+    expect(result.success).toBe(false)
+  })
+})

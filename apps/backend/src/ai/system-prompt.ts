@@ -1,4 +1,4 @@
-import { localeDisplayName } from '@grimoire/shared'
+import { CONDITIONS, getConditionDefinition, localeDisplayName } from '@grimoire/shared'
 
 import type { MemoryChunkModel, SouvenirModel } from '../generated/prisma/models'
 import type { Character, Locale } from '@grimoire/shared'
@@ -78,6 +78,44 @@ function buildSouvenirsSection(souvenirs: SouvenirModel[]): string[] {
 }
 
 /**
+ * Builds the [IA-PROPOSÉE] conditions section: the character's currently
+ * active conditions (so the AI never re-proposes a duplicate) and the full
+ * whitelist of condition ids the AI is allowed to propose via
+ * `apply_condition`. `[BACKEND]` conditions (fever, wound) are applied
+ * automatically server-side and are deliberately excluded from the whitelist
+ * shown here — the AI cannot propose them.
+ * @see docs/public/raw/06-SURVIVAL.md §2 "Les deux familles de conditions"
+ */
+function buildConditionsSection(character: Character, locale: Locale): string[] {
+  const nameKey = locale === 'fr' ? 'fr' : 'en'
+
+  const active = character.stats.conditions
+  const activeLines = active.map((condition) => {
+    const name = getConditionDefinition(condition.id)?.name[nameKey] ?? condition.id
+    return `- ${name} (id: "${condition.id}")`
+  })
+
+  const proposable = CONDITIONS.filter((condition) => condition.family === 'ia')
+  const whitelistLines = proposable.map(
+    (condition) => `- "${condition.id}": ${condition.name[nameKey]}`
+  )
+
+  return [
+    '',
+    active.length > 0
+      ? `Currently active conditions on the player: ${activeLines.join('; ')}.`
+      : 'The player currently has no active conditions.',
+    '',
+    'You may optionally propose ONE new condition via apply_condition when the',
+    'narrative and biome clearly justify it (e.g. wading through a poisonous',
+    'marsh, a freezing blizzard, a stunning blow). Never propose a condition',
+    'already active on the player. Only propose ids from this exact whitelist —',
+    'any other id is rejected:',
+    ...whitelistLines,
+  ]
+}
+
+/**
  * Builds the Game Master system prompt.
  * The AI writes narration and choice labels only; the backend owns all rules,
  * dice, stats, and canon consistency. Canon brand terms are NOT re-translated —
@@ -108,6 +146,7 @@ export function buildSystemPrompt(
     ...buildMemorySection(memoryChunks),
     ...buildRecentTurnsSection(recentTurns),
     ...buildSouvenirsSection(souvenirs),
+    ...buildConditionsSection(character, locale),
     '',
     'Respond with a single JSON object and nothing else, matching exactly:',
     '{',
@@ -117,6 +156,7 @@ export function buildSystemPrompt(
     '  "choices": [{ "text": string, "type": "action"|"dialog"|"combat"|"flee"|"use_item"|"skill", "riskLevel"?: "safe"|"low"|"medium"|"high"|"deadly" }],',
     '  "turnSummary": string,',
     '  "souvenir_candidate"?: { "title_suggestion": string, "body": string, "type": "npc-death"|"moral-choice"|"secret-discovery"|"boss-victory"|"strong-promise" }',
+    '  "apply_condition"?: { "id": string, "reason": string }',
     '}',
     '',
     'turnSummary: a short factual sentence (max 200 characters) condensing what just',
@@ -128,5 +168,10 @@ export function buildSystemPrompt(
     'choice was made, a secret was discovered, a boss was defeated, or a strong promise',
     'was sworn. title_suggestion: 4-15 words, evocative. body: 30-70 tokens, third person,',
     'describing the moment concretely (not restating narrative style).',
+    '',
+    'apply_condition: OPTIONAL, omit on most turns. Only include it when the',
+    'narrative event you just wrote clearly and directly causes one of the',
+    'whitelisted conditions above. reason: one short sentence explaining why',
+    '(e.g. "crossed the poisonous marsh without protection").',
   ].join('\n')
 }

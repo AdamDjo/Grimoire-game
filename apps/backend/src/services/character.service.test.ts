@@ -88,7 +88,7 @@ describe('createCharacter', () => {
         hunger: 100,
         energy: 100,
         calamine: 0,
-        conditions: [],
+        activeConditions: [],
       },
     })
     expect(character).toMatchObject({ name: 'Kael Vane', vocation: 'shadow-blade' })
