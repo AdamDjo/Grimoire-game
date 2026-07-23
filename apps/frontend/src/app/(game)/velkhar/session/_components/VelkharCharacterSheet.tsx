@@ -3,7 +3,7 @@ import { useLocale, useTranslations } from 'next-intl'
 
 import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
 
-import type { Character, Condition, SurvivalStats } from '@grimoire/shared'
+import type { Character, ConditionId, SurvivalStats } from '@grimoire/shared'
 
 interface VelkharCharacterSheetProps {
   character: Character
@@ -17,17 +17,17 @@ export function VelkharCharacterSheet({ character, survival }: VelkharCharacterS
   const t = useTranslations('Session')
   const people = getPeople(character.people)
   const vocation = getVocation(character.vocation)
-  const conditionLabels: Record<Condition, string> = {
+  const conditionLabels: Record<ConditionId, string> = {
     fever: t('conditionFever'),
-    poisoned: t('conditionPoisoned'),
-    wounded: t('conditionWounded'),
-    frozen: t('conditionFrozen'),
-    stunned: t('conditionStunned'),
-    blinded: t('conditionBlinded'),
-    marsh_sickness: t('conditionMarshSickness'),
-    ash_corrupted: t('conditionAshCorrupted'),
-    shaken_mind: t('conditionShakenMind'),
-    slow_petrification: t('conditionSlowPetrification'),
+    poison: t('conditionPoison'),
+    wound: t('conditionWound'),
+    freeze: t('conditionFreeze'),
+    stun: t('conditionStun'),
+    blindness: t('conditionBlindness'),
+    marsh_disease: t('conditionMarshDisease'),
+    cendre_corrupt: t('conditionCendreCorrupt'),
+    shaken_reason: t('conditionShakenReason'),
+    petrification: t('conditionPetrification'),
   }
 
   return (
@@ -99,7 +99,7 @@ export function VelkharCharacterSheet({ character, survival }: VelkharCharacterS
         {character.stats.conditions.length > 0 ? (
           <ul className="velkhar-character-sheet__conditions">
             {character.stats.conditions.map((condition) => (
-              <li key={condition}>{conditionLabels[condition]}</li>
+              <li key={condition.id}>{conditionLabels[condition.id]}</li>
             ))}
           </ul>
         ) : (

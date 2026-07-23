@@ -16,3 +16,4 @@ export * from "./types/aveugle.types";
 export * from "./constants/localized";
 export * from "./constants/peoples";
 export * from "./constants/vocations";
+export * from "./constants/conditions";
