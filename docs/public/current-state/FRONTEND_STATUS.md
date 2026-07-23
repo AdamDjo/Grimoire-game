@@ -5,7 +5,7 @@ rag: true
 source_of_truth: true
 owner: frontend
 default_agent: codex
-updated: 2026-07-22
+updated: 2026-07-24
 ---
 
 # Frontend Status
@@ -28,7 +28,8 @@ updated: 2026-07-22
 ## Pré-déploiement restant
 
 - #188 — remplacer les fixtures autoritatives de l'Auberge par les contrats réels de #147.
-- #186 — livrer l'UI Survie v2 après stabilisation des contrats #180 et des endpoints #181-#184.
+- #186 — livrer l'UI Survie v2 après stabilisation des contrats ~~#180~~ (livré, PR #196) et des
+  endpoints #181-#184.
 - #152 — intégrer la résolution du concept libre ou masquer proprement l'option en V1.
 - #161 — configurer l'API de production et les redirects Supabase côté frontend.
 - #129 — valider le golden path réel EN/FR, l'accessibilité et le responsive.

@@ -5,7 +5,7 @@ rag: true
 source_of_truth: true
 owner: backend
 default_agent: claude
-updated: 2026-07-22
+updated: 2026-07-24
 ---
 
 # Backend Status
@@ -22,16 +22,16 @@ updated: 2026-07-22
 - #168 / PR #178 — locale IA BCP-47 validée et persistée.
 - #179 / PR #187 — canon et plan Gameplay Survie v2.
 - #189 — mémoire projet, routage Claude/Codex et garde-fous `current-state`.
+- #101 / PR #191 — fallback multi-modèles face aux erreurs OpenRouter.
+- #180 / PR #196 — contrats partagés Survie v2 (`ConditionId`, `ActiveCondition`, `itemGained`).
 
 ## Pré-déploiement restant
 
-- #180 — contrats partagés Survie v2.
 - #181 — conditions persistées et Désavantage au d20.
 - #183 — acquisition, consommation et équipement de l'inventaire réel.
 - #182 — paliers de Calamine et fin spéciale `calcined`.
 - #184 — repos court/feu et récupération canonique.
 - #185 — danger IA régulier et crescendo d'intensité.
-- #101 — fallback multi-modèles face aux erreurs OpenRouter.
 - #152 — résolution du concept libre ou signal explicite de masquage V1.
 - #162 — vulnérabilités critiques/hautes applicables.
 - #161 — API, migrations, secrets, CORS et healthcheck de production.
