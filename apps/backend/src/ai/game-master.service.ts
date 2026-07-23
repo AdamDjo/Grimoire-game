@@ -1,7 +1,7 @@
-import { hasOpenRouterKey } from '../config/env'
+import { GAME_MASTER_MODEL_CHAIN, hasOpenRouterKey } from '../config/env'
 import { prisma } from '../lib/prisma'
 
-import { callOpenRouter } from './openrouter.provider'
+import { callOpenRouter, type OpenRouterMessage } from './openrouter.provider'
 import { buildStubScene } from './scene-stub'
 import { type AiScenePayload, validateAiScene } from './scene-validator'
 import { buildSystemPrompt, type RecentTurnSummary } from './system-prompt'
@@ -66,6 +66,55 @@ export interface GameMasterResult {
   scene: AiScenePayload
   /** How the scene was produced — useful for debugging and the front badge. */
   source: 'ai' | 'stub'
+  /** Which model in the chain produced an AI scene. Absent on the stub path. */
+  model?: string
+}
+
+/**
+ * Outcome of trying a single model: either a validated scene, or a flag telling
+ * the chain whether it's worth trying the next model. A definitive failure
+ * (bad key, malformed request) means every model would fail the same way, so we
+ * stop and fall straight to the stub instead of hammering the whole chain.
+ */
+type ModelAttempt = { ok: true; scene: AiScenePayload } | { ok: false; retryable: boolean }
+
+/**
+ * HTTP statuses that mean "this model can't answer right now, try another":
+ * 429 (rate-limited — the common `:free` case) and any 5xx (upstream/provider
+ * hiccup). Everything else (401 bad key, 400 bad request) is definitive.
+ */
+function isRetryableStatus(status: number | undefined): boolean {
+  return status === 429 || (status !== undefined && status >= 500)
+}
+
+/**
+ * Runs one model and validates its output. Transient failures (rate limit,
+ * timeout, upstream error, or malformed/invalid JSON) are retryable — the same
+ * prompt on another model may well succeed. A definitive API failure is not.
+ */
+async function tryModel(messages: OpenRouterMessage[], model: string): Promise<ModelAttempt> {
+  const result = await callOpenRouter(messages, { model })
+
+  if (!result.success || !result.content) {
+    // A timed-out or network-errored call has no status — treat as retryable.
+    const retryable = result.status === undefined || isRetryableStatus(result.status)
+    return { ok: false, retryable }
+  }
+
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(result.content)
+  } catch {
+    // Malformed JSON is model-specific; another model may return clean JSON.
+    return { ok: false, retryable: true }
+  }
+
+  const validated = validateAiScene(parsed)
+  if (!validated.success || !validated.data) {
+    return { ok: false, retryable: true }
+  }
+
+  return { ok: true, scene: validated.data }
 }
 
 /** Turns the player's action into a validated narrative payload. */
@@ -95,7 +144,7 @@ export async function generateScene(input: GameMasterInput): Promise<GameMasterR
     loadRecentSouvenirs(input.character.userId),
   ])
 
-  const result = await callOpenRouter([
+  const messages: OpenRouterMessage[] = [
     {
       role: 'system',
       content: buildSystemPrompt(
@@ -107,26 +156,26 @@ export async function generateScene(input: GameMasterInput): Promise<GameMasterR
       ),
     },
     { role: 'user', content: buildUserPrompt(input) },
-  ])
+  ]
 
-  if (!result.success || !result.content) {
-    console.warn('[GM] AI call failed, falling back to stub:', result.error)
-    return { scene: buildStubScene(input.character, input.locale), source: 'stub' }
+  // Try each model in the fallback chain; the first valid scene wins. Only when
+  // every model fails (all rate-limited, or a definitive error) do we serve the
+  // deterministic stub — the front never receives raw AI output. See #101.
+  for (const model of GAME_MASTER_MODEL_CHAIN) {
+    const attempt = await tryModel(messages, model)
+
+    if (attempt.ok) {
+      return { scene: attempt.scene, source: 'ai', model }
+    }
+
+    if (!attempt.retryable) {
+      console.warn(`[GM] ${model} failed definitively, falling back to stub`)
+      return { scene: buildStubScene(input.character, input.locale), source: 'stub' }
+    }
+
+    console.warn(`[GM] ${model} unavailable, trying next model`)
   }
 
-  let parsed: unknown
-  try {
-    parsed = JSON.parse(result.content)
-  } catch {
-    console.warn('[GM] AI returned non-JSON, falling back to stub')
-    return { scene: buildStubScene(input.character, input.locale), source: 'stub' }
-  }
-
-  const validated = validateAiScene(parsed)
-  if (!validated.success || !validated.data) {
-    console.warn('[GM] AI JSON failed validation, falling back to stub:', validated.error)
-    return { scene: buildStubScene(input.character, input.locale), source: 'stub' }
-  }
-
-  return { scene: validated.data, source: 'ai' }
+  console.warn('[GM] all models exhausted, falling back to stub')
+  return { scene: buildStubScene(input.character, input.locale), source: 'stub' }
 }

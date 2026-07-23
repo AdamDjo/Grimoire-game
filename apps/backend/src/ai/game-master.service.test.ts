@@ -1,7 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const hasOpenRouterKey = vi.fn()
-vi.mock('../config/env', () => ({ hasOpenRouterKey }))
+const GAME_MASTER_MODEL_CHAIN = [
+  'google/gemma-4-31b-it:free',
+  'nvidia/nemotron-3-super-120b-a12b:free',
+  'openai/gpt-oss-20b:free',
+  'openrouter/free',
+]
+vi.mock('../config/env', () => ({ hasOpenRouterKey, GAME_MASTER_MODEL_CHAIN }))
 
 const memoryChunkFindMany = vi.fn().mockResolvedValue([])
 const sceneLogFindMany = vi.fn().mockResolvedValue([])
@@ -134,5 +140,94 @@ describe('generateScene — N1 recent-turns loading', () => {
     const result = await generateScene({ character, locale: 'en', sessionId: 's1' })
 
     expect(result.source).toBe('stub')
+  })
+})
+
+describe('generateScene — multi-model fallback chain (#101)', () => {
+  beforeEach(() => {
+    hasOpenRouterKey.mockReset()
+    memoryChunkFindMany.mockClear()
+    sceneLogFindMany.mockClear()
+    souvenirFindMany.mockClear()
+    buildSystemPrompt.mockClear()
+    callOpenRouter.mockReset()
+    hasOpenRouterKey.mockReturnValue(true)
+  })
+
+  it('returns the first model that answers and does not call the next one', async () => {
+    callOpenRouter.mockResolvedValueOnce({
+      success: true,
+      content: JSON.stringify(validAiPayload),
+    })
+
+    const result = await generateScene({ character, locale: 'en', sessionId: 's1' })
+
+    expect(result.source).toBe('ai')
+    expect(callOpenRouter).toHaveBeenCalledTimes(1)
+  })
+
+  it('reports which model produced the scene', async () => {
+    callOpenRouter.mockResolvedValueOnce({
+      success: true,
+      content: JSON.stringify(validAiPayload),
+    })
+
+    const result = await generateScene({ character, locale: 'en', sessionId: 's1' })
+
+    expect(result.model).toBe('google/gemma-4-31b-it:free')
+  })
+
+  it('advances to the next model on a 429 and succeeds there', async () => {
+    callOpenRouter
+      .mockResolvedValueOnce({ success: false, error: 'rate limited', status: 429 })
+      .mockResolvedValueOnce({ success: true, content: JSON.stringify(validAiPayload) })
+
+    const result = await generateScene({ character, locale: 'en', sessionId: 's1' })
+
+    expect(result.source).toBe('ai')
+    expect(result.model).toBe('nvidia/nemotron-3-super-120b-a12b:free')
+    expect(callOpenRouter).toHaveBeenCalledTimes(2)
+  })
+
+  it('advances past a model that returns malformed JSON', async () => {
+    callOpenRouter
+      .mockResolvedValueOnce({ success: true, content: 'not json at all' })
+      .mockResolvedValueOnce({ success: true, content: JSON.stringify(validAiPayload) })
+
+    const result = await generateScene({ character, locale: 'en', sessionId: 's1' })
+
+    expect(result.source).toBe('ai')
+    expect(callOpenRouter).toHaveBeenCalledTimes(2)
+  })
+
+  it('falls back to the stub when every model in the chain fails', async () => {
+    callOpenRouter.mockResolvedValue({ success: false, error: 'rate limited', status: 429 })
+
+    const result = await generateScene({ character, locale: 'en', sessionId: 's1' })
+
+    expect(result.source).toBe('stub')
+    expect(result.model).toBeUndefined()
+    // Four free models in the default chain, all attempted.
+    expect(callOpenRouter).toHaveBeenCalledTimes(4)
+  })
+
+  it('stops immediately on a definitive error (bad key) without trying other models', async () => {
+    callOpenRouter.mockResolvedValueOnce({ success: false, error: 'unauthorized', status: 401 })
+
+    const result = await generateScene({ character, locale: 'en', sessionId: 's1' })
+
+    expect(result.source).toBe('stub')
+    expect(callOpenRouter).toHaveBeenCalledTimes(1)
+  })
+
+  it('treats a timeout (no status) as retryable and moves to the next model', async () => {
+    callOpenRouter
+      .mockResolvedValueOnce({ success: false, error: 'OpenRouter request timed out' })
+      .mockResolvedValueOnce({ success: true, content: JSON.stringify(validAiPayload) })
+
+    const result = await generateScene({ character, locale: 'en', sessionId: 's1' })
+
+    expect(result.source).toBe('ai')
+    expect(callOpenRouter).toHaveBeenCalledTimes(2)
   })
 })
