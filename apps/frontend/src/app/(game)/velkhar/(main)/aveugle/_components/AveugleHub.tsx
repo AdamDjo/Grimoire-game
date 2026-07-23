@@ -12,6 +12,7 @@ import { PlayerIdentity } from '@/components/ui/grimoire/PlayerIdentity/PlayerId
 import { ResourceCounter } from '@/components/ui/grimoire/ResourceCounter/ResourceCounter'
 import { ACTIVE_GAME_SESSION_COOKIE, hasActiveGameSession } from '@/lib/active-game-session'
 import { gsap, useGSAP } from '@/lib/gsap-init'
+import { ensureAnonymousSession } from '@/lib/supabase/ensure-session'
 
 import { VocationEmblem } from '../../../_components/VocationEmblem/VocationEmblem'
 import {
@@ -19,13 +20,7 @@ import {
   parseStoredCharacterResult,
   type CharacterCreateDraft,
 } from '../../character-create/_lib/character-create-model'
-import {
-  AUBERGE_PREPARATION_STORAGE_KEY,
-  EMPTY_AUBERGE_PREPARATION,
-  parseAubergePreparation,
-  withOmenQuery,
-  type AubergePreparationState,
-} from '../_lib/auberge-preparation'
+import { getAveugleHub, getSouvenirs } from '../_lib/aveugle-api'
 import {
   getFallbackHubCharacter,
   resolveAveugleHubSnapshot,
@@ -38,6 +33,8 @@ import { AveugleThreshold } from './AveugleThreshold'
 import { VelkharMotionShell } from './velkhar-motion-shell'
 
 import './aveugle-hub.css'
+
+import type { AveugleHubState, Souvenir } from '@grimoire/shared'
 
 interface AveugleHubProps {
   campaignId?: string
@@ -91,7 +88,10 @@ export function AveugleHub({
   const [hasActiveSessionState, setHasActiveSessionState] = useState(false)
   const [showIntro, setShowIntro] = useState(false)
   const [activePanel, setActivePanel] = useState<AubergePanel>('dialogue')
-  const [preparation, setPreparation] = useState<AubergePreparationState>(EMPTY_AUBERGE_PREPARATION)
+  const [hubState, setHubState] = useState<AveugleHubState | null>(null)
+  const [spendableSouvenirs, setSpendableSouvenirs] = useState<Souvenir[]>([])
+  const [hubError, setHubError] = useState(false)
+  const [hubLoading, setHubLoading] = useState(false)
   const ambienceRef = useRef<HTMLDivElement>(null)
   const fireGlowRef = useRef<HTMLDivElement>(null)
   const departureRef = useRef<HTMLDivElement>(null)
@@ -101,11 +101,6 @@ export function AveugleHub({
     'active-session': t('stageActiveSession'),
     'run-return': t('stageRunReturn'),
   }
-  const resources = [
-    { icon: 'coin' as const, label: t('saltResource'), value: 125 },
-    { icon: 'memory' as const, label: t('memoriesResource'), value: 0 },
-    { icon: 'artifact' as const, label: t('artifactsResource'), value: 0 },
-  ]
 
   useEffect(() => {
     const nextCharacter = readCharacter(characterReadyHint, t('traveler'))
@@ -113,18 +108,32 @@ export function AveugleHub({
     setHasActiveSessionState(readActiveSessionCookie())
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     setShowIntro(previewIntro || (!reduceMotion && !hasSeenAubergeIntro()))
-    const storedPreparation = parseAubergePreparation(
-      window.localStorage.getItem(AUBERGE_PREPARATION_STORAGE_KEY)
-    )
-    const nextPreparation = isRunReturn
-      ? { ...storedPreparation, selectedOmenId: null }
-      : storedPreparation
-    setPreparation(nextPreparation)
-    if (isRunReturn) {
-      window.localStorage.setItem(AUBERGE_PREPARATION_STORAGE_KEY, JSON.stringify(nextPreparation))
-    }
     setHydrated(true)
   }, [characterReadyHint, isRunReturn, previewIntro, t])
+
+  const loadHub = useCallback(async () => {
+    setHubLoading(true)
+    setHubError(false)
+
+    try {
+      await ensureAnonymousSession()
+      const nextHubState = await getAveugleHub()
+      const souvenirs = nextHubState.spendableSouvenirCount > 0 ? await getSouvenirs() : []
+      setHubState(nextHubState)
+      setSpendableSouvenirs(
+        souvenirs.filter((souvenir) => souvenir.anonymous && !souvenir.sharedWithAveugle)
+      )
+    } catch {
+      setHubError(true)
+    } finally {
+      setHubLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!hydrated || !character) return
+    void loadHub()
+  }, [character, hydrated, loadHub])
 
   const snapshot = useMemo(
     () =>
@@ -146,11 +155,6 @@ export function AveugleHub({
     [campaignId, character, hasActiveSessionState, isRunReturn, locale, t]
   )
   const openingLine = stageCopy[snapshot.stage]
-  const isActiveSession = snapshot.stage === 'active-session'
-  const departureHref =
-    preparation.selectedOmenId && !isActiveSession
-      ? withOmenQuery(snapshot.primaryHref, preparation.selectedOmenId)
-      : snapshot.primaryHref
 
   useGSAP(
     () => {
@@ -186,8 +190,7 @@ export function AveugleHub({
 
       const media = gsap.matchMedia()
       media.add('(prefers-reduced-motion: no-preference)', () => {
-        const targetOpacity =
-          activePanel === 'omen' ? 0.88 : activePanel === 'memories' ? 0.5 : 0.64
+        const targetOpacity = activePanel === 'memories' ? 0.5 : 0.64
         const timeline = gsap.timeline({ defaults: { ease: 'power2.out' } })
         timeline
           .to(ambience, { duration: 0.5, opacity: targetOpacity, overwrite: 'auto' }, 0)
@@ -207,15 +210,43 @@ export function AveugleHub({
       return () => media.revert()
     },
     {
-      dependencies: [activePanel, preparation.selectedOmenId, hydrated, snapshot.character],
+      dependencies: [activePanel, hydrated, snapshot.character],
       revertOnUpdate: true,
     }
   )
 
-  const handlePreparationChange = useCallback((nextPreparation: AubergePreparationState) => {
-    setPreparation(nextPreparation)
-    window.localStorage.setItem(AUBERGE_PREPARATION_STORAGE_KEY, JSON.stringify(nextPreparation))
+  const handleTopicSeen = useCallback((topicId: string) => {
+    setHubState((current) =>
+      current && !current.seenTopicIds.includes(topicId)
+        ? { ...current, seenTopicIds: [...current.seenTopicIds, topicId] }
+        : current
+    )
   }, [])
+
+  const handleSouvenirSpent = useCallback((spentSouvenir: Souvenir) => {
+    setSpendableSouvenirs((current) =>
+      current.filter((souvenir) => souvenir.id !== spentSouvenir.id)
+    )
+    setHubState((current) =>
+      current
+        ? {
+            ...current,
+            spendableSouvenirCount: Math.max(0, current.spendableSouvenirCount - 1),
+          }
+        : current
+    )
+  }, [])
+
+  const resources = hubState
+    ? [
+        { icon: 'coin' as const, label: t('ironResource'), value: hubState.iron },
+        {
+          icon: 'memory' as const,
+          label: t('memoriesResource'),
+          value: hubState.spendableSouvenirCount,
+        },
+      ]
+    : []
 
   const topBar = snapshot.character ? (
     <div className="aveugle-hub__player-bar" data-velkhar-enter>
@@ -251,7 +282,7 @@ export function AveugleHub({
     </div>
   ) : null
 
-  if (!hydrated) {
+  if (!hydrated || (snapshot.character && hubLoading && !hubState)) {
     return (
       <main className="aveugle-hub aveugle-hub--loading" aria-busy="true">
         <div className="aveugle-hub__scene" aria-hidden="true" />
@@ -276,6 +307,22 @@ export function AveugleHub({
     )
   }
 
+  if (hubError || !hubState) {
+    return (
+      <main className="aveugle-hub aveugle-hub--loading aveugle-hub--error">
+        <div className="aveugle-hub__scene" aria-hidden="true" />
+        <section className="aveugle-hub__load-error" role="alert">
+          <GameIcon decorative name="warning" size={48} />
+          <h1>{t('hubErrorTitle')}</h1>
+          <p>{t('hubErrorBody')}</p>
+          <GameButton loading={hubLoading} onClick={() => void loadHub()} variant="radiant">
+            {t('retry')}
+          </GameButton>
+        </section>
+      </main>
+    )
+  }
+
   return (
     <VelkharMotionShell animateEntrance={transitionFromHome} className="aveugle-hub">
       {showIntro ? (
@@ -294,23 +341,13 @@ export function AveugleHub({
         }
         bottom={
           <div ref={departureRef} className="aveugle-hub__departure" data-velkhar-enter>
-            {isActiveSession || preparation.selectedOmenId ? (
-              <GameLink
-                href={departureHref}
-                trailingIcon={<GameIcon decorative name="arrow" size={24} />}
-                variant="radiant"
-              >
-                {snapshot.primaryLabel}
-              </GameLink>
-            ) : (
-              <GameButton
-                onClick={() => setActivePanel('omen')}
-                trailingIcon={<GameIcon decorative name="moon" size={24} />}
-                variant="radiant"
-              >
-                {t('chooseOmen')}
-              </GameButton>
-            )}
+            <GameLink
+              href={snapshot.primaryHref}
+              trailingIcon={<GameIcon decorative name="arrow" size={24} />}
+              variant="radiant"
+            >
+              {snapshot.primaryLabel}
+            </GameLink>
           </div>
         }
         className="aveugle-hub__layout"
@@ -330,11 +367,12 @@ export function AveugleHub({
           <div className="aveugle-hub__sidebar" data-velkhar-frame>
             <AubergeDock
               activePanel={activePanel}
-              isActiveSession={isActiveSession}
+              hubState={hubState}
               onActivePanelChange={setActivePanel}
-              onPreparationChange={handlePreparationChange}
+              onSouvenirSpent={handleSouvenirSpent}
+              onTopicSeen={handleTopicSeen}
               openingLine={openingLine}
-              preparation={preparation}
+              spendableSouvenirs={spendableSouvenirs}
             />
           </div>
         }

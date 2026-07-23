@@ -4,7 +4,7 @@ visibility: public
 rag: true
 source_of_truth: true
 owner: release-coordination
-updated: 2026-07-23
+updated: 2026-07-24
 ---
 
 # Release Readiness — v0.1.0
@@ -21,6 +21,7 @@ merge. La checklist opérationnelle détaillée vit dans l'issue #163.
 | Interface EN/FR                | Livré | #167 / PR #177 |
 | Langue IA navigateur           | Livré | #168 / PR #178 |
 | Auberge backend réelle         | Livré | #147 / PR #174 |
+| Auberge frontend réelle        | Livré | #188           |
 | Canon et plan Survie v2        | Livré | #179 / PR #187 |
 | Mémoire et état du projet      | Livré | #189           |
 | Disponibilité IA (fallback GM) | Livré | #101 / PR #191 |
@@ -36,7 +37,6 @@ merge. La checklist opérationnelle détaillée vit dans l'issue #163.
 | Action de repos           | À faire    | #184      |
 | Danger IA                 | À faire    | #185      |
 | UI Survie v2              | À faire    | #186      |
-| Auberge frontend réelle   | À faire    | #188      |
 | Concept libre             | À trancher | #152      |
 | Sécurité dépendances      | Bloquant   | #162      |
 | Déploiement API           | À faire    | #161      |
@@ -50,6 +50,6 @@ multi-provider (#159), pgvector (#114), World events (#117) et échange Souvenir
 
 ## Go / No-Go
 
-`NO-GO` tant que les douze blocs fonctionnels pré-déploiement ne sont pas livrés, que la sécurité
+`NO-GO` tant que les onze blocs fonctionnels pré-déploiement ne sont pas livrés, que la sécurité
 n'est pas qualifiée, que l'API n'est pas déployée et que le golden path #129 n'est pas vert sur
 l'environnement de release.
