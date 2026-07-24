@@ -35,7 +35,7 @@ merge. La checklist opérationnelle détaillée vit dans l'issue #163.
 
 | Bloc                   | État       | Référence |
 | ---------------------- | ---------- | --------- |
-| Danger IA              | À faire    | #185      |
+| Danger IA              | Livré      | #185      |
 | UI Survie v2           | À faire    | #186      |
 | Concept libre          | À trancher | #152      |
 | Sécurité dépendances   | Bloquant   | #162      |
