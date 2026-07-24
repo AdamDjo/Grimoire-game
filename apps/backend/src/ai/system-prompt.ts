@@ -223,6 +223,85 @@ function buildRestSection(): string[] {
 }
 
 /**
+ * Builds the physical-danger crescendo section (#185): pushes the AI to keep
+ * offering regular physical pivots (combat, flee, a rescue/save decision) and
+ * to let stakes climb from the character's REAL mechanical state (HP ratio,
+ * calamine tier, active conditions, dying) rather than any invented act/beat
+ * counter — no act state is persisted server-side (deliberately out of scope,
+ * see docs/public/plans/gameplay-survie-v2.md ticket #6). The backend still
+ * owns every roll, damage value, condition, item, and ending; this section
+ * only shapes staging and pacing of the prose.
+ * @see docs/public/raw/09-ACTION-LOOP.md §6 "La bascule narrative invisible"
+ * @see docs/public/raw/15-GAME-MASTER.md §0
+ */
+function buildDangerCrescendoSection(character: Character): string[] {
+  const { hp, maxHp, calamine, isDying } = character.stats.survival
+  const hpRatio = maxHp > 0 ? hp / maxHp : 1
+  const activeConditionCount = character.stats.conditions.length
+
+  const pressureSignals: string[] = []
+  if (isDying) {
+    pressureSignals.push(
+      'The character is currently DYING (one telegraphed turn of reprieve before a second ' +
+        '0-HP hit is definitive death). This is peak stakes: every choice you offer must read ' +
+        'as urgent and physical (fight for one more breath, drag themselves to cover, an ally ' +
+        'reaching them) — no calm or contemplative option this turn.'
+    )
+  } else if (hpRatio <= 0.34) {
+    pressureSignals.push(
+      "The character's HP is critically low. Danger should feel immediate and close — favor " +
+        'a combat, flee, or rescue pivot over exploration or idle dialogue this turn.'
+    )
+  } else if (hpRatio <= 0.66) {
+    pressureSignals.push(
+      "The character's HP is dropping. Let the scene escalate — this is a good moment for a " +
+        'physical pivot rather than another calm beat.'
+    )
+  }
+
+  if (calamine >= 75) {
+    pressureSignals.push(
+      'Calamine is at Stage 3 (75-99): the transformation into a Calciné is imminent. Every ' +
+        'scene should carry that dread physically — tremors, blackouts, the body failing.'
+    )
+  } else if (calamine >= 50) {
+    pressureSignals.push(
+      'Calamine is at Stage 2 (50-74): bleeding, short-term memory loss. Let it intrude on ' +
+        'physical scenes, not just flavor text.'
+    )
+  } else if (calamine >= 25) {
+    pressureSignals.push(
+      'Calamine is at Stage 1 (25-49): grayish hands, insomnia, archontic dreams. A visible, ' +
+        'physical cost the character is starting to carry.'
+    )
+  }
+
+  if (activeConditionCount >= 2) {
+    pressureSignals.push(
+      'Multiple conditions are stacked on the character right now. Let their compounding ' +
+        'weight show physically, without piling on more conditions than the narrative earns.'
+    )
+  }
+
+  return [
+    '',
+    'Physical danger and pacing (crescendo, no invented act/chapter state):',
+    '- Vary narrative intensity turn over turn. Do not let the run stay flat, and do not swing',
+    '  randomly without direction — build toward a felt crescendo across the session, the way',
+    '  a run naturally moves from discovery to real resistance to a decisive moment.',
+    '- Offer a genuine physical pivot regularly (combat, flee, or a save/rescue decision) rather',
+    '  than a long stretch of purely contemplative or dialogue-only scenes. Not every turn needs',
+    '  one, but the player should feel the world pushing back, not just talking at them.',
+    "- Raise the stakes using the character's ACTUAL mechanical state below — never invent a new",
+    '  narrative state, an act counter, or a "chapter" to justify escalation.',
+    ...pressureSignals.map((signal) => `- ${signal}`),
+    '- You still never decide dice outcomes, damage, conditions, items, or endings — you only',
+    '  stage and pace the danger. The backend remains the sole authority on every mechanical',
+    '  consequence; you narrate what it resolves.',
+  ]
+}
+
+/**
  * Builds the Game Master system prompt.
  * The AI writes narration and choice labels only; the backend owns all rules,
  * dice, stats, and canon consistency. Canon brand terms are NOT re-translated —
@@ -257,6 +336,7 @@ export function buildSystemPrompt(
     ...buildConditionsSection(character, locale),
     ...buildInventorySection(character),
     ...buildRestSection(),
+    ...buildDangerCrescendoSection(character),
     '',
     'Respond with a single JSON object and nothing else, matching exactly:',
     '{',
