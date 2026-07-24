@@ -46,6 +46,7 @@ const character = {
   energy: 100,
   calamine: 0,
   conditions: [],
+  inventory: [],
   createdAt: new Date(),
 } as unknown as DbCharacter
 

@@ -53,6 +53,7 @@ characterRouter.post('/', async (req: Request, res: Response<ApiResponse<Charact
           calamine: character.calamine,
         },
         conditions: [],
+        inventory: [],
       },
       createdAt: character.createdAt.toISOString(),
     }

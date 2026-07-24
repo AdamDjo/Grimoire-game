@@ -38,6 +38,7 @@ const character = {
     attributes: { blood: 10, breath: 10, ash: 10 },
     survival: { hp: 20, maxHp: 20, thirst: 100, hunger: 100, energy: 100, calamine: 0 },
     conditions: [],
+    inventory: [],
   },
   createdAt: new Date().toISOString(),
 }

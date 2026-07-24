@@ -28,12 +28,12 @@ merge. La checklist opérationnelle détaillée vit dans l'issue #163.
 | Contrats shared Survie v2      | Livré | #180 / PR #196 |
 | Conditions et Désavantage      | Livré | #181 / PR #198 |
 | Calamine et fin Calciné        | Livré | #182 / PR #199 |
+| Inventaire réel                | Livré | #183           |
 
 ## Phase 1 — pré-déploiement
 
 | Bloc                   | État       | Référence |
 | ---------------------- | ---------- | --------- |
-| Inventaire réel        | À faire    | #183      |
 | Action de repos        | À faire    | #184      |
 | Danger IA              | À faire    | #185      |
 | UI Survie v2           | À faire    | #186      |
@@ -50,6 +50,6 @@ multi-provider (#159), pgvector (#114), World events (#117) et échange Souvenir
 
 ## Go / No-Go
 
-`NO-GO` tant que les onze blocs fonctionnels pré-déploiement ne sont pas livrés, que la sécurité
+`NO-GO` tant que les huit blocs fonctionnels pré-déploiement ne sont pas livrés, que la sécurité
 n'est pas qualifiée, que l'API n'est pas déployée et que le golden path #129 n'est pas vert sur
 l'environnement de release.
