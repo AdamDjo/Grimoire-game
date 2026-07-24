@@ -290,7 +290,7 @@ describe('Aveugle locale wiring (#168)', () => {
 
     await generateAveugleTalkResponse('user1', 'Quién eres?')
 
-    expect(lastPrompt()).toContain('Write the reply in European Spanish')
+    expect(lastPrompt()).toContain('Write your reply in European Spanish')
   })
 
   it('prefers the active session locale over the account preference', async () => {
@@ -303,7 +303,7 @@ describe('Aveugle locale wiring (#168)', () => {
 
     await generateAveugleTalkResponse('user1', 'Qui es-tu ?')
 
-    expect(lastPrompt()).toContain('Write the reply in French')
+    expect(lastPrompt()).toContain('Write your reply in French')
   })
 
   it('falls back to the account preference when no session is active', async () => {
@@ -315,7 +315,7 @@ describe('Aveugle locale wiring (#168)', () => {
 
     await generateAveugleTalkResponse('user1', 'Wer bist du?')
 
-    expect(lastPrompt()).toContain('Write the reply in German')
+    expect(lastPrompt()).toContain('Write your reply in German')
   })
 
   it('defaults the talk prompt to English when no locale is known', async () => {
@@ -326,7 +326,7 @@ describe('Aveugle locale wiring (#168)', () => {
 
     await generateAveugleTalkResponse('user1', 'Who are you?')
 
-    expect(lastPrompt()).toContain('Write the reply in English')
+    expect(lastPrompt()).toContain('Write your reply in English')
   })
 
   it('serves an English fallback reply for a non-French locale on AI failure', async () => {
@@ -372,7 +372,7 @@ describe('Aveugle locale wiring (#168)', () => {
 
     await spendSouvenirForLore('user1', 'sv1', 'lore-fragment')
 
-    expect(lastPrompt()).toContain('Write the loreResult in French')
+    expect(lastPrompt()).toContain('Write your reply in French')
   })
 })
 

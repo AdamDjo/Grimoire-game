@@ -1,4 +1,4 @@
-import type { Locale } from '@grimoire/shared'
+import type { CreateSessionLocaleInput } from '../api/game-session-api'
 
 export type GameSessionRiskLevel = 'safe' | 'low' | 'medium' | 'high' | 'deadly'
 
@@ -66,7 +66,7 @@ export interface PendingGameAction {
 
 export interface GameSessionApi<TResponse extends GameSessionResponse = GameSessionResponse> {
   abandonSession: (sessionId: string) => Promise<GameSessionEndResponse>
-  createSession: (locale?: Locale) => Promise<TResponse>
+  createSession: (input?: CreateSessionLocaleInput) => Promise<TResponse>
   postGameAction: (input: {
     sessionId: string
     choiceId?: string

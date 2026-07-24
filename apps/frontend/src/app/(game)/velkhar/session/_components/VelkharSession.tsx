@@ -93,8 +93,8 @@ function consequenceMessages(response: SceneResponse | null, copy: ConsequenceCo
 export function VelkharSession({ initialCharacter, locale }: VelkharSessionProps) {
   const uiLocale = useLocale()
   const t = useTranslations('Session')
-  // La langue de narration reste distincte de la locale UI : une valeur fournie
-  // par le parcours de jeu gagne, sinon le navigateur alimente le fallback #168.
+  // La langue de narration priorise : locale fournie par le parcours de jeu,
+  // puis le choix explicite du switcher en jeu, puis le navigateur (#168, #181).
   const [detectedLocale] = useState<Locale | undefined>(() => detectBrowserLocale())
   const effectiveLocale = locale ?? detectedLocale
   const [freeAction, setFreeAction] = useState('')
@@ -108,6 +108,7 @@ export function VelkharSession({ initialCharacter, locale }: VelkharSessionProps
     api: gameSessionApi,
     initialWorldState: initialCharacter.stats.survival,
     locale: effectiveLocale,
+    explicitLocale: uiLocale as Locale,
     reduceWorldState,
     resumeHref: `${VELKHAR_WORLD.routes.session}/resume`,
   })

@@ -19,6 +19,12 @@ export const DIFFICULTY_TARGET: Record<Difficulty, number> = {
   deadly: 16,
 };
 
+/**
+ * Roll mode, per canon 08-DICE §5. "normal" = 1d20. "advantage"/"disadvantage" = 2d20,
+ * keep best/worst. Advantage and disadvantage cancel out to "normal" when both apply.
+ */
+export type RollMode = "normal" | "advantage" | "disadvantage";
+
 export interface DiceRoll {
   roll: number;
   modifier: number;
@@ -27,4 +33,8 @@ export interface DiceRoll {
   success: boolean;
   /** Natural 20 / natural 1 flags for narration flavor. */
   critical: "success" | "failure" | null;
+  /** Roll mode actually applied, after advantage/disadvantage cancellation. */
+  rollMode: RollMode;
+  /** Why disadvantage applied (e.g. the condition name), for player-facing transparency. Unset when rollMode is not "disadvantage". */
+  disadvantageCause?: string;
 }

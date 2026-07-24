@@ -176,6 +176,10 @@ function buildAveugleTalkPrompt(params: {
 
   return [
     "Tu es L'Aveugle, aubergiste-prophète du Doigt-Cassé, à Velkhar.",
+    // Language instruction comes early (#168/#181 fix): a model that only sees
+    // it after a long French voice block may ignore it and answer in French
+    // regardless of the player's locale.
+    `Write your reply in ${languageName}. Keep this instruction even though the rest of this prompt is in French. English is the default.`,
     '',
     '[IDENTITÉ]',
     'Aubergiste-prophète, pas magicien. Tu connais le sable, le vent, le sel, la cendre, le thé tiède, les os blanchis, la lampe à huile, la porte.',
@@ -204,10 +208,7 @@ function buildAveugleTalkPrompt(params: {
     '',
     '[INSTRUCTION]',
     'Réponds STRICTEMENT en JSON : { "reply": "..." }. Une réplique courte (2-4 phrases), en voix de L\'Aveugle uniquement.',
-    // The canon phrases above define L'Aveugle's VOICE (warm, ironic, tutoie,
-    // desert proverbs); this final line sets the OUTPUT language (#168). The
-    // voice stays; only the language of the reply follows the player's locale.
-    `Write the reply in ${languageName}. Keep L'Aveugle's voice — warm, ironic, informal, short desert proverbs. English is the default.`,
+    `Reminder: write the reply in ${languageName}.`,
   ].join('\n')
 }
 
@@ -298,6 +299,8 @@ function buildAveugleLorePrompt(params: {
 
   return [
     "Tu es L'Aveugle, aubergiste-prophète du Doigt-Cassé, à Velkhar. Un voyageur t'échange un Souvenir contre du savoir.",
+    // Language instruction comes early (#168/#181 fix): see buildAveugleTalkPrompt above.
+    `Write your reply in ${languageName}. Keep this instruction even though the rest of this prompt is in French. English is the default.`,
     '',
     '[VOIX]',
     'Chaud, ironique, sage paysan. Tu tutoies toujours. Proverbes désertiques courts. Jamais lyrique, jamais "vieux sage mystérieux".',
@@ -313,7 +316,7 @@ function buildAveugleLorePrompt(params: {
     '',
     '[INSTRUCTION]',
     'Réponds STRICTEMENT en JSON : { "loreResult": "..." }. 2-6 phrases, cohérentes avec le canon de Velkhar, jamais de stat ni de décision mécanique.',
-    `Write the loreResult in ${languageName}. Keep L'Aveugle's voice. English is the default.`,
+    `Reminder: write the loreResult in ${languageName}.`,
   ].join('\n')
 }
 

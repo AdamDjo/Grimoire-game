@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import { isValidAiConditionId } from '../game-rules/conditions'
+
 /**
  * Zod schema for the raw narrative payload the AI is allowed to produce.
  * The AI writes prose and choice labels only — never rules, stats, or ids.
@@ -39,6 +41,26 @@ export const aiSouvenirCandidateSchema = z.object({
 
 export type AiSouvenirCandidate = z.infer<typeof aiSouvenirCandidateSchema>
 
+/**
+ * Zod schema for the optional per-turn [IA-PROPOSÉE] condition proposal (#181).
+ * The AI may only propose conditions from the `family: 'ia'` whitelist
+ * (poison, freeze, stun, blindness, marsh_disease, cendre_corrupt,
+ * shaken_reason, petrification) — `[BACKEND]` conditions (fever, wound) are
+ * applied automatically server-side and can never be proposed here. The
+ * backend still re-validates the id against `isValidAiConditionId` before
+ * ever applying it (this schema rejects unknown ids up front, but a stale
+ * whitelist copy or renamed id must never silently pass through).
+ * @see docs/public/raw/06-SURVIVAL.md §2 "Les deux familles de conditions"
+ */
+export const aiApplyConditionSchema = z.object({
+  id: z.string().min(1).refine(isValidAiConditionId, {
+    message: 'Unknown or non-AI-proposable condition id',
+  }),
+  reason: z.string().min(1).max(280),
+})
+
+export type AiApplyCondition = z.infer<typeof aiApplyConditionSchema>
+
 export const aiSceneSchema = z.object({
   narrative: z.string().min(1).max(4000),
   sceneType: z.enum(['exploration', 'combat', 'dialog', 'event', 'shop', 'rest']),
@@ -52,6 +74,8 @@ export const aiSceneSchema = z.object({
   turnSummary: z.string().min(1).max(200),
   /** Optional named-Souvenir candidate for this turn (N3 memory, #115). Some models emit `null` instead of omitting the field. */
   souvenir_candidate: aiSouvenirCandidateSchema.nullish().transform((v) => v ?? undefined),
+  /** Optional [IA-PROPOSÉE] condition proposal for this turn (#181). Some models emit `null` instead of omitting the field. */
+  apply_condition: aiApplyConditionSchema.nullish().transform((v) => v ?? undefined),
 })
 
 export type AiScenePayload = z.infer<typeof aiSceneSchema>

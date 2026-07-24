@@ -61,8 +61,9 @@ model Character {
   energy   Int
   calamine Int
 
-  /// États altérés persistants (ConditionId[]), ex: "fever", "poison".
-  conditions String[]
+  /// États altérés persistants (ActiveCondition[] JSON), voir @grimoire/shared.
+  /// @see docs/public/raw/06-SURVIVAL.md §2
+  activeConditions Json @default("[]")
 
   /// Fer (🪙), monnaie in-game de Velkhar. Aucune mécanique de gain/dépense
   /// n'est encore branchée ailleurs dans le backend — champ persistant seul.

@@ -26,11 +26,13 @@ updated: 2026-07-24
 - #189 — mémoire projet, routage Claude/Codex et garde-fous `current-state`.
 - #188 — Auberge branchée sur les contrats réels `hub`, `talk` et `spend`, avec états de
   résilience et reprise anonyme/authentifiée.
+- #181 / PR #198 — priorité langue explicite du switcher en jeu sur la détection navigateur pour
+  la narration IA (le HUD Survie v2 consommant conditions/Désavantage reste #186).
 
 ## Pré-déploiement restant
 
 - #186 — livrer l'UI Survie v2 après stabilisation des contrats ~~#180~~ (livré, PR #196) et des
-  endpoints #181-#184.
+  endpoints ~~#181~~ (livré, PR #198), #182-#184.
 - #152 — intégrer la résolution du concept libre ou masquer proprement l'option en V1.
 - #161 — configurer l'API de production et les redirects Supabase côté frontend.
 - #129 — valider le golden path réel EN/FR, l'accessibilité et le responsive.

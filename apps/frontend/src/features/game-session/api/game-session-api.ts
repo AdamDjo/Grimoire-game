@@ -42,19 +42,30 @@ async function readEndResponse(response: Response): Promise<GameSessionEndRespon
   return body.data
 }
 
+export interface CreateSessionLocaleInput {
+  /** Browser-detected narration language, used as a fallback (#168). */
+  locale?: Locale
+  /** Deliberate in-game language choice (language switcher); wins over `locale` (#181). */
+  explicitLocale?: Locale
+}
+
 /**
  * Creates (or resumes) the player's active session and returns its opening
- * scene with the persisted world-state. `locale` is the browser-detected
- * narration language; the backend normalizes it, applies its own precedence
- * and falls back to English, so `undefined` is fine (#168).
+ * scene with the persisted world-state. The backend normalizes both locales,
+ * prioritizes `explicitLocale` over the browser-detected `locale` and falls
+ * back to English, so an empty input is fine (#168, #181).
  */
-export async function createSession<TResponse extends GameSessionResponse = GameSessionResponse>(
-  locale?: Locale
-): Promise<TResponse> {
+export async function createSession<TResponse extends GameSessionResponse = GameSessionResponse>({
+  locale,
+  explicitLocale,
+}: CreateSessionLocaleInput = {}): Promise<TResponse> {
   const response = await fetch('/api/game/session', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(locale ? { locale } : {}),
+    body: JSON.stringify({
+      ...(locale ? { locale } : {}),
+      ...(explicitLocale ? { explicitLocale } : {}),
+    }),
   })
 
   return readSceneResponse<TResponse>(response)

@@ -1,4 +1,5 @@
 import {
+  type ActiveCondition,
   type Attributes,
   type Choice,
   type Locale,
@@ -10,6 +11,7 @@ import {
 
 import { generateScene } from '../ai/game-master.service'
 import { persistedChoicesSchema } from '../ai/scene-validator'
+import { applyAiCondition, isValidAiConditionId } from '../game-rules/conditions'
 import { resolveChoice } from '../game-rules/consequences'
 import { prisma } from '../lib/prisma'
 
@@ -51,10 +53,11 @@ function buildSeedCharacter(): {
   }
 }
 
-/** Reads a DB character row into the shared attribute/survival shapes. */
+/** Reads a DB character row into the shared attribute/survival/conditions shapes. */
 function readCharacter(character: DbCharacter): {
   attributes: Attributes
   survival: SurvivalStats
+  activeConditions: ActiveCondition[]
 } {
   return {
     attributes: { blood: character.blood, breath: character.breath, ash: character.ash },
@@ -66,6 +69,7 @@ function readCharacter(character: DbCharacter): {
       energy: character.energy,
       calamine: character.calamine,
     },
+    activeConditions: character.activeConditions as unknown as ActiveCondition[],
   }
 }
 
@@ -159,7 +163,7 @@ export async function getOrCreateSession(
         hunger: 100,
         energy: 100,
         calamine: 0,
-        conditions: [],
+        activeConditions: [],
       },
     })
   }
@@ -228,10 +232,10 @@ export async function buildOpeningScene(context: SessionContext): Promise<SceneR
   }
 
   const { session, character } = context
-  const { attributes, survival } = readCharacter(character)
+  const { attributes, survival, activeConditions } = readCharacter(character)
 
   const gm = await generateScene({
-    character: toGmCharacter(character, attributes, survival),
+    character: toGmCharacter(character, attributes, survival, activeConditions),
     // Locale is resolved and persisted at session creation — the DB is the
     // source of truth, never the per-request client value (#168).
     locale: session.locale,
@@ -324,12 +328,24 @@ export interface ResolveTurnInput {
  */
 export async function resolveTurn(input: ResolveTurnInput): Promise<SceneResponse> {
   const { session, character, choice, chosenActionText, freeAction } = input
-  const { attributes, survival } = readCharacter(character)
+  const { attributes, survival, activeConditions } = readCharacter(character)
 
-  const resolution = resolveChoice({ attributes, survival, choice })
+  const resolution = resolveChoice({
+    attributes,
+    survival,
+    choice,
+    activeConditions,
+    turnNumber: session.turnNumber,
+    locale: session.locale,
+  })
 
   const gm = await generateScene({
-    character: toGmCharacter(character, attributes, resolution.updatedSurvival),
+    character: toGmCharacter(
+      character,
+      attributes,
+      resolution.updatedSurvival,
+      resolution.updatedConditions
+    ),
     // Persisted session locale is the source of truth (#168).
     locale: session.locale,
     sessionId: session.id,
@@ -338,6 +354,17 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
   })
 
   const nextTurn = session.turnNumber + 1
+
+  // The AI may propose ONE [IA-PROPOSÉE] condition caused by what it just
+  // narrated (#181). The schema already restricts the id to family "ia", but
+  // isValidAiConditionId is re-checked here as the backend's own authority —
+  // the AI decides nothing, it only proposes.
+  const proposedCondition = gm.scene.apply_condition
+  const finalConditions =
+    proposedCondition && isValidAiConditionId(proposedCondition.id)
+      ? applyAiCondition(resolution.updatedConditions, proposedCondition.id, nextTurn)
+      : resolution.updatedConditions
+
   const scene = assembleScene({
     payload: gm.scene,
     sessionId: session.id,
@@ -371,6 +398,7 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
         hunger: resolution.updatedSurvival.hunger,
         energy: resolution.updatedSurvival.energy,
         calamine: resolution.updatedSurvival.calamine,
+        activeConditions: finalConditions as unknown as object,
       },
     }),
     prisma.gameSession.update({
@@ -394,7 +422,7 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
         await compressScene(
           session.id,
           recentTurns,
-          toGmCharacter(character, attributes, resolution.updatedSurvival),
+          toGmCharacter(character, attributes, resolution.updatedSurvival, finalConditions),
           scene.location
         )
       } catch (err) {
@@ -496,14 +524,19 @@ export async function abandonSession(
 }
 
 /** Assembles the shared `Character` shape the Game Master prompt expects. */
-function toGmCharacter(character: DbCharacter, attributes: Attributes, survival: SurvivalStats) {
+function toGmCharacter(
+  character: DbCharacter,
+  attributes: Attributes,
+  survival: SurvivalStats,
+  activeConditions: ActiveCondition[] = []
+) {
   return {
     id: character.id,
     userId: character.userId,
     name: character.name,
     people: character.people,
     vocation: character.vocation,
-    stats: { attributes, survival, conditions: [] as never[] },
+    stats: { attributes, survival, conditions: activeConditions },
     createdAt: character.createdAt.toISOString(),
   }
 }
