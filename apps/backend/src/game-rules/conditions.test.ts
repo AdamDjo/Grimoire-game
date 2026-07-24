@@ -21,6 +21,8 @@ const full = (overrides: Partial<SurvivalStats> = {}): SurvivalStats => ({
   hunger: 100,
   energy: 100,
   calamine: 0,
+  isDying: false,
+  neglectStreak: 0,
   ...overrides,
 })
 
@@ -138,22 +140,30 @@ describe('tickConditions', () => {
 })
 
 describe('computeDisadvantage', () => {
-  it('returns undefined with no active conditions', () => {
-    expect(computeDisadvantage([], 'fr')).toBeUndefined()
+  it('returns undefined with no active conditions and no critical gauge', () => {
+    expect(computeDisadvantage([], full(), 'fr')).toBeUndefined()
   })
 
   it('returns undefined when no active condition is severe', () => {
-    expect(computeDisadvantage([condition({ id: 'poison' })], 'fr')).toBeUndefined()
+    expect(computeDisadvantage([condition({ id: 'poison' })], full(), 'fr')).toBeUndefined()
   })
 
   it('returns a cause in French when locale is fr', () => {
-    const result = computeDisadvantage([condition({ id: 'wound', source: 'backend' })], 'fr')
+    const result = computeDisadvantage(
+      [condition({ id: 'wound', source: 'backend' })],
+      full(),
+      'fr'
+    )
     expect(result).toBeDefined()
     expect(result?.cause).toContain('Blessure')
   })
 
   it('returns a cause in English when locale is en (#181 locale fix)', () => {
-    const result = computeDisadvantage([condition({ id: 'wound', source: 'backend' })], 'en')
+    const result = computeDisadvantage(
+      [condition({ id: 'wound', source: 'backend' })],
+      full(),
+      'en'
+    )
     expect(result).toBeDefined()
     expect(result?.cause).toContain('Wound')
     expect(result?.cause).not.toContain('Blessure')
@@ -164,10 +174,39 @@ describe('computeDisadvantage', () => {
       condition({ id: 'wound', source: 'backend' }),
       condition({ id: 'fever', source: 'backend' }),
     ]
-    const result = computeDisadvantage(active, 'fr')
+    const result = computeDisadvantage(active, full(), 'fr')
     expect(result).toBeDefined()
     expect(result?.cause).toContain('Blessure')
     expect(result?.cause).toContain('Fièvre')
+  })
+
+  it('triggers on a critical gauge (thirst <= 25) even with no active conditions (#201)', () => {
+    const result = computeDisadvantage([], full({ thirst: 25 }), 'fr')
+    expect(result).toBeDefined()
+    expect(result?.cause).toContain('soif critique')
+  })
+
+  it('does not trigger at the strained tier just above critical (#201)', () => {
+    expect(computeDisadvantage([], full({ thirst: 26 }), 'fr')).toBeUndefined()
+  })
+
+  it('is non-cumulative across multiple critical gauges at once (#201)', () => {
+    const result = computeDisadvantage([], full({ thirst: 10, hunger: 5, energy: 20 }), 'fr')
+    expect(result).toBeDefined()
+    expect(result?.cause).toContain('soif critique')
+    expect(result?.cause).toContain('faim critique')
+    expect(result?.cause).toContain('fatigue critique')
+  })
+
+  it('merges a severe condition and a critical gauge into one cause (#201)', () => {
+    const result = computeDisadvantage(
+      [condition({ id: 'wound', source: 'backend' })],
+      full({ energy: 10 }),
+      'en'
+    )
+    expect(result).toBeDefined()
+    expect(result?.cause).toContain('Wound')
+    expect(result?.cause).toContain('critical exhaustion')
   })
 })
 

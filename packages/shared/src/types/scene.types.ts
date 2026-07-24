@@ -37,6 +37,8 @@ export interface ChoiceConsequence {
   questProgress?: Record<string, string>;
   triggeredEvent?: string;
   gameOver?: boolean;
+  /** True on the turn HP first hits 0 — one telegraphed reprieve turn before a second 0-HP hit is definitive death. */
+  dying?: boolean;
 }
 
 export interface Scene {

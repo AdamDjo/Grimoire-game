@@ -1,5 +1,7 @@
 import { CONDITIONS, getConditionDefinition, localeDisplayName } from '@grimoire/shared'
 
+import { gaugeTier } from '../game-rules/survival'
+
 import type { MemoryChunkModel, SouvenirModel } from '../generated/prisma/models'
 import type { Character, Locale } from '@grimoire/shared'
 
@@ -74,6 +76,50 @@ function buildSouvenirsSection(souvenirs: SouvenirModel[]): string[] {
     '',
     "The player's named Souvenirs from past runs (permanent, never contradict them):",
     ...lines,
+  ]
+}
+
+/**
+ * Builds the gauge-tiers section: tells the AI how thirst/hunger/energy
+ * currently sit on the canon 0-100 scale, purely for narration. The backend
+ * already applies the mechanical effect (Désavantage at 25 and below, via
+ * `computeDisadvantage`, non-cumulative across gauges) — this section never
+ * asks the AI to decide or apply anything, only to color the prose.
+ * @see docs/public/raw/06-SURVIVAL.md §1 "Échelle de chaque jauge"
+ */
+function buildGaugeTiersSection(character: Character): string[] {
+  const { thirst, hunger, energy } = character.stats.survival
+
+  const tierGuidance: Record<ReturnType<typeof gaugeTier>, string | null> = {
+    ok: null,
+    strained: 'mention it lightly in passing (a dry throat, a growling stomach, heavy eyelids)',
+    severe: 'describe real, perceptible suffering — this is no longer background flavor',
+    critical:
+      'describe acute suffering; the character is already fighting at a Désavantage on rolls because of it (the backend applies this — you only narrate it)',
+  }
+
+  const gauges: { label: string; value: number }[] = [
+    { label: 'Thirst', value: thirst },
+    { label: 'Hunger', value: hunger },
+    { label: 'Energy', value: energy },
+  ]
+
+  const lines = gauges
+    .map(({ label, value }) => {
+      const tier = gaugeTier(value)
+      const guidance = tierGuidance[tier]
+      return guidance ? `- ${label} (${value}/100): ${guidance}.` : null
+    })
+    .filter((line): line is string => line !== null)
+
+  if (lines.length === 0) return []
+
+  return [
+    '',
+    "The player's survival gauges are degraded enough to affect narration:",
+    ...lines,
+    'Never state or imply a specific mechanical penalty yourself (no "-1", "-2",',
+    'or dice talk) — the backend already resolves that. You only color the prose.',
   ]
 }
 
@@ -186,6 +232,7 @@ export function buildSystemPrompt(
     ...buildMemorySection(memoryChunks),
     ...buildRecentTurnsSection(recentTurns),
     ...buildSouvenirsSection(souvenirs),
+    ...buildGaugeTiersSection(character),
     ...buildConditionsSection(character, locale),
     ...buildInventorySection(character),
     '',

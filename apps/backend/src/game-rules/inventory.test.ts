@@ -16,6 +16,8 @@ const survival = (overrides: Partial<SurvivalStats> = {}): SurvivalStats => ({
   hunger: 100,
   energy: 100,
   calamine: 10,
+  isDying: false,
+  neglectStreak: 0,
   ...overrides,
 })
 

@@ -5,7 +5,7 @@ rag: true
 source_of_truth: true
 owner: backend
 default_agent: claude
-updated: 2026-07-25
+updated: 2026-07-24
 ---
 
 # Backend Status
@@ -31,6 +31,12 @@ updated: 2026-07-25
 - #183 — inventaire réel : acquisition via `item_gained` signalé par l'IA, usage/équipement/
   déséquipement joueur via `/inventory/action`, persisté et validé côté backend, et branché
   côté frontend (boutons d'action dans le panneau d'inventaire Velkhar).
+- #201 — survie punitive : paliers narratifs Soif/Faim/Énergie (75/50/25) injectés dans le prompt
+  IA pour narration, Désavantage non cumulatif sous 25 (réutilise `computeDisadvantage`), nouvelle
+  source Calamine backend sur négligence prolongée (Faim ou Soif à 0 pendant 3+ tours, +3 à +5/tour),
+  érosion de -1 PV/tour non cumulative tant que Faim ou Soif est à 0, et état universel « mourant »
+  (sursis d'un tour à 0 PV, mort définitive au second passage à 0) qui remplace l'ancienne règle
+  « 0 PV → inconscience ». Canon `06-SURVIVAL.md` §1/§4/§7 mis à jour en conséquence.
 
 ## Pré-déploiement restant
 

@@ -74,6 +74,10 @@ export interface SurvivalStats {
   energy: number;
   /** Accumulated Cendre corruption (0–100). 100 = death (Calciné). */
   calamine: number;
+  /** True after the first 0-HP hit: one telegraphed turn of reprieve before a second 0-HP hit is definitive death. */
+  isDying: boolean;
+  /** Consecutive turns thirst or hunger has been at 0 — drives the prolonged-neglect Calamine source. */
+  neglectStreak: number;
 }
 
 export interface CharacterStats {

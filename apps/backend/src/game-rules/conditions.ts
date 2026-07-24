@@ -1,5 +1,7 @@
 import { CONDITIONS, getConditionDefinition } from '@grimoire/shared'
 
+import { gaugeTier } from './survival'
+
 import type { ActiveCondition, ConditionId, Locale, SurvivalStats } from '@grimoire/shared'
 
 const clamp = (value: number, min: number, max: number): number =>
@@ -102,24 +104,40 @@ export function tickConditions(
   }
 }
 
+const CRITICAL_GAUGE_NAME: Record<'thirst' | 'hunger' | 'energy', Record<'fr' | 'en', string>> = {
+  thirst: { fr: 'soif critique', en: 'critical thirst' },
+  hunger: { fr: 'faim critique', en: 'critical hunger' },
+  energy: { fr: 'fatigue critique', en: 'critical exhaustion' },
+}
+
 /**
- * Whether any active condition imposes Désavantage right now, and why (for player-facing
- * transparency). Non-cumulative: multiple severe conditions still yield a single cause string.
- * @see docs/public/raw/08-DICE-RESOLUTION.md §5
+ * Whether any active condition OR critical survival gauge (thirst/hunger/energy
+ * at 25 or below, #201) imposes Désavantage right now, and why (for
+ * player-facing transparency). Non-cumulative: multiple severe conditions and/or
+ * multiple critical gauges still yield a single cause string — the player never
+ * stacks Désavantage twice.
+ * @see docs/public/raw/08-DICE-RESOLUTION.md §5, docs/public/raw/06-SURVIVAL.md §1
  */
 export function computeDisadvantage(
   conditions: ActiveCondition[],
+  survival: SurvivalStats,
   locale: Locale
 ): { cause: string } | undefined {
   const nameKey = locale === 'fr' ? 'fr' : 'en'
   const severe = conditions.filter(
     (condition) => getConditionDefinition(condition.id)?.disadvantage
   )
-  if (severe.length === 0) return undefined
-
-  const names = severe.map(
+  const conditionNames = severe.map(
     (condition) => getConditionDefinition(condition.id)?.name[nameKey] ?? condition.id
   )
+
+  const criticalGaugeNames = (['thirst', 'hunger', 'energy'] as const)
+    .filter((gauge) => gaugeTier(survival[gauge]) === 'critical')
+    .map((gauge) => CRITICAL_GAUGE_NAME[gauge][nameKey])
+
+  const names = [...conditionNames, ...criticalGaugeNames]
+  if (names.length === 0) return undefined
+
   return { cause: names.join(', ') }
 }
 
