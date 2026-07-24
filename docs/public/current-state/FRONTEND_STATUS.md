@@ -5,7 +5,7 @@ rag: true
 source_of_truth: true
 owner: frontend
 default_agent: codex
-updated: 2026-07-24
+updated: 2026-07-25
 ---
 
 # Frontend Status
@@ -28,6 +28,9 @@ updated: 2026-07-24
   résilience et reprise anonyme/authentifiée.
 - #181 / PR #198 — priorité langue explicite du switcher en jeu sur la détection navigateur pour
   la narration IA (le HUD Survie v2 consommant conditions/Désavantage reste #186).
+- #183 / PR #200 — panneau d'inventaire Velkhar branché sur `POST /api/game/inventory/action` :
+  boutons utiliser/équiper/déséquiper par objet, mise à jour de l'inventaire et des stats de
+  survie après réponse serveur.
 
 ## Pré-déploiement restant
 

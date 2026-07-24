@@ -722,6 +722,29 @@
   text-transform: capitalize;
 }
 
+.velkhar-inventory__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.velkhar-inventory__action-button {
+  background: color-mix(in srgb, var(--gold) 12%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gold) 30%, transparent);
+  color: var(--gold-light);
+  cursor: pointer;
+  font-family: var(--font-game-ui);
+  font-size: 0.78rem;
+  padding: 0.4rem 0.9rem;
+  text-transform: capitalize;
+  transition: background-color 0.15s ease;
+}
+
+.velkhar-inventory__action-button:hover {
+  background: color-mix(in srgb, var(--gold) 22%, transparent);
+}
+
 .velkhar-session-menu {
   display: grid;
   gap: 0.8rem;

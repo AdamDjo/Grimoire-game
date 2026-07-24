@@ -59,6 +59,12 @@ export interface GameSessionEndResponse {
   status: 'ended'
 }
 
+export interface GameSessionInventoryActionResponse {
+  updatedStats: Record<string, number>
+  updatedInventory: GameSessionInventoryItem[]
+  applied: boolean
+}
+
 export interface PendingGameAction {
   choice?: GameSessionChoice
   freeAction?: string
@@ -73,6 +79,11 @@ export interface GameSessionApi<TResponse extends GameSessionResponse = GameSess
     chosenActionText?: string
     freeAction?: string
   }) => Promise<TResponse>
+  postInventoryAction: (input: {
+    sessionId: string
+    itemId: string
+    action: 'use' | 'equip' | 'unequip'
+  }) => Promise<GameSessionInventoryActionResponse>
 }
 
 export interface GameSessionState<

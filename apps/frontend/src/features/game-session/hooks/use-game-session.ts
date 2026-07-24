@@ -9,6 +9,7 @@ import { useSessionStore } from '@/stores/session-store'
 import type {
   GameSessionApi,
   GameSessionChoice,
+  GameSessionInventoryItem,
   GameSessionResponse,
   GameSessionState,
   PendingGameAction,
@@ -32,6 +33,10 @@ export interface UseGameSessionResult<
 > extends GameSessionState<TWorldState, TResponse> {
   abandon: () => Promise<boolean>
   choose: (choice: GameSessionChoice) => void
+  performInventoryAction: (
+    item: GameSessionInventoryItem,
+    action: 'use' | 'equip' | 'unequip'
+  ) => void
   retry: () => void
   submitFreeAction: (action: string) => void
 }
@@ -216,6 +221,31 @@ export function useGameSession<TWorldState, TResponse extends GameSessionRespons
     else void openSession()
   }, [openSession, submitAction])
 
+  const performInventoryAction = useCallback(
+    (item: GameSessionInventoryItem, action: 'use' | 'equip' | 'unequip') => {
+      const sessionId = sessionIdRef.current
+      if (!sessionId) return
+
+      void (async () => {
+        try {
+          const result = await api.postInventoryAction({ sessionId, itemId: item.id, action })
+          if (!result.applied) return
+
+          setState((current) => ({
+            ...current,
+            inventory: result.updatedInventory,
+            worldState: reduceWorldState(current.worldState, {
+              updatedStats: result.updatedStats,
+            } as TResponse),
+          }))
+        } catch (error) {
+          handleRequestError(error)
+        }
+      })()
+    },
+    [api, handleRequestError, reduceWorldState]
+  )
+
   const abandon = useCallback(async () => {
     const sessionId = sessionIdRef.current
     if (!sessionId || state.ending) return false
@@ -238,5 +268,5 @@ export function useGameSession<TWorldState, TResponse extends GameSessionRespons
     }
   }, [api, handleRequestError, state.ending])
 
-  return { ...state, abandon, choose, retry, submitFreeAction }
+  return { ...state, abandon, choose, performInventoryAction, retry, submitFreeAction }
 }

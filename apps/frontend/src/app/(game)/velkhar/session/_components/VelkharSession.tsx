@@ -292,6 +292,7 @@ export function VelkharSession({ initialCharacter, locale }: VelkharSessionProps
         survival={session.worldState}
         onAbandon={handleAbandon}
         onClose={closeTool}
+        onInventoryAction={session.performInventoryAction}
       />
       <SoftSignupPrompt />
     </>

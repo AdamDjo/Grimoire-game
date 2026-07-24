@@ -18,6 +18,7 @@ interface VelkharSessionToolPanelProps {
   openTool: VelkharSessionTool | null
   onAbandon: () => Promise<void>
   onClose: () => void
+  onInventoryAction: (item: InventoryItemRef, action: 'use' | 'equip' | 'unequip') => void
   source?: 'ai' | 'stub'
   survival: SurvivalStats
 }
@@ -29,6 +30,7 @@ export function VelkharSessionToolPanel({
   inventory,
   onAbandon,
   onClose,
+  onInventoryAction,
   openTool,
   source,
   survival,
@@ -57,7 +59,9 @@ export function VelkharSessionToolPanel({
             : t('sessionMenu')
       }
     >
-      {openTool === 'inventory' ? <VelkharInventoryPanel iron={iron} items={inventory} /> : null}
+      {openTool === 'inventory' ? (
+        <VelkharInventoryPanel iron={iron} items={inventory} onAction={onInventoryAction} />
+      ) : null}
 
       {openTool === 'character' ? (
         <VelkharCharacterSheet character={character} survival={survival} />
