@@ -47,3 +47,16 @@ export const endSessionSchema = z.object({
 })
 
 export type EndSessionRequest = z.infer<typeof endSessionSchema>
+
+/**
+ * Player-initiated inventory action (use/equip/unequip, #183). Never advances
+ * the turn — the backend applies `game-rules/inventory.ts` against the
+ * persisted state and returns immediately, no AI call, no dice.
+ */
+export const inventoryActionSchema = z.object({
+  sessionId: z.string().min(1),
+  itemId: z.string().min(1),
+  action: z.enum(['use', 'equip', 'unequip']),
+})
+
+export type InventoryActionRequest = z.infer<typeof inventoryActionSchema>

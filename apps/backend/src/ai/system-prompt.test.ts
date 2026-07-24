@@ -14,6 +14,7 @@ const character = {
     attributes: { blood: 10, breath: 10, ash: 10 },
     survival: { hp: 20, maxHp: 20, thirst: 100, hunger: 100, energy: 100, calamine: 0 },
     conditions: [],
+    inventory: [],
   },
   createdAt: new Date().toISOString(),
 }
@@ -189,5 +190,44 @@ describe('buildSystemPrompt — N3 Souvenirs injection (#115)', () => {
 
     expect(prompt).toContain('"souvenir_candidate"?')
     expect(prompt).toContain('npc-death')
+  })
+})
+
+describe('buildSystemPrompt — item_gained injection (#183)', () => {
+  it('states the player carries no items when the inventory is empty', () => {
+    const prompt = buildSystemPrompt(character, 'en')
+
+    expect(prompt).toContain('The player currently carries no items.')
+  })
+
+  it('lists each carried item by name and category', () => {
+    const withItems = {
+      ...character,
+      stats: {
+        ...character.stats,
+        inventory: [
+          { id: 'i1', name: 'Waterskin', category: 'bag' as const, quantity: 1 },
+          {
+            id: 'i2',
+            name: 'Salt-iron blade',
+            category: 'equipment' as const,
+            quantity: 1,
+            slot: 'main-hand' as const,
+          },
+        ],
+      },
+    }
+
+    const prompt = buildSystemPrompt(withItems, 'en')
+
+    expect(prompt).toContain('Waterskin (category: "bag")')
+    expect(prompt).toContain('Salt-iron blade (category: "equipment")')
+  })
+
+  it('documents the optional item_gained field in the JSON output instructions', () => {
+    const prompt = buildSystemPrompt(character, 'en')
+
+    expect(prompt).toContain('"item_gained"?')
+    expect(prompt).toContain('Never propose category "heirloom"')
   })
 })

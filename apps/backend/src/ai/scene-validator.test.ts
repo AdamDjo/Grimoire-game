@@ -192,3 +192,88 @@ describe('aiSceneSchema — apply_condition (#181)', () => {
     expect(result.success).toBe(false)
   })
 })
+
+describe('aiSceneSchema — item_gained (#183)', () => {
+  it('accepts a payload with no item_gained at all (most turns)', () => {
+    const result = aiSceneSchema.safeParse({
+      ...basePayload,
+      turnSummary: 'Yarel keeps walking.',
+    })
+
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts a valid bag item', () => {
+    const result = aiSceneSchema.safeParse({
+      ...basePayload,
+      turnSummary: 'Yarel loots a waterskin from the wreck.',
+      item_gained: { name: 'Waterskin', category: 'bag' },
+    })
+
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts a valid equipment item with a canon slot', () => {
+    const result = aiSceneSchema.safeParse({
+      ...basePayload,
+      turnSummary: 'Yarel takes the fallen blade.',
+      item_gained: { name: 'Salt-iron blade', category: 'equipment', slot: 'main-hand' },
+    })
+
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects an equipment item with no slot', () => {
+    const result = aiSceneSchema.safeParse({
+      ...basePayload,
+      turnSummary: 'Yarel takes the fallen blade.',
+      item_gained: { name: 'Salt-iron blade', category: 'equipment' },
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects an equipment item with an unknown slot', () => {
+    const result = aiSceneSchema.safeParse({
+      ...basePayload,
+      turnSummary: 'Yarel takes the fallen blade.',
+      item_gained: { name: 'Salt-iron blade', category: 'equipment', slot: 'backpack' },
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects an unknown category', () => {
+    const result = aiSceneSchema.safeParse({
+      ...basePayload,
+      turnSummary: 'Something happened.',
+      item_gained: { name: "Grandmother's ring", category: 'heirloom' },
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects an item_gained missing name', () => {
+    const result = aiSceneSchema.safeParse({
+      ...basePayload,
+      turnSummary: 'Something happened.',
+      item_gained: { category: 'bag' },
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it('accepts an item_gained with a valid effect', () => {
+    const result = aiSceneSchema.safeParse({
+      ...basePayload,
+      turnSummary: 'Yarel finds a healing salve.',
+      item_gained: {
+        name: 'Salve of Ash',
+        category: 'bag',
+        effect: { healAmount: 5, calamineReduction: 2 },
+      },
+    })
+
+    expect(result.success).toBe(true)
+  })
+})

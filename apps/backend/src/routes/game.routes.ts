@@ -7,13 +7,24 @@ import {
   endSessionAtInn,
   getOrCreateSession,
   INVALID_CHOICE,
+  performInventoryAction,
   resolveChosenChoice,
   resolveTurn,
 } from '../services/session.service'
 
-import { createSessionSchema, endSessionSchema, gameActionSchema } from './game-action.schema'
+import {
+  createSessionSchema,
+  endSessionSchema,
+  gameActionSchema,
+  inventoryActionSchema,
+} from './game-action.schema'
 
-import type { ApiResponse, SceneResponse, SessionEndReason } from '@grimoire/shared'
+import type {
+  ApiResponse,
+  InventoryActionResponse,
+  SceneResponse,
+  SessionEndReason,
+} from '@grimoire/shared'
 
 export const gameRouter: Router = Router()
 
@@ -97,6 +108,33 @@ gameRouter.post('/action', async (req: Request, res: Response<ApiResponse<SceneR
 
   res.json({ success: true, data: response })
 })
+
+/**
+ * POST /api/game/inventory/action
+ * Player-initiated inventory action (use/equip/unequip, #183). Never advances
+ * the turn — no AI call, no dice. Rejects (409) once the session has ended.
+ */
+gameRouter.post(
+  '/inventory/action',
+  async (req: Request, res: Response<ApiResponse<InventoryActionResponse>>) => {
+    const parsed = inventoryActionSchema.safeParse(req.body)
+    if (!parsed.success) {
+      res.status(400).json({
+        success: false,
+        error: parsed.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; '),
+      })
+      return
+    }
+
+    const response = await performInventoryAction(parsed.data, req.auth!.userId)
+    if (!response) {
+      res.status(404).json({ success: false, error: 'Active session not found' })
+      return
+    }
+
+    res.json({ success: true, data: response })
+  }
+)
 
 /**
  * POST /api/game/session/end-inn

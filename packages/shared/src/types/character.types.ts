@@ -3,6 +3,8 @@
  * @see docs/public/raw/04-ATTRIBUTES.md, 06-SURVIVAL.md
  */
 
+import type { PersistedInventoryItem } from "./inventory.types";
+
 /** The three canon attributes (SANG / SOUFFLE / CENDRE). Values range 3–18. */
 export type Attribute = "blood" | "breath" | "ash";
 
@@ -78,6 +80,7 @@ export interface CharacterStats {
   attributes: Attributes;
   survival: SurvivalStats;
   conditions: ActiveCondition[];
+  inventory: PersistedInventoryItem[];
 }
 
 export interface Character {

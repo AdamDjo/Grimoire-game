@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import { isValidAiConditionId } from '../game-rules/conditions'
+import { isValidEquipmentSlot } from '../game-rules/inventory'
 
 /**
  * Zod schema for the raw narrative payload the AI is allowed to produce.
@@ -64,6 +65,36 @@ export const aiApplyConditionSchema = z.object({
 
 export type AiApplyCondition = z.infer<typeof aiApplyConditionSchema>
 
+/**
+ * Zod schema for the optional per-turn `item_gained` proposal (#183). The AI
+ * signals a found item; the backend re-validates category/slot/capacity in
+ * `game-rules/inventory.ts` before ever persisting it — this schema only
+ * checks structure (known category, a known slot when the item is
+ * equipment). "heirloom" is never AI-proposable (death/inheritance only).
+ * @see docs/public/raw/11-INVENTORY-ECONOMY.md §1, docs/public/raw/15-GAME-MASTER.md §4.5
+ */
+export const aiItemGainedEffectSchema = z.object({
+  healAmount: z.number().finite().optional(),
+  calamineReduction: z.number().finite().optional(),
+  removesCondition: z.string().min(1).optional(),
+  damage: z.string().min(1).max(20).optional(),
+})
+
+export const aiItemGainedSchema = z
+  .object({
+    name: z.string().min(1).max(120),
+    category: z.enum(['equipment', 'bag', 'artifact', 'key']),
+    slot: z.string().min(1).optional(),
+    effect: aiItemGainedEffectSchema.optional(),
+    description: z.string().min(1).max(400).optional(),
+  })
+  .refine((v) => v.category !== 'equipment' || (v.slot && isValidEquipmentSlot(v.slot)), {
+    message: 'Equipment items require a valid canon slot',
+    path: ['slot'],
+  })
+
+export type AiItemGained = z.infer<typeof aiItemGainedSchema>
+
 export const aiSceneSchema = z.object({
   narrative: z.string().min(1).max(4000),
   sceneType: z.enum(['exploration', 'combat', 'dialog', 'event', 'shop', 'rest']),
@@ -79,6 +110,8 @@ export const aiSceneSchema = z.object({
   souvenir_candidate: aiSouvenirCandidateSchema.nullish().transform((v) => v ?? undefined),
   /** Optional [IA-PROPOSÉE] condition proposal for this turn (#181). Some models emit `null` instead of omitting the field. */
   apply_condition: aiApplyConditionSchema.nullish().transform((v) => v ?? undefined),
+  /** Optional item-found proposal for this turn (#183). Some models emit `null` instead of omitting the field. */
+  item_gained: aiItemGainedSchema.nullish().transform((v) => v ?? undefined),
 })
 
 export type AiScenePayload = z.infer<typeof aiSceneSchema>

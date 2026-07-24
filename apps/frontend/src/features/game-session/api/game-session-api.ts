@@ -1,4 +1,8 @@
-import type { GameSessionEndResponse, GameSessionResponse } from '../model/game-session.types'
+import type {
+  GameSessionEndResponse,
+  GameSessionInventoryActionResponse,
+  GameSessionResponse,
+} from '../model/game-session.types'
 import type { ApiResponse, Locale } from '@grimoire/shared'
 
 /**
@@ -34,6 +38,18 @@ async function readSceneResponse<TResponse extends GameSessionResponse>(
 
 async function readEndResponse(response: Response): Promise<GameSessionEndResponse> {
   const body = (await response.json()) as ApiResponse<GameSessionEndResponse>
+
+  if (!response.ok || !body.success || !body.data) {
+    throw new Error(body.error ?? `Game request failed (${response.status})`)
+  }
+
+  return body.data
+}
+
+async function readInventoryActionResponse(
+  response: Response
+): Promise<GameSessionInventoryActionResponse> {
+  const body = (await response.json()) as ApiResponse<GameSessionInventoryActionResponse>
 
   if (!response.ok || !body.success || !body.data) {
     throw new Error(body.error ?? `Game request failed (${response.status})`)
@@ -99,8 +115,32 @@ export async function abandonSession(sessionId: string): Promise<GameSessionEndR
   return readEndResponse(response)
 }
 
+export interface InventoryActionInput {
+  sessionId: string
+  itemId: string
+  action: 'use' | 'equip' | 'unequip'
+}
+
+/**
+ * Player-initiated inventory action (use/equip/unequip, #183). Never advances
+ * the turn — no AI call, no dice, no new scene — only the resulting stats and
+ * inventory state.
+ */
+export async function postInventoryAction(
+  input: InventoryActionInput
+): Promise<GameSessionInventoryActionResponse> {
+  const response = await fetch('/api/game/inventory/action', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  })
+
+  return readInventoryActionResponse(response)
+}
+
 export const gameSessionApi = {
   abandonSession,
   createSession,
   postGameAction,
+  postInventoryAction,
 } as const

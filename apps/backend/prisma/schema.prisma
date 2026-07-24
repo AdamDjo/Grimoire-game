@@ -65,6 +65,10 @@ model Character {
   /// @see docs/public/raw/06-SURVIVAL.md §2
   activeConditions Json @default("[]")
 
+  /// Inventaire réel (PersistedInventoryItem[] JSON), voir @grimoire/shared.
+  /// @see docs/public/raw/11-INVENTORY-ECONOMY.md §1
+  inventory Json @default("[]")
+
   /// Fer (🪙), monnaie in-game de Velkhar. Aucune mécanique de gain/dépense
   /// n'est encore branchée ailleurs dans le backend — champ persistant seul.
   iron Int @default(0)

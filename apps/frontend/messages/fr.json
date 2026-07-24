@@ -342,6 +342,7 @@
     "itemDetail": "Détail de l’objet",
     "noDescription": "Aucune description n’a encore été révélée.",
     "authorizedActions": "Autorisé maintenant : {actions}",
+    "authorizedActionsLabel": "Actions autorisées",
     "actionUse": "utiliser",
     "actionEquip": "équiper",
     "actionUnequip": "déséquiper",

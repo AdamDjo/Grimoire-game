@@ -1,4 +1,4 @@
-import { getPeople, getVocation } from '@grimoire/shared'
+import { getPeople, getVocation, localeDisplayName, resolveLocale } from '@grimoire/shared'
 
 import { type ChronicleOutput, validateChronicleOutput } from '../ai/chronicle-validator'
 import { callOpenRouter } from '../ai/openrouter.provider'
@@ -30,6 +30,7 @@ interface ChronicleContext {
   characterName: string
   peopleLabel: string
   vocationLabel: string
+  languageName: string
   endReason: ChronicleEndReason
   turnCount: number
   memorySummaries: string[]
@@ -43,6 +44,7 @@ function buildChroniclePrompt(context: ChronicleContext): string {
     characterName,
     peopleLabel,
     vocationLabel,
+    languageName,
     endReason,
     memorySummaries,
     pinnedFacts,
@@ -59,6 +61,7 @@ function buildChroniclePrompt(context: ChronicleContext): string {
 
   return [
     'Tu écris la Chronique de fin de run — un récit littéraire de 800 à 1200 mots qui transforme la partie vécue en histoire.',
+    `Écris le texte final (title, body_markdown, tagline) en ${languageName}. Le français est la langue par défaut.`,
     '',
     '[IDENTITÉ]',
     `Nom : ${characterName}`,
@@ -156,6 +159,8 @@ export async function generateChronicle(
   }
 
   const { character } = session
+  const locale = resolveLocale(session.locale)
+  const nameKey = locale === 'fr' ? 'fr' : 'en'
   const people = getPeople(character.people)
   const vocation = getVocation(character.vocation)
 
@@ -169,8 +174,9 @@ export async function generateChronicle(
     userId: character.userId,
     characterId: character.id,
     characterName: character.name,
-    peopleLabel: people?.name.fr ?? character.people,
-    vocationLabel: vocation?.name.fr ?? character.vocation,
+    peopleLabel: people?.name[nameKey] ?? character.people,
+    vocationLabel: vocation?.name[nameKey] ?? character.vocation,
+    languageName: localeDisplayName(locale),
     endReason: session.endReason as ChronicleEndReason,
     turnCount: session.turnNumber,
     memorySummaries: memoryChunks.map((chunk) => chunk.summary),

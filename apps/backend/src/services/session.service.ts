@@ -1,8 +1,13 @@
+import { randomUUID } from 'node:crypto'
+
 import {
   type ActiveCondition,
   type Attributes,
   type Choice,
+  type InventoryActionResponse,
+  type InventoryItemRef,
   type Locale,
+  type PersistedInventoryItem,
   resolveLocale,
   type SceneResponse,
   type SessionEndReason,
@@ -18,6 +23,7 @@ import {
   isValidAiConditionId,
 } from '../game-rules/conditions'
 import { resolveChoice } from '../game-rules/consequences'
+import { acquireItem, equipItem, unequipItem, useItem } from '../game-rules/inventory'
 import { prisma } from '../lib/prisma'
 
 import { deriveAttributes } from './character.service'
@@ -27,6 +33,7 @@ import { assembleScene } from './scene-assembler'
 import { validateAndPersistSouvenirCandidate } from './souvenir.service'
 
 import type { Character as DbCharacter, GameSession } from '../generated/prisma/client'
+import type { InventoryActionRequest } from '../routes/game-action.schema'
 
 /**
  * Fallback seed character (Yarel of the Salt Roads), the same canon build the
@@ -58,11 +65,12 @@ function buildSeedCharacter(): {
   }
 }
 
-/** Reads a DB character row into the shared attribute/survival/conditions shapes. */
+/** Reads a DB character row into the shared attribute/survival/conditions/inventory shapes. */
 function readCharacter(character: DbCharacter): {
   attributes: Attributes
   survival: SurvivalStats
   activeConditions: ActiveCondition[]
+  inventory: PersistedInventoryItem[]
 } {
   return {
     attributes: { blood: character.blood, breath: character.breath, ash: character.ash },
@@ -75,7 +83,29 @@ function readCharacter(character: DbCharacter): {
       calamine: character.calamine,
     },
     activeConditions: character.activeConditions as unknown as ActiveCondition[],
+    inventory: character.inventory as unknown as PersistedInventoryItem[],
   }
+}
+
+/**
+ * Projects the backend-persisted inventory into the display-facing shape the
+ * client HUD reads. `allowedActions` is derived purely from category/state —
+ * the backend is still the sole authority when the action route is hit.
+ */
+function toInventoryRefs(items: PersistedInventoryItem[]): InventoryItemRef[] {
+  return items.map((item) => ({
+    id: item.id,
+    name: item.name,
+    category: item.category,
+    quantity: item.quantity,
+    equippedSlot: item.equippedSlot,
+    description: item.description,
+    state: 'ready',
+    allowedActions:
+      item.category === 'equipment'
+        ? [item.equippedSlot ? 'unequip' : 'equip', 'inspect']
+        : ['use', 'inspect'],
+  }))
 }
 
 /** Flattens survival stats into the display record the client HUD reads. */
@@ -199,7 +229,7 @@ async function resumeLatestScene({
   }
 
   const choices = persistedChoicesSchema.safeParse(last.choices)
-  const { survival } = readCharacter(character)
+  const { survival, inventory } = readCharacter(character)
   const source = last.source === 'ai' ? 'ai' : 'stub'
 
   const scene: SceneResponse['scene'] = {
@@ -216,7 +246,7 @@ async function resumeLatestScene({
   return {
     scene,
     updatedStats: toStatsRecord(survival),
-    updatedInventory: [],
+    updatedInventory: toInventoryRefs(inventory),
     notifications: [],
     source,
   }
@@ -237,10 +267,10 @@ export async function buildOpeningScene(context: SessionContext): Promise<SceneR
   }
 
   const { session, character } = context
-  const { attributes, survival, activeConditions } = readCharacter(character)
+  const { attributes, survival, activeConditions, inventory } = readCharacter(character)
 
   const gm = await generateScene({
-    character: toGmCharacter(character, attributes, survival, activeConditions),
+    character: toGmCharacter(character, attributes, survival, activeConditions, inventory),
     // Locale is resolved and persisted at session creation — the DB is the
     // source of truth, never the per-request client value (#168).
     locale: session.locale,
@@ -268,7 +298,7 @@ export async function buildOpeningScene(context: SessionContext): Promise<SceneR
   return {
     scene,
     updatedStats: toStatsRecord(survival),
-    updatedInventory: [],
+    updatedInventory: toInventoryRefs(inventory),
     notifications: [],
     source: gm.source,
   }
@@ -333,7 +363,7 @@ export interface ResolveTurnInput {
  */
 export async function resolveTurn(input: ResolveTurnInput): Promise<SceneResponse> {
   const { session, character, choice, chosenActionText, freeAction } = input
-  const { attributes, survival, activeConditions } = readCharacter(character)
+  const { attributes, survival, activeConditions, inventory } = readCharacter(character)
 
   const resolution = resolveChoice({
     attributes,
@@ -349,7 +379,8 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
       character,
       attributes,
       resolution.updatedSurvival,
-      resolution.updatedConditions
+      resolution.updatedConditions,
+      inventory
     ),
     // Persisted session locale is the source of truth (#168).
     locale: session.locale,
@@ -381,6 +412,15 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
   const finalSurvival = applyCalamineDelta(resolution.updatedSurvival, calamineDelta)
   const calcined = !resolution.gameOver && calamineTier(finalSurvival.calamine) === 'dead'
   const gameOver = resolution.gameOver || calcined
+
+  // The AI may signal ONE found item caused by what it just narrated (#183).
+  // Structural validity is already Zod-checked; acquireItem re-validates the
+  // state-dependent rules (bag capacity, slot) the schema cannot — the AI only
+  // proposes, the backend decides.
+  const itemProposal = gm.scene.item_gained
+  const finalInventory = itemProposal
+    ? acquireItem(inventory, itemProposal, randomUUID()).items
+    : inventory
 
   const scene = assembleScene({
     payload: gm.scene,
@@ -420,6 +460,7 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
         energy: finalSurvival.energy,
         calamine: finalSurvival.calamine,
         activeConditions: finalConditions as unknown as object,
+        inventory: finalInventory as unknown as object,
       },
     }),
     prisma.gameSession.update({
@@ -443,7 +484,7 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
         await compressScene(
           session.id,
           recentTurns,
-          toGmCharacter(character, attributes, finalSurvival, finalConditions),
+          toGmCharacter(character, attributes, finalSurvival, finalConditions, finalInventory),
           scene.location
         )
       } catch (err) {
@@ -480,10 +521,67 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
   return {
     scene,
     updatedStats: toStatsRecord(finalSurvival),
-    updatedInventory: [],
+    updatedInventory: toInventoryRefs(finalInventory),
     notifications: [],
     diceRoll: resolution.diceRoll,
     source: gm.source,
+  }
+}
+
+/**
+ * Applies a player-initiated inventory action (use/equip/unequip, #183)
+ * against the persisted world-state. Never advances the turn — no AI call,
+ * no dice, no SceneLog entry. Scoped to the caller's own active session, the
+ * same guard as `resolveTurn`. Returns null when the session doesn't belong
+ * to the caller or isn't active.
+ */
+export async function performInventoryAction(
+  request: InventoryActionRequest,
+  userId: string
+): Promise<InventoryActionResponse | null> {
+  const session = await prisma.gameSession.findFirst({
+    where: { id: request.sessionId, status: 'active', character: { userId } },
+    include: { character: true },
+  })
+  if (!session) {
+    return null
+  }
+
+  const { character } = session
+  const { survival, activeConditions, inventory } = readCharacter(character)
+
+  const result =
+    request.action === 'use'
+      ? useItem(inventory, request.itemId, survival, activeConditions)
+      : request.action === 'equip'
+        ? { ...equipItem(inventory, request.itemId), survival, conditions: activeConditions }
+        : { ...unequipItem(inventory, request.itemId), survival, conditions: activeConditions }
+
+  if (!result.applied) {
+    return {
+      updatedStats: toStatsRecord(survival),
+      updatedInventory: toInventoryRefs(inventory),
+      applied: false,
+    }
+  }
+
+  await prisma.character.update({
+    where: { id: character.id },
+    data: {
+      hp: result.survival.hp,
+      thirst: result.survival.thirst,
+      hunger: result.survival.hunger,
+      energy: result.survival.energy,
+      calamine: result.survival.calamine,
+      activeConditions: result.conditions as unknown as object,
+      inventory: result.items as unknown as object,
+    },
+  })
+
+  return {
+    updatedStats: toStatsRecord(result.survival),
+    updatedInventory: toInventoryRefs(result.items),
+    applied: true,
   }
 }
 
@@ -549,7 +647,8 @@ function toGmCharacter(
   character: DbCharacter,
   attributes: Attributes,
   survival: SurvivalStats,
-  activeConditions: ActiveCondition[] = []
+  activeConditions: ActiveCondition[] = [],
+  inventory: PersistedInventoryItem[] = []
 ) {
   return {
     id: character.id,
@@ -557,7 +656,7 @@ function toGmCharacter(
     name: character.name,
     people: character.people,
     vocation: character.vocation,
-    stats: { attributes, survival, conditions: activeConditions },
+    stats: { attributes, survival, conditions: activeConditions, inventory },
     createdAt: character.createdAt.toISOString(),
   }
 }

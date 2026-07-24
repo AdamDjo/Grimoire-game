@@ -123,6 +123,18 @@ export type InventoryItemCategory =
 
 export type InventoryItemState = "ready" | "locked" | "pending";
 
+/**
+ * Response to a player-initiated inventory action (use/equip/unequip, #183).
+ * Unlike `SceneResponse` this never advances the turn — no scene, no dice —
+ * it only reflects the resulting stats/conditions/inventory state.
+ */
+export interface InventoryActionResponse {
+  updatedStats: Record<string, number>;
+  updatedInventory: InventoryItemRef[];
+  /** False when the action was rejected (unknown item, wrong category/state) — nothing changed. */
+  applied: boolean;
+}
+
 export interface GameNotification {
   type:
     | "item_gained"

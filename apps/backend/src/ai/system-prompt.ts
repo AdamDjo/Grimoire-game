@@ -128,6 +128,34 @@ function buildConditionsSection(character: Character, locale: Locale): string[] 
 }
 
 /**
+ * Builds the item_gained section: the character's currently carried items (so
+ * the AI never re-grants a duplicate) and the rules for proposing a new item.
+ * The backend re-validates category/slot/capacity in `game-rules/inventory.ts`
+ * before ever persisting a proposal — this is guidance only.
+ * @see docs/public/raw/11-INVENTORY-ECONOMY.md §1
+ */
+function buildInventorySection(character: Character): string[] {
+  const items = character.stats.inventory ?? []
+  const lines = items.map((item) => `- ${item.name} (category: "${item.category}")`)
+
+  return [
+    '',
+    items.length > 0
+      ? `The player currently carries: ${lines.join('; ')}.`
+      : 'The player currently carries no items.',
+    '',
+    'You may optionally signal ONE found item via item_gained when the',
+    'narrative clearly justifies it (looted from a container, taken off a',
+    'defeated foe, handed over by an NPC). Never propose an item the player',
+    'already carries. category must be one of: "equipment" (worn gear —',
+    'requires a slot among main-hand, off-hand, armor, cloak, head, accessory,',
+    'belt, feet), "bag" (consumable or carried goods, backend caps the bag at',
+    '12 items), "artifact" (a single dedicated slot), "key" (quest-critical,',
+    'unlimited). Never propose category "heirloom" — it is never AI-granted.',
+  ]
+}
+
+/**
  * Builds the Game Master system prompt.
  * The AI writes narration and choice labels only; the backend owns all rules,
  * dice, stats, and canon consistency. Canon brand terms are NOT re-translated —
@@ -159,6 +187,7 @@ export function buildSystemPrompt(
     ...buildRecentTurnsSection(recentTurns),
     ...buildSouvenirsSection(souvenirs),
     ...buildConditionsSection(character, locale),
+    ...buildInventorySection(character),
     '',
     'Respond with a single JSON object and nothing else, matching exactly:',
     '{',
@@ -169,6 +198,7 @@ export function buildSystemPrompt(
     '  "turnSummary": string,',
     '  "souvenir_candidate"?: { "title_suggestion": string, "body": string, "type": "npc-death"|"moral-choice"|"secret-discovery"|"boss-victory"|"strong-promise" }',
     '  "apply_condition"?: { "id": string, "reason": string, "calamineDelta"?: number }',
+    '  "item_gained"?: { "name": string, "category": "equipment"|"bag"|"artifact"|"key", "slot"?: string, "effect"?: { "healAmount"?: number, "calamineReduction"?: number, "removesCondition"?: string, "damage"?: string }, "description"?: string }',
     '}',
     '',
     'turnSummary: a short factual sentence (max 200 characters) condensing what just',
@@ -187,5 +217,9 @@ export function buildSystemPrompt(
     '(e.g. "crossed the poisonous marsh without protection"). calamineDelta is',
     'only meaningful when id is "cendre_corrupt" — see the Calamine sources',
     'above; omit it for every other condition id.',
+    '',
+    'item_gained: OPTIONAL, omit on most turns. Only include it when the',
+    'narrative you just wrote clearly has the player finding or receiving an',
+    'item THIS turn. Never invent an item that was not part of the narrative.',
   ].join('\n')
 }

@@ -14,6 +14,7 @@ import type { InventoryItemRef } from '@grimoire/shared'
 interface VelkharInventoryPanelProps {
   iron: number | null
   items: InventoryItemRef[]
+  onAction: (item: InventoryItemRef, action: 'use' | 'equip' | 'unequip') => void
 }
 
 function itemIcon(item: InventoryItemRef): GameIconName {
@@ -62,7 +63,7 @@ function ItemSlot({ fallbackIcon, item, label, onSelect, selectedId }: ItemSlotP
   )
 }
 
-export function VelkharInventoryPanel({ iron, items }: VelkharInventoryPanelProps) {
+export function VelkharInventoryPanel({ iron, items, onAction }: VelkharInventoryPanelProps) {
   const t = useTranslations('Session')
   const inventory = useMemo(() => buildVelkharInventoryView(items), [items])
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -170,13 +171,24 @@ export function VelkharInventoryPanel({ iron, items }: VelkharInventoryPanelProp
             <h3>{selectedItem.name}</h3>
             <p>{selectedItem.description ?? t('noDescription')}</p>
             {selectedItem.allowedActions?.length ? (
-              <p className="velkhar-inventory__permissions">
-                {t('authorizedActions', {
-                  actions: selectedItem.allowedActions
-                    .map((action) => actionLabels[action])
-                    .join(', '),
-                })}
-              </p>
+              <div
+                className="velkhar-inventory__actions"
+                role="group"
+                aria-label={t('authorizedActionsLabel')}
+              >
+                {selectedItem.allowedActions
+                  .filter((action) => action !== 'inspect')
+                  .map((action) => (
+                    <button
+                      key={action}
+                      type="button"
+                      className="velkhar-inventory__action-button"
+                      onClick={() => onAction(selectedItem, action)}
+                    >
+                      {actionLabels[action]}
+                    </button>
+                  ))}
+              </div>
             ) : (
               <p className="velkhar-session-window__muted">{t('noAuthorizedAction')}</p>
             )}

@@ -13,18 +13,19 @@ updated: 2026-07-24
 ## Phase 1 — pré-déploiement
 
 1. ~~#180~~ — figer les contrats shared Survie v2 : livré (PR #196).
-2. ~~#181~~ — conditions et Désavantage : livré (PR #198). #183 — inventaire réel reste à livrer.
+2. ~~#181~~ — conditions et Désavantage : livré (PR #198).
 3. ~~#182~~ — Calamine/fin Calciné : livré (PR #199). #184 — action de repos reste à livrer.
-4. #185 — renforcer le danger IA une fois les conséquences mécaniques disponibles.
-5. ~~#101~~ — fiabiliser les modèles : livré (PR #191).
-6. #152 — résoudre ou désactiver le concept libre.
-7. #162 — traiter les risques sécurité applicables avant exposition publique.
-8. #161 — déployer l'API, appliquer les migrations et vérifier le healthcheck.
-9. #129 — supporter le golden path réel avec le frontend.
+4. ~~#183~~ — inventaire réel (acquisition, usage, équipement) : livré.
+5. #185 — renforcer le danger IA une fois les conséquences mécaniques disponibles.
+6. ~~#101~~ — fiabiliser les modèles : livré (PR #191).
+7. #152 — résoudre ou désactiver le concept libre.
+8. #162 — traiter les risques sécurité applicables avant exposition publique.
+9. #161 — déployer l'API, appliquer les migrations et vérifier le healthcheck.
+10. #129 — supporter le golden path réel avec le frontend.
 
 Ordre de dépendance :
 
-`#183 → #184 → #185 → (#152 + #162) → #161 → #129`
+`#184 → #185 → (#152 + #162) → #161 → #129`
 
 ## Post-déploiement
 

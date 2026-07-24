@@ -38,6 +38,7 @@ export const MOCK_CHARACTER: Character = {
       calamine: 0,
     },
     conditions: [],
+    inventory: [],
   },
   backstory:
     'A caravan survivor of the Makhzen who learned to read the dunes before he ' +

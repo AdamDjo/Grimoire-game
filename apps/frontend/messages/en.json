@@ -342,6 +342,7 @@
     "itemDetail": "Item detail",
     "noDescription": "No description has been revealed yet.",
     "authorizedActions": "Authorized now: {actions}",
+    "authorizedActionsLabel": "Authorized actions",
     "actionUse": "use",
     "actionEquip": "equip",
     "actionUnequip": "unequip",

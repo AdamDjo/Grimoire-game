@@ -32,6 +32,7 @@ const baseSession = {
   id: 's1',
   turnNumber: 12,
   endReason: 'inn',
+  locale: 'fr',
   character,
 }
 
@@ -180,6 +181,28 @@ describe('generateChronicle', () => {
     const prompt = messages[0].content
     expect(prompt).not.toContain('undefined')
     expect(prompt).toContain('Calciné')
+  })
+
+  it('instructs the AI to write in the session locale, English by default (#168)', async () => {
+    gameSessionFindUnique.mockResolvedValue({ ...baseSession, locale: 'es-ES' })
+    callOpenRouter.mockResolvedValue({ success: true, content: JSON.stringify(validOutput) })
+
+    await generateChronicle('s1')
+
+    const [messages] = callOpenRouter.mock.calls[0] as [{ content: string }[]]
+    const prompt = messages[0].content
+    expect(prompt).toContain('Spanish')
+  })
+
+  it('falls back to English when the session locale is unusable', async () => {
+    gameSessionFindUnique.mockResolvedValue({ ...baseSession, locale: undefined })
+    callOpenRouter.mockResolvedValue({ success: true, content: JSON.stringify(validOutput) })
+
+    await generateChronicle('s1')
+
+    const [messages] = callOpenRouter.mock.calls[0] as [{ content: string }[]]
+    const prompt = messages[0].content
+    expect(prompt).toContain('en English')
   })
 
   it('deduplicates pinned facts across memory chunks', async () => {
