@@ -220,7 +220,8 @@ describe('VelkharSession', () => {
 
     await user.click(screen.getByRole('button', { name: /Bag slot 1: Waterskin/ }))
     expect(screen.getByRole('heading', { name: 'Waterskin' })).toBeInTheDocument()
-    expect(screen.getByText('Authorized now: use, inspect')).toBeInTheDocument()
+    expect(screen.getByRole('group', { name: 'Authorized actions' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'use' })).toBeInTheDocument()
   })
 
   it('restaure le focus après Escape', async () => {
