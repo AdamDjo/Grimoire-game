@@ -9,6 +9,31 @@ import { CHARACTER_RESULT_STORAGE_KEY } from '../../character-create/_lib/charac
 import { AUBERGE_INTRO_STORAGE_KEY } from './AubergeIntro'
 import { AveugleHub } from './AveugleHub'
 
+const {
+  ensureAnonymousSession,
+  getAveugleHub,
+  getSouvenirs,
+  markAveugleTopicSeen,
+  spendSouvenir,
+  talkToAveugle,
+} = vi.hoisted(() => ({
+  ensureAnonymousSession: vi.fn(),
+  getAveugleHub: vi.fn(),
+  getSouvenirs: vi.fn(),
+  markAveugleTopicSeen: vi.fn(),
+  spendSouvenir: vi.fn(),
+  talkToAveugle: vi.fn(),
+}))
+vi.mock('@/lib/supabase/ensure-session', () => ({ ensureAnonymousSession }))
+
+vi.mock('../_lib/aveugle-api', () => ({
+  getAveugleHub,
+  getSouvenirs,
+  markAveugleTopicSeen,
+  spendSouvenir,
+  talkToAveugle,
+}))
+
 vi.mock('next/image', () => ({
   default: ({
     alt,
@@ -34,8 +59,47 @@ const CHARACTER = {
   historyReviewed: true,
 }
 
+const NAMED_MEMORY = {
+  id: 'named-1',
+  userId: 'user-1',
+  characterId: 'character-1',
+  sessionId: 'session-1',
+  title: 'The night of Vane',
+  body: 'You spared him that night. His silence still travels with you.',
+  type: 'moral-choice' as const,
+  anonymous: false,
+  sharedWithAveugle: false,
+  createdAt: '2026-07-22T00:00:00.000Z',
+}
+
+const SPENDABLE_MEMORY = {
+  ...NAMED_MEMORY,
+  id: 'spendable-1',
+  title: 'A nameless fragment',
+  anonymous: true,
+}
+
 describe('AveugleHub', () => {
   beforeEach(() => {
+    ensureAnonymousSession.mockReset()
+    getAveugleHub.mockReset()
+    getSouvenirs.mockReset()
+    markAveugleTopicSeen.mockReset()
+    spendSouvenir.mockReset()
+    talkToAveugle.mockReset()
+    ensureAnonymousSession.mockResolvedValue(undefined)
+    getAveugleHub.mockResolvedValue({
+      iron: 17,
+      spendableSouvenirCount: 1,
+      namedSouvenirs: [NAMED_MEMORY],
+      seenTopicIds: [],
+    })
+    getSouvenirs.mockResolvedValue([NAMED_MEMORY, SPENDABLE_MEMORY])
+    markAveugleTopicSeen.mockResolvedValue(undefined)
+    talkToAveugle.mockResolvedValue({
+      reply: 'Ash answers only those who listen.',
+      isFallback: false,
+    })
     window.localStorage.clear()
     window.sessionStorage.clear()
     window.sessionStorage.setItem(AUBERGE_INTRO_STORAGE_KEY, 'seen')
@@ -75,16 +139,24 @@ describe('AveugleHub', () => {
     render(<AveugleHub />)
 
     expect(await screen.findByLabelText('Character: Amani')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Choose an omen' })).toBeInTheDocument()
+    expect(screen.getByText('17')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Begin the run/ })).toHaveAttribute(
+      'href',
+      '/velkhar/session/new'
+    )
 
     await user.click(screen.getByRole('button', { name: /The Calcined Ones/ }))
-    expect(screen.getByText(/The Calcined Ones no longer listen to Ash/)).toBeInTheDocument()
+    expect(await screen.findByText(/Ash answers only those who listen/)).toBeInTheDocument()
+    expect(talkToAveugle).toHaveBeenCalledWith('What should I know about the Calcined Ones?')
+    expect(markAveugleTopicSeen).toHaveBeenCalledWith('calcines')
     expect(
       screen.queryByRole('group', { name: 'Topics to discuss with The Blind One' })
     ).not.toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Go deeper' }))
-    expect(screen.getByText(/When Ash speaks your name/)).toBeInTheDocument()
+    expect(talkToAveugle).toHaveBeenLastCalledWith(
+      'What should I know about the Calcined Ones? Tell me more, without hiding behind a proverb.'
+    )
 
     await user.click(screen.getByRole('button', { name: 'Other topics' }))
     await user.click(screen.getByRole('button', { name: 'Another question…' }))
@@ -101,20 +173,16 @@ describe('AveugleHub', () => {
     ).toBeInTheDocument()
   })
 
-  it('prépare le prochain run avec un présage explicite', async () => {
-    const user = userEvent.setup()
+  it('ne transmet plus de présage mécanique local au prochain run', async () => {
     window.localStorage.setItem(CHARACTER_RESULT_STORAGE_KEY, JSON.stringify(CHARACTER))
 
     render(<AveugleHub />)
 
-    await user.click(await screen.findByRole('button', { name: 'Choose an omen' }))
-    await user.click(screen.getByRole('button', { name: /Follow the smoke/ }))
-
-    expect(screen.getByText(/hidden encounter may appear/)).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /Begin the run/ })).toHaveAttribute(
+    expect(await screen.findByRole('link', { name: /Begin the run/ })).toHaveAttribute(
       'href',
-      '/velkhar/session/new?omen=follow-smoke'
+      '/velkhar/session/new'
     )
+    expect(screen.queryByRole('button', { name: /Omen/ })).not.toBeInTheDocument()
   })
 
   it('isole les souvenirs de la conversation principale', async () => {
@@ -130,6 +198,69 @@ describe('AveugleHub', () => {
 
     await user.click(screen.getByRole('button', { name: /The night of Vane/ }))
     expect(screen.getByText(/His silence still travels with you/)).toBeInTheDocument()
+  })
+
+  it('échange un Souvenir réel sans le dépenser si le backend échoue', async () => {
+    const user = userEvent.setup()
+    spendSouvenir.mockRejectedValueOnce(new Error('ai_generation_failed'))
+    window.localStorage.setItem(CHARACTER_RESULT_STORAGE_KEY, JSON.stringify(CHARACTER))
+
+    render(<AveugleHub />)
+
+    await user.click(await screen.findByRole('button', { name: /Memories/ }))
+    await user.click(screen.getByRole('button', { name: 'A fragment of lore' }))
+
+    expect(await screen.findByText(/Your Memory was not spent/)).toBeInTheDocument()
+    expect(spendSouvenir).toHaveBeenCalledWith('spendable-1', 'lore-fragment')
+  })
+
+  it('affiche le savoir renvoyé par un échange réussi et actualise le compteur', async () => {
+    const user = userEvent.setup()
+    spendSouvenir.mockResolvedValueOnce({
+      loreResult: 'A buried road still remembers the feet that crossed it.',
+      souvenir: { ...SPENDABLE_MEMORY, sharedWithAveugle: true },
+    })
+    window.localStorage.setItem(CHARACTER_RESULT_STORAGE_KEY, JSON.stringify(CHARACTER))
+
+    render(<AveugleHub />)
+
+    await user.click(await screen.findByRole('button', { name: /Memories/ }))
+    await user.click(screen.getByRole('button', { name: 'A fragment of lore' }))
+
+    expect(await screen.findByText(/A buried road still remembers/)).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Review memories' }))
+    expect(screen.getByText('You have no Memory to share with The Blind One.')).toBeInTheDocument()
+  })
+
+  it('rend les états vides explicites sans charger la liste secondaire', async () => {
+    getAveugleHub.mockResolvedValueOnce({
+      iron: 0,
+      spendableSouvenirCount: 0,
+      namedSouvenirs: [],
+      seenTopicIds: [],
+    })
+    window.localStorage.setItem(CHARACTER_RESULT_STORAGE_KEY, JSON.stringify(CHARACTER))
+    const user = userEvent.setup()
+
+    render(<AveugleHub />)
+
+    await user.click(await screen.findByRole('button', { name: 'Memories' }))
+    expect(screen.getByText('No named Memory has crossed this threshold yet.')).toBeInTheDocument()
+    expect(screen.getByText('You have no Memory to share with The Blind One.')).toBeInTheDocument()
+    expect(getSouvenirs).not.toHaveBeenCalled()
+  })
+
+  it('affiche une erreur de hub récupérable puis recharge les contrats', async () => {
+    const user = userEvent.setup()
+    getAveugleHub.mockRejectedValueOnce(new Error('offline'))
+    window.localStorage.setItem(CHARACTER_RESULT_STORAGE_KEY, JSON.stringify(CHARACTER))
+
+    render(<AveugleHub />)
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('The Inn keeps its door closed')
+    await user.click(screen.getByRole('button', { name: 'Try again' }))
+    expect(await screen.findByLabelText('Character: Amani')).toBeInTheDocument()
+    expect(getAveugleHub).toHaveBeenCalledTimes(2)
   })
 
   it('oriente une session active vers la reprise', async () => {

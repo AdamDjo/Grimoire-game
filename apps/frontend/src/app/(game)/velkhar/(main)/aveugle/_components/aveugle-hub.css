@@ -165,7 +165,7 @@ body:has(.aveugle-hub) {
   border-block: 1px solid rgba(217, 164, 65, 0.26);
   display: grid;
   gap: 0.25rem;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   padding: 0.3rem;
 }
 
@@ -260,30 +260,6 @@ body:has(.aveugle-hub) {
   text-transform: uppercase;
 }
 
-.aveugle-hub__choice-copy--omen {
-  align-items: start;
-  display: grid;
-  gap: 0.25rem;
-  justify-content: stretch;
-}
-
-.aveugle-hub__choice-copy--omen small {
-  color: var(--ash-light);
-  font-size: 0.92rem;
-  letter-spacing: 0;
-  line-height: 1.35;
-  text-transform: none;
-}
-
-.aveugle-hub__omen-effect {
-  border-left: 1px solid rgba(217, 164, 65, 0.55);
-  color: var(--ash-light);
-  font-size: 1.05rem;
-  line-height: 1.5;
-  margin: 0;
-  padding-left: 1rem;
-}
-
 .aveugle-hub__dialogue-content blockquote {
   border-left: 1px solid var(--gold-dark);
   color: var(--parchment);
@@ -337,6 +313,45 @@ body:has(.aveugle-hub) {
 .aveugle-hub__other-question,
 .aveugle-hub__composer > .game-button {
   font-size: 1.05rem;
+}
+
+.aveugle-hub__empty,
+.aveugle-hub__exchange > p,
+.aveugle-hub__interaction-error p,
+.aveugle-hub__conversation-stage > [role='status'] {
+  color: var(--ink-2);
+  font-family: var(--font-game-body);
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.aveugle-hub__exchange {
+  border-top: 1px solid var(--border-gold);
+  display: grid;
+  gap: 1rem;
+  padding-top: 1.25rem;
+}
+
+.aveugle-hub__exchange h2 {
+  color: var(--gold-light);
+  font-family: var(--font-game-heading);
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.aveugle-hub__interaction-error {
+  border-left: 1px solid var(--blood);
+  display: grid;
+  gap: 0.8rem;
+  padding-left: 1rem;
+}
+
+.aveugle-hub__interaction-error .game-button {
+  justify-self: start;
 }
 
 .aveugle-hub__departure {
@@ -400,6 +415,41 @@ body:has(.aveugle-hub) {
   height: min(36rem, 72vh);
   margin: 1rem 0 0 auto;
   width: min(29rem, 34vw);
+}
+
+.aveugle-hub--error {
+  align-items: center;
+  display: grid;
+  justify-items: center;
+}
+
+.aveugle-hub__load-error {
+  backdrop-filter: blur(10px);
+  background: rgba(7, 6, 4, 0.88);
+  border: 1px solid var(--border-gold);
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+  max-width: 34rem;
+  padding: clamp(2rem, 5vw, 3.5rem);
+  position: relative;
+  text-align: center;
+  z-index: 1;
+}
+
+.aveugle-hub__load-error h1 {
+  color: var(--gold-light);
+  font-family: var(--font-game-heading);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  margin: 0;
+}
+
+.aveugle-hub__load-error p {
+  color: var(--ink-2);
+  font-family: var(--font-game-body);
+  font-size: 1.1rem;
+  line-height: 1.5;
+  margin: 0;
 }
 
 @keyframes aveugle-hub-pulse {

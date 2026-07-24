@@ -24,10 +24,11 @@ updated: 2026-07-24
 - #168 / PR #178 — préférence navigateur distincte pour la narration IA.
 - #179 / PR #187 — canon et plan Gameplay Survie v2.
 - #189 — mémoire projet, routage Claude/Codex et garde-fous `current-state`.
+- #188 — Auberge branchée sur les contrats réels `hub`, `talk` et `spend`, avec états de
+  résilience et reprise anonyme/authentifiée.
 
 ## Pré-déploiement restant
 
-- #188 — remplacer les fixtures autoritatives de l'Auberge par les contrats réels de #147.
 - #186 — livrer l'UI Survie v2 après stabilisation des contrats ~~#180~~ (livré, PR #196) et des
   endpoints #181-#184.
 - #152 — intégrer la résolution du concept libre ou masquer proprement l'option en V1.
