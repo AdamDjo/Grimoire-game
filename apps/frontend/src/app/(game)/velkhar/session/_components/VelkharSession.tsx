@@ -55,6 +55,8 @@ function readSurvival(stats: Record<string, number>, previous: SurvivalStats): S
     hunger: stats.hunger ?? previous.hunger,
     energy: stats.energy ?? previous.energy,
     calamine: stats.calamine ?? previous.calamine,
+    isDying: previous.isDying,
+    neglectStreak: previous.neglectStreak,
   }
 }
 

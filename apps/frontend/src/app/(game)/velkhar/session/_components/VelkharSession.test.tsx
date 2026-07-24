@@ -65,7 +65,14 @@ const OPENING_RESPONSE: SceneResponse = {
     location: 'Salt Road',
     createdAt: '2026-07-16T00:00:00.000Z',
   },
-  updatedStats: { ...MOCK_CHARACTER.stats.survival },
+  updatedStats: (() => {
+    const {
+      isDying: _isDying,
+      neglectStreak: _neglectStreak,
+      ...stats
+    } = MOCK_CHARACTER.stats.survival
+    return stats
+  })(),
   updatedInventory: [
     {
       id: 'item-sabre',
