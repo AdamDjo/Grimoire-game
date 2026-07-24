@@ -5,7 +5,15 @@ import {
   tickConditions,
 } from './conditions'
 import { rollCheck } from './dice'
-import { applyTurnDrain } from './survival'
+import {
+  applyNeglectErosion,
+  applyTurnDrain,
+  clearDyingOnHeal,
+  NEGLECT_STREAK_THRESHOLD,
+  resolveDying,
+  rollNeglectCalamine,
+  tickNeglectStreak,
+} from './survival'
 
 import type {
   ActiveCondition,
@@ -85,7 +93,7 @@ export interface ResolveChoiceResult {
   diceRoll?: DiceRoll
   /** Mechanical consequences applied this turn, for logging and the client. */
   consequences: ChoiceConsequence
-  /** True once hp reaches 0 — the session must end (endReason 'death'). */
+  /** True only on a SECOND consecutive 0-HP hit — the session must end (endReason 'death'). */
   gameOver: boolean
 }
 
@@ -110,49 +118,73 @@ export function resolveChoice({
   const risk: Difficulty = choice.riskLevel ?? 'safe'
 
   const drained = applyTurnDrain(survival)
+  // -1 PV/turn while thirst or hunger sits at 0 (non-cumulative between the
+  // two), plus the consecutive-neglect counter that feeds the Calamine
+  // source below. #201.
+  const eroded = applyNeglectErosion(drained)
+  const neglectTracked = tickNeglectStreak(eroded)
+  const neglectCalamineDelta =
+    neglectTracked.neglectStreak >= NEGLECT_STREAK_THRESHOLD
+      ? rollNeglectCalamine(neglectTracked.neglectStreak, rng)
+      : 0
+  const withNeglectCalamine: SurvivalStats =
+    neglectCalamineDelta > 0
+      ? {
+          ...neglectTracked,
+          calamine: clamp(neglectTracked.calamine + neglectCalamineDelta, 0, 100),
+        }
+      : neglectTracked
+
   const consequences: ChoiceConsequence = {
     survivalChanges: {
-      thirst: drained.thirst - survival.thirst,
-      hunger: drained.hunger - survival.hunger,
-      energy: drained.energy - survival.energy,
+      thirst: withNeglectCalamine.thirst - survival.thirst,
+      hunger: withNeglectCalamine.hunger - survival.hunger,
+      energy: withNeglectCalamine.energy - survival.energy,
+      ...(withNeglectCalamine.hp !== survival.hp
+        ? { hp: withNeglectCalamine.hp - survival.hp }
+        : {}),
+      ...(neglectCalamineDelta > 0 ? { calamine: neglectCalamineDelta } : {}),
     },
   }
 
-  const tick = tickConditions(activeConditions, drained, turnNumber)
+  const tick = tickConditions(activeConditions, withNeglectCalamine, turnNumber)
   let conditions = clearResolvedBackendConditions(tick.conditions, tick.survival)
   const survivalAfterTick = tick.survival
-  if (survivalAfterTick.hp !== drained.hp) {
+  if (survivalAfterTick.hp !== withNeglectCalamine.hp) {
     consequences.survivalChanges = {
       ...consequences.survivalChanges,
-      hp: survivalAfterTick.hp - drained.hp,
+      hp: (consequences.survivalChanges?.hp ?? 0) + (survivalAfterTick.hp - withNeglectCalamine.hp),
     }
   }
 
   if (tick.lethal) {
-    consequences.gameOver = true
+    const dying = resolveDying(survivalAfterTick)
+    consequences.gameOver = dying.definitiveDeath
+    consequences.dying = !dying.definitiveDeath
     return {
-      updatedSurvival: survivalAfterTick,
+      updatedSurvival: dying.survival,
       updatedConditions: conditions,
       consequences,
-      gameOver: true,
+      gameOver: dying.definitiveDeath,
     }
   }
 
   if (!ROLL_RISKS.has(risk)) {
+    const healed = clearDyingOnHeal(survivalAfterTick)
     conditions = applyBackendConditions(
       conditions,
-      { survival: survivalAfterTick, woundingHit: false },
+      { survival: healed, woundingHit: false },
       turnNumber
     )
     return {
-      updatedSurvival: survivalAfterTick,
+      updatedSurvival: healed,
       updatedConditions: conditions,
       consequences,
       gameOver: false,
     }
   }
 
-  const disadvantage = computeDisadvantage(conditions, locale)
+  const disadvantage = computeDisadvantage(conditions, survivalAfterTick, locale)
   const diceRoll = rollCheck(attributes, ATTRIBUTE_BY_TYPE[choice.type], risk, rng, {
     advantage,
     disadvantage,
@@ -171,18 +203,25 @@ export function resolveChoice({
     }
   }
 
-  const updatedSurvival: SurvivalStats = { ...survivalAfterTick, hp }
   const woundingHit = hp <= 0 || isCombatCrit
+  let updatedSurvival: SurvivalStats = { ...survivalAfterTick, hp }
+  let gameOver = false
+
+  if (hp <= 0) {
+    const dying = resolveDying(updatedSurvival)
+    updatedSurvival = dying.survival
+    gameOver = dying.definitiveDeath
+    consequences.gameOver = dying.definitiveDeath
+    consequences.dying = !dying.definitiveDeath
+  } else {
+    updatedSurvival = clearDyingOnHeal(updatedSurvival)
+  }
+
   conditions = applyBackendConditions(
     conditions,
     { survival: updatedSurvival, woundingHit },
     turnNumber
   )
-
-  const gameOver = hp <= 0
-  if (gameOver) {
-    consequences.gameOver = true
-  }
 
   return { updatedSurvival, updatedConditions: conditions, diceRoll, consequences, gameOver }
 }

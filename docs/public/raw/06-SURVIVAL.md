@@ -35,11 +35,16 @@ La survie est la **pression constante** du jeu (Pilier 1). Mais elle ne doit **j
 ```
 100  ─── pleine forme
  75  ─── légère gêne (l'IA commence à la mentionner)
- 50  ─── malus modéré au jet (-1)
- 25  ─── malus sévère (-2), l'IA décrit la souffrance
- 10  ─── critique, risque de condition (évanouissement, fièvre)
-  0  ─── la jauge touche zéro → condition grave
+ 50  ─── souffrance perceptible, l'IA la décrit franchement
+ 25  ─── souffrance aiguë + Désavantage aux jets (voir « Traduction mécanique » ci-dessous)
+  0  ─── la jauge touche zéro → fièvre (`fever`) + érosion des PV (voir « Effritement des PV » ci-dessous)
 ```
+
+🟢 _Paliers narratifs exacts (contrat moteur `game-rules/survival.ts`, `gaugeTier()`, #201) : `ok` >75,
+`strained` 51-75 (mention légère), `severe` 26-50 (souffrance décrite), `critical` ≤25 (souffrance
+aiguë + Désavantage, non cumulatif même si plusieurs jauges sont critiques en même temps). Ces
+paliers sont injectés dans le prompt du MJ IA pour guider la narration ; l'IA ne décide jamais du
+Désavantage lui-même, il est appliqué côté backend._
 
 ### Base PV
 
@@ -48,6 +53,13 @@ PV_max = 10 + modificateur SANG
 ```
 
 🟢 _Un Marcheur-du-Sel (SANG +2) démarre à 12 PV. Un Tisse-Verbe (SANG -1) à 9 PV._
+
+### Effritement des PV par négligence (contrat moteur, #201)
+
+Tant que Faim **ou** Soif est à 0, le perso perd **-1 PV par tour** (usure, épuisement). L'effet
+n'est **pas cumulatif** : si Faim et Soif sont à 0 en même temps, la perte reste -1 PV/tour, pas -2.
+C'est distinct de la fièvre (`fever`, §2) qui reste déclenchée dans les mêmes conditions — les deux
+effets coexistent (fièvre = Désavantage aux jets, érosion = perte de PV).
 
 ---
 
@@ -173,6 +185,22 @@ La Cendre **ne monte jamais toute seule** : pas de drain passif par tour. Elle a
 - Le backend **plafonne** un delta IA-proposé à +20 par tour (garde-fou anti-abus).
 - Toute source hors de cette liste → delta **ignoré** (l'IA reste libre de narrer, mais la jauge ne bouge pas).
 
+### Négligence prolongée → Calamine (contrat moteur, #201)
+
+Une **nouvelle source, purement BACKEND**, s'ajoute à la table ci-dessus : la négligence prolongée
+des jauges vitales. L'IA ne la propose jamais — elle ne fait que narrer les conséquences une fois
+appliquées.
+
+- Chaque tour où Faim **ou** Soif est à 0, un compteur `neglectStreak` s'incrémente. Il retombe à 0
+  dès que les deux jauges repassent au-dessus de 0.
+- Une fois `neglectStreak ≥ 3` (négligence sur 3 tours consécutifs ou plus), le backend applique
+  **+3 à +5 Calamine par tour**, tant que la négligence continue.
+- Ce delta suit le même plafond anti-abus que les sources IA-proposées et s'additionne normalement
+  aux autres sources du tour.
+- 🟢 _Logique : ignorer les avertissements de faim/soif pendant plusieurs tours de suite a un coût
+  cumulatif, cohérent avec le principe §0 « la mort par survie n'est jamais du RNG, elle vient de la
+  négligence prolongée »._
+
 ### Paliers de Calamine (contrat moteur)
 
 Le backend applique les effets de palier automatiquement dès franchissement du seuil (cf. table §4 « jauge de Cendre »). À **100**, la transformation en Calciné est **immédiate et non réversible** → fin de run avec `endReason: "calcined"` (cf. `09-ACTION-LOOP §7`). Pas d'héritage transmis (artefact corrompu).
@@ -222,10 +250,29 @@ Possible, mais **rare et télégraphiée**.
 
 - 🟢 Le perso ne meurt pas d'un seul coup de faim
 - 🟢 Les jauges doivent s'effondrer **progressivement** et le joueur doit avoir **ignoré les avertissements**
-- 🟢 À 0 PV → inconscience (pas mort immédiate) → l'IA décide du sort selon contexte (captivité, secours, mort)
 - 🟢 La mort par survie génère une **Chronique** comme toute mort
 
 🟢 _Règle absolue : la mort par survie ne doit jamais être perçue comme injuste ou RNG._
+
+### État « mourant » — sursis universel (contrat moteur, #201)
+
+Cette section **remplace** l'ancienne règle « à 0 PV → inconscience, l'IA décide du sort ». La
+mécanique est désormais **entièrement backend**, quelle que soit la cause (combat, poison, érosion
+de négligence) — l'IA ne décide jamais du sort du perso, elle ne fait que narrer l'état une fois
+appliqué.
+
+- **Premier passage à 0 PV** : le perso devient **mourant** (`isDying: true`). Les PV restent
+  clampés à 0 (jamais négatifs). C'est un **sursis d'un tour** — pas de fin de run immédiate.
+  L'IA doit **télégraphier clairement** cet état dans la narration (le perso titube, la vue se
+  trouble, un allié crie son nom) pour que le joueur comprenne le danger sans ambiguïté.
+- **Soin pendant l'état mourant** : si les PV remontent au-dessus de 0 (item, repos, allié), l'état
+  mourant est levé (`isDying: false`) — le perso survit.
+- **Second passage à 0 PV alors que `isDying` est déjà vrai** : **mort définitive**
+  (`definitiveDeath: true`, `gameOver: true`). Génère la Chronique comme toute mort (cf. règle
+  ci-dessus).
+- 🟢 _Ce mécanisme est universel : il s'applique identiquement à une mort par combat, par poison, ou
+  par négligence prolongée (érosion des PV, §1 « Effritement des PV ») — un seul système, pas de cas particulier par
+  cause de dégât._
 
 ---
 

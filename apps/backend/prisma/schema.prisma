@@ -61,6 +61,14 @@ model Character {
   energy   Int
   calamine Int
 
+  /// True after the first 0-HP hit: one telegraphed turn of reprieve before a
+  /// second 0-HP hit is definitive death. @see docs/public/raw/06-SURVIVAL.md §7
+  isDying Boolean @default(false)
+
+  /// Consecutive turns thirst or hunger has been at 0 — drives the prolonged
+  /// neglect Calamine source. Resets once both gauges are back above 0.
+  neglectStreak Int @default(0)
+
   /// États altérés persistants (ActiveCondition[] JSON), voir @grimoire/shared.
   /// @see docs/public/raw/06-SURVIVAL.md §2
   activeConditions Json @default("[]")

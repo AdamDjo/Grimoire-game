@@ -36,7 +36,16 @@ const character = {
   vocation: 'salt-walker',
   stats: {
     attributes: { blood: 10, breath: 10, ash: 10 },
-    survival: { hp: 20, maxHp: 20, thirst: 100, hunger: 100, energy: 100, calamine: 0 },
+    survival: {
+      hp: 20,
+      maxHp: 20,
+      thirst: 100,
+      hunger: 100,
+      energy: 100,
+      calamine: 0,
+      isDying: false,
+      neglectStreak: 0,
+    },
     conditions: [],
     inventory: [],
   },

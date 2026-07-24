@@ -16,12 +16,13 @@ updated: 2026-07-24
 2. ~~#181~~ — conditions et Désavantage : livré (PR #198).
 3. ~~#182~~ — Calamine/fin Calciné : livré (PR #199). #184 — action de repos reste à livrer.
 4. ~~#183~~ — inventaire réel (acquisition, usage, équipement) : livré.
-5. #185 — renforcer le danger IA une fois les conséquences mécaniques disponibles.
-6. ~~#101~~ — fiabiliser les modèles : livré (PR #191).
-7. #152 — résoudre ou désactiver le concept libre.
-8. #162 — traiter les risques sécurité applicables avant exposition publique.
-9. #161 — déployer l'API, appliquer les migrations et vérifier le healthcheck.
-10. #129 — supporter le golden path réel avec le frontend.
+5. ~~#201~~ — survie punitive (paliers narratifs, négligence→Calamine, érosion PV, état mourant) : livré.
+6. #185 — renforcer le danger IA une fois les conséquences mécaniques disponibles.
+7. ~~#101~~ — fiabiliser les modèles : livré (PR #191).
+8. #152 — résoudre ou désactiver le concept libre.
+9. #162 — traiter les risques sécurité applicables avant exposition publique.
+10. #161 — déployer l'API, appliquer les migrations et vérifier le healthcheck.
+11. #129 — supporter le golden path réel avec le frontend.
 
 Ordre de dépendance :
 

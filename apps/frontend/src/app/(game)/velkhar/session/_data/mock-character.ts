@@ -36,6 +36,8 @@ export const MOCK_CHARACTER: Character = {
       hunger: 100,
       energy: 100,
       calamine: 0,
+      isDying: false,
+      neglectStreak: 0,
     },
     conditions: [],
     inventory: [],

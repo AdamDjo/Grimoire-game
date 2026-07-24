@@ -5,7 +5,7 @@ rag: true
 source_of_truth: true
 owner: frontend
 default_agent: codex
-updated: 2026-07-25
+updated: 2026-07-24
 ---
 
 # Frontend Status
@@ -31,6 +31,9 @@ updated: 2026-07-25
 - #183 / PR #200 — panneau d'inventaire Velkhar branché sur `POST /api/game/inventory/action` :
   boutons utiliser/équiper/déséquiper par objet, mise à jour de l'inventaire et des stats de
   survie après réponse serveur.
+- #201 / PR #203 — synchronisation frontend avec `SurvivalStats` (contrat backend #201) : `isDying`
+  et `neglectStreak` ajoutés au personnage de démo et à `readSurvival`, `updatedStats` restant
+  `Record<string, number>` (isDying non transporté réseau, mis à jour côté backend uniquement).
 
 ## Pré-déploiement restant
 

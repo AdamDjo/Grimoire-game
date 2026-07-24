@@ -24,6 +24,7 @@ import {
 } from '../game-rules/conditions'
 import { resolveChoice } from '../game-rules/consequences'
 import { acquireItem, equipItem, unequipItem, useItem } from '../game-rules/inventory'
+import { clearDyingOnHeal } from '../game-rules/survival'
 import { prisma } from '../lib/prisma'
 
 import { deriveAttributes } from './character.service'
@@ -81,6 +82,8 @@ function readCharacter(character: DbCharacter): {
       hunger: character.hunger,
       energy: character.energy,
       calamine: character.calamine,
+      isDying: character.isDying,
+      neglectStreak: character.neglectStreak,
     },
     activeConditions: character.activeConditions as unknown as ActiveCondition[],
     inventory: character.inventory as unknown as PersistedInventoryItem[],
@@ -459,6 +462,8 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
         hunger: finalSurvival.hunger,
         energy: finalSurvival.energy,
         calamine: finalSurvival.calamine,
+        isDying: finalSurvival.isDying,
+        neglectStreak: finalSurvival.neglectStreak,
         activeConditions: finalConditions as unknown as object,
         inventory: finalInventory as unknown as object,
       },
@@ -565,21 +570,27 @@ export async function performInventoryAction(
     }
   }
 
+  // A used item may heal HP back above 0 (#201) — clear the "mourant" flag
+  // when that happens, same rule as a turn resolving with healing.
+  const finalSurvival = clearDyingOnHeal(result.survival)
+
   await prisma.character.update({
     where: { id: character.id },
     data: {
-      hp: result.survival.hp,
-      thirst: result.survival.thirst,
-      hunger: result.survival.hunger,
-      energy: result.survival.energy,
-      calamine: result.survival.calamine,
+      hp: finalSurvival.hp,
+      thirst: finalSurvival.thirst,
+      hunger: finalSurvival.hunger,
+      energy: finalSurvival.energy,
+      calamine: finalSurvival.calamine,
+      isDying: finalSurvival.isDying,
+      neglectStreak: finalSurvival.neglectStreak,
       activeConditions: result.conditions as unknown as object,
       inventory: result.items as unknown as object,
     },
   })
 
   return {
-    updatedStats: toStatsRecord(result.survival),
+    updatedStats: toStatsRecord(finalSurvival),
     updatedInventory: toInventoryRefs(result.items),
     applied: true,
   }

@@ -12,7 +12,16 @@ const character = {
   vocation: 'salt-walker',
   stats: {
     attributes: { blood: 10, breath: 10, ash: 10 },
-    survival: { hp: 20, maxHp: 20, thirst: 100, hunger: 100, energy: 100, calamine: 0 },
+    survival: {
+      hp: 20,
+      maxHp: 20,
+      thirst: 100,
+      hunger: 100,
+      energy: 100,
+      calamine: 0,
+      isDying: false,
+      neglectStreak: 0,
+    },
     conditions: [],
     inventory: [],
   },
@@ -190,6 +199,90 @@ describe('buildSystemPrompt — N3 Souvenirs injection (#115)', () => {
 
     expect(prompt).toContain('"souvenir_candidate"?')
     expect(prompt).toContain('npc-death')
+  })
+})
+
+describe('buildSystemPrompt — gauge-tiers narration injection (#201)', () => {
+  it('injects no gauge-tiers section when every gauge is above 75', () => {
+    const prompt = buildSystemPrompt(character, 'en')
+
+    expect(prompt).not.toContain('survival gauges are degraded')
+  })
+
+  it('mentions a strained gauge lightly (51-75)', () => {
+    const strained = {
+      ...character,
+      stats: {
+        ...character.stats,
+        survival: { ...character.stats.survival, thirst: 60 },
+      },
+    }
+
+    const prompt = buildSystemPrompt(strained, 'en')
+
+    expect(prompt).toContain('survival gauges are degraded')
+    expect(prompt).toContain('- Thirst (60/100): mention it lightly in passing')
+    expect(prompt).not.toContain('Hunger (')
+    expect(prompt).not.toContain('Energy (')
+  })
+
+  it('describes real suffering for a severe gauge (26-50)', () => {
+    const severe = {
+      ...character,
+      stats: {
+        ...character.stats,
+        survival: { ...character.stats.survival, hunger: 40 },
+      },
+    }
+
+    const prompt = buildSystemPrompt(severe, 'en')
+
+    expect(prompt).toContain('- Hunger (40/100): describe real, perceptible suffering')
+  })
+
+  it('flags a critical gauge and names the backend-applied Désavantage (0-25)', () => {
+    const critical = {
+      ...character,
+      stats: {
+        ...character.stats,
+        survival: { ...character.stats.survival, energy: 10 },
+      },
+    }
+
+    const prompt = buildSystemPrompt(critical, 'en')
+
+    expect(prompt).toContain('- Energy (10/100): describe acute suffering')
+    expect(prompt).toContain('Désavantage on rolls')
+  })
+
+  it('lists multiple degraded gauges independently', () => {
+    const multi = {
+      ...character,
+      stats: {
+        ...character.stats,
+        survival: { ...character.stats.survival, thirst: 20, hunger: 40, energy: 60 },
+      },
+    }
+
+    const prompt = buildSystemPrompt(multi, 'en')
+
+    expect(prompt).toContain('- Thirst (20/100): describe acute suffering')
+    expect(prompt).toContain('- Hunger (40/100): describe real, perceptible suffering')
+    expect(prompt).toContain('- Energy (60/100): mention it lightly in passing')
+  })
+
+  it('instructs the AI never to state a mechanical penalty itself', () => {
+    const critical = {
+      ...character,
+      stats: {
+        ...character.stats,
+        survival: { ...character.stats.survival, thirst: 5 },
+      },
+    }
+
+    const prompt = buildSystemPrompt(critical, 'en')
+
+    expect(prompt).toContain('Never state or imply a specific mechanical penalty yourself')
   })
 })
 
