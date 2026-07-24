@@ -53,6 +53,8 @@ function buildChroniclePrompt(context: ChronicleContext): string {
     death: 'Mort en cours de run',
     inn: 'Choix de fin volontaire à l’auberge, face à L’Aveugle',
     abandon: 'Abandon du personnage (inactivité ou clic explicite)',
+    calcined:
+      'Calamine à son comble : le personnage est devenu ce qu’il chassait, transformé en Calciné',
   }
 
   return [

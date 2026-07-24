@@ -11,7 +11,12 @@ import {
 
 import { generateScene } from '../ai/game-master.service'
 import { persistedChoicesSchema } from '../ai/scene-validator'
-import { applyAiCondition, isValidAiConditionId } from '../game-rules/conditions'
+import {
+  applyAiCondition,
+  applyCalamineDelta,
+  calamineTier,
+  isValidAiConditionId,
+} from '../game-rules/conditions'
 import { resolveChoice } from '../game-rules/consequences'
 import { prisma } from '../lib/prisma'
 
@@ -360,10 +365,22 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
   // isValidAiConditionId is re-checked here as the backend's own authority —
   // the AI decides nothing, it only proposes.
   const proposedCondition = gm.scene.apply_condition
-  const finalConditions =
-    proposedCondition && isValidAiConditionId(proposedCondition.id)
-      ? applyAiCondition(resolution.updatedConditions, proposedCondition.id, nextTurn)
-      : resolution.updatedConditions
+  const isValidProposal = proposedCondition && isValidAiConditionId(proposedCondition.id)
+  const finalConditions = isValidProposal
+    ? applyAiCondition(resolution.updatedConditions, proposedCondition.id, nextTurn)
+    : resolution.updatedConditions
+
+  // #182: only "cendre_corrupt" carries a Calamine effect — a validated source,
+  // bounded to +20/turn, no passive drain (06-SURVIVAL §4). 100 is a hard,
+  // non-reversible transformation into Calciné, checked after HP-death so a
+  // simultaneous lethal HP hit still reports as 'death'.
+  const calamineDelta =
+    isValidProposal && proposedCondition.id === 'cendre_corrupt'
+      ? (proposedCondition.calamineDelta ?? 0)
+      : 0
+  const finalSurvival = applyCalamineDelta(resolution.updatedSurvival, calamineDelta)
+  const calcined = !resolution.gameOver && calamineTier(finalSurvival.calamine) === 'dead'
+  const gameOver = resolution.gameOver || calcined
 
   const scene = assembleScene({
     payload: gm.scene,
@@ -372,7 +389,11 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
     consequences: resolution.consequences,
   })
 
-  const endReason: SessionEndReason | null = resolution.gameOver ? 'death' : null
+  const endReason: SessionEndReason | null = resolution.gameOver
+    ? 'death'
+    : calcined
+      ? 'calcined'
+      : null
 
   await prisma.$transaction([
     prisma.sceneLog.create({
@@ -393,11 +414,11 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
     prisma.character.update({
       where: { id: character.id },
       data: {
-        hp: resolution.updatedSurvival.hp,
-        thirst: resolution.updatedSurvival.thirst,
-        hunger: resolution.updatedSurvival.hunger,
-        energy: resolution.updatedSurvival.energy,
-        calamine: resolution.updatedSurvival.calamine,
+        hp: finalSurvival.hp,
+        thirst: finalSurvival.thirst,
+        hunger: finalSurvival.hunger,
+        energy: finalSurvival.energy,
+        calamine: finalSurvival.calamine,
         activeConditions: finalConditions as unknown as object,
       },
     }),
@@ -406,7 +427,7 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
       data: {
         turnNumber: nextTurn,
         location: scene.location,
-        ...(resolution.gameOver ? { status: 'ended', endReason } : {}),
+        ...(gameOver ? { status: 'ended', endReason } : {}),
       },
     }),
   ])
@@ -422,7 +443,7 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
         await compressScene(
           session.id,
           recentTurns,
-          toGmCharacter(character, attributes, resolution.updatedSurvival, finalConditions),
+          toGmCharacter(character, attributes, finalSurvival, finalConditions),
           scene.location
         )
       } catch (err) {
@@ -446,7 +467,7 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
     })()
   }
 
-  if (resolution.gameOver) {
+  if (gameOver) {
     void (async () => {
       try {
         await generateChronicle(session.id)
@@ -458,7 +479,7 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
 
   return {
     scene,
-    updatedStats: toStatsRecord(resolution.updatedSurvival),
+    updatedStats: toStatsRecord(finalSurvival),
     updatedInventory: [],
     notifications: [],
     diceRoll: resolution.diceRoll,

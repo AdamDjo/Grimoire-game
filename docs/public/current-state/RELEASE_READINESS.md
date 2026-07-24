@@ -27,21 +27,21 @@ merge. La checklist opérationnelle détaillée vit dans l'issue #163.
 | Disponibilité IA (fallback GM) | Livré | #101 / PR #191 |
 | Contrats shared Survie v2      | Livré | #180 / PR #196 |
 | Conditions et Désavantage      | Livré | #181 / PR #198 |
+| Calamine et fin Calciné        | Livré | #182 / PR #199 |
 
 ## Phase 1 — pré-déploiement
 
-| Bloc                    | État       | Référence |
-| ----------------------- | ---------- | --------- |
-| Calamine et fin Calciné | À faire    | #182      |
-| Inventaire réel         | À faire    | #183      |
-| Action de repos         | À faire    | #184      |
-| Danger IA               | À faire    | #185      |
-| UI Survie v2            | À faire    | #186      |
-| Concept libre           | À trancher | #152      |
-| Sécurité dépendances    | Bloquant   | #162      |
-| Déploiement API         | À faire    | #161      |
-| Golden path réel        | À faire    | #129      |
-| Checklist de livraison  | Ouverte    | #163      |
+| Bloc                   | État       | Référence |
+| ---------------------- | ---------- | --------- |
+| Inventaire réel        | À faire    | #183      |
+| Action de repos        | À faire    | #184      |
+| Danger IA              | À faire    | #185      |
+| UI Survie v2           | À faire    | #186      |
+| Concept libre          | À trancher | #152      |
+| Sécurité dépendances   | Bloquant   | #162      |
+| Déploiement API        | À faire    | #161      |
+| Golden path réel       | À faire    | #129      |
+| Checklist de livraison | Ouverte    | #163      |
 
 ## Post-déploiement
 

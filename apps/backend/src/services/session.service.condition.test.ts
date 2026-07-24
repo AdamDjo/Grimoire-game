@@ -24,6 +24,9 @@ vi.mock('./scene-assembler', () => ({ assembleScene }))
 
 vi.mock('./memory.service', () => ({ compressScene: vi.fn().mockResolvedValue(undefined) }))
 
+const generateChronicle = vi.fn().mockResolvedValue({ generated: true })
+vi.mock('./chronicle.service', () => ({ generateChronicle }))
+
 const { resolveTurn } = await import('./session.service')
 
 import type { Character as DbCharacter, GameSession } from '../generated/prisma/client'
@@ -68,11 +71,20 @@ const choice = {
 }
 
 /** Reads the `data` payload passed to the mocked `character.update` call. */
-function lastCharacterUpdateData(): { activeConditions: unknown } {
+function lastCharacterUpdateData(): { activeConditions: unknown; calamine?: number } {
   const call = characterUpdate.mock.calls.at(-1) as
-    | [{ data: { activeConditions: unknown } }]
+    | [{ data: { activeConditions: unknown; calamine?: number } }]
     | undefined
   if (!call) throw new Error('character.update was not called')
+  return call[0].data
+}
+
+/** Reads the `data` payload passed to the mocked `gameSession.update` call. */
+function lastGameSessionUpdateData(): { status?: string; endReason?: string | null } {
+  const call = gameSessionUpdate.mock.calls.at(-1) as
+    | [{ data: { status?: string; endReason?: string | null } }]
+    | undefined
+  if (!call) throw new Error('gameSession.update was not called')
   return call[0].data
 }
 
@@ -146,5 +158,139 @@ describe('resolveTurn — AI-proposed condition persistence (#181)', () => {
     expect(lastCharacterUpdateData().activeConditions).toEqual([
       { id: 'poison', source: 'ai', appliedAtTurn: 1, expiresRule: { type: 'until_cured' } },
     ])
+  })
+})
+
+describe('resolveTurn — Calamine sources and transformation (#182)', () => {
+  beforeEach(() => {
+    transaction.mockClear()
+    characterUpdate.mockClear()
+    gameSessionUpdate.mockClear()
+    generateChronicle.mockClear()
+
+    assembleScene.mockReturnValue({
+      sceneType: 'exploration',
+      location: 'The Marsh',
+      narrative: 'text',
+      choices: [],
+    })
+  })
+
+  it('applies a validated cendre_corrupt delta to the Calamine gauge', async () => {
+    resolveChoice.mockReturnValue({
+      updatedSurvival: { hp: 20, maxHp: 20, thirst: 95, hunger: 95, energy: 95, calamine: 10 },
+      updatedConditions: [],
+      consequences: {},
+      gameOver: false,
+    })
+    generateScene.mockResolvedValue({
+      scene: {
+        apply_condition: {
+          id: 'cendre_corrupt',
+          reason: 'exposed to archontic light',
+          calamineDelta: 15,
+        },
+      },
+      source: 'ai',
+    })
+
+    await resolveTurn({ session: session(3), character, choice })
+
+    expect(lastCharacterUpdateData().calamine).toBe(25)
+  })
+
+  it('caps the applied delta at +20/turn even if the AI proposes more', async () => {
+    resolveChoice.mockReturnValue({
+      updatedSurvival: { hp: 20, maxHp: 20, thirst: 95, hunger: 95, energy: 95, calamine: 0 },
+      updatedConditions: [],
+      consequences: {},
+      gameOver: false,
+    })
+    generateScene.mockResolvedValue({
+      scene: {
+        apply_condition: {
+          id: 'cendre_corrupt',
+          reason: 'watcher presence',
+          calamineDelta: 999,
+        },
+      },
+      source: 'ai',
+    })
+
+    await resolveTurn({ session: session(3), character, choice })
+
+    expect(lastCharacterUpdateData().calamine).toBe(20)
+  })
+
+  it('ignores a calamineDelta attached to a non-cendre_corrupt proposal', async () => {
+    resolveChoice.mockReturnValue({
+      updatedSurvival: { hp: 20, maxHp: 20, thirst: 95, hunger: 95, energy: 95, calamine: 10 },
+      updatedConditions: [],
+      consequences: {},
+      gameOver: false,
+    })
+    generateScene.mockResolvedValue({
+      scene: {
+        apply_condition: { id: 'poison', reason: 'venomous bite', calamineDelta: 50 },
+      },
+      source: 'ai',
+    })
+
+    await resolveTurn({ session: session(3), character, choice })
+
+    expect(lastCharacterUpdateData().calamine).toBe(10)
+  })
+
+  it('leaves the gauge untouched when the AI omits apply_condition (no passive drain)', async () => {
+    resolveChoice.mockReturnValue({
+      updatedSurvival: { hp: 20, maxHp: 20, thirst: 95, hunger: 95, energy: 95, calamine: 40 },
+      updatedConditions: [],
+      consequences: {},
+      gameOver: false,
+    })
+    generateScene.mockResolvedValue({ scene: {}, source: 'ai' })
+
+    await resolveTurn({ session: session(3), character, choice })
+
+    expect(lastCharacterUpdateData().calamine).toBe(40)
+  })
+
+  it('transforms into Calciné at 100: ends the session with endReason "calcined"', async () => {
+    resolveChoice.mockReturnValue({
+      updatedSurvival: { hp: 20, maxHp: 20, thirst: 95, hunger: 95, energy: 95, calamine: 85 },
+      updatedConditions: [],
+      consequences: {},
+      gameOver: false,
+    })
+    generateScene.mockResolvedValue({
+      scene: {
+        apply_condition: {
+          id: 'cendre_corrupt',
+          reason: 'excessive ritual magic',
+          calamineDelta: 20,
+        },
+      },
+      source: 'ai',
+    })
+
+    await resolveTurn({ session: session(3), character, choice })
+
+    expect(lastCharacterUpdateData().calamine).toBe(100)
+    expect(lastGameSessionUpdateData()).toMatchObject({ status: 'ended', endReason: 'calcined' })
+    expect(generateChronicle).toHaveBeenCalledWith('s1')
+  })
+
+  it('reports "death" over "calcined" when HP-death and Calamine=100 happen the same turn', async () => {
+    resolveChoice.mockReturnValue({
+      updatedSurvival: { hp: 0, maxHp: 20, thirst: 95, hunger: 95, energy: 95, calamine: 100 },
+      updatedConditions: [],
+      consequences: { gameOver: true },
+      gameOver: true,
+    })
+    generateScene.mockResolvedValue({ scene: {}, source: 'ai' })
+
+    await resolveTurn({ session: session(3), character, choice })
+
+    expect(lastGameSessionUpdateData()).toMatchObject({ status: 'ended', endReason: 'death' })
   })
 })

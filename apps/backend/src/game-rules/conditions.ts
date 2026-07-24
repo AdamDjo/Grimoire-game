@@ -144,3 +144,45 @@ export function applyAiCondition(
     { id, source: 'ai', appliedAtTurn: turnNumber, expiresRule: { type: 'until_cured' } },
   ]
 }
+
+/** Max Calamine gained from a single AI-proposed source in one turn. @see docs/public/raw/06-SURVIVAL.md §4 */
+export const CALAMINE_DELTA_CAP = 20
+
+/** Calamine tiers (06-SURVIVAL §4). `dead` is the 100 transformation threshold, not a narrative tier. */
+export type CalamineTier = 'none' | 'stage1' | 'stage2' | 'stage3' | 'dead'
+
+/**
+ * The canon tier for a given Calamine value: 0-24 none, 25-49 stage 1,
+ * 50-74 stage 2, 75-99 stage 3, 100 = transformation (Calciné).
+ */
+export function calamineTier(calamine: number): CalamineTier {
+  if (calamine >= 100) return 'dead'
+  if (calamine >= 75) return 'stage3'
+  if (calamine >= 50) return 'stage2'
+  if (calamine >= 25) return 'stage1'
+  return 'none'
+}
+
+/**
+ * Bounds an AI-proposed Calamine delta to the canon cap, dropping non-positive
+ * or non-finite values. There is no passive drain and no canon source lowers
+ * Calamine via `apply_condition` — only positive deltas from a validated
+ * narrative source are meaningful here.
+ * @see docs/public/raw/06-SURVIVAL.md §4
+ */
+export function clampCalamineDelta(delta: number): number {
+  if (!Number.isFinite(delta) || delta <= 0) return 0
+  return Math.min(delta, CALAMINE_DELTA_CAP)
+}
+
+/**
+ * Applies a bounded Calamine delta to survival stats, clamped to [0, 100].
+ * Only `cendre_corrupt` proposals carry a meaningful delta — callers must
+ * check the condition id before calling this (see `resolveTurn` in
+ * `session.service.ts`, applied post-hoc once the AI proposal is known).
+ */
+export function applyCalamineDelta(survival: SurvivalStats, delta: number): SurvivalStats {
+  const bounded = clampCalamineDelta(delta)
+  if (bounded === 0) return survival
+  return { ...survival, calamine: clamp(survival.calamine + bounded, 0, 100) }
+}

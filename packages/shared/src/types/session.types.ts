@@ -5,8 +5,12 @@ import type { QuestState } from "./quest.types";
 
 export type SessionStatus = "active" | "ended";
 
-/** Why a session ended. Only bridge to the A3 narrative memory layer. */
-export type SessionEndReason = "death" | "inn" | "abandon";
+/**
+ * Why a session ended. Only bridge to the A3 narrative memory layer.
+ * `calcined` = Calamine reached 100 (06-SURVIVAL §4) — the only ending
+ * without heirloom inheritance transmission (09-ACTION-LOOP endReason table).
+ */
+export type SessionEndReason = "death" | "inn" | "abandon" | "calcined";
 
 export interface WorldState {
   currentRegionId: string;
