@@ -1,3 +1,5 @@
+import type { SessionEndReason } from "./session.types";
+
 /** Dominant tone of a Chronicle. @see 17-RUN-CHRONICLE.md §2 */
 export type ChronicleMood =
   | "tragic"
@@ -11,8 +13,8 @@ export interface ChronicleKeyMoment {
   sceneRef: number;
 }
 
-/** Why a GameSession ended, mirrors GameSession.endReason. */
-export type ChronicleEndReason = "death" | "inn" | "abandon";
+/** Why a GameSession ended. Alias of `SessionEndReason` — a Chronicle always mirrors its GameSession. */
+export type ChronicleEndReason = SessionEndReason;
 
 export interface Chronicle {
   id: string;
