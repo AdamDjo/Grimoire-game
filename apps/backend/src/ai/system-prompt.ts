@@ -202,6 +202,27 @@ function buildInventorySection(character: Character): string[] {
 }
 
 /**
+ * Builds the rest_requested section: tells the AI it may propose a rest as a
+ * player choice, but never lets it choose recovery values — the backend
+ * applies the canon rates (`game-rules/rest.ts`) and narrates the calm scene
+ * itself. Only "short" and "fire" are in scope; "inn" belongs to the
+ * separate session-ending inn flow and is never proposed mid-run.
+ * @see docs/public/raw/06-SURVIVAL.md §3, docs/public/raw/15-GAME-MASTER.md §4.5
+ */
+function buildRestSection(): string[] {
+  return [
+    '',
+    'You may optionally propose a rest via rest_requested when the narrative',
+    "and the player's action clearly indicate they are stopping to rest —",
+    'either a short rest ("short", a brief pause) or a rest at a campfire',
+    '("fire", a full night). Never propose "inn" — resting at an inn is a',
+    'separate flow. Never state or imply specific recovery numbers yourself',
+    '(no "+20 energy", no dice) — the backend computes and applies the',
+    'recovery, you only narrate a calm scene once it happens.',
+  ]
+}
+
+/**
  * Builds the Game Master system prompt.
  * The AI writes narration and choice labels only; the backend owns all rules,
  * dice, stats, and canon consistency. Canon brand terms are NOT re-translated —
@@ -235,6 +256,7 @@ export function buildSystemPrompt(
     ...buildGaugeTiersSection(character),
     ...buildConditionsSection(character, locale),
     ...buildInventorySection(character),
+    ...buildRestSection(),
     '',
     'Respond with a single JSON object and nothing else, matching exactly:',
     '{',

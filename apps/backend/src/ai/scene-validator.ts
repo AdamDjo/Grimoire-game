@@ -95,6 +95,20 @@ export const aiItemGainedSchema = z
 
 export type AiItemGained = z.infer<typeof aiItemGainedSchema>
 
+/**
+ * Zod schema for the optional per-turn `rest_requested` proposal (#184). The
+ * AI only signals the player's intent to rest — it never chooses recovery
+ * values, those are computed by `game-rules/rest.ts` from the canon table.
+ * "inn" is a distinct, session-ending flow (`endSessionAtInn`) and is out of
+ * scope here — the backend silently ignores it if proposed.
+ * @see docs/public/raw/06-SURVIVAL.md §3, docs/public/raw/15-GAME-MASTER.md §4.5
+ */
+export const aiRestRequestedSchema = z.object({
+  type: z.enum(['short', 'fire', 'inn']),
+})
+
+export type AiRestRequested = z.infer<typeof aiRestRequestedSchema>
+
 export const aiSceneSchema = z.object({
   narrative: z.string().min(1).max(4000),
   sceneType: z.enum(['exploration', 'combat', 'dialog', 'event', 'shop', 'rest']),
@@ -112,6 +126,8 @@ export const aiSceneSchema = z.object({
   apply_condition: aiApplyConditionSchema.nullish().transform((v) => v ?? undefined),
   /** Optional item-found proposal for this turn (#183). Some models emit `null` instead of omitting the field. */
   item_gained: aiItemGainedSchema.nullish().transform((v) => v ?? undefined),
+  /** Optional rest proposal for this turn (#184). Some models emit `null` instead of omitting the field. */
+  rest_requested: aiRestRequestedSchema.nullish().transform((v) => v ?? undefined),
 })
 
 export type AiScenePayload = z.infer<typeof aiSceneSchema>

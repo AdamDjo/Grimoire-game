@@ -24,6 +24,7 @@ import {
 } from '../game-rules/conditions'
 import { resolveChoice } from '../game-rules/consequences'
 import { acquireItem, equipItem, unequipItem, useItem } from '../game-rules/inventory'
+import { applyRest } from '../game-rules/rest'
 import { clearDyingOnHeal } from '../game-rules/survival'
 import { prisma } from '../lib/prisma'
 
@@ -425,6 +426,22 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
     ? acquireItem(inventory, itemProposal, randomUUID()).items
     : inventory
 
+  // The AI may propose a rest via restRequested (#184) — it only signals the
+  // player's intent, never the recovered values. "inn" is a distinct,
+  // session-ending flow (endSessionAtInn) and is silently ignored here; the
+  // backend computes and applies the canon short/fire rates itself
+  // (game-rules/rest.ts) and clears "mourant" if the rest healed HP back
+  // above 0. Rest risk (ambush) stays out of scope — always safe.
+  const restProposal = gm.scene.rest_requested
+  const restedSurvival =
+    !gameOver && restProposal && (restProposal.type === 'short' || restProposal.type === 'fire')
+      ? clearDyingOnHeal(
+          applyRest(restProposal.type, finalSurvival, finalInventory, attributes.blood, {
+            hasProvisions: true,
+          }).survival
+        )
+      : finalSurvival
+
   const scene = assembleScene({
     payload: gm.scene,
     sessionId: session.id,
@@ -457,13 +474,13 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
     prisma.character.update({
       where: { id: character.id },
       data: {
-        hp: finalSurvival.hp,
-        thirst: finalSurvival.thirst,
-        hunger: finalSurvival.hunger,
-        energy: finalSurvival.energy,
-        calamine: finalSurvival.calamine,
-        isDying: finalSurvival.isDying,
-        neglectStreak: finalSurvival.neglectStreak,
+        hp: restedSurvival.hp,
+        thirst: restedSurvival.thirst,
+        hunger: restedSurvival.hunger,
+        energy: restedSurvival.energy,
+        calamine: restedSurvival.calamine,
+        isDying: restedSurvival.isDying,
+        neglectStreak: restedSurvival.neglectStreak,
         activeConditions: finalConditions as unknown as object,
         inventory: finalInventory as unknown as object,
       },
@@ -489,7 +506,7 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
         await compressScene(
           session.id,
           recentTurns,
-          toGmCharacter(character, attributes, finalSurvival, finalConditions, finalInventory),
+          toGmCharacter(character, attributes, restedSurvival, finalConditions, finalInventory),
           scene.location
         )
       } catch (err) {
@@ -525,7 +542,7 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
 
   return {
     scene,
-    updatedStats: toStatsRecord(finalSurvival),
+    updatedStats: toStatsRecord(restedSurvival),
     updatedInventory: toInventoryRefs(finalInventory),
     notifications: [],
     diceRoll: resolution.diceRoll,
