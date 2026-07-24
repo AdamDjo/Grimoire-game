@@ -50,13 +50,16 @@ export type AiSouvenirCandidate = z.infer<typeof aiSouvenirCandidateSchema>
  * backend still re-validates the id against `isValidAiConditionId` before
  * ever applying it (this schema rejects unknown ids up front, but a stale
  * whitelist copy or renamed id must never silently pass through).
- * @see docs/public/raw/06-SURVIVAL.md §2 "Les deux familles de conditions"
+ * `calamineDelta` is only meaningful when `id === "cendre_corrupt"` (#182) —
+ * capped at +20/turn by `clampCalamineDelta`, ignored for every other id.
+ * @see docs/public/raw/06-SURVIVAL.md §2 "Les deux familles de conditions", §4 "La Cendre et la Calamine"
  */
 export const aiApplyConditionSchema = z.object({
   id: z.string().min(1).refine(isValidAiConditionId, {
     message: 'Unknown or non-AI-proposable condition id',
   }),
   reason: z.string().min(1).max(280),
+  calamineDelta: z.number().finite().optional(),
 })
 
 export type AiApplyCondition = z.infer<typeof aiApplyConditionSchema>

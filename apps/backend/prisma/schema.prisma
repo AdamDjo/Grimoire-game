@@ -92,7 +92,7 @@ model GameSession {
   /// normalisé). Persistée pour que la reprise garde la même langue (#168).
   locale     String   @default("en")
   status     String   @default("active") // active | ended
-  /// Why the session ended (death | inn | abandon). Null while active. Bridge to A3.
+  /// Why the session ended (death | inn | abandon | calcined). Null while active. Bridge to A3.
   endReason  String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -196,7 +196,7 @@ model Chronicle {
   characterId String
   sessionId   String
 
-  /// Why the run ended (death | inn | abandon), copied from GameSession.endReason.
+  /// Why the run ended (death | inn | abandon | calcined), copied from GameSession.endReason.
   endReason String
 
   title        String

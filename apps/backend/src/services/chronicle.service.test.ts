@@ -156,6 +156,32 @@ describe('generateChronicle', () => {
     expect(sceneLogDeleteMany).not.toHaveBeenCalled()
   })
 
+  it('narrates a calcined ending with its dedicated label, not undefined (#182)', async () => {
+    gameSessionFindUnique.mockResolvedValue({ ...baseSession, endReason: 'calcined' })
+    callOpenRouter.mockResolvedValue({ success: true, content: JSON.stringify(validOutput) })
+
+    const result = await generateChronicle('s1')
+
+    expect(result).toEqual({ generated: true })
+    expect(chronicleCreate).toHaveBeenCalledWith({
+      data: {
+        userId: 'user1',
+        characterId: 'char1',
+        sessionId: 's1',
+        endReason: 'calcined',
+        title: validOutput.title,
+        bodyMarkdown: validOutput.body_markdown,
+        mood: validOutput.mood,
+        keyMoments: validOutput.key_moments,
+        tagline: validOutput.tagline,
+      },
+    })
+    const [messages] = callOpenRouter.mock.calls[0] as [{ content: string }[]]
+    const prompt = messages[0].content
+    expect(prompt).not.toContain('undefined')
+    expect(prompt).toContain('Calciné')
+  })
+
   it('deduplicates pinned facts across memory chunks', async () => {
     memoryChunkFindMany.mockResolvedValue([
       { summary: 'A', keyFactsPinned: ['Artifact obtained: shrine relic'] },

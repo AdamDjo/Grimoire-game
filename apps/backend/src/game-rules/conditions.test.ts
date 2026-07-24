@@ -3,6 +3,9 @@ import { describe, expect, it } from 'vitest'
 import {
   applyAiCondition,
   applyBackendConditions,
+  applyCalamineDelta,
+  calamineTier,
+  clampCalamineDelta,
   clearResolvedBackendConditions,
   computeDisadvantage,
   isValidAiConditionId,
@@ -194,5 +197,78 @@ describe('applyAiCondition', () => {
     const existing = [condition({ id: 'poison' })]
     const next = applyAiCondition(existing, 'poison', 9)
     expect(next).toHaveLength(1)
+  })
+})
+
+describe('calamineTier (06-SURVIVAL §4)', () => {
+  it('is "none" from 0 to 24', () => {
+    expect(calamineTier(0)).toBe('none')
+    expect(calamineTier(24)).toBe('none')
+  })
+
+  it('is "stage1" from 25 to 49', () => {
+    expect(calamineTier(25)).toBe('stage1')
+    expect(calamineTier(49)).toBe('stage1')
+  })
+
+  it('is "stage2" from 50 to 74', () => {
+    expect(calamineTier(50)).toBe('stage2')
+    expect(calamineTier(74)).toBe('stage2')
+  })
+
+  it('is "stage3" from 75 to 99', () => {
+    expect(calamineTier(75)).toBe('stage3')
+    expect(calamineTier(99)).toBe('stage3')
+  })
+
+  it('is "dead" at 100 (transformation into Calciné)', () => {
+    expect(calamineTier(100)).toBe('dead')
+  })
+
+  it('stays "dead" above 100 (defensive, gauge is clamped elsewhere)', () => {
+    expect(calamineTier(150)).toBe('dead')
+  })
+})
+
+describe('clampCalamineDelta', () => {
+  it('passes through a delta within the cap', () => {
+    expect(clampCalamineDelta(15)).toBe(15)
+  })
+
+  it('caps a delta above +20 (anti-abuse guard, 06-SURVIVAL §4)', () => {
+    expect(clampCalamineDelta(35)).toBe(20)
+  })
+
+  it('drops a non-positive delta — no canon source lowers Calamine here', () => {
+    expect(clampCalamineDelta(0)).toBe(0)
+    expect(clampCalamineDelta(-10)).toBe(0)
+  })
+
+  it('drops a non-finite delta', () => {
+    expect(clampCalamineDelta(Number.NaN)).toBe(0)
+    expect(clampCalamineDelta(Number.POSITIVE_INFINITY)).toBe(0)
+  })
+})
+
+describe('applyCalamineDelta', () => {
+  it('adds a bounded delta to the gauge', () => {
+    const next = applyCalamineDelta(full({ calamine: 10 }), 15)
+    expect(next.calamine).toBe(25)
+  })
+
+  it('caps the applied delta at +20 even if a larger value is passed', () => {
+    const next = applyCalamineDelta(full({ calamine: 10 }), 999)
+    expect(next.calamine).toBe(30)
+  })
+
+  it('clamps the gauge at 100', () => {
+    const next = applyCalamineDelta(full({ calamine: 90 }), 20)
+    expect(next.calamine).toBe(100)
+  })
+
+  it('leaves survival untouched (same reference) when delta is dropped', () => {
+    const survival = full({ calamine: 10 })
+    const next = applyCalamineDelta(survival, -5)
+    expect(next).toBe(survival)
   })
 })

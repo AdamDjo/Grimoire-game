@@ -112,6 +112,18 @@ function buildConditionsSection(character: Character, locale: Locale): string[] 
     'already active on the player. Only propose ids from this exact whitelist —',
     'any other id is rejected:',
     ...whitelistLines,
+    '',
+    'Special case — "cendre_corrupt" (Calamine): only propose this id, with a',
+    'calamineDelta, when the scene you just wrote depicts ONE of these canon',
+    'sources (any other cause is ignored by the backend, gauge does not move):',
+    '- Exposure to archontic light: delta 5 to 15',
+    '- Contact with a corrupted creature or place: delta 5 to 10',
+    '- The gaze or presence of an archontic Watcher: delta 10 to 20',
+    '- Excessive ritual or magic use outside an artifact: delta 5 to 15',
+    'The backend caps the applied delta at +20/turn regardless of what you send.',
+    'Never invent a delta for any other condition id, and never let the gauge',
+    'rise without one of these sources actually happening in the narrative —',
+    'Calamine never rises on its own.',
   ]
 }
 
@@ -156,7 +168,7 @@ export function buildSystemPrompt(
     '  "choices": [{ "text": string, "type": "action"|"dialog"|"combat"|"flee"|"use_item"|"skill", "riskLevel"?: "safe"|"low"|"medium"|"high"|"deadly" }],',
     '  "turnSummary": string,',
     '  "souvenir_candidate"?: { "title_suggestion": string, "body": string, "type": "npc-death"|"moral-choice"|"secret-discovery"|"boss-victory"|"strong-promise" }',
-    '  "apply_condition"?: { "id": string, "reason": string }',
+    '  "apply_condition"?: { "id": string, "reason": string, "calamineDelta"?: number }',
     '}',
     '',
     'turnSummary: a short factual sentence (max 200 characters) condensing what just',
@@ -172,6 +184,8 @@ export function buildSystemPrompt(
     'apply_condition: OPTIONAL, omit on most turns. Only include it when the',
     'narrative event you just wrote clearly and directly causes one of the',
     'whitelisted conditions above. reason: one short sentence explaining why',
-    '(e.g. "crossed the poisonous marsh without protection").',
+    '(e.g. "crossed the poisonous marsh without protection"). calamineDelta is',
+    'only meaningful when id is "cendre_corrupt" — see the Calamine sources',
+    'above; omit it for every other condition id.',
   ].join('\n')
 }
