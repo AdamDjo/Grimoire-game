@@ -24,10 +24,11 @@ updated: 2026-07-24
 - #189 — mémoire projet, routage Claude/Codex et garde-fous `current-state`.
 - #101 / PR #191 — fallback multi-modèles face aux erreurs OpenRouter.
 - #180 / PR #196 — contrats partagés Survie v2 (`ConditionId`, `ActiveCondition`, `itemGained`).
+- #181 / PR #198 — conditions persistées, Désavantage au d20 et priorité langue explicite du
+  switcher en jeu sur la détection navigateur.
 
 ## Pré-déploiement restant
 
-- #181 — conditions persistées et Désavantage au d20.
 - #183 — acquisition, consommation et équipement de l'inventaire réel.
 - #182 — paliers de Calamine et fin spéciale `calcined`.
 - #184 — repos court/feu et récupération canonique.

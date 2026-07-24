@@ -13,7 +13,7 @@ updated: 2026-07-24
 ## Phase 1 — pré-déploiement
 
 1. #186 — afficher le HUD Survie v2, les conditions, l'inventaire réel, le Désavantage et la fin
-   Calciné ; dépend de ~~#180~~ (livré, PR #196) et #181-#184.
+   Calciné ; dépend de ~~#180~~ (livré, PR #196), ~~#181~~ (livré, PR #198) et #182-#184.
 2. #152 — livrer le flow du concept libre ou masquer l'option sans cul-de-sac pour la V1.
 3. #161 — configurer `NEXT_PUBLIC_API_URL`, le domaine final et les redirects Supabase.
 4. #129 — exécuter les golden paths anonyme, conversion et résilience en EN/FR.

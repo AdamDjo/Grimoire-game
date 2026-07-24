@@ -5,7 +5,7 @@ rag: true
 source_of_truth: true
 owner: backend
 default_agent: claude
-updated: 2026-07-23
+updated: 2026-07-24
 ---
 
 # Backend Next
@@ -13,7 +13,7 @@ updated: 2026-07-23
 ## Phase 1 — pré-déploiement
 
 1. ~~#180~~ — figer les contrats shared Survie v2 : livré (PR #196).
-2. #181 et #183 — livrer en séquence les conditions/Désavantage et l'inventaire réel.
+2. ~~#181~~ — conditions et Désavantage : livré (PR #198). #183 — inventaire réel reste à livrer.
 3. #182 et #184 — brancher la Calamine/fin Calciné et l'action de repos.
 4. #185 — renforcer le danger IA une fois les conséquences mécaniques disponibles.
 5. ~~#101~~ — fiabiliser les modèles : livré (PR #191).
@@ -24,7 +24,7 @@ updated: 2026-07-23
 
 Ordre de dépendance :
 
-`(#181 + #183) → (#182 + #184) → #185 → (#152 + #162) → #161 → #129`
+`#183 → (#182 + #184) → #185 → (#152 + #162) → #161 → #129`
 
 ## Post-déploiement
 
