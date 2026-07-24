@@ -29,12 +29,12 @@ merge. La checklist opérationnelle détaillée vit dans l'issue #163.
 | Conditions et Désavantage      | Livré | #181 / PR #198 |
 | Calamine et fin Calciné        | Livré | #182 / PR #199 |
 | Inventaire réel                | Livré | #183           |
+| Action de repos                | Livré | #184           |
 
 ## Phase 1 — pré-déploiement
 
 | Bloc                   | État       | Référence |
 | ---------------------- | ---------- | --------- |
-| Action de repos        | À faire    | #184      |
 | Danger IA              | À faire    | #185      |
 | UI Survie v2           | À faire    | #186      |
 | Concept libre          | À trancher | #152      |

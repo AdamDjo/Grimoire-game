@@ -14,19 +14,20 @@ updated: 2026-07-24
 
 1. ~~#180~~ — figer les contrats shared Survie v2 : livré (PR #196).
 2. ~~#181~~ — conditions et Désavantage : livré (PR #198).
-3. ~~#182~~ — Calamine/fin Calciné : livré (PR #199). #184 — action de repos reste à livrer.
+3. ~~#182~~ — Calamine/fin Calciné : livré (PR #199).
 4. ~~#183~~ — inventaire réel (acquisition, usage, équipement) : livré.
 5. ~~#201~~ — survie punitive (paliers narratifs, négligence→Calamine, érosion PV, état mourant) : livré.
-6. #185 — renforcer le danger IA une fois les conséquences mécaniques disponibles.
-7. ~~#101~~ — fiabiliser les modèles : livré (PR #191).
-8. #152 — résoudre ou désactiver le concept libre.
-9. #162 — traiter les risques sécurité applicables avant exposition publique.
-10. #161 — déployer l'API, appliquer les migrations et vérifier le healthcheck.
-11. #129 — supporter le golden path réel avec le frontend.
+6. ~~#184~~ — repos court/feu (récupération canonique, `restRequested`) : livré.
+7. #185 — renforcer le danger IA une fois les conséquences mécaniques disponibles.
+8. ~~#101~~ — fiabiliser les modèles : livré (PR #191).
+9. #152 — résoudre ou désactiver le concept libre.
+10. #162 — traiter les risques sécurité applicables avant exposition publique.
+11. #161 — déployer l'API, appliquer les migrations et vérifier le healthcheck.
+12. #129 — supporter le golden path réel avec le frontend.
 
 Ordre de dépendance :
 
-`#184 → #185 → (#152 + #162) → #161 → #129`
+`#185 → (#152 + #162) → #161 → #129`
 
 ## Post-déploiement
 
