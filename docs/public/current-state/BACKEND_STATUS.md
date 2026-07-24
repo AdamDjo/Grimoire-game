@@ -26,11 +26,12 @@ updated: 2026-07-24
 - #180 / PR #196 — contrats partagés Survie v2 (`ConditionId`, `ActiveCondition`, `itemGained`).
 - #181 / PR #198 — conditions persistées, Désavantage au d20 et priorité langue explicite du
   switcher en jeu sur la détection navigateur.
+- #182 / PR #199 — paliers de Calamine et fin spéciale `calcined`, `ChronicleEndReason` dérivé de
+  `SessionEndReason`.
 
 ## Pré-déploiement restant
 
 - #183 — acquisition, consommation et équipement de l'inventaire réel.
-- #182 — paliers de Calamine et fin spéciale `calcined`.
 - #184 — repos court/feu et récupération canonique.
 - #185 — danger IA régulier et crescendo d'intensité.
 - #152 — résolution du concept libre ou signal explicite de masquage V1.

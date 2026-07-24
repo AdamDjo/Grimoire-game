@@ -14,7 +14,7 @@ updated: 2026-07-24
 
 1. ~~#180~~ — figer les contrats shared Survie v2 : livré (PR #196).
 2. ~~#181~~ — conditions et Désavantage : livré (PR #198). #183 — inventaire réel reste à livrer.
-3. #182 et #184 — brancher la Calamine/fin Calciné et l'action de repos.
+3. ~~#182~~ — Calamine/fin Calciné : livré (PR #199). #184 — action de repos reste à livrer.
 4. #185 — renforcer le danger IA une fois les conséquences mécaniques disponibles.
 5. ~~#101~~ — fiabiliser les modèles : livré (PR #191).
 6. #152 — résoudre ou désactiver le concept libre.
@@ -24,7 +24,7 @@ updated: 2026-07-24
 
 Ordre de dépendance :
 
-`#183 → (#182 + #184) → #185 → (#152 + #162) → #161 → #129`
+`#183 → #184 → #185 → (#152 + #162) → #161 → #129`
 
 ## Post-déploiement
 
