@@ -11,7 +11,8 @@ export default defineConfig({
   // The single entrypoint. tsup follows every import from here.
   entry: ['src/index.ts'],
 
-  // Output directory. `start: node dist/index.js` runs the file produced here.
+  // Output directory. `format: ['esm']` makes tsup emit `.mjs`, so the file
+  // produced here is `dist/index.mjs` — what `start` and the Dockerfile run.
   outDir: 'dist',
 
   // ES modules, matching the source (`"module": "ESNext"` in tsconfig).
@@ -21,7 +22,8 @@ export default defineConfig({
   target: 'node20',
 
   // Inline `@grimoire/shared` INTO the bundle instead of leaving it as an
-  // external `import`. This is what makes dist/index.js self-contained.
+  // external `import`. Runtime packages (express, @prisma/client/runtime) stay
+  // external, so node_modules is still required at runtime.
   noExternal: ['@grimoire/shared'],
 
   // Wipe dist/ before each build so no stale files linger.

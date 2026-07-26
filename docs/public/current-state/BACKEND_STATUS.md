@@ -87,6 +87,25 @@ updated: 2026-07-26
   tout modèle ayant répondu 429/5xx — il réordonne sans jamais retirer, pour qu'un cooldown périmé
   ne puisse pas provoquer un déni de service. Détail `docs/public/tech/SECURITY.md`.
 
+- #162 (image de production) — `apps/backend/Dockerfile` corrigé avant tout déploiement : `CMD` pointait
+  sur `dist/index.js` alors que tsup émet `dist/index.mjs` (`format: ['esm']`), donc **le conteneur
+  aurait crashé au démarrage** bien que l'image se construise sans erreur. Corrigé aussi : le schéma
+  Prisma est désormais copié dans le stage `deps` pour que le `postinstall` `prisma generate` puisse
+  aboutir (le client généré vit dans `src/generated/prisma`, hors `node_modules`, et est inliné par
+  tsup) ; le stage runner prend ses `node_modules` d'un nouveau stage `prod-deps`
+  (`--prod --ignore-scripts`) au lieu du stage `deps` qui embarquait tsup/vitest/eslint ; l'API ne
+  tourne plus en `root` (`USER node`). Ajout d'un `.dockerignore` (il n'y en avait aucun) : les
+  `node_modules` de l'hôte — binaires macOS — entraient dans le contexte de build, et tout `.env`
+  local aussi. `docker-compose.yml` : le service `backend` ne recevait ni `DATABASE_URL` ni
+  `DIRECT_URL`, donc Prisma ne pouvait pas se connecter en dev local. `.env.example` (racine et
+  backend) réalignés sur `src/config/env.ts` : suppression des variables mortes (`JWT_SECRET`,
+  `ANTHROPIC_API_KEY`, `MISTRAL_API_KEY`, `GEMINI_API_KEY`, `OPENAI_API_KEY`, `PRIMARY_AI_PROVIDER`,
+  `SUPABASE_SERVICE_ROLE_KEY` — le code lit `SUPABASE_SERVICE_KEY`), ajout de `DATABASE_URL`/
+  `DIRECT_URL`, et retrait du défaut `OPENROUTER_MODEL=google/gemma-4-31b-it:free` (modèle rétrogradé
+  pour indisponibilité). ⚠️ Image non construite localement (daemon Docker indisponible) : correctif
+  établi par lecture de la sortie `tsup` et des imports externes du bundle, à confirmer au premier
+  build Coolify.
+
 ## Pré-déploiement restant
 
 - #161 — API, migrations, secrets, CORS et healthcheck de production.
