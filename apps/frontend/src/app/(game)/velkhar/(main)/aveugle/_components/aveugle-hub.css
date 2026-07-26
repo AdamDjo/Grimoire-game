@@ -506,6 +506,8 @@ body:has(.aveugle-hub) {
   }
 
   .aveugle-hub__layout.game-scene-layout {
+    align-content: start;
+    grid-template-rows: auto auto minmax(0, 1fr);
     height: 100%;
     min-height: 0;
     overflow: hidden;
@@ -517,11 +519,11 @@ body:has(.aveugle-hub) {
   }
 
   .aveugle-hub__layout.game-scene-layout--sidebar .game-scene-layout__body {
-    gap: 0.65rem;
+    gap: 0.45rem;
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(7rem, 22dvh) minmax(0, 1fr);
+    grid-template-rows: minmax(7rem, 22dvh) auto;
     min-height: 0;
-    overflow: hidden;
+    overflow: visible;
     padding: 0.65rem 0.75rem 0;
   }
 
@@ -532,7 +534,7 @@ body:has(.aveugle-hub) {
   }
 
   .aveugle-hub__sidebar {
-    height: 100%;
+    height: auto;
     min-height: 0;
     margin-inline: auto;
     max-width: 46rem;
@@ -540,14 +542,15 @@ body:has(.aveugle-hub) {
   }
 
   .aveugle-hub__layout .game-scene-layout__sidebar {
-    height: 100%;
+    align-self: start;
+    height: auto;
     min-height: 0;
-    overflow: hidden;
+    overflow: visible;
   }
 
   .aveugle-hub__dialogue-content {
     gap: 1rem;
-    height: 100%;
+    height: auto;
     max-height: none;
     min-height: 0;
     overflow-x: hidden;
@@ -556,14 +559,26 @@ body:has(.aveugle-hub) {
   }
 
   .aveugle-hub__dock {
-    height: 100%;
+    gap: 0.45rem;
+    height: auto;
     min-height: 0;
   }
 
   .aveugle-hub__dialogue.game-panel {
-    height: 100%;
+    align-self: start;
+    height: fit-content;
+    max-height: calc(78dvh - 12rem);
     min-height: 0;
     overflow: hidden;
+  }
+
+  .aveugle-hub__dialogue > .game-panel__content {
+    height: auto;
+    max-height: calc(78dvh - 12rem);
+  }
+
+  .aveugle-hub__dialogue-content {
+    max-height: calc(78dvh - 12rem);
   }
 
   .aveugle-hub__dialogue-content > header {
@@ -585,7 +600,12 @@ body:has(.aveugle-hub) {
   }
 
   .aveugle-hub__departure {
-    padding-block: 0.55rem 0.7rem;
+    padding: 0.75rem 1rem 1.35rem;
+  }
+
+  .aveugle-hub__layout .game-scene-layout__bottom {
+    align-self: start;
+    margin-top: 0;
   }
 }
 
@@ -609,7 +629,7 @@ body:has(.aveugle-hub) {
 
   .aveugle-hub__layout.game-scene-layout--sidebar .game-scene-layout__body {
     gap: 0.45rem;
-    grid-template-rows: 4.75rem minmax(0, 1fr);
+    grid-template-rows: 4.75rem auto;
     padding: 0.45rem 0.55rem 0;
   }
 
@@ -666,7 +686,7 @@ body:has(.aveugle-hub) {
   }
 
   .aveugle-hub__departure {
-    padding: 0.45rem 0.55rem 0.6rem;
+    padding: 0.65rem 0.55rem 1.1rem;
   }
 
   .aveugle-hub__departure .game-button {
