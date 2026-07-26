@@ -313,11 +313,7 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
     }
   }
 
-  const replayCreation = () => {
-    window.sessionStorage.removeItem(CHARACTER_DRAFT_STORAGE_KEY)
-    window.localStorage.removeItem(CHARACTER_RESULT_STORAGE_KEY)
-    setDraft(EMPTY_CHARACTER_DRAFT)
-    setIsDirty(false)
+  const reviewCreation = () => {
     moveToStep('identity')
   }
 
@@ -445,6 +441,14 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                   id={`character-create-${currentStep}`}
                   title={currentMeta.label}
                 />
+
+                <div className="character-create__inline-guidance">
+                  <GameIcon decorative name="book" size={24} />
+                  <p>
+                    <strong>{guidance.title}</strong>
+                    <span>{guidance.body}</span>
+                  </p>
+                </div>
 
                 {currentStep === 'identity' ? (
                   <form className="character-create__form" onSubmit={submitIdentity} noValidate>
@@ -766,14 +770,14 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                     <div className="character-create__summary-actions">
                       <GameButton
                         disabled={isSubmitting}
-                        onClick={replayCreation}
+                        onClick={reviewCreation}
                         size="sm"
                         variant="ghost"
                       >
-                        {t('restart')}
+                        {t('reviewChoices')}
                       </GameButton>
                       <GameButton loading={isSubmitting} onClick={finishCreation} variant="radiant">
-                        {t('returnToInn')}
+                        {t('createCharacter')}
                       </GameButton>
                     </div>
                   </div>

@@ -71,9 +71,19 @@ export function VelkharActiveConditions({
   const hasWarnings = isDying || neglectStreak > 0
 
   if (conditions.length === 0 && !hasWarnings) {
-    return variant === 'sheet' ? (
-      <p className="velkhar-session-window__muted">{t('noCondition')}</p>
-    ) : null
+    if (variant === 'sheet') {
+      return <p className="velkhar-session-window__muted">{t('noCondition')}</p>
+    }
+
+    return (
+      <div className="velkhar-conditions velkhar-conditions--hud" data-empty="true">
+        <span className="velkhar-conditions__label">{t('conditions')}</span>
+        <p className="velkhar-conditions__empty">
+          <GameIcon decorative name="shield" size={24} />
+          <span>{t('noCondition')}</span>
+        </p>
+      </div>
+    )
   }
 
   return (

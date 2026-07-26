@@ -10,14 +10,7 @@ import { VelkharMotionShell } from './velkhar-motion-shell'
 
 interface AveugleThresholdProps {
   campaignId?: string
-  isCharacterFlow?: boolean
   transitionFromHome?: boolean
-}
-
-function getCharacterFlowHref(campaignId?: string): string {
-  return campaignId
-    ? `${VELKHAR_WORLD.routes.aveugle}?flow=character-create&campaign=${encodeURIComponent(campaignId)}`
-    : `${VELKHAR_WORLD.routes.aveugle}?flow=character-create`
 }
 
 function getCharacterCreateHref(campaignId?: string): string {
@@ -28,7 +21,6 @@ function getCharacterCreateHref(campaignId?: string): string {
 
 export function AveugleThreshold({
   campaignId,
-  isCharacterFlow = false,
   transitionFromHome = false,
 }: AveugleThresholdProps) {
   const t = useTranslations('Auberge')
@@ -42,7 +34,6 @@ export function AveugleThreshold({
         <p className="aveugle-threshold__location" data-velkhar-enter>
           {t('thresholdLocation')}
         </p>
-        <div className="aveugle-threshold__portrait" data-velkhar-enter aria-hidden="true" />
 
         <GamePanel
           className="aveugle-threshold__panel"
@@ -52,24 +43,18 @@ export function AveugleThreshold({
           variant="dialogue-frame"
         >
           <div className="aveugle-threshold__speaker" data-velkhar-enter>
-            <GameIcon decorative name={isCharacterFlow ? 'quill' : 'eye'} size={48} />
-            <h1 id="aveugle-title">{isCharacterFlow ? t('registerTitle') : t('blindOne')}</h1>
+            <GameIcon decorative name="eye" size={48} />
+            <h1 id="aveugle-title">{t('blindOne')}</h1>
           </div>
 
-          <blockquote data-velkhar-enter>
-            {isCharacterFlow ? t('registerQuote') : t('thresholdQuote')}
-          </blockquote>
+          <blockquote data-velkhar-enter>{t('thresholdQuote')}</blockquote>
 
           <div className="aveugle-threshold__actions" data-velkhar-enter>
             <GameLink
-              href={
-                isCharacterFlow
-                  ? getCharacterCreateHref(campaignId)
-                  : getCharacterFlowHref(campaignId)
-              }
+              href={getCharacterCreateHref(campaignId)}
               trailingIcon={<GameIcon decorative name="arrow" size={24} />}
             >
-              {isCharacterFlow ? t('giveName') : t('answer')}
+              {t('answer')}
             </GameLink>
           </div>
         </GamePanel>

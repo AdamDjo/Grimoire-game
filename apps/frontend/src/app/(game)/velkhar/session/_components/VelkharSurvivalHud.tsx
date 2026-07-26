@@ -41,7 +41,7 @@ export function VelkharSurvivalHud({
       statusBars={[
         {
           id: 'health',
-          icon: <GameIcon decorative name="blood-drop" size={24} />,
+          icon: <GameIcon decorative name="blood-drop" size={32} />,
           label: t('healthPoints'),
           max: survival.maxHp,
           tone: 'danger',
@@ -59,7 +59,7 @@ export function VelkharSurvivalHud({
       statusGauges={[
         {
           id: 'thirst',
-          icon: <GameIcon decorative name="water" size={24} />,
+          icon: <GameIcon decorative name="water" size={32} />,
           label: t('thirst'),
           max: 100,
           tone: 'aqua',
@@ -67,7 +67,7 @@ export function VelkharSurvivalHud({
         },
         {
           id: 'hunger',
-          icon: <GameIcon decorative name="hunger" size={24} />,
+          icon: <GameIcon decorative name="hunger" size={32} />,
           label: t('hunger'),
           max: 100,
           tone: 'ember',
@@ -75,7 +75,7 @@ export function VelkharSurvivalHud({
         },
         {
           id: 'fatigue',
-          icon: <GameIcon decorative name="moon" size={24} />,
+          icon: <GameIcon decorative name="moon" size={32} />,
           label: t('fatigue'),
           max: 100,
           value: 100 - survival.energy,
@@ -83,9 +83,10 @@ export function VelkharSurvivalHud({
         {
           className: 'velkhar-session__calamine-ring',
           id: 'calamine',
-          icon: <GameIcon decorative name="warning" size={24} />,
+          icon: <GameIcon decorative name="warning" size={32} />,
           label: t('calamine'),
           max: 100,
+          tone: 'danger',
           value: survival.calamine,
         },
       ]}

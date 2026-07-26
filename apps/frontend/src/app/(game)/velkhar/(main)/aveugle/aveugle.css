@@ -52,10 +52,6 @@ body:has(.aveugle-threshold) .main-navigation {
   text-transform: uppercase;
 }
 
-.aveugle-threshold__portrait {
-  display: none;
-}
-
 .aveugle-threshold__panel {
   aspect-ratio: 1533 / 1024;
   background: transparent;
@@ -123,19 +119,6 @@ body:has(.aveugle-threshold) .main-navigation {
     max-width: min(40rem, 78vw);
   }
 
-  .aveugle-threshold__portrait {
-    background:
-      linear-gradient(90deg, rgba(5, 4, 3, 0.72), transparent 36%, rgba(5, 4, 3, 0.16)),
-      linear-gradient(180deg, rgba(5, 4, 3, 0.08), rgba(5, 4, 3, 0.68)),
-      url('/scenes/aveugle-cendres.webp') 73% 40% / 185% auto no-repeat;
-    box-shadow:
-      inset 0 0 0 1px rgba(255, 255, 255, 0.1),
-      0 1rem 2rem rgba(0, 0, 0, 0.42);
-    display: block;
-    height: clamp(8.5rem, 19vw, 10.5rem);
-    margin: 0 0 0.75rem;
-  }
-
   .aveugle-threshold__panel {
     aspect-ratio: auto;
   }
@@ -178,19 +161,6 @@ body:has(.aveugle-threshold) .main-navigation {
 
   .aveugle-threshold__dialogue {
     max-width: 100%;
-  }
-
-  .aveugle-threshold__portrait {
-    background:
-      linear-gradient(90deg, rgba(5, 4, 3, 0.68), transparent 42%, rgba(5, 4, 3, 0.12)),
-      linear-gradient(180deg, rgba(5, 4, 3, 0.08), rgba(5, 4, 3, 0.68)),
-      url('/scenes/aveugle-cendres.webp') 73% 40% / 185% auto no-repeat;
-    box-shadow:
-      inset 0 0 0 1px rgba(255, 255, 255, 0.1),
-      0 1rem 2rem rgba(0, 0, 0, 0.42);
-    display: block;
-    height: clamp(7.5rem, 32vw, 9rem);
-    margin-bottom: 0.65rem;
   }
 
   .aveugle-threshold__location {

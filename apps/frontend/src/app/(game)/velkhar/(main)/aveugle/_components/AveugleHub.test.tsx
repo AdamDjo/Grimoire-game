@@ -117,23 +117,11 @@ describe('AveugleHub', () => {
     expect(screen.getByText(/Before the road, give me your name/)).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Answer/ })).toHaveAttribute(
       'href',
-      '/velkhar/aveugle?flow=character-create&campaign=nouvelle-chronique'
+      '/velkhar/character-create?campaign=nouvelle-chronique'
     )
     expect(
       screen.queryByRole('group', { name: 'Topics to discuss with The Blind One' })
     ).not.toBeInTheDocument()
-  })
-
-  it('ouvre la Forge au second temps du flow sans personnage', async () => {
-    render(<AveugleHub campaignId="nouvelle-chronique" isCharacterFlow />)
-
-    expect(
-      await screen.findByRole('heading', { name: "The Blind One's register" })
-    ).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /Give my name/ })).toHaveAttribute(
-      'href',
-      '/velkhar/character-create?campaign=nouvelle-chronique'
-    )
   })
 
   it('affiche le personnage et rend les sujets du hub interactifs', async () => {
@@ -265,6 +253,34 @@ describe('AveugleHub', () => {
     await user.click(screen.getByRole('button', { name: 'Try again' }))
     expect(await screen.findByLabelText('Character: Amani')).toBeInTheDocument()
     expect(getAveugleHub).toHaveBeenCalledTimes(2)
+  })
+
+  it('réutilise le parcours de création de compte au retour d’un run', async () => {
+    getAveugleHub.mockRejectedValueOnce(new Error('offline'))
+    window.localStorage.setItem(CHARACTER_RESULT_STORAGE_KEY, JSON.stringify(CHARACTER))
+
+    render(<AveugleHub isRunReturn />)
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Your Chronicle is waiting')
+    expect(screen.getByRole('link', { name: 'Create account' })).toHaveAttribute(
+      'href',
+      '/signup?next=%2Fvelkhar%2Faveugle%3Freturn%3Drun'
+    )
+    expect(getAveugleHub).toHaveBeenCalledTimes(1)
+  })
+
+  it('impose la création de compte quand l’entrée depuis le home ne peut pas initialiser le hub', async () => {
+    getAveugleHub.mockRejectedValueOnce(new Error('offline'))
+    window.localStorage.setItem(CHARACTER_RESULT_STORAGE_KEY, JSON.stringify(CHARACTER))
+
+    render(<AveugleHub transitionFromHome />)
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Your Chronicle is waiting')
+    expect(screen.getByRole('link', { name: 'Create account' })).toHaveAttribute(
+      'href',
+      '/signup?next=%2Fvelkhar%2Faveugle%3Ftransition%3Dhome'
+    )
+    expect(screen.queryByRole('button', { name: 'Try again' })).not.toBeInTheDocument()
   })
 
   it('oriente une session active vers la reprise', async () => {

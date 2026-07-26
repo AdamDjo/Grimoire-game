@@ -12,6 +12,7 @@ import { PlayerIdentity } from '@/components/ui/grimoire/PlayerIdentity/PlayerId
 import { ResourceCounter } from '@/components/ui/grimoire/ResourceCounter/ResourceCounter'
 import { ACTIVE_GAME_SESSION_COOKIE, hasActiveGameSession } from '@/lib/active-game-session'
 import { gsap, useGSAP } from '@/lib/gsap-init'
+import { getAuthHref } from '@/lib/internal-navigation'
 import { ensureAnonymousSession } from '@/lib/supabase/ensure-session'
 
 import { VocationEmblem } from '../../../_components/VocationEmblem/VocationEmblem'
@@ -39,7 +40,6 @@ import type { AveugleHubState, Souvenir } from '@grimoire/shared'
 interface AveugleHubProps {
   campaignId?: string
   characterReadyHint?: boolean
-  isCharacterFlow?: boolean
   isRunReturn?: boolean
   previewIntro?: boolean
   transitionFromHome?: boolean
@@ -76,13 +76,13 @@ function readCharacter(
 export function AveugleHub({
   campaignId,
   characterReadyHint = false,
-  isCharacterFlow = false,
   isRunReturn = false,
   previewIntro = false,
   transitionFromHome = false,
 }: AveugleHubProps) {
   const locale = useLocale()
   const t = useTranslations('Auberge')
+  const sessionT = useTranslations('Session')
   const [hydrated, setHydrated] = useState(false)
   const [character, setCharacter] = useState<CharacterCreateDraft | null>(null)
   const [hasActiveSessionState, setHasActiveSessionState] = useState(false)
@@ -298,26 +298,33 @@ export function AveugleHub({
         {showIntro ? (
           <AubergeIntro onComplete={() => setShowIntro(false)} preview={previewIntro} />
         ) : null}
-        <AveugleThreshold
-          campaignId={campaignId}
-          isCharacterFlow={isCharacterFlow}
-          transitionFromHome={transitionFromHome}
-        />
+        <AveugleThreshold campaignId={campaignId} transitionFromHome={transitionFromHome} />
       </>
     )
   }
 
   if (hubError || !hubState) {
+    const showAccountPrompt = isRunReturn || transitionFromHome
+    const accountReturnPath = isRunReturn
+      ? '/velkhar/aveugle?return=run'
+      : '/velkhar/aveugle?transition=home'
+
     return (
       <main className="aveugle-hub aveugle-hub--loading aveugle-hub--error">
         <div className="aveugle-hub__scene" aria-hidden="true" />
         <section className="aveugle-hub__load-error" role="alert">
-          <GameIcon decorative name="warning" size={48} />
-          <h1>{t('hubErrorTitle')}</h1>
-          <p>{t('hubErrorBody')}</p>
-          <GameButton loading={hubLoading} onClick={() => void loadHub()} variant="radiant">
-            {t('retry')}
-          </GameButton>
+          <GameIcon decorative name={showAccountPrompt ? 'lock' : 'warning'} size={48} />
+          <h1>{showAccountPrompt ? sessionT('chronicleWaiting') : t('hubErrorTitle')}</h1>
+          <p>{showAccountPrompt ? sessionT('limitBody') : t('hubErrorBody')}</p>
+          {showAccountPrompt ? (
+            <GameLink href={getAuthHref('/signup', accountReturnPath)} variant="radiant">
+              {sessionT('createAccount')}
+            </GameLink>
+          ) : (
+            <GameButton loading={hubLoading} onClick={() => void loadHub()} variant="radiant">
+              {t('retry')}
+            </GameButton>
+          )}
         </section>
       </main>
     )
