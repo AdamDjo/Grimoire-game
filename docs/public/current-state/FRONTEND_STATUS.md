@@ -40,6 +40,8 @@ updated: 2026-07-26
   qui avance vers l'étape Histoire, repli explicite vers les 4 voies preset avec message dédié en
   cas d'échec, `CharacterCreateDraft` v2 (nom personnalisé, trait narratif, compétences décalées)
   persisté dans le brouillon versionné. Copy EN/FR synchronisée.
+- #162 — axios retiré de `apps/frontend` : dépendance inutilisée (aucun appel dans le code, fetch
+  natif partout), sans impact fonctionnel.
 
 ## Pré-déploiement restant
 

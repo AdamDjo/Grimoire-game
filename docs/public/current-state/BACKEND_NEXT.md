@@ -22,13 +22,13 @@ updated: 2026-07-26
 8. ~~#101~~ — fiabiliser les modèles : livré (PR #191).
 9. ~~#152~~ — résoudre le concept libre (`POST /api/character/resolve-vocation`) : livré.
 10. ~~#207~~ — cache d'images de scène dynamique partagé : livré.
-11. #162 — traiter les risques sécurité applicables avant exposition publique.
+11. ~~#162~~ — vulnérabilités npm et RLS Supabase : livré (PR #209).
 12. #161 — déployer l'API, appliquer les migrations et vérifier le healthcheck.
 13. #129 — supporter le golden path réel avec le frontend.
 
 Ordre de dépendance :
 
-`#162 → #161 → #129`
+`#161 → #129`
 
 ## Post-déploiement
 

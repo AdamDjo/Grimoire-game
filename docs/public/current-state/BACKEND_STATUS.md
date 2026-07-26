@@ -66,10 +66,13 @@ updated: 2026-07-26
   (`resumeLatestScene`, `buildOpeningScene`, `resolveTurn`). Défensif de bout en bout : toute
   panne (génération, upload, course concurrentielle sur la clé unique) retombe sur `null` sans
   jamais faire échouer le tour. Doc technique `docs/public/tech/DYNAMIC_SCENE_IMAGES.md`.
+- #162 — vulnérabilités npm critiques/hautes résolues (montée Next.js 16.2.11, Vitest 3,
+  `pnpm.overrides` transitifs, axios retiré car inutilisé), audit CI bloquant sur `high`/`critical`,
+  RLS activé sur les 9 tables Supabase (policy deny-all `anon`/`authenticated`, le backend accède
+  via `postgres`/`service_role` qui bypassent RLS). Détail `docs/public/tech/SECURITY.md`.
 
 ## Pré-déploiement restant
 
-- #162 — vulnérabilités critiques/hautes applicables.
 - #161 — API, migrations, secrets, CORS et healthcheck de production.
 - #129 — golden path contre les services réels.
 

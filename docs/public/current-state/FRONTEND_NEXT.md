@@ -19,8 +19,9 @@ updated: 2026-07-26
    synchronisés avec `isDying`/`neglectStreak` ; l'affichage dédié à ces deux champs reste à faire
    dans le cadre du HUD Survie v2.
 2. ~~#152~~ — flow du concept libre dans `CharacterCreateFlow` : livré.
-3. #161 — configurer `NEXT_PUBLIC_API_URL`, le domaine final et les redirects Supabase.
-4. #129 — exécuter les golden paths anonyme, conversion et résilience en EN/FR.
+3. ~~#162~~ — retrait d'axios (dépendance inutilisée) : livré, aucune action de suivi côté frontend.
+4. #161 — configurer `NEXT_PUBLIC_API_URL`, le domaine final et les redirects Supabase.
+5. #129 — exécuter les golden paths anonyme, conversion et résilience en EN/FR.
 
 ## Post-déploiement
 
