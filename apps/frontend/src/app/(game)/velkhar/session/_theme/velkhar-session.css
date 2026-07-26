@@ -262,6 +262,19 @@
   padding: 0.55rem 1rem;
 }
 
+.game-session-dice[data-roll-mode='disadvantage'] {
+  border-color: color-mix(in srgb, var(--blood) 58%, var(--border-gold));
+  box-shadow:
+    inset 0 1px color-mix(in srgb, var(--blood) 18%, transparent),
+    0 0 24px color-mix(in srgb, var(--blood) 16%, transparent);
+}
+
+.game-session-dice__roll {
+  display: grid;
+  gap: 0.2rem;
+  justify-items: center;
+}
+
 @keyframes gs-dice-enter {
   from {
     opacity: 0;
@@ -311,6 +324,25 @@
   font-family: var(--font-game-ui);
   font-size: 0.78rem;
   font-variant-numeric: tabular-nums;
+}
+
+.game-session-dice__mode {
+  align-items: center;
+  color: color-mix(in srgb, var(--blood) 62%, var(--parchment));
+  display: flex;
+  font-family: var(--font-game-ui);
+  font-size: 0.68rem;
+  font-weight: 700;
+  gap: 0.2rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.game-session-dice__cause {
+  color: color-mix(in srgb, var(--blood) 55%, var(--ink-2));
+  font-family: var(--font-game-ui);
+  font-size: 0.74rem;
+  margin: 0.2rem 0 0;
 }
 
 .velkhar-session__state {
@@ -392,6 +424,15 @@
 .velkhar-session-window .game-window {
   animation: gs-tool-enter var(--motion-step) var(--ease-grimoire-out) both;
   bottom: clamp(7.75rem, 15dvh, 9.25rem);
+  max-width: min(92vw, 46rem);
+}
+
+.velkhar-session-window--inventory {
+  --game-window-width: min(68rem, calc(100vw - 2rem));
+}
+
+.velkhar-session-window--inventory .game-window {
+  max-width: min(96vw, 68rem);
 }
 
 @keyframes gs-tool-enter {
@@ -412,6 +453,7 @@
   list-style: none;
   margin: 0;
   padding: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .velkhar-session-window__attributes > div {
@@ -420,8 +462,10 @@
   border: 1px solid rgba(217, 164, 65, 0.2);
   display: grid;
   gap: 0.75rem;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  padding: 0.65rem;
+  grid-template-rows: auto auto;
+  justify-items: center;
+  padding: 0.85rem;
+  text-align: center;
 }
 
 .velkhar-session-window__attributes > div[data-attribute='blood'] {
@@ -445,7 +489,7 @@
 .velkhar-session-window__attributes dd {
   color: var(--gold-light);
   font-family: var(--font-game-heading);
-  font-size: 1.35rem;
+  font-size: clamp(1.65rem, 4vw, 2.2rem);
   margin: 0;
   font-variant-numeric: tabular-nums;
 }
@@ -574,27 +618,112 @@
   color: color-mix(in srgb, var(--blood) 70%, var(--parchment));
 }
 
-.velkhar-character-sheet__conditions {
+.velkhar-conditions ul {
   display: flex;
   flex-wrap: wrap;
   gap: 0.45rem;
   list-style: none;
-  margin: 0.65rem 0 0;
+  margin: 0;
   padding: 0;
 }
 
-.velkhar-character-sheet__conditions li {
-  background: color-mix(in srgb, var(--blood) 12%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--blood) 34%, transparent);
+.velkhar-conditions--sheet ul {
+  margin-top: 0.65rem;
+}
+
+.velkhar-conditions__label {
+  color: var(--ink-2);
+  font-family: var(--font-game-ui);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.velkhar-condition {
+  position: relative;
+}
+
+.velkhar-condition__trigger {
+  align-items: center;
+  background: color-mix(in srgb, var(--cendre) 10%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cendre) 32%, transparent);
   color: var(--parchment);
+  display: inline-flex;
   font-family: var(--font-game-ui);
   font-size: 0.78rem;
+  gap: 0.35rem;
+  min-height: 32px;
   padding: 0.35rem 0.55rem;
+}
+
+.velkhar-condition[data-tone='critical'] .velkhar-condition__trigger {
+  background: color-mix(in srgb, var(--blood) 14%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--blood) 42%, transparent);
+}
+
+.velkhar-condition__trigger:focus-visible {
+  outline: 2px solid var(--gold-light);
+  outline-offset: 2px;
+}
+
+.velkhar-condition__tooltip {
+  background: color-mix(in srgb, var(--void) 96%, var(--gold));
+  border: 1px solid var(--border-gold);
+  bottom: calc(100% + 0.45rem);
+  box-shadow: 0 12px 30px color-mix(in srgb, var(--void) 72%, transparent);
+  color: var(--parchment);
+  font-family: var(--font-game-ui);
+  font-size: 0.76rem;
+  left: 0;
+  line-height: 1.4;
+  max-width: min(20rem, 80vw);
+  opacity: 0;
+  padding: 0.6rem 0.7rem;
+  pointer-events: none;
+  position: absolute;
+  transform: translateY(0.25rem);
+  transition:
+    opacity var(--motion-ui) var(--ease-grimoire-out),
+    transform var(--motion-ui) var(--ease-grimoire-out);
+  width: max-content;
+  z-index: 4;
+}
+
+.velkhar-condition__trigger:hover + .velkhar-condition__tooltip,
+.velkhar-condition__trigger:focus + .velkhar-condition__tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.velkhar-conditions--hud {
+  display: grid;
+  gap: 0.25rem;
+  min-height: 2.2rem;
+}
+
+.velkhar-conditions--hud .velkhar-condition__trigger > span {
+  max-width: 8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .velkhar-inventory {
   display: grid;
   gap: 1.35rem;
+}
+
+.velkhar-inventory__workspace {
+  align-items: start;
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: minmax(0, 1fr) minmax(15rem, 0.42fr);
+}
+
+.velkhar-inventory__categories {
+  display: grid;
+  gap: 1.35rem;
+  min-width: 0;
 }
 
 .velkhar-inventory__summary {
@@ -698,6 +827,34 @@
   padding: 0.7rem;
 }
 
+.velkhar-inventory__specials section > div:first-child {
+  min-width: 0;
+}
+
+.velkhar-inventory__specials p {
+  color: var(--ink-2);
+  font-family: var(--font-game-ui);
+  font-size: 0.7rem;
+  line-height: 1.35;
+  margin: 0.25rem 0 0;
+  max-width: 14rem;
+}
+
+.velkhar-inventory__key-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: end;
+}
+
+.velkhar-inventory__empty-keyring {
+  color: var(--ink-2);
+  font-family: var(--font-game-ui);
+  font-size: 0.72rem;
+  max-width: 8rem;
+  text-align: right;
+}
+
 .velkhar-inventory__detail {
   background: color-mix(in srgb, var(--gold) 5%, transparent);
   box-shadow:
@@ -705,6 +862,8 @@
     0 12px 28px color-mix(in srgb, var(--void) 48%, transparent);
   min-height: 8.5rem;
   padding: 1rem;
+  position: sticky;
+  top: 0;
 }
 
 .velkhar-inventory__detail h3 {
@@ -743,6 +902,15 @@
 
 .velkhar-inventory__action-button:hover {
   background: color-mix(in srgb, var(--gold) 22%, transparent);
+}
+
+.velkhar-inventory__action-button:active {
+  transform: translateY(1px);
+}
+
+.velkhar-inventory__action-button:focus-visible {
+  outline: 2px solid var(--gold-light);
+  outline-offset: 2px;
 }
 
 .velkhar-session-menu {
@@ -883,6 +1051,14 @@
   .velkhar-session__topbar-end > a {
     font-size: 0.92rem;
   }
+
+  .velkhar-inventory__workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .velkhar-inventory__detail {
+    position: static;
+  }
 }
 
 @media (max-width: 620px) {
@@ -937,6 +1113,18 @@
 
   .velkhar-character-sheet__survival {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .velkhar-session-window__attributes {
+    grid-template-columns: 1fr;
+  }
+
+  .velkhar-inventory__workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .velkhar-inventory__detail {
+    position: static;
   }
 
   .velkhar-inventory__grid--equipment {

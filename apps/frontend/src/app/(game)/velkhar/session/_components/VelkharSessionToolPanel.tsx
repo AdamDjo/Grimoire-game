@@ -1,17 +1,19 @@
 import { useTranslations } from 'next-intl'
 
 import { GameWindow } from '@/components/ui/grimoire/GameWindow/GameWindow'
+import { cn } from '@/lib/utils'
 
 import { VelkharCharacterSheet } from './VelkharCharacterSheet'
 import { VelkharInventoryPanel } from './VelkharInventoryPanel'
 import { VelkharSessionMenu } from './VelkharSessionMenu'
 
-import type { Character, InventoryItemRef, SurvivalStats } from '@grimoire/shared'
+import type { ActiveCondition, Character, InventoryItemRef, SurvivalStats } from '@grimoire/shared'
 
 export type VelkharSessionTool = 'character' | 'inventory' | 'menu'
 
 interface VelkharSessionToolPanelProps {
   character: Character
+  conditions: ActiveCondition[]
   ending: boolean
   iron: number | null
   inventory: InventoryItemRef[]
@@ -25,6 +27,7 @@ interface VelkharSessionToolPanelProps {
 
 export function VelkharSessionToolPanel({
   character,
+  conditions,
   ending,
   iron,
   inventory,
@@ -40,7 +43,10 @@ export function VelkharSessionToolPanel({
 
   return (
     <GameWindow
-      className="velkhar-session-window"
+      className={cn(
+        'velkhar-session-window',
+        openTool === 'inventory' && 'velkhar-session-window--inventory'
+      )}
       closeLabel={t('closePanel')}
       dismissLabel={t('closePanel')}
       label={
@@ -64,7 +70,7 @@ export function VelkharSessionToolPanel({
       ) : null}
 
       {openTool === 'character' ? (
-        <VelkharCharacterSheet character={character} survival={survival} />
+        <VelkharCharacterSheet character={character} conditions={conditions} survival={survival} />
       ) : null}
 
       {openTool === 'menu' ? (

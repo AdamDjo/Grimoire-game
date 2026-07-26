@@ -10,11 +10,13 @@ import { VelkharSession } from './VelkharSession'
 
 import type { SceneResponse } from '@grimoire/shared'
 
-const { abandonSessionMock, createSessionMock, postGameActionMock } = vi.hoisted(() => ({
-  abandonSessionMock: vi.fn(),
-  createSessionMock: vi.fn(),
-  postGameActionMock: vi.fn(),
-}))
+const { abandonSessionMock, createSessionMock, postGameActionMock, postInventoryActionMock } =
+  vi.hoisted(() => ({
+    abandonSessionMock: vi.fn(),
+    createSessionMock: vi.fn(),
+    postGameActionMock: vi.fn(),
+    postInventoryActionMock: vi.fn(),
+  }))
 
 vi.mock('next/image', () => ({
   default: ({
@@ -35,6 +37,7 @@ vi.mock('@/features/game-session/api/game-session-api', () => ({
     abandonSession: abandonSessionMock,
     createSession: createSessionMock,
     postGameAction: postGameActionMock,
+    postInventoryAction: postInventoryActionMock,
   },
 }))
 
@@ -48,6 +51,15 @@ vi.mock('@/lib/supabase/client', () => ({
 }))
 
 const OPENING_RESPONSE: SceneResponse = {
+  activeConditions: [
+    {
+      id: 'wound',
+      source: 'backend',
+      appliedAtTurn: 1,
+      expiresRule: { type: 'until_cured' },
+    },
+  ],
+  iron: 37,
   scene: {
     id: 'scene-1',
     sessionId: 'session-1',
@@ -111,7 +123,15 @@ const OPENING_RESPONSE: SceneResponse = {
       quantity: 1,
       category: 'artifact',
     },
+    {
+      id: 'item-letter',
+      name: 'Letter from Lekh',
+      quantity: 1,
+      category: 'key',
+      description: 'A water-stained letter bearing an unbroken seal.',
+    },
   ],
+  survival: MOCK_CHARACTER.stats.survival,
   notifications: [],
   source: 'ai',
 }
@@ -134,11 +154,21 @@ const NEXT_RESPONSE: SceneResponse = {
   },
 }
 
+const CALCINED_RESPONSE: SceneResponse = {
+  ...NEXT_RESPONSE,
+  endReason: 'calcined',
+  survival: {
+    ...NEXT_RESPONSE.survival,
+    calamine: 100,
+  },
+}
+
 describe('VelkharSession', () => {
   beforeEach(() => {
     abandonSessionMock.mockReset()
     createSessionMock.mockReset()
     postGameActionMock.mockReset()
+    postInventoryActionMock.mockReset()
     createSessionMock.mockResolvedValue(OPENING_RESPONSE)
     postGameActionMock.mockResolvedValue(NEXT_RESPONSE)
     abandonSessionMock.mockResolvedValue({ status: 'ended', endReason: 'abandon' })
@@ -153,8 +183,12 @@ describe('VelkharSession', () => {
 
     expect(await screen.findByText('Salt moves across the road.')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Approach the stranger/ })).toBeInTheDocument()
-    expect(screen.getByRole('progressbar', { name: 'Blood' })).toBeInTheDocument()
+    expect(screen.getByRole('progressbar', { name: 'Health points (HP)' })).toBeInTheDocument()
+    expect(screen.queryByRole('progressbar', { name: 'Blood' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('progressbar', { name: 'Breath' })).not.toBeInTheDocument()
     expect(screen.getByRole('progressbar', { name: 'Calamine' })).toBeInTheDocument()
+    expect(screen.getByLabelText('Iron : 37')).toBeInTheDocument()
+    expect(screen.getByText('Wound')).toBeInTheDocument()
   })
 
   it('envoie un choix une seule fois et affiche la scène suivante', async () => {
@@ -213,11 +247,13 @@ describe('VelkharSession', () => {
     render(<VelkharSession initialCharacter={MOCK_CHARACTER} />)
 
     await screen.findByText('Salt moves across the road.')
-    await user.click(screen.getByRole('button', { name: 'Open inventory, 5 items' }))
+    await user.click(screen.getByRole('button', { name: 'Open inventory, 6 items' }))
 
     expect(screen.getByRole('dialog', { name: 'Inventory panel' })).toBeInTheDocument()
     expect(screen.getByText('8 fixed slots')).toBeInTheDocument()
     expect(screen.getByText('12 slots')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Keyring' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Letter from Lekh/ })).toBeEnabled()
     expect(screen.getByRole('button', { name: /Main hand: Salt sabre, equipped/ })).toBeEnabled()
     expect(screen.getByRole('button', { name: /Bag slot 2: Sealed letter, locked/ })).toBeDisabled()
     expect(
@@ -273,5 +309,16 @@ describe('VelkharSession', () => {
 
     await waitFor(() => expect(abandonSessionMock).toHaveBeenCalledWith('session-1'))
     expect(await screen.findByText('A few steps, not yet a Chronicle')).toBeInTheDocument()
+  })
+
+  it('affiche la transition Calciné avant de charger la Chronique', async () => {
+    const user = userEvent.setup()
+    postGameActionMock.mockResolvedValueOnce(CALCINED_RESPONSE)
+    render(<VelkharSession initialCharacter={MOCK_CHARACTER} />)
+
+    await user.click(await screen.findByRole('button', { name: /Approach the stranger/ }))
+
+    expect(await screen.findByText('CALCINED')).toBeInTheDocument()
+    expect(screen.getByText(/The Ash has won/)).toBeInTheDocument()
   })
 })

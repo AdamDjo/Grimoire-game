@@ -1,6 +1,11 @@
-import type { Attribute } from "./character.types";
+import type {
+  ActiveCondition,
+  Attribute,
+  SurvivalStats,
+} from "./character.types";
 import type { DiceRoll } from "./dice.types";
 import type { ItemGained } from "./inventory.types";
+import type { SessionEndReason } from "./session.types";
 
 export type SceneType =
   | "exploration"
@@ -69,7 +74,15 @@ export interface Scene {
 }
 
 export interface SceneResponse {
+  /** Exact backend-owned condition state after this scene. */
+  activeConditions: ActiveCondition[];
+  /** Present when this scene definitively ended the run. */
+  endReason?: SessionEndReason;
+  /** Current in-run currency, projected from the persisted character. */
+  iron: number;
   scene: Scene;
+  /** Complete survival snapshot. Prefer this over the legacy flattened record. */
+  survival: SurvivalStats;
   updatedStats: Record<string, number>;
   updatedInventory: InventoryItemRef[];
   notifications: GameNotification[];
@@ -143,6 +156,12 @@ export type InventoryItemState = "ready" | "locked" | "pending";
  * it only reflects the resulting stats/conditions/inventory state.
  */
 export interface InventoryActionResponse {
+  /** Exact backend-owned condition state after the item action. */
+  activeConditions: ActiveCondition[];
+  /** Current in-run currency, unchanged by v2 inventory actions. */
+  iron: number;
+  /** Complete survival snapshot after the item action. */
+  survival: SurvivalStats;
   updatedStats: Record<string, number>;
   updatedInventory: InventoryItemRef[];
   /** False when the action was rejected (unknown item, wrong category/state) — nothing changed. */

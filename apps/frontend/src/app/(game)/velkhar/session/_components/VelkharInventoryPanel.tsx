@@ -103,103 +103,122 @@ export function VelkharInventoryPanel({ iron, items, onAction }: VelkharInventor
         </span>
       </div>
 
-      <section aria-labelledby="velkhar-equipment-title">
-        <div className="velkhar-session-window__section-heading">
-          <h3 id="velkhar-equipment-title">{t('wornEquipment')}</h3>
-          <span>{t('fixedSlots')}</span>
-        </div>
-        <div className="velkhar-inventory__grid velkhar-inventory__grid--equipment">
-          {inventory.equipment.map((slot) => (
-            <ItemSlot
-              key={slot.id}
-              fallbackIcon={slot.icon}
-              item={slot.item}
-              label={equipmentLabels[slot.id] ?? slot.label}
-              selectedId={selectedId}
-              onSelect={(item) => setSelectedId(item.id)}
-            />
-          ))}
-        </div>
-      </section>
+      <div className="velkhar-inventory__workspace">
+        <div className="velkhar-inventory__categories">
+          <section aria-labelledby="velkhar-equipment-title">
+            <div className="velkhar-session-window__section-heading">
+              <h3 id="velkhar-equipment-title">{t('wornEquipment')}</h3>
+              <span>{t('fixedSlots')}</span>
+            </div>
+            <div className="velkhar-inventory__grid velkhar-inventory__grid--equipment">
+              {inventory.equipment.map((slot) => (
+                <ItemSlot
+                  key={slot.id}
+                  fallbackIcon={slot.icon}
+                  item={slot.item}
+                  label={equipmentLabels[slot.id] ?? slot.label}
+                  selectedId={selectedId}
+                  onSelect={(item) => setSelectedId(item.id)}
+                />
+              ))}
+            </div>
+          </section>
 
-      <section aria-labelledby="velkhar-bag-title">
-        <div className="velkhar-session-window__section-heading">
-          <h3 id="velkhar-bag-title">{t('bag')}</h3>
-          <span>{t('bagSlots')}</span>
-        </div>
-        <div className="velkhar-inventory__grid velkhar-inventory__grid--bag">
-          {bagSlots.map((item, index) => (
-            <ItemSlot
-              key={item?.id ?? `bag-slot-${index}`}
-              fallbackIcon="chest"
-              item={item}
-              label={t('bagSlot', { number: index + 1 })}
-              selectedId={selectedId}
-              onSelect={(nextItem) => setSelectedId(nextItem.id)}
-            />
-          ))}
-        </div>
-      </section>
+          <section aria-labelledby="velkhar-bag-title">
+            <div className="velkhar-session-window__section-heading">
+              <h3 id="velkhar-bag-title">{t('bag')}</h3>
+              <span>{t('bagSlots')}</span>
+            </div>
+            <div className="velkhar-inventory__grid velkhar-inventory__grid--bag">
+              {bagSlots.map((item, index) => (
+                <ItemSlot
+                  key={item?.id ?? `bag-slot-${index}`}
+                  fallbackIcon="chest"
+                  item={item}
+                  label={t('bagSlot', { number: index + 1 })}
+                  selectedId={selectedId}
+                  onSelect={(nextItem) => setSelectedId(nextItem.id)}
+                />
+              ))}
+            </div>
+          </section>
 
-      <div className="velkhar-inventory__specials">
-        <section aria-labelledby="velkhar-artifact-title">
-          <h3 id="velkhar-artifact-title">{t('artifact')}</h3>
-          <ItemSlot
-            fallbackIcon="artifact"
-            item={inventory.artifact}
-            label={t('artifactSlot')}
-            selectedId={selectedId}
-            onSelect={(item) => setSelectedId(item.id)}
-          />
-        </section>
-        <section aria-labelledby="velkhar-heirloom-title">
-          <h3 id="velkhar-heirloom-title">{t('heirloom')}</h3>
-          <ItemSlot
-            fallbackIcon="memory"
-            item={inventory.heirloom}
-            label={t('heirloomSlot')}
-            selectedId={selectedId}
-            onSelect={(item) => setSelectedId(item.id)}
-          />
-        </section>
-      </div>
-
-      <aside className="velkhar-inventory__detail" aria-live="polite">
-        {selectedItem ? (
-          <>
-            <p className="velkhar-session-window__eyebrow">{t('itemDetail')}</p>
-            <h3>{selectedItem.name}</h3>
-            <p>{selectedItem.description ?? t('noDescription')}</p>
-            {selectedItem.allowedActions?.length ? (
-              <div
-                className="velkhar-inventory__actions"
-                role="group"
-                aria-label={t('authorizedActionsLabel')}
-              >
-                {selectedItem.allowedActions
-                  .filter((action) => action !== 'inspect')
-                  .map((action) => (
-                    <button
-                      key={action}
-                      type="button"
-                      className="velkhar-inventory__action-button"
-                      onClick={() => onAction(selectedItem, action)}
-                    >
-                      {actionLabels[action]}
-                    </button>
-                  ))}
+          <div className="velkhar-inventory__specials">
+            <section aria-labelledby="velkhar-artifact-title">
+              <div>
+                <h3 id="velkhar-artifact-title">{t('artifact')}</h3>
+                <p>{t('artifactHint')}</p>
               </div>
-            ) : (
-              <p className="velkhar-session-window__muted">{t('noAuthorizedAction')}</p>
-            )}
-          </>
-        ) : (
-          <div className="velkhar-session-window__empty">
-            <GameIcon decorative name="eye" size={48} />
-            <p>{t('selectItem')}</p>
+              <ItemSlot
+                fallbackIcon="artifact"
+                item={inventory.artifact}
+                label={t('artifactSlot')}
+                selectedId={selectedId}
+                onSelect={(item) => setSelectedId(item.id)}
+              />
+            </section>
+            <section aria-labelledby="velkhar-keyring-title">
+              <div>
+                <h3 id="velkhar-keyring-title">{t('keyring')}</h3>
+                <p>{t('keyringHint')}</p>
+              </div>
+              {inventory.keyItems.length > 0 ? (
+                <div className="velkhar-inventory__key-items">
+                  {inventory.keyItems.map((item) => (
+                    <ItemSlot
+                      key={item.id}
+                      fallbackIcon="key"
+                      item={item}
+                      label={item.name}
+                      selectedId={selectedId}
+                      onSelect={(nextItem) => setSelectedId(nextItem.id)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <span className="velkhar-inventory__empty-keyring">{t('keyringEmpty')}</span>
+              )}
+            </section>
           </div>
-        )}
-      </aside>
+        </div>
+
+        <aside className="velkhar-inventory__detail" aria-live="polite">
+          {selectedItem ? (
+            <>
+              <p className="velkhar-session-window__eyebrow">{t('itemDetail')}</p>
+              <h3>{selectedItem.name}</h3>
+              <p>{selectedItem.description ?? t('noDescription')}</p>
+              {selectedItem.allowedActions?.length ? (
+                <div
+                  className="velkhar-inventory__actions"
+                  role="group"
+                  aria-label={t('authorizedActionsLabel')}
+                >
+                  {selectedItem.allowedActions
+                    .filter((action) => action !== 'inspect')
+                    .map((action) => (
+                      <button
+                        key={action}
+                        type="button"
+                        className="velkhar-inventory__action-button"
+                        onClick={() => onAction(selectedItem, action)}
+                      >
+                        {actionLabels[action]}
+                      </button>
+                    ))}
+                </div>
+              ) : (
+                <p className="velkhar-session-window__muted">{t('noAuthorizedAction')}</p>
+              )}
+            </>
+          ) : (
+            <div className="velkhar-session-window__empty">
+              <GameIcon decorative name="eye" size={48} />
+              <p>{t('selectItem')}</p>
+            </div>
+          )}
+        </aside>
+      </div>
     </div>
   )
 }

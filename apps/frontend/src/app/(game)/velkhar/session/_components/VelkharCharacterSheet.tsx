@@ -3,32 +3,27 @@ import { useLocale, useTranslations } from 'next-intl'
 
 import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
 
-import type { Character, ConditionId, SurvivalStats } from '@grimoire/shared'
+import { VelkharActiveConditions } from './VelkharActiveConditions'
+
+import type { ActiveCondition, Character, SurvivalStats } from '@grimoire/shared'
 
 interface VelkharCharacterSheetProps {
   character: Character
+  conditions: ActiveCondition[]
   survival: SurvivalStats
 }
 
 const ATTRIBUTE_ORDER = ['blood', 'breath', 'ash'] as const
 
-export function VelkharCharacterSheet({ character, survival }: VelkharCharacterSheetProps) {
+export function VelkharCharacterSheet({
+  character,
+  conditions,
+  survival,
+}: VelkharCharacterSheetProps) {
   const locale = useLocale()
   const t = useTranslations('Session')
   const people = getPeople(character.people)
   const vocation = getVocation(character.vocation)
-  const conditionLabels: Record<ConditionId, string> = {
-    fever: t('conditionFever'),
-    poison: t('conditionPoison'),
-    wound: t('conditionWound'),
-    freeze: t('conditionFreeze'),
-    stun: t('conditionStun'),
-    blindness: t('conditionBlindness'),
-    marsh_disease: t('conditionMarshDisease'),
-    cendre_corrupt: t('conditionCendreCorrupt'),
-    shaken_reason: t('conditionShakenReason'),
-    petrification: t('conditionPetrification'),
-  }
 
   return (
     <div className="velkhar-character-sheet">
@@ -96,15 +91,7 @@ export function VelkharCharacterSheet({ character, survival }: VelkharCharacterS
 
       <section aria-labelledby="velkhar-conditions-title">
         <h4 id="velkhar-conditions-title">{t('conditions')}</h4>
-        {character.stats.conditions.length > 0 ? (
-          <ul className="velkhar-character-sheet__conditions">
-            {character.stats.conditions.map((condition) => (
-              <li key={condition.id}>{conditionLabels[condition.id]}</li>
-            ))}
-          </ul>
-        ) : (
-          <p className="velkhar-session-window__muted">{t('noCondition')}</p>
-        )}
+        <VelkharActiveConditions conditions={conditions} variant="sheet" />
       </section>
     </div>
   )

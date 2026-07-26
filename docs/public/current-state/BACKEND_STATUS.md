@@ -49,6 +49,9 @@ updated: 2026-07-26
   serveur (explicitement hors scope). Le backend reste seul souverain sur dés, dégâts, conditions,
   objets et fins de run ; l'IA ne fait que mettre en scène. Vérification manuelle en session
   (pas de test unitaire, conforme à la DoD du ticket).
+- #186 — projection UI Survie v2 complétée dans `SceneResponse` et `InventoryActionResponse` :
+  instantané `survival`, conditions actives, fer persistant et `endReason` autoritaire sont renvoyés
+  au frontend après chaque scène ou action d'inventaire. Le client n'infère aucune règle critique.
 - #152 — résolution du concept libre : nouvel endpoint dédié `POST /api/character/resolve-vocation`
   (appelé avant `POST /api/character`, stateless, aucune écriture Prisma) qui fait vétérinariser le
   concept libre par l'IA vers l'une des 4 vocations canon (`z.enum` côté serveur, souverain sur

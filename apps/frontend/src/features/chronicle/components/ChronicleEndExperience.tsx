@@ -8,12 +8,19 @@ import { useChronicle } from '../hooks/use-chronicle'
 import { ChronicleReader } from './ChronicleReader'
 import { ChronicleState } from './ChronicleState'
 
+import type { SessionEndReason } from '@grimoire/shared'
+
 interface ChronicleEndExperienceProps {
+  endReason?: SessionEndReason | null
   sessionId: string | null
   turnCount: number
 }
 
-export function ChronicleEndExperience({ sessionId, turnCount }: ChronicleEndExperienceProps) {
+export function ChronicleEndExperience({
+  endReason,
+  sessionId,
+  turnCount,
+}: ChronicleEndExperienceProps) {
   const t = useTranslations('Session')
   const [transitionComplete, setTransitionComplete] = useState(false)
   const { chronicle, retry, status } = useChronicle({
@@ -24,15 +31,23 @@ export function ChronicleEndExperience({ sessionId, turnCount }: ChronicleEndExp
 
   useEffect(() => {
     const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
-    const timeout = window.setTimeout(() => setTransitionComplete(true), reducedMotion ? 0 : 2400)
+    const transitionDuration =
+      endReason === 'calcined' ? (reducedMotion ? 1200 : 3200) : reducedMotion ? 0 : 2400
+    const timeout = window.setTimeout(() => setTransitionComplete(true), transitionDuration)
     return () => window.clearTimeout(timeout)
-  }, [])
+  }, [endReason])
 
   if (!transitionComplete) {
     return (
-      <section className="chronicle-transition" role="status" aria-live="polite">
+      <section
+        className="chronicle-transition"
+        data-end-reason={endReason ?? undefined}
+        role="status"
+        aria-live="polite"
+      >
         <span aria-hidden="true" />
-        <p>{t('chronicleTransition')}</p>
+        {endReason === 'calcined' ? <strong>{t('calcinedTitle')}</strong> : null}
+        <p>{endReason === 'calcined' ? t('calcinedTransition') : t('chronicleTransition')}</p>
       </section>
     )
   }

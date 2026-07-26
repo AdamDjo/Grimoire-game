@@ -19,12 +19,13 @@ updated: 2026-07-26
 5. ~~#201~~ — survie punitive (paliers narratifs, négligence→Calamine, érosion PV, état mourant) : livré.
 6. ~~#184~~ — repos court/feu (récupération canonique, `restRequested`) : livré (PR #204).
 7. ~~#185~~ — crescendo de danger IA (`buildDangerCrescendoSection`) : livré.
-8. ~~#101~~ — fiabiliser les modèles : livré (PR #191).
-9. ~~#152~~ — résoudre le concept libre (`POST /api/character/resolve-vocation`) : livré.
-10. ~~#207~~ — cache d'images de scène dynamique partagé : livré.
-11. #162 — traiter les risques sécurité applicables avant exposition publique.
-12. #161 — déployer l'API, appliquer les migrations et vérifier le healthcheck.
-13. #129 — supporter le golden path réel avec le frontend.
+8. ~~#186~~ — projeter conditions, survie, fer et motif de fin vers l'UI Survie v2 : livré.
+9. ~~#101~~ — fiabiliser les modèles : livré (PR #191).
+10. ~~#152~~ — résoudre le concept libre (`POST /api/character/resolve-vocation`) : livré.
+11. ~~#207~~ — cache d'images de scène dynamique partagé : livré.
+12. #162 — traiter les risques sécurité applicables avant exposition publique.
+13. #161 — déployer l'API, appliquer les migrations et vérifier le healthcheck.
+14. #129 — supporter le golden path réel avec le frontend.
 
 Ordre de dépendance :
 

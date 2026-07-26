@@ -40,11 +40,13 @@ updated: 2026-07-26
   qui avance vers l'étape Histoire, repli explicite vers les 4 voies preset avec message dédié en
   cas d'échec, `CharacterCreateDraft` v2 (nom personnalisé, trait narratif, compétences décalées)
   persisté dans le brouillon versionné. Copy EN/FR synchronisée.
+- #186 — UI Survie v2 : HUD limité aux jauges variables (PV, Soif, Faim, Fatigue, Calamine),
+  Triptyque affiché en scores fixes, conditions et alertes Mourant/Négligence avec tooltips,
+  Désavantage explicite sur le jet, inventaire premium structuré selon les quatre catégories canon
+  et transition Calciné réutilisant `ChronicleEndExperience`.
 
 ## Pré-déploiement restant
 
-- #186 — livrer l'UI Survie v2 après stabilisation des contrats ~~#180~~ (livré, PR #196) et des
-  endpoints ~~#181~~ (livré, PR #198), #182-#184.
 - #161 — configurer l'API de production et les redirects Supabase côté frontend.
 - #129 — valider le golden path réel EN/FR, l'accessibilité et le responsive.
 

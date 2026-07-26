@@ -233,7 +233,7 @@ async function resumeLatestScene({
   }
 
   const choices = persistedChoicesSchema.safeParse(last.choices)
-  const { survival, inventory } = readCharacter(character)
+  const { survival, activeConditions, inventory } = readCharacter(character)
   const source = last.source === 'ai' ? 'ai' : 'stub'
 
   const scene: SceneResponse['scene'] = {
@@ -249,7 +249,10 @@ async function resumeLatestScene({
   }
 
   return {
+    activeConditions,
+    iron: character.iron,
     scene,
+    survival,
     updatedStats: toStatsRecord(survival),
     updatedInventory: toInventoryRefs(inventory),
     notifications: [],
@@ -302,7 +305,10 @@ export async function buildOpeningScene(context: SessionContext): Promise<SceneR
   })
 
   return {
+    activeConditions,
+    iron: character.iron,
     scene,
+    survival,
     updatedStats: toStatsRecord(survival),
     updatedInventory: toInventoryRefs(inventory),
     notifications: [],
@@ -544,7 +550,11 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
   }
 
   return {
+    activeConditions: finalConditions,
+    ...(endReason ? { endReason } : {}),
+    iron: character.iron,
     scene,
+    survival: restedSurvival,
     updatedStats: toStatsRecord(restedSurvival),
     updatedInventory: toInventoryRefs(finalInventory),
     notifications: [],
@@ -584,6 +594,9 @@ export async function performInventoryAction(
 
   if (!result.applied) {
     return {
+      activeConditions,
+      iron: character.iron,
+      survival,
       updatedStats: toStatsRecord(survival),
       updatedInventory: toInventoryRefs(inventory),
       applied: false,
@@ -610,6 +623,9 @@ export async function performInventoryAction(
   })
 
   return {
+    activeConditions: result.conditions,
+    iron: character.iron,
+    survival: finalSurvival,
     updatedStats: toStatsRecord(finalSurvival),
     updatedInventory: toInventoryRefs(result.items),
     applied: true,

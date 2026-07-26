@@ -52,6 +52,7 @@ export interface GameSessionHudProps {
   label: string
   resource?: GameSessionHudResource | null
   statusBars: readonly GameSessionHudStatusBar[]
+  statusDetail?: ReactNode
   statusGauges: readonly GameSessionHudStatusGauge[]
   toolLabel?: string
   tools: readonly GameSessionHudTool[]
@@ -66,6 +67,7 @@ export function GameSessionHud({
   label,
   resource,
   statusBars,
+  statusDetail,
   statusGauges,
   toolLabel = 'Session tools',
   tools,
@@ -90,6 +92,7 @@ export function GameSessionHud({
             value={status.value}
           />
         ))}
+        {statusDetail}
       </div>
 
       {statusGauges.length > 0 ? (
