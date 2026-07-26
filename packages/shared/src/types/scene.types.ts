@@ -10,6 +10,17 @@ export type SceneType =
   | "shop"
   | "rest";
 
+/** Canon biome, drives survival narration and the scene-image cache key. @see docs/public/raw/06-SURVIVAL.md §5 */
+export type Biome = "tissan" | "doigts" | "rivage" | "marais_lekh" | "coeur";
+
+/** Canon dungeon archetype, or generic outdoor. @see docs/public/raw/03-BESTIARY.md §9 */
+export type LieuType =
+  | "plein_air"
+  | "ruines_archontiques"
+  | "cryptes"
+  | "cavernes_cendre"
+  | "donjon_profond";
+
 export interface Choice {
   id: string;
   text: string;
@@ -46,6 +57,7 @@ export interface Scene {
   sessionId: string;
   turnNumber: number;
   narrative: string;
+  /** Resolved URL from the shared scene-image cache, if resolved for this chunk. @see docs/public/tech/DYNAMIC_SCENE_IMAGES.md */
   imageUrl?: string;
   imagePrompt?: string;
   choices: Choice[];

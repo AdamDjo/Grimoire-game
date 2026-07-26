@@ -1,7 +1,10 @@
 import { type CompressionOutput, validateCompressionOutput } from '../ai/compression-validator'
 import { callOpenRouter } from '../ai/openrouter.provider'
+import { sceneTypeSchema } from '../ai/scene-validator'
 import { COMPRESSION_FALLBACK_MODEL, env } from '../config/env'
 import { prisma } from '../lib/prisma'
+
+import { classifyBiome, classifyLieuType, resolveSceneImage } from './scene-image.service'
 
 import type { SceneLog } from '../generated/prisma/client'
 import type { Character } from '@grimoire/shared'
@@ -120,4 +123,42 @@ export async function compressScene(
       turnRangeEnd,
     },
   })
+
+  await resolveAndPersistSceneImage(
+    sessionId,
+    location,
+    sortedTurns[sortedTurns.length - 1].sceneType
+  )
+}
+
+/**
+ * Resolves the shared scene-image cache entry for this chunk (#207) and
+ * persists it on the session so the next scene response can surface it.
+ * Never throws — a resolution failure just leaves `currentImageUrl`
+ * untouched, and the frontend falls back to its static theme image.
+ */
+async function resolveAndPersistSceneImage(
+  sessionId: string,
+  location: string,
+  sceneType: string
+): Promise<void> {
+  try {
+    const parsedSceneType = sceneTypeSchema.safeParse(sceneType)
+    if (!parsedSceneType.success) {
+      return
+    }
+
+    const biome = classifyBiome(location)
+    const lieuType = classifyLieuType(location)
+    const url = await resolveSceneImage(parsedSceneType.data, biome, lieuType)
+
+    if (url) {
+      await prisma.gameSession.update({
+        where: { id: sessionId },
+        data: { currentImageUrl: url },
+      })
+    }
+  } catch (err) {
+    console.warn(`[SceneImage] resolution failed for session ${sessionId}:`, err)
+  }
 }
