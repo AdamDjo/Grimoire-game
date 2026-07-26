@@ -48,6 +48,15 @@ model Character {
   backstory   String?
   avatarUrl   String?
 
+  /// Nom de vocation personnalisé par L'Aveugle quand `vocation` a été
+  /// résolue depuis un concept libre. @see docs/public/raw/07-CHARACTER-CREATION.md §2
+  customVocationName String?
+  /// Trait narratif attribué par L'Aveugle lors de la résolution du concept libre.
+  narrativeTrait     String?
+  /// Compétences canon de la vocation renommées pour coller au concept libre
+  /// (ShiftedSkill[] JSON), voir @grimoire/shared.
+  shiftedSkills      Json?   @default("[]")
+
   // Triptyque canon SANG/SOUFFLE/CENDRE (3-18).
   blood  Int
   breath Int

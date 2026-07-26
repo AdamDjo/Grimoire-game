@@ -28,7 +28,7 @@ import {
   getVocationOption,
   isHistoryOptionSelected,
 } from '../_data/character-create-options'
-import { createCharacter } from '../_lib/api'
+import { createCharacter, resolveVocation } from '../_lib/api'
 import {
   CHARACTER_CREATE_STEPS,
   CHARACTER_DRAFT_STORAGE_KEY,
@@ -105,6 +105,7 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
   const [announcement, setAnnouncement] = useState('')
   const [previewedVocationId, setPreviewedVocationId] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [vocationAnnouncement, setVocationAnnouncement] = useState('')
   const schemas = useMemo(
     () =>
       createCharacterSchemas({
@@ -157,6 +158,10 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
   const currentMeta = stepContent[currentStep]
   const people = getPeopleOption(draft.peopleId, locale)
   const vocation = getVocationOption(draft.vocationId, locale)
+  const resolvedVocationOption =
+    draft.vocationResolutionStatus === 'resolved'
+      ? getVocationOption(draft.vocationId, locale)
+      : undefined
   const previewedVocation = previewedVocationId
     ? getVocationOption(previewedVocationId, locale)
     : undefined
@@ -243,14 +248,59 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
     moveToStep('history')
   }
 
-  const continueCustomConcept = () => {
+  const continueCustomConcept = async () => {
+    let freeConcept: string
     try {
-      const freeConcept = schemas.freeConcept.parse(draft.freeConcept)
-      updateDraft({ freeConcept, historyReviewed: false, vocationId: '', vocationPath: 'custom' })
-      moveToStep('history')
+      freeConcept = schemas.freeConcept.parse(draft.freeConcept)
     } catch (validationError) {
       setError(getErrorMessage(validationError, t('invalidAnswer')))
+      return
     }
+
+    updateDraft({
+      customVocationName: '',
+      freeConcept,
+      narrativeTrait: '',
+      shiftedSkills: [],
+      vocationId: '',
+      vocationPath: 'custom',
+      vocationResolutionStatus: 'pending',
+    })
+
+    try {
+      const result = await resolveVocation(freeConcept)
+      if (result.status === 'resolved') {
+        updateDraft({
+          customVocationName: result.customVocationName,
+          narrativeTrait: result.narrativeTrait,
+          shiftedSkills: result.shiftedSkills,
+          vocationId: result.vocationId,
+          vocationResolutionStatus: 'resolved',
+        })
+        setVocationAnnouncement(result.announcement)
+      } else {
+        updateDraft({ vocationResolutionStatus: 'fallback' })
+      }
+    } catch {
+      updateDraft({ vocationResolutionStatus: 'error' })
+    }
+  }
+
+  const acceptResolvedVocation = () => {
+    updateDraft({ historyReviewed: false })
+    moveToStep('history')
+  }
+
+  const rejectResolvedVocation = () => {
+    updateDraft({
+      customVocationName: '',
+      freeConcept: '',
+      narrativeTrait: '',
+      shiftedSkills: [],
+      vocationId: '',
+      vocationPath: 'preset',
+      vocationResolutionStatus: 'idle',
+    })
   }
 
   const continueHistory = () => {
@@ -496,32 +546,128 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                         </div>
                       </div>
 
-                      <div className="character-create__custom-form">
-                        <GameField
-                          error={error ?? undefined}
-                          hint={t('customHint')}
-                          label={t('customLabel')}
-                          required
-                        >
-                          <GameTextarea
-                            invalid={Boolean(error)}
-                            maxLength={500}
-                            onChange={(event) =>
-                              updateDraft({
-                                freeConcept: event.target.value,
-                                vocationId: '',
-                                vocationPath: 'custom',
-                              })
-                            }
-                            placeholder={t('customPlaceholder')}
-                            rows={4}
-                            value={draft.freeConcept}
-                          />
-                        </GameField>
-                        <GameButton onClick={continueCustomConcept} size="sm" variant="secondary">
-                          {t('submitConcept')}
-                        </GameButton>
-                      </div>
+                      {draft.vocationPath === 'custom' &&
+                      draft.vocationResolutionStatus !== 'idle' ? (
+                        <div className="character-create__resolution">
+                          {draft.vocationResolutionStatus === 'pending' ? (
+                            <div className="character-create__resolution-pending">
+                              <GameButton disabled loading variant="secondary">
+                                {t('resolvingConcept')}
+                              </GameButton>
+                            </div>
+                          ) : null}
+
+                          {draft.vocationResolutionStatus === 'resolved' &&
+                          resolvedVocationOption ? (
+                            <div className="character-create__resolution-proposal">
+                              <p className="character-create__resolution-announcement">
+                                {vocationAnnouncement}
+                              </p>
+                              <ArchetypeCard
+                                description={resolvedVocationOption.description}
+                                eyebrow={resolvedVocationOption.eyebrow}
+                                id={resolvedVocationOption.id}
+                                illustration={
+                                  <Image
+                                    alt={t('vocationPortrait', {
+                                      name: draft.customVocationName || resolvedVocationOption.name,
+                                    })}
+                                    className="character-create__vocation-image"
+                                    height={640}
+                                    sizes="(max-width: 640px) 100vw, 22vw"
+                                    src={resolvedVocationOption.imageSrc}
+                                    width={960}
+                                  />
+                                }
+                                selected
+                                selectedLabel={t('selectedPath')}
+                                title={draft.customVocationName || resolvedVocationOption.name}
+                              />
+                              {draft.narrativeTrait ? (
+                                <p className="character-create__resolution-trait">
+                                  {draft.narrativeTrait}
+                                </p>
+                              ) : null}
+                              {draft.shiftedSkills.length > 0 ? (
+                                <ul className="character-create__resolution-skills">
+                                  {draft.shiftedSkills.map((skill) => (
+                                    <li key={skill.shifted}>
+                                      <strong>{skill.shifted}</strong>
+                                      <span>{skill.original}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              ) : null}
+                              <div className="character-create__resolution-actions">
+                                <GameButton
+                                  onClick={rejectResolvedVocation}
+                                  size="sm"
+                                  variant="ghost"
+                                >
+                                  {t('rejectProposal')}
+                                </GameButton>
+                                <GameButton
+                                  onClick={acceptResolvedVocation}
+                                  size="sm"
+                                  variant="radiant"
+                                >
+                                  {t('acceptProposal')}
+                                </GameButton>
+                              </div>
+                            </div>
+                          ) : null}
+
+                          {draft.vocationResolutionStatus === 'fallback' ? (
+                            <p className="character-create__resolution-fallback" role="alert">
+                              {t('resolutionFallback')}
+                            </p>
+                          ) : null}
+
+                          {draft.vocationResolutionStatus === 'error' ? (
+                            <div className="character-create__resolution-error" role="alert">
+                              <p>{t('resolutionError')}</p>
+                              <GameButton
+                                onClick={() => void continueCustomConcept()}
+                                size="sm"
+                                variant="secondary"
+                              >
+                                {t('retry')}
+                              </GameButton>
+                            </div>
+                          ) : null}
+                        </div>
+                      ) : (
+                        <div className="character-create__custom-form">
+                          <GameField
+                            error={error ?? undefined}
+                            hint={t('customHint')}
+                            label={t('customLabel')}
+                            required
+                          >
+                            <GameTextarea
+                              invalid={Boolean(error)}
+                              maxLength={500}
+                              onChange={(event) =>
+                                updateDraft({
+                                  freeConcept: event.target.value,
+                                  vocationId: '',
+                                  vocationPath: 'custom',
+                                })
+                              }
+                              placeholder={t('customPlaceholder')}
+                              rows={4}
+                              value={draft.freeConcept}
+                            />
+                          </GameField>
+                          <GameButton
+                            onClick={() => void continueCustomConcept()}
+                            size="sm"
+                            variant="secondary"
+                          >
+                            {t('submitConcept')}
+                          </GameButton>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ) : null}
@@ -582,7 +728,8 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                         <dt>{t('pathSummary')}</dt>
                         <dd>
                           {draft.vocationPath === 'custom'
-                            ? t('customPathPending')
+                            ? draft.customVocationName.trim() ||
+                              (vocation?.name ?? t('notChosenFeminine'))
                             : (vocation?.name ?? t('notChosenFeminine'))}
                         </dd>
                       </div>
@@ -590,6 +737,12 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                         <div>
                           <dt>{t('conceptSummary')}</dt>
                           <dd>{draft.freeConcept}</dd>
+                        </div>
+                      ) : null}
+                      {draft.vocationPath === 'custom' && draft.narrativeTrait ? (
+                        <div>
+                          <dt>{t('narrativeTraitSummary')}</dt>
+                          <dd>{draft.narrativeTrait}</dd>
                         </div>
                       ) : null}
                       <div>

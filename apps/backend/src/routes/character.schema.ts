@@ -9,12 +9,29 @@ import { z } from 'zod'
 export const createCharacterSchema = z.object({
   name: z.string().trim().min(1).max(30),
   peopleId: z.string().trim().min(1).max(40),
-  /** Empty when the player wrote a free concept whose host vocation the AI
-   * hasn't resolved yet (`07-CHARACTER-CREATION.md` §2 step 4) — the service
-   * falls back to the canon default host, mirroring the frontend hub display. */
-  vocationId: z.string().trim().max(40).optional(),
+  /** Always resolved before this call — a preset picked directly, or the AI's
+   * resolution from `POST /api/character/resolve-vocation` for a free concept
+   * (`07-CHARACTER-CREATION.md` §2 step 4). */
+  vocationId: z.string().trim().min(1).max(40),
   freeConcept: z.string().trim().max(500).optional(),
   backstory: z.string().trim().max(500).optional(),
+  customVocationName: z.string().trim().max(60).optional(),
+  narrativeTrait: z.string().trim().max(200).optional(),
+  shiftedSkills: z
+    .array(z.object({ original: z.string().trim().max(60), shifted: z.string().trim().max(60) }))
+    .max(2)
+    .optional(),
 })
 
 export type CreateCharacterRequest = z.infer<typeof createCharacterSchema>
+
+/**
+ * `POST /api/character/resolve-vocation` request — the free concept the
+ * player wrote describing who they are, submitted before character creation
+ * so L'Aveugle can identify a host vocation among the 4 canon presets.
+ */
+export const resolveVocationSchema = z.object({
+  freeConcept: z.string().trim().min(1).max(500),
+})
+
+export type ResolveVocationRequest = z.infer<typeof resolveVocationSchema>

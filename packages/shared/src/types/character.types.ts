@@ -4,6 +4,7 @@
  */
 
 import type { PersistedInventoryItem } from "./inventory.types";
+import type { ShiftedSkill } from "./vocation-resolution.types";
 
 /** The three canon attributes (SANG / SOUFFLE / CENDRE). Values range 3–18. */
 export type Attribute = "blood" | "breath" | "ash";
@@ -97,6 +98,12 @@ export interface Character {
   vocation: string;
   /** Free-form concept when the player picks the "custom vocation" path. */
   freeConcept?: string;
+  /** AI-personalized vocation name shown in place of the canon preset name, when resolved from a free concept. */
+  customVocationName?: string;
+  /** AI-authored narrative trait tied to the resolved free-concept vocation. */
+  narrativeTrait?: string;
+  /** Canon vocation skills renamed to fit the free concept, when resolved. */
+  shiftedSkills?: ShiftedSkill[];
   stats: CharacterStats;
   backstory?: string;
   avatarUrl?: string;
@@ -109,4 +116,7 @@ export interface CreateCharacterInput {
   vocation: string;
   freeConcept?: string;
   backstory?: string;
+  customVocationName?: string;
+  narrativeTrait?: string;
+  shiftedSkills?: ShiftedSkill[];
 }

@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import type { ShiftedSkill } from '@grimoire/shared'
+
 export const CHARACTER_CREATE_STEPS = [
   'identity',
   'people',
@@ -10,9 +12,10 @@ export const CHARACTER_CREATE_STEPS = [
 
 export type CharacterCreateStep = (typeof CHARACTER_CREATE_STEPS)[number]
 export type VocationPath = 'preset' | 'custom'
+export type VocationResolutionStatus = 'idle' | 'pending' | 'resolved' | 'fallback' | 'error'
 
 export interface CharacterCreateDraft {
-  version: 1
+  version: 2
   name: string
   peopleId: string
   vocationPath: VocationPath
@@ -20,10 +23,14 @@ export interface CharacterCreateDraft {
   freeConcept: string
   backstory: string
   historyReviewed: boolean
+  vocationResolutionStatus: VocationResolutionStatus
+  customVocationName: string
+  narrativeTrait: string
+  shiftedSkills: ShiftedSkill[]
 }
 
 export const EMPTY_CHARACTER_DRAFT: CharacterCreateDraft = {
-  version: 1,
+  version: 2,
   name: '',
   peopleId: '',
   vocationPath: 'preset',
@@ -31,10 +38,19 @@ export const EMPTY_CHARACTER_DRAFT: CharacterCreateDraft = {
   freeConcept: '',
   backstory: '',
   historyReviewed: false,
+  vocationResolutionStatus: 'idle',
+  customVocationName: '',
+  narrativeTrait: '',
+  shiftedSkills: [],
 }
 
+const shiftedSkillSchema = z.object({
+  original: z.string().max(60),
+  shifted: z.string().max(60),
+})
+
 const storedDraftSchema = z.object({
-  version: z.literal(1),
+  version: z.literal(2),
   name: z.string().max(30),
   peopleId: z.string().max(40),
   vocationPath: z.enum(['preset', 'custom']),
@@ -42,6 +58,10 @@ const storedDraftSchema = z.object({
   freeConcept: z.string().max(500),
   backstory: z.string().max(500),
   historyReviewed: z.boolean(),
+  vocationResolutionStatus: z.enum(['idle', 'pending', 'resolved', 'fallback', 'error']),
+  customVocationName: z.string().max(60),
+  narrativeTrait: z.string().max(200),
+  shiftedSkills: z.array(shiftedSkillSchema).max(2),
 })
 
 interface CharacterValidationMessages {
@@ -80,8 +100,8 @@ export const {
   name: characterNameSchema,
 } = createCharacterSchemas()
 
-export const CHARACTER_DRAFT_STORAGE_KEY = 'grimoire.character-create.draft.v1'
-export const CHARACTER_RESULT_STORAGE_KEY = 'grimoire.character-create.result.v1'
+export const CHARACTER_DRAFT_STORAGE_KEY = 'grimoire.character-create.draft.v2'
+export const CHARACTER_RESULT_STORAGE_KEY = 'grimoire.character-create.result.v2'
 
 export function parseStoredCharacterDraft(value: string | null): CharacterCreateDraft | null {
   if (!value) return null
@@ -103,6 +123,7 @@ export function getResumeStep(draft: CharacterCreateDraft): CharacterCreateStep 
   if (!draft.peopleId) return 'people'
   if (draft.vocationPath === 'custom') {
     if (!freeConceptSchema.safeParse(draft.freeConcept).success) return 'vocation'
+    if (draft.vocationResolutionStatus !== 'resolved' || !draft.vocationId) return 'vocation'
     return draft.historyReviewed ? 'summary' : 'history'
   }
   if (!draft.vocationId) return 'vocation'
@@ -129,5 +150,7 @@ export function createCharacterResult(draft: CharacterCreateDraft): CharacterCre
     name: characterNameSchema.parse(draft.name),
     freeConcept: draft.freeConcept.trim(),
     backstory: draft.backstory.trim(),
+    customVocationName: draft.customVocationName.trim(),
+    narrativeTrait: draft.narrativeTrait.trim(),
   }
 }

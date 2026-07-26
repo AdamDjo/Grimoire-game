@@ -49,7 +49,7 @@ vi.mock('next/image', () => ({
 }))
 
 const CHARACTER = {
-  version: 1,
+  version: 2,
   name: 'Amani',
   peopleId: 'sahelin',
   vocationPath: 'preset',
@@ -57,6 +57,10 @@ const CHARACTER = {
   freeConcept: '',
   backstory: '',
   historyReviewed: true,
+  vocationResolutionStatus: 'idle',
+  customVocationName: '',
+  narrativeTrait: '',
+  shiftedSkills: [],
 }
 
 const NAMED_MEMORY = {

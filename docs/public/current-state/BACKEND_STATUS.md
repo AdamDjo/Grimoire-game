@@ -5,7 +5,7 @@ rag: true
 source_of_truth: true
 owner: backend
 default_agent: claude
-updated: 2026-07-24
+updated: 2026-07-26
 ---
 
 # Backend Status
@@ -49,10 +49,15 @@ updated: 2026-07-24
   serveur (explicitement hors scope). Le backend reste seul souverain sur dés, dégâts, conditions,
   objets et fins de run ; l'IA ne fait que mettre en scène. Vérification manuelle en session
   (pas de test unitaire, conforme à la DoD du ticket).
+- #152 — résolution du concept libre : nouvel endpoint dédié `POST /api/character/resolve-vocation`
+  (appelé avant `POST /api/character`, stateless, aucune écriture Prisma) qui fait vétérinariser le
+  concept libre par l'IA vers l'une des 4 vocations canon (`z.enum` côté serveur, souverain sur
+  l'identifiant retenu), avec réponse union discriminée `resolved` (vocation + nom personnalisé +
+  trait narratif + compétences décalées) ou `fallback` (raison explicite), toujours HTTP 200. Nom
+  personnalisé et trait narratif injectés dans `ai/system-prompt.ts` pour la narration en run.
 
 ## Pré-déploiement restant
 
-- #152 — résolution du concept libre ou signal explicite de masquage V1.
 - #162 — vulnérabilités critiques/hautes applicables.
 - #161 — API, migrations, secrets, CORS et healthcheck de production.
 - #129 — golden path contre les services réels.
