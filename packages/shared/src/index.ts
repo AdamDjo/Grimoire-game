@@ -11,6 +11,7 @@ export * from "./types/api.types";
 export * from "./types/souvenir.types";
 export * from "./types/chronicle.types";
 export * from "./types/aveugle.types";
+export * from "./types/vocation-resolution.types";
 
 // Constants
 export * from "./constants/localized";

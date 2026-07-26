@@ -240,4 +240,30 @@ describe('generateScene — multi-model fallback chain (#101)', () => {
     expect(result.source).toBe('ai')
     expect(callOpenRouter).toHaveBeenCalledTimes(2)
   })
+
+  it('logs prompt/completion/total token usage when OpenRouter reports it', async () => {
+    const infoSpy = vi.spyOn(console, 'info').mockImplementation(() => undefined)
+    callOpenRouter.mockResolvedValueOnce({
+      success: true,
+      content: JSON.stringify(validAiPayload),
+      usage: { promptTokens: 1234, completionTokens: 56, totalTokens: 1290 },
+    })
+
+    await generateScene({ character, locale: 'en', sessionId: 's1' })
+
+    expect(infoSpy).toHaveBeenCalledWith(
+      expect.stringContaining('1234 prompt + 56 completion = 1290 tokens')
+    )
+    infoSpy.mockRestore()
+  })
+
+  it('does not log usage when OpenRouter does not report it', async () => {
+    const infoSpy = vi.spyOn(console, 'info').mockImplementation(() => undefined)
+    callOpenRouter.mockResolvedValueOnce({ success: true, content: JSON.stringify(validAiPayload) })
+
+    await generateScene({ character, locale: 'en', sessionId: 's1' })
+
+    expect(infoSpy).not.toHaveBeenCalled()
+    infoSpy.mockRestore()
+  })
 })

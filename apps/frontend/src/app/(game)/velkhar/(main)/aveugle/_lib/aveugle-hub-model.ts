@@ -53,7 +53,7 @@ const DEFAULT_LABELS: AveugleHubLabels = {
 }
 
 const FALLBACK_CHARACTER: CharacterCreateDraft = {
-  version: 1,
+  version: 2,
   name: 'Le Voyageur',
   peopleId: 'sahelin',
   vocationPath: 'preset',
@@ -61,6 +61,10 @@ const FALLBACK_CHARACTER: CharacterCreateDraft = {
   freeConcept: '',
   backstory: '',
   historyReviewed: true,
+  vocationResolutionStatus: 'idle',
+  customVocationName: '',
+  narrativeTrait: '',
+  shiftedSkills: [],
 }
 
 function withCampaign(path: string, campaignId?: string): string {

@@ -5,7 +5,7 @@ import { resolveAveugleHubSnapshot } from './aveugle-hub-model'
 import type { CharacterCreateDraft } from '../../character-create/_lib/character-create-model'
 
 const CHARACTER: CharacterCreateDraft = {
-  version: 1,
+  version: 2,
   name: 'Amani',
   peopleId: 'sahelin',
   vocationPath: 'preset',
@@ -13,6 +13,10 @@ const CHARACTER: CharacterCreateDraft = {
   freeConcept: '',
   backstory: 'Une caravane entière a péri par sa faute.',
   historyReviewed: true,
+  vocationResolutionStatus: 'idle',
+  customVocationName: '',
+  narrativeTrait: '',
+  shiftedSkills: [],
 }
 
 describe('aveugle hub model', () => {

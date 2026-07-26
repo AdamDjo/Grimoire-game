@@ -1,4 +1,10 @@
-import { type Attributes, getPeople, getVocation, maxHpFromBlood } from '@grimoire/shared'
+import {
+  type Attributes,
+  type ShiftedSkill,
+  getPeople,
+  getVocation,
+  maxHpFromBlood,
+} from '@grimoire/shared'
 
 import { Prisma } from '../generated/prisma/client'
 import { prisma } from '../lib/prisma'
@@ -8,23 +14,17 @@ import type { Character as DbCharacter } from '../generated/prisma/client'
 /** Postgres unique-constraint violation error code (`Character_userId_key`). */
 const UNIQUE_CONSTRAINT_VIOLATION = 'P2002'
 
-/**
- * Default host vocation for a free concept whose host the AI hasn't resolved
- * yet (`07-CHARACTER-CREATION.md` §2 step 4 — "the AI identifies the host
- * vocation"). No such resolution step is implemented server-side today, so an
- * empty `vocationId` falls back to `watcher`, mirroring the frontend hub's own
- * fallback (`aveugle-hub-model.ts`: `vocation?.id ?? 'watcher'`).
- */
-const DEFAULT_HOST_VOCATION_ID = 'watcher'
-
 export class InvalidCharacterInputError extends Error {}
 
 export interface CreateCharacterServiceInput {
   name: string
   peopleId: string
-  vocationId?: string
+  vocationId: string
   freeConcept?: string
   backstory?: string
+  customVocationName?: string
+  narrativeTrait?: string
+  shiftedSkills?: ShiftedSkill[]
 }
 
 /** Derives blood/breath/ash + maxHp from a people + vocation pair (canon triptyque). */
@@ -62,8 +62,7 @@ export async function createCharacter(
     return existing
   }
 
-  const vocationId = input.vocationId ?? DEFAULT_HOST_VOCATION_ID
-  const { attributes, maxHp } = deriveAttributes(input.peopleId, vocationId)
+  const { attributes, maxHp } = deriveAttributes(input.peopleId, input.vocationId)
 
   try {
     return await prisma.character.create({
@@ -71,9 +70,12 @@ export async function createCharacter(
         userId,
         name: input.name,
         people: input.peopleId,
-        vocation: vocationId,
+        vocation: input.vocationId,
         freeConcept: input.freeConcept ?? null,
         backstory: input.backstory ?? null,
+        customVocationName: input.customVocationName ?? null,
+        narrativeTrait: input.narrativeTrait ?? null,
+        shiftedSkills: (input.shiftedSkills ?? []) as unknown as Prisma.InputJsonValue,
         blood: attributes.blood,
         breath: attributes.breath,
         ash: attributes.ash,
