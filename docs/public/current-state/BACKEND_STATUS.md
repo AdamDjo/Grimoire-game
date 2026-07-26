@@ -37,10 +37,14 @@ updated: 2026-07-24
   érosion de -1 PV/tour non cumulative tant que Faim ou Soif est à 0, et état universel « mourant »
   (sursis d'un tour à 0 PV, mort définitive au second passage à 0) qui remplace l'ancienne règle
   « 0 PV → inconscience ». Canon `06-SURVIVAL.md` §1/§4/§7 mis à jour en conséquence.
+- #184 — repos court/feu : `game-rules/rest.ts` applique les taux canon (06-SURVIVAL §3) — court
+  (+20 énergie, +1d4 PV si bandages) et feu (+60 énergie/faim/soif si provisions, +1d4+mod SANG PV
+  si bandages, -10 Calamine), jauges clampées 0-100. L'IA propose `rest_requested` (`short`/`fire`,
+  `inn` ignoré côté backend) sans jamais choisir les valeurs ; `resolveTurn` applique le repos et
+  lève l'état « mourant » si le soin remonte le PV au-dessus de 0. Risque d'embuscade différé.
 
 ## Pré-déploiement restant
 
-- #184 — repos court/feu et récupération canonique.
 - #185 — danger IA régulier et crescendo d'intensité.
 - #152 — résolution du concept libre ou signal explicite de masquage V1.
 - #162 — vulnérabilités critiques/hautes applicables.
