@@ -43,7 +43,9 @@ updated: 2026-07-26
 - #186 — UI Survie v2 : HUD limité aux jauges variables (PV, Soif, Faim, Fatigue, Calamine),
   Triptyque affiché en scores fixes, conditions et alertes Mourant/Négligence avec tooltips,
   Désavantage explicite sur le jet, inventaire premium structuré selon les quatre catégories canon
-  et transition Calciné réutilisant `ChronicleEndExperience`.
+  et transition Calciné réutilisant `ChronicleEndExperience`. La Forge ouvre directement le premier
+  run ; l'Auberge interactive est réservée aux sessions commencées ou terminées et tient en `100dvh`
+  sur desktop, tablette et mobile avec défilement interne du dialogue uniquement.
 
 ## Pré-déploiement restant
 

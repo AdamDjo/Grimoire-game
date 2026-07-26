@@ -73,12 +73,16 @@ const STEP_MOTION_VARIANTS: Variants = {
   }),
 }
 
-function buildAveugleHref(campaignId: string | undefined, ready = false): string {
+function buildAveugleHref(campaignId: string | undefined): string {
   const params = new URLSearchParams()
   if (campaignId) params.set('campaign', campaignId)
-  if (ready) params.set('character', 'ready')
   const query = params.toString()
   return query ? `${VELKHAR_WORLD.routes.aveugle}?${query}` : VELKHAR_WORLD.routes.aveugle
+}
+
+function buildFirstRunHref(campaignId: string | undefined): string {
+  const path = `${VELKHAR_WORLD.routes.session}/new`
+  return campaignId ? `${path}?campaign=${encodeURIComponent(campaignId)}` : path
 }
 
 function getErrorMessage(error: unknown, fallback: string): string {
@@ -336,7 +340,7 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
       window.localStorage.setItem(CHARACTER_RESULT_STORAGE_KEY, JSON.stringify(result))
       window.sessionStorage.removeItem(CHARACTER_DRAFT_STORAGE_KEY)
       setIsDirty(false)
-      router.push(buildAveugleHref(campaignId, true))
+      router.push(buildFirstRunHref(campaignId))
     } catch {
       setError(t('submissionError'))
     } finally {

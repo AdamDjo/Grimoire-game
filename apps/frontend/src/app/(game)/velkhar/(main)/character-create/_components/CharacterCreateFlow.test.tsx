@@ -34,7 +34,7 @@ describe('CharacterCreateFlow', () => {
     )
   })
 
-  it('completes the preset path and returns to L’Aveugle', async () => {
+  it('completes the preset path and starts the first run', async () => {
     const user = userEvent.setup()
 
     render(<CharacterCreateFlow campaignId="nouvelle-chronique" />)
@@ -63,9 +63,7 @@ describe('CharacterCreateFlow', () => {
     await user.click(screen.getByRole('button', { name: 'Create this character' }))
 
     await waitFor(() => {
-      expect(pushMock).toHaveBeenCalledWith(
-        '/velkhar/aveugle?campaign=nouvelle-chronique&character=ready'
-      )
+      expect(pushMock).toHaveBeenCalledWith('/velkhar/session/new?campaign=nouvelle-chronique')
     })
 
     const storedResult = window.localStorage.getItem(CHARACTER_RESULT_STORAGE_KEY)

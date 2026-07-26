@@ -132,6 +132,14 @@
   margin-top: 0.65rem;
 }
 
+.game-session-narrative .narrative-passage p:first-child::first-letter {
+  color: var(--gold-light);
+  font-family: var(--font-game-heading);
+  font-size: 1.12em;
+  font-weight: 600;
+  text-shadow: 0 0 12px rgba(217, 164, 65, 0.3);
+}
+
 .game-session-narrative[data-loading='true'] .narrative-passage {
   filter: blur(1px);
   opacity: 0.42;

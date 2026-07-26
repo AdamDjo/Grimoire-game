@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -7,13 +7,14 @@ import { ACTIVE_GAME_SESSION_COOKIE } from '@/lib/active-game-session'
 import { CHARACTER_RESULT_STORAGE_KEY } from '../../character-create/_lib/character-create-model'
 
 import { AUBERGE_INTRO_STORAGE_KEY } from './AubergeIntro'
-import { AveugleHub } from './AveugleHub'
+import { AUBERGE_HUB_UNLOCK_STORAGE_KEY, AveugleHub } from './AveugleHub'
 
 const {
   ensureAnonymousSession,
   getAveugleHub,
   getSouvenirs,
   markAveugleTopicSeen,
+  replaceMock,
   spendSouvenir,
   talkToAveugle,
 } = vi.hoisted(() => ({
@@ -21,8 +22,12 @@ const {
   getAveugleHub: vi.fn(),
   getSouvenirs: vi.fn(),
   markAveugleTopicSeen: vi.fn(),
+  replaceMock: vi.fn(),
   spendSouvenir: vi.fn(),
   talkToAveugle: vi.fn(),
+}))
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ replace: replaceMock }),
 }))
 vi.mock('@/lib/supabase/ensure-session', () => ({ ensureAnonymousSession }))
 
@@ -89,6 +94,7 @@ describe('AveugleHub', () => {
     getAveugleHub.mockReset()
     getSouvenirs.mockReset()
     markAveugleTopicSeen.mockReset()
+    replaceMock.mockReset()
     spendSouvenir.mockReset()
     talkToAveugle.mockReset()
     ensureAnonymousSession.mockResolvedValue(undefined)
@@ -105,6 +111,7 @@ describe('AveugleHub', () => {
       isFallback: false,
     })
     window.localStorage.clear()
+    window.localStorage.setItem(AUBERGE_HUB_UNLOCK_STORAGE_KEY, 'true')
     window.sessionStorage.clear()
     window.sessionStorage.setItem(AUBERGE_INTRO_STORAGE_KEY, 'seen')
     document.cookie = `${ACTIVE_GAME_SESSION_COOKIE}=; Path=/; Max-Age=0`
@@ -153,6 +160,19 @@ describe('AveugleHub', () => {
     await user.click(screen.getByRole('button', { name: 'Other topics' }))
     await user.click(screen.getByRole('button', { name: 'Another question…' }))
     expect(screen.getByPlaceholderText('Ask your question…')).toBeInTheDocument()
+  })
+
+  it('lance le premier run sans exposer les conversations de l’Auberge', async () => {
+    window.localStorage.removeItem(AUBERGE_HUB_UNLOCK_STORAGE_KEY)
+    window.localStorage.setItem(CHARACTER_RESULT_STORAGE_KEY, JSON.stringify(CHARACTER))
+
+    render(<AveugleHub campaignId="nouvelle-chronique" />)
+
+    await waitFor(() => {
+      expect(replaceMock).toHaveBeenCalledWith('/velkhar/session/new?campaign=nouvelle-chronique')
+    })
+    expect(getAveugleHub).not.toHaveBeenCalled()
+    expect(screen.queryByRole('button', { name: /Memories/ })).not.toBeInTheDocument()
   })
 
   it('lance l’introduction au premier passage même sans personnage', async () => {

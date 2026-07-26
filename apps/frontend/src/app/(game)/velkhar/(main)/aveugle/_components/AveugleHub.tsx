@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
@@ -16,17 +17,14 @@ import { getAuthHref } from '@/lib/internal-navigation'
 import { ensureAnonymousSession } from '@/lib/supabase/ensure-session'
 
 import { VocationEmblem } from '../../../_components/VocationEmblem/VocationEmblem'
+import { VELKHAR_WORLD } from '../../../_config/velkhar-world'
 import {
   CHARACTER_RESULT_STORAGE_KEY,
   parseStoredCharacterResult,
   type CharacterCreateDraft,
 } from '../../character-create/_lib/character-create-model'
 import { getAveugleHub, getSouvenirs } from '../_lib/aveugle-api'
-import {
-  getFallbackHubCharacter,
-  resolveAveugleHubSnapshot,
-  type AveugleHubStage,
-} from '../_lib/aveugle-hub-model'
+import { resolveAveugleHubSnapshot, type AveugleHubStage } from '../_lib/aveugle-hub-model'
 
 import { AubergeDock, type AubergePanel } from './AubergeDock'
 import { AubergeIntro, hasSeenAubergeIntro } from './AubergeIntro'
@@ -39,11 +37,12 @@ import type { AveugleHubState, Souvenir } from '@grimoire/shared'
 
 interface AveugleHubProps {
   campaignId?: string
-  characterReadyHint?: boolean
   isRunReturn?: boolean
   previewIntro?: boolean
   transitionFromHome?: boolean
 }
+
+export const AUBERGE_HUB_UNLOCK_STORAGE_KEY = 'grimoire:velkhar:auberge-unlocked'
 
 function readActiveSessionCookie(): boolean {
   const cookie = document.cookie
@@ -52,10 +51,7 @@ function readActiveSessionCookie(): boolean {
   return hasActiveGameSession(cookie?.split('=')[1])
 }
 
-function readCharacter(
-  characterReadyHint: boolean,
-  fallbackName: string
-): CharacterCreateDraft | null {
+function readCharacter(): CharacterCreateDraft | null {
   const persisted = parseStoredCharacterResult(
     window.localStorage.getItem(CHARACTER_RESULT_STORAGE_KEY)
   )
@@ -70,22 +66,28 @@ function readCharacter(
     return legacy
   }
 
-  return characterReadyHint ? getFallbackHubCharacter(fallbackName) : null
+  return null
+}
+
+function getFirstRunHref(campaignId?: string): string {
+  const path = `${VELKHAR_WORLD.routes.session}/new`
+  return campaignId ? `${path}?campaign=${encodeURIComponent(campaignId)}` : path
 }
 
 export function AveugleHub({
   campaignId,
-  characterReadyHint = false,
   isRunReturn = false,
   previewIntro = false,
   transitionFromHome = false,
 }: AveugleHubProps) {
   const locale = useLocale()
+  const router = useRouter()
   const t = useTranslations('Auberge')
   const sessionT = useTranslations('Session')
   const [hydrated, setHydrated] = useState(false)
   const [character, setCharacter] = useState<CharacterCreateDraft | null>(null)
   const [hasActiveSessionState, setHasActiveSessionState] = useState(false)
+  const [hubUnlocked, setHubUnlocked] = useState(false)
   const [showIntro, setShowIntro] = useState(false)
   const [activePanel, setActivePanel] = useState<AubergePanel>('dialogue')
   const [hubState, setHubState] = useState<AveugleHubState | null>(null)
@@ -103,13 +105,26 @@ export function AveugleHub({
   }
 
   useEffect(() => {
-    const nextCharacter = readCharacter(characterReadyHint, t('traveler'))
+    const nextCharacter = readCharacter()
+    const nextHasActiveSession = readActiveSessionCookie()
+    const nextHubUnlocked = Boolean(
+      nextCharacter &&
+      (isRunReturn ||
+        nextHasActiveSession ||
+        window.localStorage.getItem(AUBERGE_HUB_UNLOCK_STORAGE_KEY) === 'true')
+    )
+
+    if (nextHubUnlocked) {
+      window.localStorage.setItem(AUBERGE_HUB_UNLOCK_STORAGE_KEY, 'true')
+    }
+
     setCharacter(nextCharacter)
-    setHasActiveSessionState(readActiveSessionCookie())
+    setHasActiveSessionState(nextHasActiveSession)
+    setHubUnlocked(nextHubUnlocked)
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     setShowIntro(previewIntro || (!reduceMotion && !hasSeenAubergeIntro()))
     setHydrated(true)
-  }, [characterReadyHint, isRunReturn, previewIntro, t])
+  }, [isRunReturn, previewIntro])
 
   const loadHub = useCallback(async () => {
     setHubLoading(true)
@@ -131,9 +146,9 @@ export function AveugleHub({
   }, [])
 
   useEffect(() => {
-    if (!hydrated || !character) return
+    if (!hydrated || !character || !hubUnlocked) return
     void loadHub()
-  }, [character, hydrated, loadHub])
+  }, [character, hubUnlocked, hydrated, loadHub])
 
   const snapshot = useMemo(
     () =>
@@ -155,6 +170,11 @@ export function AveugleHub({
     [campaignId, character, hasActiveSessionState, isRunReturn, locale, t]
   )
   const openingLine = stageCopy[snapshot.stage]
+
+  useEffect(() => {
+    if (!hydrated || !character || hubUnlocked) return
+    router.replace(getFirstRunHref(campaignId))
+  }, [campaignId, character, hubUnlocked, hydrated, router])
 
   useGSAP(
     () => {
@@ -282,7 +302,7 @@ export function AveugleHub({
     </div>
   ) : null
 
-  if (!hydrated || (snapshot.character && hubLoading && !hubState)) {
+  if (!hydrated || (snapshot.character && (!hubUnlocked || (hubLoading && !hubState)))) {
     return (
       <main className="aveugle-hub aveugle-hub--loading" aria-busy="true">
         <div className="aveugle-hub__scene" aria-hidden="true" />

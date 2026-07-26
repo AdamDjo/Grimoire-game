@@ -26,6 +26,9 @@ interface AveuglePageProps {
 export default async function AveuglePage({ searchParams }: AveuglePageProps) {
   const { campaign, character, flow, intro, return: returnState, transition } = await searchParams
   const campaignId = typeof campaign === 'string' ? campaign : undefined
+  const firstRunHref = campaignId
+    ? `/velkhar/session/new?campaign=${encodeURIComponent(campaignId)}`
+    : '/velkhar/session/new'
 
   if (flow === 'character-create') {
     redirect(
@@ -35,10 +38,13 @@ export default async function AveuglePage({ searchParams }: AveuglePageProps) {
     )
   }
 
+  if (character === 'ready') {
+    redirect(firstRunHref)
+  }
+
   return (
     <AveugleHub
       campaignId={campaignId}
-      characterReadyHint={character === 'ready'}
       isRunReturn={returnState === 'chronicle' || returnState === 'run'}
       previewIntro={intro === 'preview'}
       transitionFromHome={transition === 'home'}
