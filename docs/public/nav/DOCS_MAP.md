@@ -35,6 +35,7 @@ source_of_truth: true
 - `design/UI_KIT.md` : composants et règles du UI Kit livré (#93 / PR #121).
 - `tech/ARCHITECTURE_RULES.md` : invariants backend/AI/frontend.
 - `tech/TECH_STACK.md` : stack active.
+- `tech/DYNAMIC_SCENE_IMAGES.md` : cache d'images de scène partagé (#207).
 - `raw/` : canon complet Velkhar (25 fichiers, public, versionné).
 
 ## Private (gitignored)

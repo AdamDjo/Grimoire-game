@@ -20,10 +20,11 @@ updated: 2026-07-24
 6. ~~#184~~ — repos court/feu (récupération canonique, `restRequested`) : livré (PR #204).
 7. ~~#185~~ — crescendo de danger IA (`buildDangerCrescendoSection`) : livré.
 8. ~~#101~~ — fiabiliser les modèles : livré (PR #191).
-9. #152 — résoudre ou désactiver le concept libre.
-10. #162 — traiter les risques sécurité applicables avant exposition publique.
-11. #161 — déployer l'API, appliquer les migrations et vérifier le healthcheck.
-12. #129 — supporter le golden path réel avec le frontend.
+9. ~~#152~~ — résoudre ou désactiver le concept libre : livré.
+10. ~~#207~~ — cache d'images de scène dynamique partagé : livré.
+11. #162 — traiter les risques sécurité applicables avant exposition publique.
+12. #161 — déployer l'API, appliquer les migrations et vérifier le healthcheck.
+13. #129 — supporter le golden path réel avec le frontend.
 
 Ordre de dépendance :
 

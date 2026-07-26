@@ -49,10 +49,21 @@ updated: 2026-07-24
   serveur (explicitement hors scope). Le backend reste seul souverain sur dés, dégâts, conditions,
   objets et fins de run ; l'IA ne fait que mettre en scène. Vérification manuelle en session
   (pas de test unitaire, conforme à la DoD du ticket).
+- #152 — résolution du concept libre par L'Aveugle.
+- #207 — cache d'images de scène dynamique partagé entre joueurs : nouvelle table `SceneImage`
+  (`cacheKey` = `sceneType_biome_lieuType`, jamais dérivée du texte libre IA) et colonne
+  `GameSession.currentImageUrl`. Classification `biome`/`lieuType` par pattern-matching de
+  mots-clés canon sur le `location` texte libre (`classifyBiome`/`classifyLieuType`), toujours
+  côté backend. Génération via Pollinations.ai (gratuit, sans clé API, timeout 15s), upload vers
+  le bucket public Supabase Storage `scene-images` (écriture service-role, lecture publique, pas
+  de policy RLS additionnelle). Résolution déclenchée à chaque chunk N2 (`compressScene`), URL
+  persistée sur `currentImageUrl` et relue par tous les points de construction de scène
+  (`resumeLatestScene`, `buildOpeningScene`, `resolveTurn`). Défensif de bout en bout : toute
+  panne (génération, upload, course concurrentielle sur la clé unique) retombe sur `null` sans
+  jamais faire échouer le tour. Doc technique `docs/public/tech/DYNAMIC_SCENE_IMAGES.md`.
 
 ## Pré-déploiement restant
 
-- #152 — résolution du concept libre ou signal explicite de masquage V1.
 - #162 — vulnérabilités critiques/hautes applicables.
 - #161 — API, migrations, secrets, CORS et healthcheck de production.
 - #129 — golden path contre les services réels.
