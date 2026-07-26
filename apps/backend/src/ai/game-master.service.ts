@@ -1,6 +1,11 @@
 import { GAME_MASTER_MODEL_CHAIN, hasOpenRouterKey } from '../config/env'
 import { prisma } from '../lib/prisma'
 
+import {
+  clearModelCooldown,
+  markModelCoolingDown,
+  prioritizeAvailableModels,
+} from './model-cooldown'
 import { callOpenRouter, type OpenRouterMessage, type OpenRouterUsage } from './openrouter.provider'
 import { buildStubScene } from './scene-stub'
 import { type AiScenePayload, validateAiScene } from './scene-validator'
@@ -163,10 +168,13 @@ export async function generateScene(input: GameMasterInput): Promise<GameMasterR
   // Try each model in the fallback chain; the first valid scene wins. Only when
   // every model fails (all rate-limited, or a definitive error) do we serve the
   // deterministic stub — the front never receives raw AI output. See #101.
-  for (const model of GAME_MASTER_MODEL_CHAIN) {
+  // Models that recently answered 429/5xx are pushed to the back of the chain so
+  // a throttled head no longer costs a wasted full-prompt round-trip every turn.
+  for (const model of prioritizeAvailableModels(GAME_MASTER_MODEL_CHAIN)) {
     const attempt = await tryModel(messages, model)
 
     if (attempt.ok) {
+      clearModelCooldown(model)
       if (attempt.usage) {
         console.info(
           `[GM] ${model} usage: ${attempt.usage.promptTokens} prompt + ` +
@@ -181,7 +189,8 @@ export async function generateScene(input: GameMasterInput): Promise<GameMasterR
       return { scene: buildStubScene(input.character, input.locale), source: 'stub' }
     }
 
-    console.warn(`[GM] ${model} unavailable, trying next model`)
+    markModelCoolingDown(model)
+    console.warn(`[GM] ${model} unavailable, cooling down and trying next model`)
   }
 
   console.warn('[GM] all models exhausted, falling back to stub')

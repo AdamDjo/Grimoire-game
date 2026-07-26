@@ -70,6 +70,19 @@ updated: 2026-07-26
   `pnpm.overrides` transitifs, axios retiré car inutilisé), audit CI bloquant sur `high`/`critical`,
   RLS activé sur les 9 tables Supabase (policy deny-all `anon`/`authenticated`, le backend accède
   via `postgres`/`service_role` qui bypassent RLS). Détail `docs/public/tech/SECURITY.md`.
+- #162 (durcissement pentest) — vérification JWT épinglée sur `issuer`/`audience` Supabase avec rejet
+  d'un token sans claim `sub`, quota anonyme rendu atomique (`updateMany` avec la garde `lt` dans le
+  `WHERE`, plus de course lecture-puis-écriture), `app.set('trust proxy', 1)` et `helmet` (CSP « tout
+  interdit », API JSON). Rate limit désormais clé par utilisateur : `requireAuth` monté **avant** les
+  limiteurs pour que `req.auth.userId` existe, `userOrIpKey` partagé
+  (`src/middleware/rate-limit-key.ts`) appliqué aux limiteurs de `index.ts` et `aveugle.routes.ts` —
+  auparavant tous les joueurs derrière un même NAT partageaient un seul seau.
+- #162 (chaîne de modèles) — `google/gemma-4-31b-it:free` rétrogradé après mesure (429 permanent
+  upstream) alors qu'il était tête de chaîne **et** repli de compression : un aller-retour complet
+  gaspillé à chaque tour. Chaîne réordonnée sur la disponibilité mesurée et élargie à 5 modèles
+  gratuits, plus cooldown mémoire (`src/ai/model-cooldown.ts`, 5 min) qui repousse en fin de chaîne
+  tout modèle ayant répondu 429/5xx — il réordonne sans jamais retirer, pour qu'un cooldown périmé
+  ne puisse pas provoquer un déni de service. Détail `docs/public/tech/SECURITY.md`.
 
 ## Pré-déploiement restant
 
