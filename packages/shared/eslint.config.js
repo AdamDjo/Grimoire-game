@@ -1,14 +1,14 @@
-const tsParser = require('@typescript-eslint/parser')
+const tsParser = require("@typescript-eslint/parser");
 
 /** @type {import("eslint").Linter.Config[]} */
 const config = [
   {
-    files: ['src/**/*.ts'],
+    files: ["src/**/*.ts"],
     languageOptions: {
       parser: tsParser,
     },
-    ignores: ['node_modules/**'],
+    ignores: ["node_modules/**"],
   },
-]
+];
 
-module.exports = config
+module.exports = config;
