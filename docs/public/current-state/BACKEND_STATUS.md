@@ -42,10 +42,16 @@ updated: 2026-07-24
   si bandages, -10 Calamine), jauges clampées 0-100. L'IA propose `rest_requested` (`short`/`fire`,
   `inn` ignoré côté backend) sans jamais choisir les valeurs ; `resolveTurn` applique le repos et
   lève l'état « mourant » si le soin remonte le PV au-dessus de 0. Risque d'embuscade différé.
+- #185 — crescendo de danger IA : nouvelle section `buildDangerCrescendoSection` dans
+  `ai/system-prompt.ts` qui pousse l'IA à faire monter l'intensité physique (pivots combat/fuite/
+  sauvetage réguliers) en s'appuyant sur l'état mécanique réel transmis (ratio PV, palier de
+  Calamine, conditions actives, état « mourant ») — aucun état d'acte/chapitre persisté côté
+  serveur (explicitement hors scope). Le backend reste seul souverain sur dés, dégâts, conditions,
+  objets et fins de run ; l'IA ne fait que mettre en scène. Vérification manuelle en session
+  (pas de test unitaire, conforme à la DoD du ticket).
 
 ## Pré-déploiement restant
 
-- #185 — danger IA régulier et crescendo d'intensité.
 - #152 — résolution du concept libre ou signal explicite de masquage V1.
 - #162 — vulnérabilités critiques/hautes applicables.
 - #161 — API, migrations, secrets, CORS et healthcheck de production.

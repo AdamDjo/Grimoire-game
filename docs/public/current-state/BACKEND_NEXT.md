@@ -17,8 +17,8 @@ updated: 2026-07-24
 3. ~~#182~~ — Calamine/fin Calciné : livré (PR #199).
 4. ~~#183~~ — inventaire réel (acquisition, usage, équipement) : livré.
 5. ~~#201~~ — survie punitive (paliers narratifs, négligence→Calamine, érosion PV, état mourant) : livré.
-6. ~~#184~~ — repos court/feu (récupération canonique, `restRequested`) : livré.
-7. #185 — renforcer le danger IA une fois les conséquences mécaniques disponibles.
+6. ~~#184~~ — repos court/feu (récupération canonique, `restRequested`) : livré (PR #204).
+7. ~~#185~~ — crescendo de danger IA (`buildDangerCrescendoSection`) : livré.
 8. ~~#101~~ — fiabiliser les modèles : livré (PR #191).
 9. #152 — résoudre ou désactiver le concept libre.
 10. #162 — traiter les risques sécurité applicables avant exposition publique.
@@ -27,7 +27,7 @@ updated: 2026-07-24
 
 Ordre de dépendance :
 
-`#185 → (#152 + #162) → #161 → #129`
+`(#152 + #162) → #161 → #129`
 
 ## Post-déploiement
 
