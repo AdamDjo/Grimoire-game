@@ -5,7 +5,7 @@ rag: true
 source_of_truth: true
 owner: frontend
 default_agent: codex
-updated: 2026-07-24
+updated: 2026-07-26
 ---
 
 # Frontend Status
@@ -34,12 +34,17 @@ updated: 2026-07-24
 - #201 / PR #203 — synchronisation frontend avec `SurvivalStats` (contrat backend #201) : `isDying`
   et `neglectStreak` ajoutés au personnage de démo et à `readSurvival`, `updatedStats` restant
   `Record<string, number>` (isDying non transporté réseau, mis à jour côté backend uniquement).
+- #152 — flow du concept libre dans `CharacterCreateFlow` : soumission du concept à L'Aveugle via
+  `resolveVocation` (client API), état `vocationResolutionStatus` (`idle`/`pending`/`resolved`/
+  `fallback`/`error`) affiché avec `ArchetypeCard` réutilisé pour la vocation proposée, acceptation
+  qui avance vers l'étape Histoire, repli explicite vers les 4 voies preset avec message dédié en
+  cas d'échec, `CharacterCreateDraft` v2 (nom personnalisé, trait narratif, compétences décalées)
+  persisté dans le brouillon versionné. Copy EN/FR synchronisée.
 
 ## Pré-déploiement restant
 
 - #186 — livrer l'UI Survie v2 après stabilisation des contrats ~~#180~~ (livré, PR #196) et des
   endpoints ~~#181~~ (livré, PR #198), #182-#184.
-- #152 — intégrer la résolution du concept libre ou masquer proprement l'option en V1.
 - #161 — configurer l'API de production et les redirects Supabase côté frontend.
 - #129 — valider le golden path réel EN/FR, l'accessibilité et le responsive.
 

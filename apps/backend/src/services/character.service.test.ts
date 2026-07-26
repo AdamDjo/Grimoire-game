@@ -78,6 +78,9 @@ describe('createCharacter', () => {
         vocation: 'shadow-blade',
         freeConcept: null,
         backstory: null,
+        customVocationName: null,
+        narrativeTrait: null,
+        shiftedSkills: [],
         // shadow-blade: blood 10 / breath 14 / ash 10 — rivain: +1 ash.
         blood: 10,
         breath: 14,
@@ -108,20 +111,40 @@ describe('createCharacter', () => {
     expect(characterCreate).not.toHaveBeenCalled()
   })
 
-  it('falls back to the watcher host vocation when vocationId is empty (unresolved free concept)', async () => {
+  it('persists the AI-resolved custom vocation fields for a free concept', async () => {
     characterFindFirst.mockResolvedValue(null)
 
     await createCharacter('user1', {
       name: 'A Free Concept',
       peopleId: 'sahelin',
+      vocationId: 'watcher',
       freeConcept: 'A vieille chasseuse de Calcinés, lasse.',
+      customVocationName: 'Traqueuse de Cendres',
+      narrativeTrait: 'Ne dort jamais deux nuits au même endroit.',
+      shiftedSkills: [
+        { original: 'Lecture des ruines', shifted: 'Pistage de Calcinés' },
+        { original: "Prudence d'artefact", shifted: 'Instinct de traque' },
+      ],
     })
 
-    const [[{ data: watcherCallData }]] = characterCreate.mock.calls as [
-      [{ data: { vocation: string; freeConcept: string | null } }],
+    const [[{ data: resolvedCallData }]] = characterCreate.mock.calls as [
+      [
+        {
+          data: {
+            vocation: string
+            freeConcept: string | null
+            customVocationName: string | null
+            narrativeTrait: string | null
+            shiftedSkills: unknown
+          }
+        },
+      ],
     ]
-    expect(watcherCallData.vocation).toBe('watcher')
-    expect(watcherCallData.freeConcept).toBe('A vieille chasseuse de Calcinés, lasse.')
+    expect(resolvedCallData.vocation).toBe('watcher')
+    expect(resolvedCallData.freeConcept).toBe('A vieille chasseuse de Calcinés, lasse.')
+    expect(resolvedCallData.customVocationName).toBe('Traqueuse de Cendres')
+    expect(resolvedCallData.narrativeTrait).toBe('Ne dort jamais deux nuits au même endroit.')
+    expect(resolvedCallData.shiftedSkills).toHaveLength(2)
   })
 
   it('persists null for freeConcept/backstory when not provided', async () => {

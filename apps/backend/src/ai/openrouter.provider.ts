@@ -5,6 +5,12 @@ export interface OpenRouterMessage {
   content: string
 }
 
+export interface OpenRouterUsage {
+  promptTokens: number
+  completionTokens: number
+  totalTokens: number
+}
+
 export interface OpenRouterResult {
   success: boolean
   /** Raw assistant text content (expected to be JSON). */
@@ -17,6 +23,8 @@ export interface OpenRouterResult {
    * Absent on success and on network/timeout errors.
    */
   status?: number
+  /** Token usage reported by OpenRouter, when the provider includes it. */
+  usage?: OpenRouterUsage
 }
 
 export interface OpenRouterCallOptions {
@@ -74,6 +82,7 @@ export async function callOpenRouter(
 
     const data = (await response.json()) as {
       choices?: { message?: { content?: string } }[]
+      usage?: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number }
     }
     const content = data.choices?.[0]?.message?.content
 
@@ -81,7 +90,15 @@ export async function callOpenRouter(
       return { success: false, error: 'OpenRouter returned an empty response' }
     }
 
-    return { success: true, content }
+    const usage = data.usage
+      ? {
+          promptTokens: data.usage.prompt_tokens ?? 0,
+          completionTokens: data.usage.completion_tokens ?? 0,
+          totalTokens: data.usage.total_tokens ?? 0,
+        }
+      : undefined
+
+    return { success: true, content, usage }
   } catch (err) {
     if (err instanceof Error && err.name === 'AbortError') {
       return { success: false, error: 'OpenRouter request timed out' }

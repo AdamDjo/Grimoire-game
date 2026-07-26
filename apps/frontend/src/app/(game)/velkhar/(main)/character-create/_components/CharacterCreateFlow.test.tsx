@@ -2,7 +2,10 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { CHARACTER_RESULT_STORAGE_KEY } from '../_lib/character-create-model'
+import {
+  CHARACTER_DRAFT_STORAGE_KEY,
+  CHARACTER_RESULT_STORAGE_KEY,
+} from '../_lib/character-create-model'
 
 import { CharacterCreateFlow } from './CharacterCreateFlow'
 
@@ -70,11 +73,106 @@ describe('CharacterCreateFlow', () => {
     expect(storedResult).not.toContain('stats')
   })
 
+  it('resolves a free concept and lets the player accept the proposed vocation', async () => {
+    const user = userEvent.setup()
+    const fetchMock = vi.fn().mockImplementation((input: RequestInfo | URL) => {
+      const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url
+      if (url.includes('/resolve-vocation')) {
+        return Promise.resolve({
+          ok: true,
+          status: 200,
+          json: () =>
+            Promise.resolve({
+              success: true,
+              data: {
+                status: 'resolved',
+                vocationId: 'watcher',
+                customVocationName: 'Ruin-Reader',
+                narrativeTrait: 'Reads danger before it strikes.',
+                shiftedSkills: [{ original: 'Lore', shifted: 'Ruin-Sense' }],
+                announcement: 'The Blind One nods slowly.',
+              },
+            }),
+        })
+      }
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({ success: true, data: { id: 'char1' } }),
+      })
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    render(<CharacterCreateFlow campaignId="nouvelle-chronique" />)
+
+    await user.type(await screen.findByLabelText('Character name *'), 'Amani')
+    await user.click(screen.getByRole('button', { name: 'Next' }))
+
+    await screen.findByRole('heading', { name: 'People' })
+    await user.click(screen.getByRole('button', { name: /Sahelin/ }))
+
+    await screen.findByRole('heading', { name: 'Vocation' })
+    await user.type(
+      screen.getByLabelText('Your character idea *'),
+      'A ruin-reader who listens to the bones of the desert.'
+    )
+    await user.click(screen.getByRole('button', { name: 'Entrust this concept to The Blind One' }))
+
+    expect(await screen.findByText('The Blind One nods slowly.')).toBeInTheDocument()
+    expect(screen.getByText('Ruin-Reader')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Accept this vocation' }))
+
+    await screen.findByRole('heading', { name: 'History' })
+  })
+
+  it('falls back to the preset choices when the concept cannot be resolved', async () => {
+    const user = userEvent.setup()
+    const fetchMock = vi.fn().mockImplementation((input: RequestInfo | URL) => {
+      const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url
+      if (url.includes('/resolve-vocation')) {
+        return Promise.resolve({
+          ok: true,
+          status: 200,
+          json: () =>
+            Promise.resolve({
+              success: true,
+              data: { status: 'fallback', reason: 'unintelligible_concept' },
+            }),
+        })
+      }
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({ success: true, data: { id: 'char1' } }),
+      })
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    render(<CharacterCreateFlow campaignId="nouvelle-chronique" />)
+
+    await user.type(await screen.findByLabelText('Character name *'), 'Amani')
+    await user.click(screen.getByRole('button', { name: 'Next' }))
+
+    await screen.findByRole('heading', { name: 'People' })
+    await user.click(screen.getByRole('button', { name: /Sahelin/ }))
+
+    await screen.findByRole('heading', { name: 'Vocation' })
+    await user.type(screen.getByLabelText('Your character idea *'), 'asdf asdf asdf asdf asdf')
+    await user.click(screen.getByRole('button', { name: 'Entrust this concept to The Blind One' }))
+
+    expect(
+      await screen.findByText(
+        'The Blind One could not make out a vocation in these words. Choose one of the four paths above, or refine your concept.'
+      )
+    ).toBeInTheDocument()
+  })
+
   it('restores a versioned draft after hydration', async () => {
     window.sessionStorage.setItem(
-      'grimoire.character-create.draft.v1',
+      CHARACTER_DRAFT_STORAGE_KEY,
       JSON.stringify({
-        version: 1,
+        version: 2,
         name: 'Kael',
         peopleId: 'rivain',
         vocationPath: 'preset',
@@ -82,6 +180,10 @@ describe('CharacterCreateFlow', () => {
         freeConcept: '',
         backstory: '',
         historyReviewed: false,
+        vocationResolutionStatus: 'idle',
+        customVocationName: '',
+        narrativeTrait: '',
+        shiftedSkills: [],
       })
     )
 

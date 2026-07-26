@@ -5,7 +5,7 @@ rag: true
 source_of_truth: true
 owner: backend
 default_agent: claude
-updated: 2026-07-24
+updated: 2026-07-26
 ---
 
 # Backend Next
@@ -20,7 +20,7 @@ updated: 2026-07-24
 6. ~~#184~~ — repos court/feu (récupération canonique, `restRequested`) : livré (PR #204).
 7. ~~#185~~ — crescendo de danger IA (`buildDangerCrescendoSection`) : livré.
 8. ~~#101~~ — fiabiliser les modèles : livré (PR #191).
-9. ~~#152~~ — résoudre ou désactiver le concept libre : livré.
+9. ~~#152~~ — résoudre le concept libre (`POST /api/character/resolve-vocation`) : livré.
 10. ~~#207~~ — cache d'images de scène dynamique partagé : livré.
 11. #162 — traiter les risques sécurité applicables avant exposition publique.
 12. #161 — déployer l'API, appliquer les migrations et vérifier le healthcheck.
@@ -28,7 +28,7 @@ updated: 2026-07-24
 
 Ordre de dépendance :
 
-`(#152 + #162) → #161 → #129`
+`#162 → #161 → #129`
 
 ## Post-déploiement
 

@@ -1,7 +1,7 @@
 import { GAME_MASTER_MODEL_CHAIN, hasOpenRouterKey } from '../config/env'
 import { prisma } from '../lib/prisma'
 
-import { callOpenRouter, type OpenRouterMessage } from './openrouter.provider'
+import { callOpenRouter, type OpenRouterMessage, type OpenRouterUsage } from './openrouter.provider'
 import { buildStubScene } from './scene-stub'
 import { type AiScenePayload, validateAiScene } from './scene-validator'
 import { buildSystemPrompt, type RecentTurnSummary } from './system-prompt'
@@ -76,7 +76,9 @@ export interface GameMasterResult {
  * (bad key, malformed request) means every model would fail the same way, so we
  * stop and fall straight to the stub instead of hammering the whole chain.
  */
-type ModelAttempt = { ok: true; scene: AiScenePayload } | { ok: false; retryable: boolean }
+type ModelAttempt =
+  | { ok: true; scene: AiScenePayload; usage?: OpenRouterUsage }
+  | { ok: false; retryable: boolean }
 
 /**
  * HTTP statuses that mean "this model can't answer right now, try another":
@@ -114,7 +116,7 @@ async function tryModel(messages: OpenRouterMessage[], model: string): Promise<M
     return { ok: false, retryable: true }
   }
 
-  return { ok: true, scene: validated.data }
+  return { ok: true, scene: validated.data, usage: result.usage }
 }
 
 /** Turns the player's action into a validated narrative payload. */
@@ -165,6 +167,12 @@ export async function generateScene(input: GameMasterInput): Promise<GameMasterR
     const attempt = await tryModel(messages, model)
 
     if (attempt.ok) {
+      if (attempt.usage) {
+        console.info(
+          `[GM] ${model} usage: ${attempt.usage.promptTokens} prompt + ` +
+            `${attempt.usage.completionTokens} completion = ${attempt.usage.totalTokens} tokens`
+        )
+      }
       return { scene: attempt.scene, source: 'ai', model }
     }
 
