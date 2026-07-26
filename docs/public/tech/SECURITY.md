@@ -113,9 +113,22 @@ attaqués, même via un compte détenu par l'équipe.
 Les limiteurs étaient montés **avant** `requireAuth`, donc `req.auth.userId` n'existait pas encore et
 la clé retombait sur l'IP. Deux conséquences : des joueurs derrière un même NAT (campus, opérateur
 mobile, entreprise) se vidaient mutuellement leur budget, et un attaquant remettait son quota à zéro
-en changeant d'IP. L'ordre est désormais inversé (`requireAuth, limiter, router`) et tous les
-limiteurs utilisent `userOrIpKey` (`apps/backend/src/middleware/rate-limit-key.ts`), qui clé sur
-`user:<id>` quand l'utilisateur est authentifié et retombe sur `ip:<addr>` sinon.
+en changeant d'IP. Les limiteurs utilisent désormais `userOrIpKey`
+(`apps/backend/src/middleware/rate-limit-key.ts`), qui clé sur `user:<id>` quand l'utilisateur est
+authentifié et retombe sur `ip:<addr>` sinon — ce qui impose de les monter **après** `requireAuth`.
+
+Mais déplacer les limiteurs après l'authentification laisse `requireAuth` lui-même exposé : il
+vérifie un JWT contre un JWKS distant et fait un upsert Prisma, donc un attaquant non authentifié
+pourrait le marteler sans jamais rencontrer de limite. Chaque route est donc limitée **deux fois** :
+
+1. `preAuthLimiter` (120 req/min, clé IP) **avant** `requireAuth` — plafond volontairement large,
+   il sert à couper le flood non authentifié, pas à mesurer le jeu légitime ;
+2. `gameLimiter` / `apiLimiter` (30 et 60 req/min, clé utilisateur) **après** `requireAuth`.
+
+Aucun des deux ne suffit seul : un quota par IP seule est partagé par tout un NAT, un quota par
+utilisateur seul laisse la vérification JWT sans protection. C'est aussi ce que signalait CodeQL
+(`js/missing-rate-limiting`) sur la première version de ce correctif, qui n'avait que le second
+étage.
 
 > Note montée `express-rate-limit` v8 : la v8 ajoute `ipKeyGenerator` (repli IPv6 sur le /64) et
 > l'**impose** aux générateurs de clés personnalisés manipulant des IP. La version installée est la

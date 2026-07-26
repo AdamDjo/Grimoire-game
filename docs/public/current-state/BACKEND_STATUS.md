@@ -76,7 +76,10 @@ updated: 2026-07-26
   interdit », API JSON). Rate limit désormais clé par utilisateur : `requireAuth` monté **avant** les
   limiteurs pour que `req.auth.userId` existe, `userOrIpKey` partagé
   (`src/middleware/rate-limit-key.ts`) appliqué aux limiteurs de `index.ts` et `aveugle.routes.ts` —
-  auparavant tous les joueurs derrière un même NAT partageaient un seul seau.
+  auparavant tous les joueurs derrière un même NAT partageaient un seul seau. Comme déplacer les
+  limiteurs après l'authentification exposait `requireAuth` lui-même (vérification JWT contre un JWKS
+  distant + upsert Prisma) au flood non authentifié, chaque route est limitée deux fois :
+  `preAuthLimiter` par IP (120 req/min) en amont, puis le limiteur par utilisateur en aval.
 - #162 (chaîne de modèles) — `google/gemma-4-31b-it:free` rétrogradé après mesure (429 permanent
   upstream) alors qu'il était tête de chaîne **et** repli de compression : un aller-retour complet
   gaspillé à chaque tour. Chaîne réordonnée sur la disponibilité mesurée et élargie à 5 modèles

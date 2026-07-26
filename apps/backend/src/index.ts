@@ -49,6 +49,18 @@ app.use(
 )
 app.use(express.json({ limit: '64kb' }))
 
+// First line of defence, keyed on IP because it runs before authentication.
+// `requireAuth` is itself expensive — it verifies a JWT against a remote JWKS and
+// upserts a User row — so it must not be reachable without a limiter in front of
+// it. The ceiling is deliberately loose: it exists to stop unauthenticated
+// flooding, not to meter legitimate play, which the per-user limiters below do.
+const preAuthLimiter = rateLimit({
+  windowMs: 60_000,
+  limit: 120,
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+
 // Rate-limit the AI-backed game endpoints to protect the OpenRouter budget.
 const gameLimiter = rateLimit({
   windowMs: 60_000,
@@ -67,15 +79,18 @@ const apiLimiter = rateLimit({
   keyGenerator: userOrIpKey,
 })
 
-// Routes. `requireAuth` runs *before* the limiter so `req.auth.userId` exists as
-// a rate-limit key; unauthenticated traffic is rejected by the 401 it never gets
-// past, which is cheaper than the limiter anyway.
-app.use('/api/game', requireAuth, gameLimiter, gameRouter)
-app.use('/api/character', requireAuth, apiLimiter, characterRouter)
-app.use('/api/souvenirs', requireAuth, apiLimiter, souvenirRouter)
-app.use('/api/chronicles', requireAuth, apiLimiter, chronicleRouter)
+// Routes are limited twice, and the order matters. `preAuthLimiter` caps
+// unauthenticated flooding by IP before the expensive `requireAuth` runs; the
+// second limiter then meters real usage per user, which needs `req.auth.userId`
+// and therefore has to come *after* authentication. Neither alone is enough: an
+// IP-only quota is shared by everyone behind a NAT, and a user-only quota leaves
+// JWT verification unprotected.
+app.use('/api/game', preAuthLimiter, requireAuth, gameLimiter, gameRouter)
+app.use('/api/character', preAuthLimiter, requireAuth, apiLimiter, characterRouter)
+app.use('/api/souvenirs', preAuthLimiter, requireAuth, apiLimiter, souvenirRouter)
+app.use('/api/chronicles', preAuthLimiter, requireAuth, apiLimiter, chronicleRouter)
 // Aveugle's router also applies its own stricter per-route limiter on AI-backed endpoints.
-app.use('/api/aveugle', requireAuth, apiLimiter, aveugleRouter)
+app.use('/api/aveugle', preAuthLimiter, requireAuth, apiLimiter, aveugleRouter)
 
 // Health check
 app.get('/api/health', (_req, res) => {
