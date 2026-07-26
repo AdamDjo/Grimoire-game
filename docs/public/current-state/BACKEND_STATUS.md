@@ -55,6 +55,17 @@ updated: 2026-07-26
   l'identifiant retenu), avec réponse union discriminée `resolved` (vocation + nom personnalisé +
   trait narratif + compétences décalées) ou `fallback` (raison explicite), toujours HTTP 200. Nom
   personnalisé et trait narratif injectés dans `ai/system-prompt.ts` pour la narration en run.
+- #207 — cache d'images de scène dynamique partagé entre joueurs : nouvelle table `SceneImage`
+  (`cacheKey` = `sceneType_biome_lieuType`, jamais dérivée du texte libre IA) et colonne
+  `GameSession.currentImageUrl`. Classification `biome`/`lieuType` par pattern-matching de
+  mots-clés canon sur le `location` texte libre (`classifyBiome`/`classifyLieuType`), toujours
+  côté backend. Génération via Pollinations.ai (gratuit, sans clé API, timeout 15s), upload vers
+  le bucket public Supabase Storage `scene-images` (écriture service-role, lecture publique, pas
+  de policy RLS additionnelle). Résolution déclenchée à chaque chunk N2 (`compressScene`), URL
+  persistée sur `currentImageUrl` et relue par tous les points de construction de scène
+  (`resumeLatestScene`, `buildOpeningScene`, `resolveTurn`). Défensif de bout en bout : toute
+  panne (génération, upload, course concurrentielle sur la clé unique) retombe sur `null` sans
+  jamais faire échouer le tour. Doc technique `docs/public/tech/DYNAMIC_SCENE_IMAGES.md`.
 
 ## Pré-déploiement restant
 

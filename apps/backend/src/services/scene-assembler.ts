@@ -9,6 +9,8 @@ export interface AssembleSceneInput {
   turnNumber: number
   /** Mechanical consequences resolved by the backend for this turn, if any. */
   consequences?: ChoiceConsequence
+  /** Resolved shared scene-image cache URL for this session, if any (#207). */
+  imageUrl?: string | null
 }
 
 /**
@@ -21,6 +23,7 @@ export function assembleScene({
   sessionId,
   turnNumber,
   consequences,
+  imageUrl,
 }: AssembleSceneInput): Scene {
   const choices: Choice[] = payload.choices.map((choice) => ({
     id: randomUUID(),
@@ -36,6 +39,7 @@ export function assembleScene({
     narrative: payload.narrative,
     choices,
     ...(consequences ? { consequences } : {}),
+    ...(imageUrl ? { imageUrl } : {}),
     sceneType: payload.sceneType,
     location: payload.location,
     createdAt: new Date().toISOString(),

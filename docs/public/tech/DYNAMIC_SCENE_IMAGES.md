@@ -6,11 +6,14 @@ source_of_truth: true
 updated: 2026-07-26
 ---
 
-# Images de scène dynamiques (plan)
+> Statut : **livré** (#207). Ce document garde son rôle de plan de conception ;
+> les sections marquées « livré » décrivent l'implémentation réelle.
 
-> Statut : **plan, non implémenté**. Remplace l'image de fond statique unique
-> (`public/scenes/`, voir [[UI_KIT]] §Scènes) par une bibliothèque d'images
-> générées et partagées entre tous les joueurs.
+# Images de scène dynamiques (#207)
+
+> Remplace l'image de fond statique unique (`public/scenes/`, voir
+> [[UI_KIT]] §Scènes) par une bibliothèque d'images générées et partagées
+> entre tous les joueurs.
 
 ## Problème
 
@@ -84,24 +87,56 @@ DB/auth. Le volume reste borné par le nombre de combinaisons de cache
 (quelques dizaines d'images, pas une par run/joueur), donc largement dans le
 free tier (1 Go).
 
-## Schéma (à créer)
+## Schéma (livré)
 
-Nouvelle table Prisma `SceneImage` :
+Table Prisma `SceneImage` :
 
 ```prisma
 model SceneImage {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   cacheKey  String   @unique // sceneType_biome_lieuType
   url       String
   createdAt DateTime @default(now())
 }
 ```
 
-Au moment de la compression N2 (ou de la génération de scène), le backend
-calcule `cacheKey`, cherche une ligne existante ; absente → génère, upload
-Supabase Storage, insère la ligne ; présente → réutilise `url` directement.
-Le `MemoryChunk` (ou le payload de scène renvoyé au frontend) porte la
-`SceneImage.url` résolue pour ce tour.
+`GameSession` gagne une colonne `currentImageUrl String?`.
+
+## Classification biome/lieuType (livré)
+
+`scene-image.service.ts` expose `classifyBiome(location)` et
+`classifyLieuType(location)` : un pattern-matching de mots-clés canon sur le
+texte libre `location` écrit par l'IA, avec des défauts sûrs (`coeur`,
+`plein_air`) quand aucun mot-clé ne matche. Choix délibéré de ne **pas**
+brancher le champ `WorldState.biome` (existant mais inutilisé) pour garder
+#207 scopé — le classifieur texte-libre suffit et reste entièrement côté
+backend (jamais l'IA qui décide de la clé).
+
+## Pont asynchrone image ↔ tour (livré)
+
+`resolveTurn()` (`session.service.ts`) construit et renvoie le `SceneResponse`
+de façon synchrone, puis déclenche `compressScene()` en asynchrone (non
+attendu, tous les ~8 tours). L'image ne peut donc pas atteindre la réponse du
+même tour : l'URL résolue est persistée sur `GameSession.currentImageUrl` (via
+`resolveAndPersistSceneImage()` dans `memory.service.ts`) et relue par tous
+les points de construction de scène suivants (`resumeLatestScene`,
+`buildOpeningScene`, `resolveTurn`) pour peupler `Scene.imageUrl`.
+
+## Génération et stockage (livré)
+
+**Pollinations.ai** (`image.pollinations.ai/prompt/...`), GET simple avec
+prompt encodé, timeout 15s via `AbortController`. Échec ou timeout → `null`,
+le frontend retombe sur l'image de thème statique existante.
+
+Bucket **Supabase Storage `scene-images`**, créé **public** (`getPublicUrl()`
+direct, pas d'URL signée). Les écritures (`uploadSceneImage`) utilisent la clé
+service-role qui bypass RLS ; les lectures sont publiques — donc aucune
+policy RLS Storage additionnelle nécessaire.
+
+`resolveSceneImage()` gère la course concurrentielle : si deux requêtes
+tentent de créer la même `cacheKey` en même temps, l'échec de contrainte
+unique déclenche une relecture par `cacheKey` pour réutiliser la ligne
+gagnante plutôt que de traiter ça comme une erreur.
 
 ## Hors scope de ce plan
 

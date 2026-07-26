@@ -115,6 +115,9 @@ model GameSession {
   status     String   @default("active") // active | ended
   /// Why the session ended (death | inn | abandon | calcined). Null while active. Bridge to A3.
   endReason  String?
+  /// URL résolue du cache d'images de scène partagé (#207), mise à jour à
+  /// chaque compression N2. Null tant qu'aucun chunk n'a encore résolu d'image.
+  currentImageUrl String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
@@ -165,6 +168,17 @@ model MemoryChunk {
   turnRangeStart Int
   turnRangeEnd   Int
 
+  createdAt DateTime @default(now())
+}
+
+/// Bibliothèque d'images de scène partagée entre tous les joueurs (#207).
+/// Une ligne par combinaison sceneType_biome_lieuType rencontrée ; générée une
+/// seule fois puis réutilisée par tous les chunks qui matchent la même clé.
+/// @see docs/public/tech/DYNAMIC_SCENE_IMAGES.md
+model SceneImage {
+  id        String   @id @default(uuid())
+  cacheKey  String   @unique
+  url       String
   createdAt DateTime @default(now())
 }
 

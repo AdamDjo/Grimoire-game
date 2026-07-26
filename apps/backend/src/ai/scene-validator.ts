@@ -109,9 +109,11 @@ export const aiRestRequestedSchema = z.object({
 
 export type AiRestRequested = z.infer<typeof aiRestRequestedSchema>
 
+export const sceneTypeSchema = z.enum(['exploration', 'combat', 'dialog', 'event', 'shop', 'rest'])
+
 export const aiSceneSchema = z.object({
   narrative: z.string().min(1).max(4000),
-  sceneType: z.enum(['exploration', 'combat', 'dialog', 'event', 'shop', 'rest']),
+  sceneType: sceneTypeSchema,
   location: z.string().min(1).max(120),
   choices: z.array(aiChoiceSchema).min(1).max(6),
   /**

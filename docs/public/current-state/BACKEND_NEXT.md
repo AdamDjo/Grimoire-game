@@ -21,9 +21,10 @@ updated: 2026-07-26
 7. ~~#185~~ — crescendo de danger IA (`buildDangerCrescendoSection`) : livré.
 8. ~~#101~~ — fiabiliser les modèles : livré (PR #191).
 9. ~~#152~~ — résoudre le concept libre (`POST /api/character/resolve-vocation`) : livré.
-10. #162 — traiter les risques sécurité applicables avant exposition publique.
-11. #161 — déployer l'API, appliquer les migrations et vérifier le healthcheck.
-12. #129 — supporter le golden path réel avec le frontend.
+10. ~~#207~~ — cache d'images de scène dynamique partagé : livré.
+11. #162 — traiter les risques sécurité applicables avant exposition publique.
+12. #161 — déployer l'API, appliquer les migrations et vérifier le healthcheck.
+13. #129 — supporter le golden path réel avec le frontend.
 
 Ordre de dépendance :
 

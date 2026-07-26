@@ -4,8 +4,19 @@ const callOpenRouter = vi.fn()
 vi.mock('../ai/openrouter.provider', () => ({ callOpenRouter }))
 
 const memoryChunkCreate = vi.fn()
+const gameSessionUpdate = vi.fn()
 vi.mock('../lib/prisma', () => ({
-  prisma: { memoryChunk: { create: memoryChunkCreate } },
+  prisma: {
+    memoryChunk: { create: memoryChunkCreate },
+    gameSession: { update: gameSessionUpdate },
+  },
+}))
+
+const resolveSceneImage = vi.fn<(...args: unknown[]) => Promise<string | null>>()
+vi.mock('./scene-image.service', () => ({
+  classifyBiome: () => 'coeur',
+  classifyLieuType: () => 'plein_air',
+  resolveSceneImage: (...args: unknown[]) => resolveSceneImage(...args),
 }))
 
 const { compressScene } = await import('./memory.service')
@@ -62,6 +73,8 @@ describe('compressScene', () => {
   beforeEach(() => {
     callOpenRouter.mockReset()
     memoryChunkCreate.mockReset()
+    gameSessionUpdate.mockReset()
+    resolveSceneImage.mockReset().mockResolvedValue(null)
   })
 
   it('creates a MemoryChunk when the primary model succeeds', async () => {
@@ -84,6 +97,22 @@ describe('compressScene', () => {
         turnRangeStart: 1,
         turnRangeEnd: 8,
       },
+    })
+  })
+
+  it('persists the resolved scene image on the session after a successful compression (#207)', async () => {
+    callOpenRouter.mockResolvedValueOnce({
+      success: true,
+      content: JSON.stringify(validCompression),
+    })
+    resolveSceneImage.mockResolvedValue('https://cache/exploration_coeur_plein_air.jpg')
+
+    await compressScene('s1', turns, character, 'Calamine')
+
+    expect(resolveSceneImage).toHaveBeenCalledWith('exploration', 'coeur', 'plein_air')
+    expect(gameSessionUpdate).toHaveBeenCalledWith({
+      where: { id: 's1' },
+      data: { currentImageUrl: 'https://cache/exploration_coeur_plein_air.jpg' },
     })
   })
 

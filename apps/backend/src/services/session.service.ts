@@ -242,6 +242,7 @@ async function resumeLatestScene({
     turnNumber: last.turnNumber,
     narrative: last.narrative,
     choices: choices.success ? choices.data : [],
+    ...(session.currentImageUrl ? { imageUrl: session.currentImageUrl } : {}),
     sceneType: last.sceneType as SceneResponse['scene']['sceneType'],
     location: last.location,
     createdAt: last.createdAt.toISOString(),
@@ -284,6 +285,7 @@ export async function buildOpeningScene(context: SessionContext): Promise<SceneR
     payload: gm.scene,
     sessionId: session.id,
     turnNumber: session.turnNumber,
+    imageUrl: session.currentImageUrl,
   })
 
   await prisma.sceneLog.create({
@@ -447,6 +449,7 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
     sessionId: session.id,
     turnNumber: nextTurn,
     consequences: resolution.consequences,
+    imageUrl: session.currentImageUrl,
   })
 
   const endReason: SessionEndReason | null = resolution.gameOver
