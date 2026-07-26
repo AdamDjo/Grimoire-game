@@ -13,6 +13,7 @@ export const env = {
   frontendUrl: process.env.FRONTEND_URL ?? 'http://localhost:3000',
   supabaseUrl,
   supabaseJwksUrl: `${supabaseUrl}/auth/v1/.well-known/jwks.json`,
+  supabaseServiceKey: process.env.SUPABASE_SERVICE_KEY ?? '',
   openRouter: {
     apiKey: process.env.OPENROUTER_API_KEY ?? '',
     /** Free multilingual model by default; override with OPENROUTER_MODEL. */
