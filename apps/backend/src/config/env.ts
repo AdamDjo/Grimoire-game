@@ -17,7 +17,7 @@ export const env = {
   openRouter: {
     apiKey: process.env.OPENROUTER_API_KEY ?? '',
     /** Free multilingual model by default; override with OPENROUTER_MODEL. */
-    model: process.env.OPENROUTER_MODEL ?? 'google/gemma-4-31b-it:free',
+    model: process.env.OPENROUTER_MODEL ?? 'nvidia/nemotron-3-super-120b-a12b:free',
     /** Lightweight model used for N2 scene compression; override with OPENROUTER_COMPRESSION_MODEL. */
     compressionModel:
       process.env.OPENROUTER_COMPRESSION_MODEL ?? 'mistralai/mistral-small-24b-instruct:free',
@@ -26,7 +26,7 @@ export const env = {
 } as const
 
 /** Hardcoded fallback model for N2 compression if the primary model call fails. */
-export const COMPRESSION_FALLBACK_MODEL = 'google/gemma-4-31b-it:free'
+export const COMPRESSION_FALLBACK_MODEL = 'nvidia/nemotron-3-nano-30b-a3b:free'
 
 /**
  * Ordered fallback chain the Game Master tries before giving up on the AI (#101).
@@ -41,16 +41,23 @@ export const COMPRESSION_FALLBACK_MODEL = 'google/gemma-4-31b-it:free'
  * to a static scene. Free tiers cap at 20 req/min account-wide, so under real
  * load a paid tail is what keeps the AI answering.
  *
- * Editors are deliberately varied (Google → Nvidia → OpenAI → OpenRouter's meta
+ * Editors are deliberately varied (Nvidia → Google → OpenAI → OpenRouter's meta
  * router) because free rate limits are per-provider: the odds of all four being
  * throttled at once are low.
+ *
+ * Order reflects measured availability (2026-07-26), not just catalog presence:
+ * `google/gemma-4-31b-it:free` was permanently 429 upstream while every other
+ * entry answered, so it is no longer first — a dead head-of-chain cost one
+ * wasted full-prompt round-trip on every single turn. Re-measure before
+ * reordering; the free catalog rotates.
  */
 export const GAME_MASTER_MODEL_CHAIN: readonly string[] = (
   process.env.OPENROUTER_GM_MODELS ??
   [
-    'google/gemma-4-31b-it:free',
     'nvidia/nemotron-3-super-120b-a12b:free',
+    'google/gemma-4-26b-a4b-it:free',
     'openai/gpt-oss-20b:free',
+    'nvidia/nemotron-3-nano-30b-a3b:free',
     'openrouter/free',
   ].join(',')
 )

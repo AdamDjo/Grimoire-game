@@ -1,34 +1,39 @@
-import type { KnipConfig } from 'knip'
+import type { KnipConfig } from "knip";
 
 const config: KnipConfig = {
   workspaces: {
-    'apps/frontend': {
+    "apps/frontend": {
       entry: [
-        'src/app/**/page.tsx',
-        'src/app/**/layout.tsx',
-        'src/app/**/route.ts',
-        'src/app/**/route.tsx',
-        'src/app/**/loading.tsx',
-        'src/app/**/error.tsx',
-        'src/app/**/not-found.tsx',
-        'src/test/setup.ts',
-        'vitest.config.ts',
-        'cypress.config.ts',
-        'cypress/support/e2e.ts',
-        'next.config.ts',
+        "src/app/**/page.tsx",
+        "src/app/**/layout.tsx",
+        "src/app/**/route.ts",
+        "src/app/**/route.tsx",
+        "src/app/**/loading.tsx",
+        "src/app/**/error.tsx",
+        "src/app/**/not-found.tsx",
+        "src/test/setup.ts",
+        "vitest.config.ts",
+        "cypress.config.ts",
+        "cypress/support/e2e.ts",
+        "next.config.ts",
       ],
-      ignore: ['.next/**', 'coverage/**', 'cypress/screenshots/**', 'cypress/videos/**'],
+      ignore: [
+        ".next/**",
+        "coverage/**",
+        "cypress/screenshots/**",
+        "cypress/videos/**",
+      ],
     },
-    'apps/backend': {
-      entry: ['src/index.ts'],
-      ignore: ['dist/**', 'coverage/**'],
+    "apps/backend": {
+      entry: ["src/index.ts"],
+      ignore: ["dist/**", "coverage/**"],
     },
-    'packages/shared': {
-      entry: ['src/index.ts'],
-      ignore: ['dist/**'],
+    "packages/shared": {
+      entry: ["src/index.ts"],
+      ignore: ["dist/**"],
     },
   },
-  ignore: ['**/*.d.ts'],
-}
+  ignore: ["**/*.d.ts"],
+};
 
-export default config
+export default config;

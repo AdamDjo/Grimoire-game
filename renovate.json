@@ -5,22 +5,21 @@
   "schedule": ["every weekend"],
   "labels": ["type: chore"],
   "assignees": ["AdamDjo"],
-  "pnpm": {
-    "enabled": true
-  },
   "packageRules": [
     {
       "description": "Auto-merge patch updates for all deps",
       "matchUpdateTypes": ["patch"],
-      "autoMerge": true,
-      "autoMergeType": "squash"
+      "automerge": true,
+      "automergeType": "pr",
+      "automergeStrategy": "squash"
     },
     {
       "description": "Auto-merge minor updates for tooling",
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["minor"],
-      "autoMerge": true,
-      "autoMergeType": "squash"
+      "automerge": true,
+      "automergeType": "pr",
+      "automergeStrategy": "squash"
     },
     {
       "description": "Group frontend deps",
@@ -48,7 +47,7 @@
     {
       "description": "Never auto-merge major updates",
       "matchUpdateTypes": ["major"],
-      "autoMerge": false,
+      "automerge": false,
       "addLabels": ["priority: high"]
     },
     {

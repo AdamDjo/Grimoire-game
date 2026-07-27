@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { resetModelCooldowns } from './model-cooldown'
+
 const hasOpenRouterKey = vi.fn()
 const GAME_MASTER_MODEL_CHAIN = [
   'google/gemma-4-31b-it:free',
@@ -162,6 +164,10 @@ describe('generateScene — multi-model fallback chain (#101)', () => {
     buildSystemPrompt.mockClear()
     callOpenRouter.mockReset()
     hasOpenRouterKey.mockReturnValue(true)
+    // The cooldown map is module state shared across tests: a failure recorded by
+    // one test would reorder the chain for the next one and make assertions on
+    // model order depend on execution order.
+    resetModelCooldowns()
   })
 
   it('returns the first model that answers and does not call the next one', async () => {

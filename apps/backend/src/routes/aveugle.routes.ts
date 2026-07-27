@@ -2,6 +2,7 @@ import { type Request, type Response, Router } from 'express'
 import rateLimit from 'express-rate-limit'
 
 import { prisma } from '../lib/prisma'
+import { userOrIpKey } from '../middleware/rate-limit-key'
 import {
   generateAveugleTalkResponse,
   getAveugleHubState,
@@ -36,6 +37,7 @@ const apiLimiter = rateLimit({
   limit: 60,
   standardHeaders: true,
   legacyHeaders: false,
+  keyGenerator: userOrIpKey,
 })
 
 // AI-backed endpoints — protect the OpenRouter budget.
@@ -44,6 +46,7 @@ const gameLimiter = rateLimit({
   limit: 30,
   standardHeaders: true,
   legacyHeaders: false,
+  keyGenerator: userOrIpKey,
 })
 
 /**

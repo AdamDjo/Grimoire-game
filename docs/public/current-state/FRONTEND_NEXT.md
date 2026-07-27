@@ -16,8 +16,11 @@ updated: 2026-07-26
    Désavantage, alertes Mourant/Négligence, fin Calciné et parcours Forge → premier run direct avec
    Auberge post-run responsive en `100dvh`.
 2. ~~#152~~ — flow du concept libre dans `CharacterCreateFlow` : livré.
-3. #161 — configurer `NEXT_PUBLIC_API_URL`, le domaine final et les redirects Supabase.
-4. #129 — exécuter les golden paths anonyme, conversion et résilience en EN/FR.
+3. ~~#162~~ — retrait d'axios (dépendance inutilisée) : livré. Le durcissement pentest ajoute les
+   en-têtes de sécurité dans `next.config.ts` (CSP, HSTS et consorts) : à revérifier lors de #161,
+   la CSP dérive de `NEXT_PUBLIC_SUPABASE_URL` et doit couvrir le domaine de production final.
+4. #161 — configurer `NEXT_PUBLIC_API_URL`, le domaine final et les redirects Supabase.
+5. #129 — exécuter les golden paths anonyme, conversion et résilience en EN/FR.
 
 ## Post-déploiement
 

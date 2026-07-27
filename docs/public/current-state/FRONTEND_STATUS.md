@@ -46,6 +46,14 @@ updated: 2026-07-26
   et transition Calciné réutilisant `ChronicleEndExperience`. La Forge ouvre directement le premier
   run ; l'Auberge interactive est réservée aux sessions commencées ou terminées et tient en `100dvh`
   sur desktop, tablette et mobile avec défilement interne du dialogue uniquement.
+- #162 — axios retiré de `apps/frontend` : dépendance inutilisée (aucun appel dans le code, fetch
+  natif partout), sans impact fonctionnel.
+- #162 (durcissement pentest) — en-têtes de sécurité ajoutés dans `next.config.ts` (`headers()`), le
+  fichier n'en définissait aucun : CSP, HSTS, `X-Content-Type-Options`, `X-Frame-Options`,
+  `Referrer-Policy`, `Permissions-Policy`. La CSP autorise l'origine Supabase Storage en `img-src`
+  (images de scène #207) et en `connect-src` (auth/REST du client navigateur) ; `'unsafe-inline'` sur
+  `style-src` reste imposé par Next.js (aucune échappatoire par nonce dans l'App Router aujourd'hui).
+  Détail `docs/public/tech/SECURITY.md`.
 
 ## Pré-déploiement restant
 
