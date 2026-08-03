@@ -73,12 +73,16 @@ const STEP_MOTION_VARIANTS: Variants = {
   }),
 }
 
-function buildAveugleHref(campaignId: string | undefined, ready = false): string {
+function buildAveugleHref(campaignId: string | undefined): string {
   const params = new URLSearchParams()
   if (campaignId) params.set('campaign', campaignId)
-  if (ready) params.set('character', 'ready')
   const query = params.toString()
   return query ? `${VELKHAR_WORLD.routes.aveugle}?${query}` : VELKHAR_WORLD.routes.aveugle
+}
+
+function buildFirstRunHref(campaignId: string | undefined): string {
+  const path = `${VELKHAR_WORLD.routes.session}/new`
+  return campaignId ? `${path}?campaign=${encodeURIComponent(campaignId)}` : path
 }
 
 function getErrorMessage(error: unknown, fallback: string): string {
@@ -313,11 +317,7 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
     }
   }
 
-  const replayCreation = () => {
-    window.sessionStorage.removeItem(CHARACTER_DRAFT_STORAGE_KEY)
-    window.localStorage.removeItem(CHARACTER_RESULT_STORAGE_KEY)
-    setDraft(EMPTY_CHARACTER_DRAFT)
-    setIsDirty(false)
+  const reviewCreation = () => {
     moveToStep('identity')
   }
 
@@ -340,7 +340,7 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
       window.localStorage.setItem(CHARACTER_RESULT_STORAGE_KEY, JSON.stringify(result))
       window.sessionStorage.removeItem(CHARACTER_DRAFT_STORAGE_KEY)
       setIsDirty(false)
-      router.push(buildAveugleHref(campaignId, true))
+      router.push(buildFirstRunHref(campaignId))
     } catch {
       setError(t('submissionError'))
     } finally {
@@ -445,6 +445,14 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                   id={`character-create-${currentStep}`}
                   title={currentMeta.label}
                 />
+
+                <div className="character-create__inline-guidance">
+                  <GameIcon decorative name="book" size={24} />
+                  <p>
+                    <strong>{guidance.title}</strong>
+                    <span>{guidance.body}</span>
+                  </p>
+                </div>
 
                 {currentStep === 'identity' ? (
                   <form className="character-create__form" onSubmit={submitIdentity} noValidate>
@@ -766,14 +774,14 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                     <div className="character-create__summary-actions">
                       <GameButton
                         disabled={isSubmitting}
-                        onClick={replayCreation}
+                        onClick={reviewCreation}
                         size="sm"
                         variant="ghost"
                       >
-                        {t('restart')}
+                        {t('reviewChoices')}
                       </GameButton>
                       <GameButton loading={isSubmitting} onClick={finishCreation} variant="radiant">
-                        {t('returnToInn')}
+                        {t('createCharacter')}
                       </GameButton>
                     </div>
                   </div>

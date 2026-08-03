@@ -274,10 +274,15 @@ describe('resolveTurn — Calamine sources and transformation (#182)', () => {
       source: 'ai',
     })
 
-    await resolveTurn({ session: session(3), character, choice })
+    const response = await resolveTurn({ session: session(3), character, choice })
 
     expect(lastCharacterUpdateData().calamine).toBe(100)
     expect(lastGameSessionUpdateData()).toMatchObject({ status: 'ended', endReason: 'calcined' })
+    expect(response.endReason).toBe('calcined')
+    expect(response.survival.calamine).toBe(100)
+    expect(response.activeConditions).toEqual(
+      expect.arrayContaining([expect.objectContaining({ id: 'cendre_corrupt' })])
+    )
     expect(generateChronicle).toHaveBeenCalledWith('s1')
   })
 

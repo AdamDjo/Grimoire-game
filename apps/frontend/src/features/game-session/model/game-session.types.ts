@@ -1,4 +1,5 @@
 import type { CreateSessionLocaleInput } from '../api/game-session-api'
+import type { ActiveCondition, SessionEndReason, SurvivalStats } from '@grimoire/shared'
 
 export type GameSessionRiskLevel = 'safe' | 'low' | 'medium' | 'high' | 'deadly'
 
@@ -11,8 +12,10 @@ export interface GameSessionChoice {
 
 export interface GameSessionDiceRoll {
   critical?: 'success' | 'failure' | null
+  disadvantageCause?: string
   modifier: number
   roll: number
+  rollMode: 'normal' | 'advantage' | 'disadvantage'
   success: boolean
   target: number
   total: number
@@ -46,10 +49,14 @@ export interface GameSessionScene {
 }
 
 export interface GameSessionResponse {
+  activeConditions: ActiveCondition[]
   diceRoll?: GameSessionDiceRoll
+  endReason?: SessionEndReason
+  iron: number
   notifications: GameSessionNotification[]
   scene: GameSessionScene
   source?: 'ai' | 'stub'
+  survival: SurvivalStats
   updatedInventory: GameSessionInventoryItem[]
   updatedStats: Record<string, number>
 }
@@ -60,6 +67,9 @@ export interface GameSessionEndResponse {
 }
 
 export interface GameSessionInventoryActionResponse {
+  activeConditions: ActiveCondition[]
+  iron: number
+  survival: SurvivalStats
   updatedStats: Record<string, number>
   updatedInventory: GameSessionInventoryItem[]
   applied: boolean
@@ -90,11 +100,13 @@ export interface GameSessionState<
   TWorldState,
   TResponse extends GameSessionResponse = GameSessionResponse,
 > {
-  endReason: 'death' | 'inn' | 'abandon' | null
+  conditions: ActiveCondition[]
+  endReason: SessionEndReason | null
   error: string | null
   ending: boolean
   gameOver: boolean
   inventory: GameSessionInventoryItem[]
+  iron: number
   limitReached: boolean
   loading: boolean
   online: boolean

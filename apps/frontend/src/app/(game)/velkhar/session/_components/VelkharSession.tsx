@@ -103,7 +103,7 @@ export function VelkharSession({ initialCharacter, locale }: VelkharSessionProps
   const [openTool, setOpenTool] = useState<VelkharSessionTool | null>(null)
   const reduceWorldState = useCallback(
     (previous: SurvivalStats, response: SceneResponse) =>
-      readSurvival(response.updatedStats, previous),
+      response.survival ?? readSurvival(response.updatedStats, previous),
     []
   )
   const session = useGameSession<SurvivalStats, SceneResponse>({
@@ -238,7 +238,11 @@ export function VelkharSession({ initialCharacter, locale }: VelkharSessionProps
                   </button>
                 </div>
               ) : session.gameOver ? (
-                <ChronicleEndExperience sessionId={session.sessionId} turnCount={session.turn} />
+                <ChronicleEndExperience
+                  endReason={session.endReason}
+                  sessionId={session.sessionId}
+                  turnCount={session.turn}
+                />
               ) : (
                 <>
                   <NarrativePanel narrative={narrative} loading={session.loading} />
@@ -275,7 +279,8 @@ export function VelkharSession({ initialCharacter, locale }: VelkharSessionProps
         }
         bottom={
           <VelkharSurvivalHud
-            attributes={initialCharacter.stats.attributes}
+            conditions={session.conditions}
+            iron={session.iron}
             inventory={session.inventory}
             survival={session.worldState}
             onOpenCharacter={() => setOpenTool('character')}
@@ -287,7 +292,8 @@ export function VelkharSession({ initialCharacter, locale }: VelkharSessionProps
       <VelkharSessionToolPanel
         character={initialCharacter}
         ending={session.ending}
-        iron={session.response?.updatedStats.iron ?? null}
+        conditions={session.conditions}
+        iron={session.iron}
         inventory={session.inventory}
         openTool={openTool}
         source={session.source}

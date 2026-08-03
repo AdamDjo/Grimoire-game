@@ -5,9 +5,10 @@ body:has(.character-create) .main-navigation {
 .character-create {
   align-items: center;
   display: grid;
+  height: 100dvh;
   isolation: isolate;
   justify-items: center;
-  min-height: 100dvh;
+  min-height: 0;
   overflow: hidden;
   padding: clamp(0.75rem, 1.5vh, 1.25rem) clamp(0.75rem, 1.5vw, 1.5rem) clamp(3.5rem, 6vh, 4.5rem);
   position: relative;
@@ -206,6 +207,10 @@ body:has(.character-create) .main-navigation {
   letter-spacing: 0.025em;
   margin-top: 0.55rem;
   text-transform: uppercase;
+}
+
+.character-create__inline-guidance {
+  display: none;
 }
 
 .character-create__form,
@@ -839,10 +844,11 @@ body:has(.character-create) .main-navigation {
 
 @media (max-width: 900px) {
   .character-create {
-    align-items: start;
-    min-height: 100dvh;
-    overflow: visible;
-    padding: 4.5rem 0.75rem 4rem;
+    align-items: stretch;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+    padding: 4rem 0.75rem 0.75rem;
   }
 
   .character-create__exit {
@@ -851,56 +857,113 @@ body:has(.character-create) .main-navigation {
   }
 
   .character-create__composition {
-    max-width: min(52rem, 92vw, calc((100dvh - 8rem) * 1.497));
+    height: 100%;
+    max-width: min(52rem, 96vw);
   }
 
   .game-panel.character-create__heritage {
-    aspect-ratio: auto;
-    left: auto;
-    margin: 0 auto -1.1rem;
-    min-height: 9.5rem;
-    position: relative;
-    top: auto;
-    width: min(26rem, 86vw);
-  }
-
-  .character-create__heritage > .game-panel__content {
-    display: grid;
-    gap: 0.35rem 1rem;
-    grid-template-columns: auto 1fr;
-    padding: 1.4rem 2.3rem 1.8rem;
-    text-align: left;
-  }
-
-  .character-create__heritage-medallion {
-    background-image: url('/ui-kit/character-create/character-medallion-mobile.webp');
-    grid-row: 1 / 4;
-    margin: 0;
-  }
-
-  .character-create__heritage-divider {
-    margin: 0.2rem 0;
+    display: none;
   }
 
   .character-create__panel {
-    aspect-ratio: 1533 / 1024;
-    height: auto;
+    aspect-ratio: auto;
+    height: 100%;
     min-height: 0;
   }
 
   .character-create__stepper-surface {
-    left: 4%;
-    padding: 1.25% 5% 0.75%;
-    right: 4%;
-    top: 4.5%;
+    left: 5%;
+    padding: 0.35rem 5% 0;
+    right: 5%;
+    top: clamp(1.35rem, 3vh, 2rem);
   }
 
   .character-create__stage {
-    bottom: 11%;
-    left: 9%;
+    bottom: clamp(2.75rem, 5.5vh, 4rem);
+    left: 8%;
     overflow-y: auto;
-    right: 9%;
-    top: 23%;
+    padding-bottom: 0.75rem;
+    right: 8%;
+    top: clamp(7.2rem, 14vh, 9.25rem);
+  }
+
+  .character-create__inline-guidance {
+    align-items: start;
+    background: rgba(217, 164, 65, 0.06);
+    border-left: 2px solid rgba(217, 164, 65, 0.48);
+    color: var(--ink-2);
+    display: grid;
+    gap: 0.65rem;
+    grid-template-columns: auto minmax(0, 1fr);
+    margin: -0.3rem auto 1rem;
+    max-width: 46rem;
+    padding: 0.65rem 0.8rem;
+  }
+
+  .character-create__inline-guidance .game-icon {
+    height: 1.35rem;
+    width: 1.35rem;
+  }
+
+  .character-create__inline-guidance p {
+    display: grid;
+    gap: 0.12rem;
+    margin: 0;
+  }
+
+  .character-create__inline-guidance strong {
+    color: var(--gold-light);
+    font-family: var(--font-game-ui);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .character-create__inline-guidance span {
+    font-size: var(--text-game-body-sm);
+    line-height: 1.35;
+  }
+
+  .character-create__step .game-section-heading {
+    margin-bottom: 1rem;
+  }
+
+  .character-create__form,
+  .character-create__history-step,
+  .character-create__summary {
+    gap: 0.9rem;
+  }
+
+  .character-create__history-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .character-create__choice-grid--vocations .archetype-card,
+  .character-create__choice-grid--vocations .game-panel__content {
+    min-height: 14rem;
+  }
+
+  .character-create__choice-grid--vocations .game-panel__content {
+    padding: 1.25rem;
+  }
+
+  .character-create__choice-grid--vocations .archetype-card__body {
+    padding-bottom: 3.8rem;
+  }
+
+  .character-create__choice-grid--vocations .archetype-card .game-button {
+    bottom: 1.1rem;
+    left: 1.1rem;
+    min-height: 48px;
+    width: calc(100% - 2.2rem);
+  }
+
+  .character-create__summary dl {
+    padding-block: 0.75rem;
+  }
+
+  .character-create__summary dl > div {
+    padding-block: 0.55rem;
   }
 }
 
@@ -926,16 +989,16 @@ body:has(.character-create) .main-navigation {
   }
 
   .character-create__panel {
-    aspect-ratio: 820 / 1320;
-    height: auto;
+    aspect-ratio: auto;
+    height: 100%;
     min-height: 0;
   }
 
   .character-create__stage {
-    bottom: 12%;
+    bottom: 3.25rem;
     left: 8%;
     right: 8%;
-    top: 15.5%;
+    top: 7.15rem;
   }
 
   .character-create__choice-grid--people,
@@ -964,6 +1027,10 @@ body:has(.character-create) .main-navigation {
   .character-create__summary-actions,
   .character-create__summary-actions .game-button {
     width: 100%;
+  }
+
+  .character-create__history-options {
+    grid-template-columns: 1fr;
   }
 
   .character-create__custom-intro {

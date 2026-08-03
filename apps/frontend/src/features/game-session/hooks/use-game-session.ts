@@ -54,11 +54,13 @@ export function useGameSession<TWorldState, TResponse extends GameSessionRespons
   resumeHref,
 }: UseGameSessionOptions<TWorldState, TResponse>): UseGameSessionResult<TWorldState, TResponse> {
   const [state, setState] = useState<GameSessionState<TWorldState, TResponse>>({
+    conditions: [],
     endReason: null,
     ending: false,
     error: null,
     gameOver: false,
     inventory: [],
+    iron: 0,
     limitReached: false,
     loading: true,
     online: true,
@@ -81,16 +83,20 @@ export function useGameSession<TWorldState, TResponse extends GameSessionRespons
   const applyResponse = useCallback(
     (response: TResponse) => {
       sessionIdRef.current = response.scene.sessionId
-      if (response.scene.consequences?.gameOver === true) forgetActiveGameSession()
+      const ended = Boolean(response.endReason) || response.scene.consequences?.gameOver === true
+      if (ended) forgetActiveGameSession()
       else rememberActiveGameSession(resumeHref)
 
       setState((current) => ({
         ...current,
+        conditions: response.activeConditions,
         error: null,
         ending: false,
-        endReason: response.scene.consequences?.gameOver === true ? 'death' : null,
-        gameOver: response.scene.consequences?.gameOver === true,
+        endReason:
+          response.endReason ?? (response.scene.consequences?.gameOver === true ? 'death' : null),
+        gameOver: ended,
         inventory: response.updatedInventory,
+        iron: response.iron,
         limitReached: false,
         loading: false,
         roll: response.diceRoll ?? null,
@@ -233,8 +239,13 @@ export function useGameSession<TWorldState, TResponse extends GameSessionRespons
 
           setState((current) => ({
             ...current,
+            conditions: result.activeConditions,
             inventory: result.updatedInventory,
+            iron: result.iron,
             worldState: reduceWorldState(current.worldState, {
+              activeConditions: result.activeConditions,
+              iron: result.iron,
+              survival: result.survival,
               updatedStats: result.updatedStats,
             } as TResponse),
           }))

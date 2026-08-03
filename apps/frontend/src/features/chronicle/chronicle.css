@@ -212,8 +212,12 @@
   text-wrap: balance;
 }
 
-.chronicle-body h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); }
-.chronicle-body h3 { font-size: clamp(1.45rem, 3vw, 2rem); }
+.chronicle-body h2 {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+}
+.chronicle-body h3 {
+  font-size: clamp(1.45rem, 3vw, 2rem);
+}
 
 .chronicle-body blockquote {
   border-left: 1px solid var(--gold);
@@ -288,10 +292,15 @@
   color: var(--gold-light);
   font-family: var(--font-game-ui);
   padding: 0.7rem 1rem;
-  transition: background var(--motion-ui), border-color var(--motion-ui);
+  transition:
+    background var(--motion-ui),
+    border-color var(--motion-ui);
 }
 
-.chronicle-reader__after a:hover { background: rgba(217, 164, 65, 0.08); border-color: var(--gold); }
+.chronicle-reader__after a:hover {
+  background: rgba(217, 164, 65, 0.08);
+  border-color: var(--gold);
+}
 
 .chronicle-reader__account-note {
   color: var(--ink-2);
@@ -301,7 +310,10 @@
   text-align: center;
 }
 
-.chronicle-reader__account-note a { color: var(--gold-light); text-decoration: underline; }
+.chronicle-reader__account-note a {
+  color: var(--gold-light);
+  text-decoration: underline;
+}
 
 .chronicle-state,
 .chronicle-transition {
@@ -355,7 +367,12 @@
   transform: translateX(-100%);
 }
 
-@keyframes chronicle-writing { 50%, 100% { transform: translateX(100%); } }
+@keyframes chronicle-writing {
+  50%,
+  100% {
+    transform: translateX(100%);
+  }
+}
 
 .chronicle-transition {
   background: #050403;
@@ -381,18 +398,81 @@
   font-style: italic;
 }
 
-@keyframes chronicle-mark { from { opacity: 0; scale: 0 1; } 45% { opacity: 1; scale: 1; } to { opacity: 0.35; } }
-@keyframes chronicle-copy { from { opacity: 0; translate: 0 0.6rem; } 40%, 80% { opacity: 1; translate: 0; } to { opacity: 0; } }
+.chronicle-transition strong {
+  color: color-mix(in srgb, var(--blood) 68%, var(--gold-light));
+  font-family: var(--font-game-display);
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  letter-spacing: 0.22em;
+  margin-bottom: 0.75rem;
+}
+
+.chronicle-transition[data-end-reason='calcined'] {
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      color-mix(in srgb, var(--cendre) 13%, transparent),
+      transparent 34rem
+    ),
+    color-mix(in srgb, var(--void) 97%, var(--blood));
+}
+
+.chronicle-transition[data-end-reason='calcined'] span {
+  background: color-mix(in srgb, var(--blood) 58%, var(--gold));
+}
+
+.chronicle-transition[data-end-reason='calcined'] p {
+  font-style: normal;
+  max-width: 34rem;
+}
+
+@keyframes chronicle-mark {
+  from {
+    opacity: 0;
+    scale: 0 1;
+  }
+  45% {
+    opacity: 1;
+    scale: 1;
+  }
+  to {
+    opacity: 0.35;
+  }
+}
+@keyframes chronicle-copy {
+  from {
+    opacity: 0;
+    translate: 0 0.6rem;
+  }
+  40%,
+  80% {
+    opacity: 1;
+    translate: 0;
+  }
+  to {
+    opacity: 0;
+  }
+}
 
 @media (max-width: 640px) {
-  .chronicle-page__nav-actions > span { display: none; }
-  .chronicle-reader__moments { grid-template-columns: 1fr; }
-  .chronicle-reader__moments li + li { border-top: 1px solid rgba(217, 164, 65, 0.12); }
-  .chronicle-reader__after nav { align-items: stretch; flex-direction: column; }
+  .chronicle-page__nav-actions > span {
+    display: none;
+  }
+  .chronicle-reader__moments {
+    grid-template-columns: 1fr;
+  }
+  .chronicle-reader__moments li + li {
+    border-top: 1px solid rgba(217, 164, 65, 0.12);
+  }
+  .chronicle-reader__after nav {
+    align-items: stretch;
+    flex-direction: column;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .chronicle-state__progress::after,
   .chronicle-transition p,
-  .chronicle-transition span { animation: none; }
+  .chronicle-transition span {
+    animation: none;
+  }
 }

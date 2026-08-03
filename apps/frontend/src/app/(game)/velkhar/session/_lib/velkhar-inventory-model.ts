@@ -25,12 +25,13 @@ export interface VelkharInventoryView {
   artifact: InventoryItemRef | null
   bagItems: InventoryItemRef[]
   equipment: VelkharEquipmentSlot[]
-  heirloom: InventoryItemRef | null
+  keyItems: InventoryItemRef[]
 }
 
 export function buildVelkharInventoryView(items: InventoryItemRef[]): VelkharInventoryView {
-  const artifact = items.find((item) => item.category === 'artifact') ?? null
-  const heirloom = items.find((item) => item.category === 'heirloom') ?? null
+  const artifact =
+    items.find((item) => item.category === 'artifact' || item.category === 'heirloom') ?? null
+  const keyItems = items.filter((item) => item.category === 'key')
   const equipment = VELKHAR_EQUIPMENT_SLOTS.map((slot) => ({
     ...slot,
     item: items.find((item) => item.equippedSlot === slot.id) ?? null,
@@ -46,5 +47,5 @@ export function buildVelkharInventoryView(items: InventoryItemRef[]): VelkharInv
     )
     .slice(0, VELKHAR_BAG_CAPACITY)
 
-  return { artifact, bagItems, equipment, heirloom }
+  return { artifact, bagItems, equipment, keyItems }
 }

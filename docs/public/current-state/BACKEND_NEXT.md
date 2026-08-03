@@ -28,8 +28,11 @@ updated: 2026-07-26
     rétrogradé). Suivi à prévoir : montée `express-rate-limit` v7 → v8 pour envelopper le repli IP de
     `userOrIpKey` dans `ipKeyGenerator` (/64 IPv6), et re-mesure périodique de la disponibilité des
     modèles `:free` — le catalogue OpenRouter tourne.
-12. #161 — déployer l'API, appliquer les migrations et vérifier le healthcheck.
-13. #129 — supporter le golden path réel avec le frontend.
+12. ~~#186~~ — projection Survie v2 consommable par l'UI livrée : `SceneResponse` et
+    `InventoryActionResponse` renvoient l'instantané de survie, les conditions actives, le fer
+    persistant et la fin de run autoritaire sans recalcul de règles côté client.
+13. #161 — déployer l'API, appliquer les migrations et vérifier le healthcheck.
+14. #129 — supporter le golden path réel avec le frontend.
 
 Ordre de dépendance :
 

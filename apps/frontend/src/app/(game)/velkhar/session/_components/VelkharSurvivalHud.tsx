@@ -3,10 +3,13 @@ import { useTranslations } from 'next-intl'
 import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
 import { GameSessionHud } from '@/features/game-session/components/GameSessionHud'
 
-import type { Attributes, InventoryItemRef, SurvivalStats } from '@grimoire/shared'
+import { VelkharActiveConditions } from './VelkharActiveConditions'
+
+import type { ActiveCondition, InventoryItemRef, SurvivalStats } from '@grimoire/shared'
 
 interface VelkharSurvivalHudProps {
-  attributes: Attributes
+  conditions: ActiveCondition[]
+  iron: number
   inventory: InventoryItemRef[]
   onOpenCharacter: () => void
   onOpenInventory: () => void
@@ -16,14 +19,14 @@ interface VelkharSurvivalHudProps {
 
 /** Persistent combat and survival readout, tuned for glanceability during play. */
 export function VelkharSurvivalHud({
-  attributes,
+  conditions,
+  iron,
   inventory,
   onOpenCharacter,
   onOpenInventory,
   onOpenMenu,
   survival,
 }: VelkharSurvivalHudProps) {
-  const attributesCopy = useTranslations('Attributes')
   const t = useTranslations('Session')
 
   return (
@@ -33,38 +36,30 @@ export function VelkharSurvivalHud({
       resource={{
         icon: <GameIcon decorative name="coin" size={32} />,
         label: t('iron'),
-        value: '?',
+        value: iron,
       }}
       statusBars={[
         {
           id: 'health',
-          icon: <GameIcon decorative name="blood-drop" size={24} />,
-          label: attributesCopy('blood'),
+          icon: <GameIcon decorative name="blood-drop" size={32} />,
+          label: t('healthPoints'),
           max: survival.maxHp,
           tone: 'danger',
           value: survival.hp,
         },
-        {
-          id: 'breath',
-          icon: <GameIcon decorative name="wind" size={24} />,
-          label: attributesCopy('breath'),
-          max: 18,
-          tone: 'aqua',
-          value: attributes.breath,
-        },
-        {
-          id: 'ash',
-          icon: <GameIcon decorative name="fire" size={24} />,
-          label: attributesCopy('ash'),
-          max: 18,
-          tone: 'ember',
-          value: attributes.ash,
-        },
       ]}
+      statusDetail={
+        <VelkharActiveConditions
+          conditions={conditions}
+          isDying={survival.isDying}
+          neglectStreak={survival.neglectStreak}
+          variant="hud"
+        />
+      }
       statusGauges={[
         {
           id: 'thirst',
-          icon: <GameIcon decorative name="water" size={24} />,
+          icon: <GameIcon decorative name="water" size={32} />,
           label: t('thirst'),
           max: 100,
           tone: 'aqua',
@@ -72,7 +67,7 @@ export function VelkharSurvivalHud({
         },
         {
           id: 'hunger',
-          icon: <GameIcon decorative name="hunger" size={24} />,
+          icon: <GameIcon decorative name="hunger" size={32} />,
           label: t('hunger'),
           max: 100,
           tone: 'ember',
@@ -80,7 +75,7 @@ export function VelkharSurvivalHud({
         },
         {
           id: 'fatigue',
-          icon: <GameIcon decorative name="moon" size={24} />,
+          icon: <GameIcon decorative name="moon" size={32} />,
           label: t('fatigue'),
           max: 100,
           value: 100 - survival.energy,
@@ -88,9 +83,10 @@ export function VelkharSurvivalHud({
         {
           className: 'velkhar-session__calamine-ring',
           id: 'calamine',
-          icon: <GameIcon decorative name="warning" size={24} />,
+          icon: <GameIcon decorative name="warning" size={32} />,
           label: t('calamine'),
           max: 100,
+          tone: 'danger',
           value: survival.calamine,
         },
       ]}

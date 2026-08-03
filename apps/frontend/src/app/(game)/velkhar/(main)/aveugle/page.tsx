@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
 
 import { AveugleHub } from './_components/AveugleHub'
@@ -24,12 +25,26 @@ interface AveuglePageProps {
 
 export default async function AveuglePage({ searchParams }: AveuglePageProps) {
   const { campaign, character, flow, intro, return: returnState, transition } = await searchParams
+  const campaignId = typeof campaign === 'string' ? campaign : undefined
+  const firstRunHref = campaignId
+    ? `/velkhar/session/new?campaign=${encodeURIComponent(campaignId)}`
+    : '/velkhar/session/new'
+
+  if (flow === 'character-create') {
+    redirect(
+      campaignId
+        ? `/velkhar/character-create?campaign=${encodeURIComponent(campaignId)}`
+        : '/velkhar/character-create'
+    )
+  }
+
+  if (character === 'ready') {
+    redirect(firstRunHref)
+  }
 
   return (
     <AveugleHub
-      campaignId={typeof campaign === 'string' ? campaign : undefined}
-      characterReadyHint={character === 'ready'}
-      isCharacterFlow={flow === 'character-create'}
+      campaignId={campaignId}
       isRunReturn={returnState === 'chronicle' || returnState === 'run'}
       previewIntro={intro === 'preview'}
       transitionFromHome={transition === 'home'}

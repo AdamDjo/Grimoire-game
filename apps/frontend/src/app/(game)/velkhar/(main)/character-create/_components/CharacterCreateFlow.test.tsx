@@ -34,7 +34,7 @@ describe('CharacterCreateFlow', () => {
     )
   })
 
-  it('completes the preset path and returns to L’Aveugle', async () => {
+  it('completes the preset path and starts the first run', async () => {
     const user = userEvent.setup()
 
     render(<CharacterCreateFlow campaignId="nouvelle-chronique" />)
@@ -53,19 +53,17 @@ describe('CharacterCreateFlow', () => {
     expect(screen.getAllByText(/Choose this path to play a traveler/)).not.toHaveLength(0)
     await user.click(within(vocationCard!).getByRole('button', { name: 'Follow this path' }))
 
-    await screen.findByRole('heading', { name: 'History' })
+    await screen.findByRole('heading', { name: 'Past' })
     await user.click(
       screen.getByRole('button', { name: 'An entire caravan perished because of you.' })
     )
-    await user.click(screen.getByRole('button', { name: 'Keep this history' }))
+    await user.click(screen.getByRole('button', { name: 'Continue with this past' }))
 
     expect(await screen.findByRole('heading', { name: 'Summary' })).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: 'Return to The Blind One' }))
+    await user.click(screen.getByRole('button', { name: 'Create this character' }))
 
     await waitFor(() => {
-      expect(pushMock).toHaveBeenCalledWith(
-        '/velkhar/aveugle?campaign=nouvelle-chronique&character=ready'
-      )
+      expect(pushMock).toHaveBeenCalledWith('/velkhar/session/new?campaign=nouvelle-chronique')
     })
 
     const storedResult = window.localStorage.getItem(CHARACTER_RESULT_STORAGE_KEY)
@@ -123,7 +121,7 @@ describe('CharacterCreateFlow', () => {
 
     await user.click(screen.getByRole('button', { name: 'Accept this vocation' }))
 
-    await screen.findByRole('heading', { name: 'History' })
+    await screen.findByRole('heading', { name: 'Past' })
   })
 
   it('falls back to the preset choices when the concept cannot be resolved', async () => {
@@ -200,13 +198,13 @@ describe('CharacterCreateFlow', () => {
     render(<CharacterCreateFlow campaignId="nouvelle-chronique" />)
 
     await user.type(await screen.findByLabelText('Character name *'), 'Naïra')
-    await user.click(screen.getByRole('button', { name: 'Back to The Blind One' }))
+    await user.click(screen.getByRole('button', { name: 'Leave the Forge' }))
 
     expect(confirmMock).toHaveBeenCalledOnce()
     expect(pushMock).not.toHaveBeenCalled()
 
     confirmMock.mockReturnValue(true)
-    await user.click(screen.getByRole('button', { name: 'Back to The Blind One' }))
+    await user.click(screen.getByRole('button', { name: 'Leave the Forge' }))
 
     expect(pushMock).toHaveBeenCalledWith('/velkhar/aveugle?campaign=nouvelle-chronique')
     confirmMock.mockRestore()

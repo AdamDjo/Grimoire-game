@@ -12,12 +12,9 @@ updated: 2026-07-26
 
 ## Phase 1 — pré-déploiement
 
-1. #186 — afficher le HUD Survie v2, les conditions, le Désavantage et la fin Calciné ; dépend de
-   ~~#180~~ (livré, PR #196), ~~#181~~ (livré, PR #198) et #182-#184. Actions d'inventaire réel
-   (~~#183~~, PR #200) déjà branchées : boutons utiliser/équiper/déséquiper opérationnels.
-   ~~#201~~ (livré, PR #203) : `SurvivalStats` du personnage de démo et de `readSurvival`
-   synchronisés avec `isDying`/`neglectStreak` ; l'affichage dédié à ces deux champs reste à faire
-   dans le cadre du HUD Survie v2.
+1. ~~#186~~ — UI Survie v2 livrée : contrats mécaniques projetés, HUD, conditions, inventaire,
+   Désavantage, alertes Mourant/Négligence, fin Calciné et parcours Forge → premier run direct avec
+   Auberge post-run responsive en `100dvh`.
 2. ~~#152~~ — flow du concept libre dans `CharacterCreateFlow` : livré.
 3. ~~#162~~ — retrait d'axios (dépendance inutilisée) : livré. Le durcissement pentest ajoute les
    en-têtes de sécurité dans `next.config.ts` (CSP, HSTS et consorts) : à revérifier lors de #161,
