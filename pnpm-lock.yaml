@@ -10,9 +10,9 @@ overrides:
   flatted: ">=3.4.2"
   brace-expansion@1: ">=1.1.16"
   brace-expansion@2: ">=2.1.2"
-  brace-expansion@>=5.0.0: ">=5.0.8"
+  brace-expansion@>=5.0.0: ">=5.0.9"
   js-yaml: ">=4.3.0"
-  fast-uri: ">=3.1.4"
+  fast-uri: ">=4.1.2"
   postcss: ">=8.5.18"
   tmp: ">=0.2.6"
   ws: ">=8.21.0"
@@ -26,6 +26,10 @@ overrides:
   "@babel/core": ">=7.29.6"
   body-parser: ">=1.20.6"
   valibot: ">=1.4.2"
+  undici: ">=7.29.0"
+  ip-address: ">=10.3.1"
+  hono: ">=4.12.34"
+  uuid@>=3.0.0 <11.1.1: ">=11.1.1"
 
 importers:
   .:
@@ -1338,7 +1342,7 @@ packages:
       }
     engines: { node: ">=20" }
     peerDependencies:
-      hono: ^4
+      hono: ">=4.12.34"
 
   "@humanfs/core@0.19.1":
     resolution:
@@ -5255,10 +5259,10 @@ packages:
       }
     engines: { node: ">=18" }
 
-  brace-expansion@5.0.8:
+  brace-expansion@5.0.9:
     resolution:
       {
-        integrity: sha512-JZyDyq3D4AUifKTPOB7DELf6XsB3WdPuNxCtob1vFXPsSXhdAiHBWJ/tJ8HAc9aH84BK+5JFZLNkJKx3G9kzQg==,
+        integrity: sha512-ScQ4IuvIEF1TMlP7Zt+vjJ//9zlPb2SDcxWxM3bk8s6t6GGdJ7KO1dCcTidOPJKePW30LE/2cT7wCyPho9/Wxg==,
       }
     engines: { node: 20 || >=22 }
 
@@ -6737,10 +6741,10 @@ packages:
         integrity: sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==,
       }
 
-  fast-uri@4.1.1:
+  fast-uri@4.1.2:
     resolution:
       {
-        integrity: sha512-YPOs1zD5TG2+EZt+r88LwF6mclA7TPkpwMP7ZN3TO2HiHS8TXvq7QA/17iJsV9dubcLo/f8eEYqMBruyQV21hQ==,
+        integrity: sha512-TyGmBcbDTZXcb2cj5MV89DrF42DKvb3y5DDUNh95iO+IMeAzMkVSxK1PZRrRIpc9yg8U2GhGdbofNa0LS/a4Bw==,
       }
 
   fastq@1.20.1:
@@ -7286,10 +7290,10 @@ packages:
         integrity: sha512-6pEjquH3rqaI6cYAXYPcz9MS4rY6R4ngRgrgfDshRptUZIc3lw0MCIJIGDj9++mfySOuPTHB4nrSW99BCvOPIA==,
       }
 
-  hono@4.12.27:
+  hono@4.13.0:
     resolution:
       {
-        integrity: sha512-1yrb/+w6HWQJrUCLkJ2IF5jNIPvvFkblV5RNOYl6bV+OA6p9GLcMpHFFGTosSvHvcAUibuUukRqhlYI4z32C7Q==,
+        integrity: sha512-jhunvfHWxd7J5EFfSgH4xsYJzSe/lfqbUCxiyyeaQasUsXeEHXtzVid+7EOGByc5JnFa23SSFL3Y2RV/z1T+eQ==,
       }
     engines: { node: ">=16.9.0" }
 
@@ -7476,10 +7480,10 @@ packages:
         integrity: sha512-KW70Xxfcvy7vV3qODfvShWkFDPMqKDAa4N+hSyVBWGNtVhTUFYaqlD/l88DaYPKiVcPP4rPQ3qnH7i5K82Mg7g==,
       }
 
-  ip-address@10.2.0:
+  ip-address@10.4.0:
     resolution:
       {
-        integrity: sha512-/+S6j4E9AHvW9SWMSEY9Xfy66O5PWvVEJ08O0y5JGyEKQpojb0K0GKpz/v5HJ/G0vi3D2sjGK78119oXZeE0qA==,
+        integrity: sha512-oSK96Grm3aP6OrS263xVxbNDGVL7rzBtYdpGqlDG8iQdoenDoTs/nkki+DflYbAEE8Xl6o5YxhxlrKvI3nqKXQ==,
       }
     engines: { node: ">= 12" }
 
@@ -10808,12 +10812,12 @@ packages:
         integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==,
       }
 
-  undici@7.28.0:
+  undici@8.10.0:
     resolution:
       {
-        integrity: sha512-cRZYrTDwWznlnRiPjggAGxZXanty6M8RV1ff8Wm4LWXBp7/IG8v5DnOm74DtUBp9OONpK75YlPnIjQqX0dBDtA==,
+        integrity: sha512-HvltHd7avK13QIw/oLe4qoOLyoVSoafqJ2jYOrtMRBkbYT31eiBQ8O0ehRKZiEZCMEyLFQNIADpgCWC5fALvYQ==,
       }
-    engines: { node: ">=20.18.1" }
+    engines: { node: ">=22.19.0" }
 
   unicorn-magic@0.3.0:
     resolution:
@@ -10911,12 +10915,11 @@ packages:
       }
     engines: { node: ">= 0.4.0" }
 
-  uuid@8.3.2:
+  uuid@14.0.1:
     resolution:
       {
-        integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==,
+        integrity: sha512-6ZxzVpzDXDa3bJWaHilVayA+BH/1zmxCJoVgvmqJnid/gPoKHxUrS/aC/T6LGQtNHT+XHG9fXPJB4d+IrU30Ew==,
       }
-    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   valibot@1.4.2:
@@ -11793,7 +11796,7 @@ snapshots:
       safe-buffer: 5.2.1
       tough-cookie: 5.1.2
       tunnel-agent: 0.6.0
-      uuid: 8.3.2
+      uuid: 14.0.1
 
   "@cypress/xvfb@1.2.4(supports-color@8.1.1)":
     dependencies:
@@ -11819,7 +11822,7 @@ snapshots:
       open: 8.4.2
       picomatch: 4.0.4
       systeminformation: 5.31.11
-      undici: 7.28.0
+      undici: 8.10.0
       which: 4.0.0
       yocto-spinner: 1.2.0
 
@@ -12025,9 +12028,9 @@ snapshots:
       gsap: 3.15.0
       react: 19.2.3
 
-  "@hono/node-server@2.0.12(hono@4.12.27)":
+  "@hono/node-server@2.0.12(hono@4.13.0)":
     dependencies:
-      hono: 4.12.27
+      hono: 4.13.0
 
   "@humanfs/core@0.19.1": {}
 
@@ -12181,7 +12184,7 @@ snapshots:
 
   "@modelcontextprotocol/sdk@1.29.0(zod@3.25.76)":
     dependencies:
-      "@hono/node-server": 2.0.12(hono@4.12.27)
+      "@hono/node-server": 2.0.12(hono@4.13.0)
       ajv: 8.20.0
       ajv-formats: 3.0.1(ajv@8.20.0)
       content-type: 1.0.5
@@ -12191,7 +12194,7 @@ snapshots:
       eventsource-parser: 3.1.0
       express: 5.2.1
       express-rate-limit: 8.5.2(express@5.2.1)
-      hono: 4.12.27
+      hono: 4.13.0
       jose: 6.2.3
       json-schema-typed: 8.0.2
       pkce-challenge: 5.0.1
@@ -12505,13 +12508,13 @@ snapshots:
       "@electric-sql/pglite": 0.4.1
       "@electric-sql/pglite-socket": 0.1.1(@electric-sql/pglite@0.4.1)
       "@electric-sql/pglite-tools": 0.3.1(@electric-sql/pglite@0.4.1)
-      "@hono/node-server": 2.0.12(hono@4.12.27)
+      "@hono/node-server": 2.0.12(hono@4.13.0)
       "@prisma/get-platform": 7.2.0
       "@prisma/query-plan-executor": 7.2.0
       "@prisma/streams-local": 0.1.2
       foreground-child: 3.3.1
       get-port-please: 3.2.0
-      hono: 4.12.27
+      hono: 4.13.0
       http-status-codes: 2.3.0
       pathe: 2.0.3
       proper-lockfile: 4.1.2
@@ -14259,7 +14262,7 @@ snapshots:
   ajv@8.20.0:
     dependencies:
       fast-deep-equal: 3.1.3
-      fast-uri: 4.1.1
+      fast-uri: 4.1.2
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
 
@@ -14448,7 +14451,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  brace-expansion@5.0.8:
+  brace-expansion@5.0.9:
     dependencies:
       balanced-match: 4.0.4
 
@@ -15472,7 +15475,7 @@ snapshots:
   express-rate-limit@8.5.2(express@5.2.1):
     dependencies:
       express: 5.2.1
-      ip-address: 10.2.0
+      ip-address: 10.4.0
 
   express@4.22.1:
     dependencies:
@@ -15585,7 +15588,7 @@ snapshots:
 
   fast-levenshtein@2.0.6: {}
 
-  fast-uri@4.1.1: {}
+  fast-uri@4.1.2: {}
 
   fastq@1.20.1:
     dependencies:
@@ -15905,7 +15908,7 @@ snapshots:
     dependencies:
       hermes-estree: 0.25.1
 
-  hono@4.12.27: {}
+  hono@4.13.0: {}
 
   html-encoding-sniffer@4.0.0:
     dependencies:
@@ -15999,7 +16002,7 @@ snapshots:
       "@formatjs/fast-memoize": 3.1.7
       "@formatjs/icu-messageformat-parser": 3.5.15
 
-  ip-address@10.2.0: {}
+  ip-address@10.4.0: {}
 
   ipaddr.js@1.9.1: {}
 
@@ -16616,7 +16619,7 @@ snapshots:
 
   minimatch@10.2.5:
     dependencies:
-      brace-expansion: 5.0.8
+      brace-expansion: 5.0.9
 
   minimist@1.2.8: {}
 
@@ -18110,7 +18113,7 @@ snapshots:
 
   undici-types@6.21.0: {}
 
-  undici@7.28.0: {}
+  undici@8.10.0: {}
 
   unicorn-magic@0.3.0: {}
 
@@ -18181,7 +18184,7 @@ snapshots:
 
   utils-merge@1.0.1: {}
 
-  uuid@8.3.2: {}
+  uuid@14.0.1: {}
 
   valibot@1.4.2(typescript@5.9.3):
     optionalDependencies:
