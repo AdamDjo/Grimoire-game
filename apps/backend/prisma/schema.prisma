@@ -200,7 +200,7 @@ model MemoryChunk {
 }
 
 /// Bibliothèque d'images de scène partagée entre tous les joueurs (#207).
-/// Une ligne par combinaison sceneType_biome_lieuType rencontrée ; générée une
+/// Une ligne par combinaison sceneType_depthBand_lieuType rencontrée ; générée une
 /// seule fois puis réutilisée par tous les chunks qui matchent la même clé.
 /// @see docs/public/tech/DYNAMIC_SCENE_IMAGES.md
 model SceneImage {

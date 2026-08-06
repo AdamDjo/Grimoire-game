@@ -2,9 +2,10 @@ import { type CompressionOutput, validateCompressionOutput } from '../ai/compres
 import { callOpenRouter } from '../ai/openrouter.provider'
 import { sceneTypeSchema } from '../ai/scene-validator'
 import { COMPRESSION_FALLBACK_MODEL, env } from '../config/env'
+import { depthBandOf } from '../game-rules/dungeon'
 import { prisma } from '../lib/prisma'
 
-import { classifyBiome, classifyLieuType, resolveSceneImage } from './scene-image.service'
+import { classifyLieuType, resolveSceneImage } from './scene-image.service'
 
 import type { SceneLog } from '../generated/prisma/client'
 import type { Character } from '@grimoire/shared'
@@ -90,7 +91,8 @@ export async function compressScene(
   sessionId: string,
   turns: SceneLog[],
   character: Character,
-  location: string
+  location: string,
+  currentDepth: number
 ): Promise<void> {
   if (turns.length === 0) {
     return
@@ -127,7 +129,8 @@ export async function compressScene(
   await resolveAndPersistSceneImage(
     sessionId,
     location,
-    sortedTurns[sortedTurns.length - 1].sceneType
+    sortedTurns[sortedTurns.length - 1].sceneType,
+    currentDepth
   )
 }
 
@@ -140,7 +143,8 @@ export async function compressScene(
 async function resolveAndPersistSceneImage(
   sessionId: string,
   location: string,
-  sceneType: string
+  sceneType: string,
+  currentDepth: number
 ): Promise<void> {
   try {
     const parsedSceneType = sceneTypeSchema.safeParse(sceneType)
@@ -148,9 +152,11 @@ async function resolveAndPersistSceneImage(
       return
     }
 
-    const biome = classifyBiome(location)
+    // Depth is read from the run state, never from the narration: the picture
+    // must track where the player actually is, not how the AI phrased it.
+    const depthBand = depthBandOf(currentDepth)
     const lieuType = classifyLieuType(location)
-    const url = await resolveSceneImage(parsedSceneType.data, biome, lieuType)
+    const url = await resolveSceneImage(parsedSceneType.data, depthBand, lieuType)
 
     if (url) {
       await prisma.gameSession.update({

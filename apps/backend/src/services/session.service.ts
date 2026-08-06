@@ -607,7 +607,8 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
           session.id,
           recentTurns,
           toGmCharacter(character, attributes, restedSurvival, finalConditions, finalInventory),
-          scene.location
+          scene.location,
+          run?.next.currentDepth ?? 0
         )
       } catch (err) {
         console.warn(`[Memory] failed to load turns for session ${session.id}:`, err)

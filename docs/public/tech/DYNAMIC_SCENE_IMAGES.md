@@ -3,7 +3,7 @@ type: tech-plan
 visibility: public
 rag: true
 source_of_truth: true
-updated: 2026-07-26
+updated: 2026-08-07
 ---
 
 > Statut : **livré** (#207). Ce document garde son rôle de plan de conception ;
@@ -46,24 +46,41 @@ entièrement composée de champs structurés que le **backend** possède déjà 
 assigne lui-même :
 
 ```
-cacheKey = `${sceneType}_${biome}_${lieuType}`
+cacheKey = `${sceneType}_${depthBand}_${lieuType}`
 ```
 
 - **`sceneType`** (6 valeurs, déjà un enum Zod strict — `scene-validator.ts:114`) :
   `exploration | combat | dialog | event | shop | rest`
-- **`biome`** (5 valeurs, canon `06-SURVIVAL.md` §5, lignes 210-222) :
-  `tissan | doigts | rivage | marais_lekh | coeur`
+- **`depthBand`** (5 valeurs, dérivées de la profondeur du run par
+  `depthBandOf` — `game-rules/dungeon.ts`) :
+  `surface | upper | mid | deep | abyss`
 - **`lieuType`** (5 valeurs, dérivées des types de donjons canon
   `03-BESTIARY.md` §9, lignes 239-244, + un type générique extérieur) :
   `plein_air | ruines_archontiques | cryptes | cavernes_cendre | donjon_profond`
 
-Espace théorique max : 6 × 5 × 5 = 150 combinaisons, mais beaucoup ne sont pas
-plausibles en jeu (pas de `shop` dans une `cavernes_cendre`, pas de
-`cryptes` au `rivage`) — le nombre réel rencontré en pratique sera plutôt de
-l'ordre de 30-50 combinaisons, un espace fini qui se sature après quelques
-dizaines de parties.
+**Pourquoi la profondeur a remplacé le biome.** La clé d'origine supposait un
+monde ouvert parcouru horizontalement, où le biome était ce qui changeait
+d'une scène à l'autre. La refonte roguelike ([[23-RUN-STRUCTURE]]) a rendu le
+contenu **vertical** : le joueur descend des paliers, et ce qui doit changer
+l'image est la profondeur atteinte — un palier 1 et un palier 7 ne se
+ressemblent pas, deux `tissan` à des paliers différents si. Le biome était de
+surcroît **deviné** dans la prose de l'IA, alors que la profondeur est une
+donnée que le moteur possède déjà : une image ne peut donc plus contredire le
+palier où le joueur se trouve réellement.
 
-**Qui assigne `biome` et `lieuType`** : le backend, jamais l'IA — cohérent
+Les bandes découpent les 7 paliers exactement là où le bestiaire découpe ses
+tiers de danger (`03-BESTIARY.md` §6bis) : `upper` = 1-2 « je gère »,
+`mid` = 3-4 « ça coûte », `deep` = 5-6 « je devrais peut-être remonter »,
+`abyss` = 7 « c'est là que je meurs ou que je gagne le run ». `surface`
+couvre le hors-run (palier 0). L'image suit donc la même montée de tension
+que la faune, sans qu'aucun des deux systèmes ait à connaître l'autre.
+
+Espace théorique max : 6 × 5 × 5 = 150 combinaisons, mais beaucoup ne sont pas
+plausibles en jeu (pas de `shop` en `abyss`, pas de `cryptes` en `surface`) —
+le nombre réel rencontré en pratique sera plutôt de l'ordre de 30-50
+combinaisons, un espace fini qui se sature après quelques dizaines de parties.
+
+**Qui assigne `depthBand` et `lieuType`** : le backend, jamais l'IA — cohérent
 avec la règle du projet "le backend possède toutes les règles, l'IA ne décide
 rien" ([[ARCHITECTURE_RULES]]). L'IA continue d'écrire `location` en texte
 libre pour l'immersion narrative ; ce texte n'entre jamais dans la clé de
@@ -94,7 +111,7 @@ Table Prisma `SceneImage` :
 ```prisma
 model SceneImage {
   id        String   @id @default(uuid())
-  cacheKey  String   @unique // sceneType_biome_lieuType
+  cacheKey  String   @unique // sceneType_depthBand_lieuType
   url       String
   createdAt DateTime @default(now())
 }
@@ -102,15 +119,24 @@ model SceneImage {
 
 `GameSession` gagne une colonne `currentImageUrl String?`.
 
-## Classification biome/lieuType (livré)
+## Profondeur et lieuType (livré)
 
-`scene-image.service.ts` expose `classifyBiome(location)` et
-`classifyLieuType(location)` : un pattern-matching de mots-clés canon sur le
-texte libre `location` écrit par l'IA, avec des défauts sûrs (`coeur`,
-`plein_air`) quand aucun mot-clé ne matche. Choix délibéré de ne **pas**
-brancher le champ `WorldState.biome` (existant mais inutilisé) pour garder
-#207 scopé — le classifieur texte-libre suffit et reste entièrement côté
-backend (jamais l'IA qui décide de la clé).
+Les deux composantes non-`sceneType` de la clé ne sont **pas** obtenues de la
+même façon, et c'est délibéré :
+
+- **`depthBand`** est _lu_, jamais deviné. `depthBandOf(depth)` traduit la
+  profondeur du run — `GameSession.currentDepth`, une donnée que le moteur
+  possède — en bande. Aucun texte n'intervient. Un palier hors bornes (négatif,
+  `NaN`, au-delà de 7) est **clampé** vers une bande valide au lieu de lever :
+  un tour ne doit jamais échouer parce qu'il cherchait à s'illustrer.
+- **`lieuType`** reste _classifié_, par `classifyLieuType(location)` :
+  pattern-matching de mots-clés canon sur le texte libre `location` écrit par
+  l'IA, avec `plein_air` comme défaut sûr. C'est le seul endroit où la prose
+  influence la clé, et seulement pour choisir entre cinq décors — jamais pour
+  décider du niveau de danger représenté.
+
+`classifyBiome` a été **supprimé** avec la refonte roguelike : il devinait dans
+la prose une information que le moteur détient désormais de façon fiable.
 
 ## Pont asynchrone image ↔ tour (livré)
 
