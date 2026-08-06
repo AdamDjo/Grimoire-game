@@ -3,6 +3,7 @@ import type {
   Attribute,
   SurvivalStats,
 } from "./character.types";
+import type { CombatSnapshot } from "./combat.types";
 import type { DiceRoll } from "./dice.types";
 import type { ItemGained } from "./inventory.types";
 import type { GameMode, ReturnEstimate, RunContract } from "./run.types";
@@ -100,6 +101,13 @@ export interface SceneResponse {
    * @see docs/public/raw/23-RUN-STRUCTURE.md §3
    */
   run?: RunSnapshot;
+  /**
+   * The fight in progress, if any. Absent outside combat mode. Like `run`, the
+   * client renders this as given: armour class, damage and the end of the
+   * fight are all arbitrated by the backend, never recomputed here.
+   * @see docs/public/raw/10-COMBAT.md §3
+   */
+  combat?: CombatSnapshot;
 }
 
 /**

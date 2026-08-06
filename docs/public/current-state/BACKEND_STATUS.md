@@ -123,8 +123,8 @@ updated: 2026-08-06
   les sessions existantes sont migrées en `abandon` (migration Supabase
   `split_session_end_reason_run_structure` ; aucune ligne concernée en base à ce jour).
   `ChronicleEndReason` suit par alias, et le prompt de Chronique distingue désormais les deux
-  retours. Les fins `extracted`/`returned_empty` sont **typées mais pas encore produites** : c'est
-  le trajet de retour (#228) qui les émettra. `@see docs/public/raw/23-RUN-STRUCTURE.md` §5.
+  retours. Les fins `extracted`/`returned_empty` sont désormais réellement produites par le trajet
+  de retour (#228). `@see docs/public/raw/23-RUN-STRUCTURE.md` §5.
 - #227 (lot 2 de #214) — moteur de donjon et estimation de retour, en règles pures
   (`game-rules/dungeon.ts` et `game-rules/run.ts`, zéro Prisma, `rng` injectable comme `dice.ts`).
   `generateDescent` produit 3 salles par palier avec indice partiel et 2-3 suites au choix ; le
@@ -165,6 +165,25 @@ updated: 2026-08-06
   ouverte ou reprise le lendemain ne consomme rien et ne change ni la narration, ni le retour : les
   minutes affichées sont une estimation honnête pour décider, pas une horloge que le moteur relit.
   `@see docs/public/raw/23-RUN-STRUCTURE.md` §1-§6.
+- #233 (lot 1 de #215) — contrats de combat et bestiaire typé. `combat.types.ts` existait depuis la
+  phase 2B mais n'était **importé par aucun fichier** : écrit avant que le canon combat n'existe, il
+  a été confronté au canon plutôt que repris tel quel. Deux fermetures portent tout le fichier et
+  sont **structurelles, pas documentaires** : `CreatureId` énumère les 18 créatures canon et
+  `CreatureVariant` les 5 variantes contrôlées — une créature inventée par l'IA, une variante hors
+  table ou deux variantes cumulées produisent une valeur que le type ne peut pas représenter, donc
+  qui n'atteint jamais le moteur. _Pourquoi une fermeture plutôt qu'une validation_ : une créature
+  improvisée n'a ni CA, ni PV, ni comportement, ni butin — le backend ne peut pas l'arbitrer et le
+  joueur ne peut pas apprendre à la combattre. La méta-progression de connaissance n'a de valeur que
+  si la créature du run 8 est **la même** qu'au run 3.
+  Les conditions de combat (`CombatConditionId`, §6) sont typées **séparément** de `ConditionId` :
+  elles vivent et meurent dans un seul combat, là où les conditions de survie persistent sur le run.
+  L'habitat du bestiaire est `CreatureHabitat` et non le `Biome` de `scene.types.ts` : ce dernier
+  nomme un **lieu** et sert de clé au cache d'images, le premier est une **règle de placement** —
+  d'où `anywhere`, dont les Calcinés ont besoin et qu'aucune image ne pourrait représenter.
+  `CombatSnapshot` rejoint `RunSnapshot` dans `SceneResponse` : le client dessine l'interface de
+  combat sans recalculer une seule règle. Ce lot ne pose **aucune valeur chiffrée** — PV, CA et
+  dégâts relèvent du bestiaire (#234), et le canon devra les fournir.
+  `@see docs/public/raw/03-BESTIARY.md` §1-§8, `docs/public/raw/10-COMBAT.md` §2-§7.
 
 ## Pré-déploiement restant
 

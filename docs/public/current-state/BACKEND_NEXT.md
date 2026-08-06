@@ -37,8 +37,21 @@ updated: 2026-08-06
      débloqué par le merge de #226.
 2. [#215](https://github.com/AdamDjo/Grimoire-game/issues/215) — **moteur de combat par tours** :
    initiative, CA, tours, actions catégorisées, conditions, fuite dirigée, table de vérité de la
-   mort. La spec est complète dans `docs/public/raw/10-COMBAT.md` — rien à concevoir, tout à
-   implémenter. Le backend arbitre, l'IA narre.
+   mort. La spec est complète dans `docs/public/raw/10-COMBAT.md` et `03-BESTIARY.md` — rien à
+   concevoir, tout à implémenter. Le backend arbitre, l'IA narre. Découpé en 4 lots :
+   - ~~[#233](https://github.com/AdamDjo/Grimoire-game/issues/233)~~ — contrats de combat et
+     bestiaire typé : **livré**. `CreatureId` (18 créatures) et `CreatureVariant` (5 variantes) sont
+     des unions fermées : l'invention par l'IA est structurellement irreprésentable.
+     `CombatSnapshot` rejoint `RunSnapshot` dans `SceneResponse`. Aucune valeur chiffrée posée.
+   - [#234](https://github.com/AdamDjo/Grimoire-game/issues/234) — `game-rules/bestiary.ts` : les 18
+     créatures en données, la répartition par palier (§6bis) et les 5 variantes bornées (§6ter).
+     ⚠️ Le canon donne comportements, biomes et tiers de butin, mais **pas de PV/CA/dégâts par
+     créature** : la seule référence chiffrée est la table de CA générique de `10-COMBAT §4`. À
+     trancher au début du lot — aucune valeur provisoire ne doit être écrite.
+   - [#235](https://github.com/AdamDjo/Grimoire-game/issues/235) — `game-rules/combat.ts` et câblage
+     session : initiative unique, tours, 4 catégories d'action, rôle CENDRE, fuite dirigée, mort.
+   - [#236](https://github.com/AdamDjo/Grimoire-game/issues/236) — frontend, mode combat dédié
+     (domaine Codex), débloqué par le merge de #233.
 3. [#216](https://github.com/AdamDjo/Grimoire-game/issues/216) — **auberge** : contrat, boutique,
    forge, usure 3 paliers, contrainte de sac.
 4. [#217](https://github.com/AdamDjo/Grimoire-game/issues/217) — **artefacts activables** :
