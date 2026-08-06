@@ -5,6 +5,7 @@ import type {
 } from "./character.types";
 import type { DiceRoll } from "./dice.types";
 import type { ItemGained } from "./inventory.types";
+import type { GameMode, ReturnEstimate, RunContract } from "./run.types";
 import type { SessionEndReason } from "./session.types";
 
 export type SceneType =
@@ -90,6 +91,39 @@ export interface SceneResponse {
   diceRoll?: DiceRoll;
   /** Whether the narrative came from the AI or the local stub fallback. */
   source?: "ai" | "stub";
+  /**
+   * Where the run stands after this scene. Absent on a session with no run
+   * structure (at the inn, or created before the run loop existed). The client
+   * renders this as given and infers nothing: the depth, the mode, the cost of
+   * getting home and whether descending is still allowed are all decided by
+   * the backend.
+   * @see docs/public/raw/23-RUN-STRUCTURE.md §3
+   */
+  run?: RunSnapshot;
+}
+
+/**
+ * The run state projected to the client alongside every scene — everything the
+ * turn-back panel needs to be drawn without computing a single rule.
+ * @see docs/public/raw/23-RUN-STRUCTURE.md §3, §4.1
+ */
+export interface RunSnapshot {
+  contract: RunContract;
+  mode: GameMode;
+  /** Floor the character stands on. 0 = surface. */
+  currentDepth: number;
+  /** Deepest floor reached this run. Never decreases. */
+  maxDepthReached: number;
+  returnEngaged: boolean;
+  objectiveSecured: boolean;
+  /** Honest cost of getting home from here — shown before every descend decision. */
+  returnEstimate: ReturnEstimate;
+  /** Minutes left for the whole run, descent included. Display only. */
+  estimatedRemainingMinutes: number;
+  /** Whether "descendre encore" is still a legal move. */
+  canDescend: boolean;
+  /** True once the character has climbed back out. */
+  atSurface: boolean;
 }
 
 /**

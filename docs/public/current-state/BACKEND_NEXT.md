@@ -28,8 +28,11 @@ updated: 2026-08-06
      ne trahissent jamais l'ampleur, retour distinct et strictement plus court, estimation de
      retour et détection de franchissement de seuil. Règles pures, sans Prisma. Reste à câbler :
      la formulation en langage de personnage de l'avertissement (§4.2) revient à #228.
-   - [#228](https://github.com/AdamDjo/Grimoire-game/issues/228) — extension Prisma `GameSession`,
-     mode de jeu porté par la session, câblage dans `resolveTurn`.
+   - ~~[#228](https://github.com/AdamDjo/Grimoire-game/issues/228)~~ — extension Prisma
+     `GameSession`, mode de jeu porté par la session, câblage dans `resolveTurn` : **livré**. Le
+     run est persistant (reprise à la profondeur atteinte), l'avertissement de seuil est injecté
+     dans le prompt en langage de personnage (§4.2), et `extracted`/`returned_empty` sont
+     désormais réellement produites au retour en surface.
    - [#229](https://github.com/AdamDjo/Grimoire-game/issues/229) — frontend (domaine Codex),
      débloqué par le merge de #226.
 2. [#215](https://github.com/AdamDjo/Grimoire-game/issues/215) — **moteur de combat par tours** :

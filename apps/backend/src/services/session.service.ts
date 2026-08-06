@@ -4,11 +4,13 @@ import {
   type ActiveCondition,
   type Attributes,
   type Choice,
+  type ContractDepth,
   type InventoryActionResponse,
   type InventoryItemRef,
   type Locale,
   type PersistedInventoryItem,
   resolveLocale,
+  type RunState,
   type SceneResponse,
   type SessionEndReason,
   type SurvivalStats,
@@ -25,12 +27,24 @@ import {
 import { resolveChoice } from '../game-rules/consequences'
 import { acquireItem, equipItem, unequipItem, useItem } from '../game-rules/inventory'
 import { applyRest } from '../game-rules/rest'
+import { createContract, createRunState, engageReturn } from '../game-rules/run'
 import { clearDyingOnHeal } from '../game-rules/survival'
 import { prisma } from '../lib/prisma'
 
 import { deriveAttributes } from './character.service'
 import { generateChronicle } from './chronicle.service'
 import { compressScene } from './memory.service'
+import {
+  advanceRun,
+  countCarriedSupplies,
+  detectThresholdCrossings,
+  hasContract,
+  projectRun,
+  readRunState,
+  resolveReturnEnding,
+  toContractPersistence,
+  toRunStatePersistence,
+} from './run.service'
 import { assembleScene } from './scene-assembler'
 import { validateAndPersistSouvenirCandidate } from './souvenir.service'
 
@@ -220,6 +234,20 @@ export async function getOrCreateSession(
  * against) instead of regenerating them. Returns null for a session with no turn
  * logged yet. The persisted scene is the source of truth — never regenerated.
  */
+/**
+ * Projects the session's run state for the client, or nothing at all when the
+ * session carries no run structure (still at the inn, or created before the run
+ * loop existed — those sessions stay playable, just without the panel).
+ */
+function runProjectionFor(
+  session: GameSession,
+  inventory: PersistedInventoryItem[]
+): Pick<SceneResponse, 'run'> {
+  const state = readRunState(session)
+  if (!state) return {}
+  return { run: projectRun(state, countCarriedSupplies(inventory)) }
+}
+
 async function resumeLatestScene({
   session,
   character,
@@ -257,6 +285,7 @@ async function resumeLatestScene({
     updatedInventory: toInventoryRefs(inventory),
     notifications: [],
     source,
+    ...runProjectionFor(session, inventory),
   }
 }
 
@@ -313,6 +342,7 @@ export async function buildOpeningScene(context: SessionContext): Promise<SceneR
     updatedInventory: toInventoryRefs(inventory),
     notifications: [],
     source: gm.source,
+    ...runProjectionFor(session, inventory),
   }
 }
 
@@ -365,6 +395,32 @@ export interface ResolveTurnInput {
   choice: Choice
   chosenActionText?: string
   freeAction?: string
+  /**
+   * Set when the player took the "faire demi-tour" pivot offered at the end of
+   * a floor. Irreversible — from here the run only climbs (#228).
+   * @see docs/public/raw/23-RUN-STRUCTURE.md §3
+   */
+  engageReturn?: boolean
+}
+
+/**
+ * Moves the run one step for this turn, before the scene is generated.
+ *
+ * Progression is driven by the *turn*, never by elapsed real time: a session
+ * left open for an hour advances exactly as far as one that ran without a
+ * pause. The minute figures the run carries are an honest estimate shown to the
+ * player, not a clock the engine reads back.
+ * @see docs/public/raw/23-RUN-STRUCTURE.md §1, §3
+ */
+function advanceRunForTurn(
+  session: GameSession,
+  engageReturnRequested: boolean
+): { previous: RunState; next: RunState } | null {
+  const previous = readRunState(session)
+  if (!previous) return null
+
+  const turned = engageReturnRequested ? engageReturn(previous) : previous
+  return { previous, next: advanceRun(turned) }
 }
 
 /**
@@ -377,6 +433,12 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
   const { session, character, choice, chosenActionText, freeAction } = input
   const { attributes, survival, activeConditions, inventory } = readCharacter(character)
 
+  // The run moves first, so the scene is narrated from where the character
+  // actually stands — and so a threshold crossed by descending is caught even
+  // when the player spent nothing this turn.
+  const run = advanceRunForTurn(session, input.engageReturn === true)
+  const suppliesBefore = countCarriedSupplies(inventory)
+
   const resolution = resolveChoice({
     attributes,
     survival,
@@ -385,6 +447,15 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
     turnNumber: session.turnNumber,
     locale: session.locale,
   })
+
+  // Threshold crossings are detected against the move that just happened: the
+  // supplies are unchanged this turn (items are only ever *gained* mid-turn,
+  // which can never create a shortage), so what makes the trip home newly
+  // unaffordable is the extra floor. Computed before the prompt is built, since
+  // the narration must carry the warning in the same breath (§4.2).
+  const returnWarnings = run
+    ? detectThresholdCrossings(run.previous, run.next, suppliesBefore, suppliesBefore)
+    : []
 
   const gm = await generateScene({
     character: toGmCharacter(
@@ -399,6 +470,18 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
     sessionId: session.id,
     chosenActionText,
     freeAction,
+    run: run
+      ? {
+          destination: run.next.contract.destination,
+          objective: run.next.contract.objective,
+          targetDepth: run.next.contract.targetDepth,
+          currentDepth: run.next.currentDepth,
+          maxDepthReached: run.next.maxDepthReached,
+          mode: run.next.mode,
+          returnEngaged: run.next.returnEngaged,
+          warnings: returnWarnings,
+        }
+      : null,
   })
 
   const nextTurn = session.turnNumber + 1
@@ -458,11 +541,18 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
     imageUrl: session.currentImageUrl,
   })
 
+  // Reaching the surface alive settles the run: `extracted` with the objective,
+  // `returned_empty` without. Death and Calamine take precedence — a character
+  // who dies on the last climb did not come home. @see 23-RUN-STRUCTURE.md §5
+  const returnEnding = run && !gameOver ? resolveReturnEnding(run.next) : null
+
   const endReason: SessionEndReason | null = resolution.gameOver
     ? 'death'
     : calcined
       ? 'calcined'
-      : null
+      : returnEnding
+
+  const runOver = gameOver || returnEnding !== null
 
   await prisma.$transaction([
     prisma.sceneLog.create({
@@ -499,7 +589,8 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
       data: {
         turnNumber: nextTurn,
         location: scene.location,
-        ...(gameOver ? { status: 'ended', endReason } : {}),
+        ...(run ? toRunStatePersistence(run.next) : {}),
+        ...(runOver ? { status: 'ended', endReason } : {}),
       },
     }),
   ])
@@ -539,7 +630,9 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
     })()
   }
 
-  if (gameOver) {
+  // A run that ends by coming home earns its Chronicle exactly like one that
+  // ends in death — `runOver`, not `gameOver`.
+  if (runOver) {
     void (async () => {
       try {
         await generateChronicle(session.id)
@@ -560,6 +653,10 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
     notifications: [],
     diceRoll: resolution.diceRoll,
     source: gm.source,
+    // Projected from the inventory as it stands *after* the turn, so the panel
+    // the player reads before deciding to descend reflects what they actually
+    // carry now.
+    ...(run ? { run: projectRun(run.next, countCarriedSupplies(finalInventory)) } : {}),
   }
 }
 
@@ -667,13 +764,55 @@ async function endSession(
 }
 
 /**
+ * Starts a run: the player accepts a contract at the inn and sets out.
+ *
+ * The contract is built by the backend from a validated depth — the client
+ * never supplies a duration or a room count, both of which are derived. Only an
+ * active session still at the inn may leave; a session already underground
+ * cannot silently swap contracts mid-run.
+ * @see docs/public/raw/23-RUN-STRUCTURE.md §1
+ */
+export async function startRun(
+  sessionId: string,
+  userId: string,
+  contract: {
+    destination: string
+    targetDepth: ContractDepth
+    rewardIron: number
+    objective: string
+  }
+): Promise<SceneResponse | null> {
+  const session = await prisma.gameSession.findFirst({
+    where: { id: sessionId, status: 'active', character: { userId } },
+    include: { character: true },
+  })
+  if (!session || session.gameMode !== 'inn' || hasContract(session)) {
+    return null
+  }
+
+  const state = createRunState(createContract({ id: randomUUID(), ...contract }))
+
+  const updated = await prisma.gameSession.update({
+    where: { id: session.id },
+    data: {
+      ...toContractPersistence(state.contract),
+      ...toRunStatePersistence(state),
+    },
+  })
+
+  // The player leaves with the return estimate already on screen: the cost of
+  // getting home is visible before the first descent, not after it (§4.1).
+  return buildOpeningScene({ session: updated, character: session.character })
+}
+
+/**
  * Ends a session via the player's voluntary choice at the inn, facing
  * L'Aveugle ("Ton aventure se termine ici").
  *
- * Recorded as `abandon`, not as a return: this flow predates run contracts and
- * ends the campaign on the player's initiative, without an objective to fulfil.
- * The contract-aware endings (`extracted` / `returned_empty`) are produced by
- * the return trip, wired in #228.
+ * Recorded as `abandon`, not as a return: the player ends the campaign on their
+ * own initiative, without an objective to fulfil. The contract-aware endings
+ * (`extracted` / `returned_empty`) belong to the return trip and are resolved
+ * in `resolveTurn` when the character climbs back to the surface.
  * @see docs/public/raw/23-RUN-STRUCTURE.md §5
  */
 export async function endSessionAtInn(

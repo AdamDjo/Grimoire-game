@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { buildSystemPrompt, type RecentTurnSummary } from './system-prompt'
+import { buildSystemPrompt, type RecentTurnSummary, type RunPromptContext } from './system-prompt'
 
 import type { MemoryChunkModel, SouvenirModel } from '../generated/prisma/models'
 
@@ -322,5 +322,81 @@ describe('buildSystemPrompt — item_gained injection (#183)', () => {
 
     expect(prompt).toContain('"item_gained"?')
     expect(prompt).toContain('Never propose category "heirloom"')
+  })
+})
+
+describe('run section', () => {
+  function run(overrides: Partial<RunPromptContext> = {}): RunPromptContext {
+    return {
+      destination: 'Les Salines Basses',
+      objective: 'Rapporter le sceau du contremaître',
+      targetDepth: 5,
+      currentDepth: 2,
+      maxDepthReached: 2,
+      mode: 'exploration',
+      returnEngaged: false,
+      warnings: [],
+      ...overrides,
+    }
+  }
+
+  function promptWithRun(context: RunPromptContext): string {
+    return buildSystemPrompt(character, 'en', [], [], [], context)
+  }
+
+  it('says nothing about a run when the session has none', () => {
+    const prompt = buildSystemPrompt(character, 'en')
+
+    expect(prompt).not.toContain('Run structure')
+  })
+
+  it('states where the character stands, and that the backend owns it', () => {
+    const prompt = promptWithRun(run())
+
+    expect(prompt).toContain('Rapporter le sceau du contremaître')
+    expect(prompt).toContain('Les Salines Basses')
+    expect(prompt).toContain('stands on floor 2')
+    expect(prompt).toContain('the backend owns every value below')
+  })
+
+  it('forbids a climactic set-piece on the way home', () => {
+    // §4 — the return may kill, but never by ambush.
+    const prompt = promptWithRun(run({ returnEngaged: true, mode: 'return' }))
+
+    expect(prompt).toContain('TURNED BACK')
+    expect(prompt).toContain('Never introduce a boss')
+  })
+
+  it('demands a crossed threshold be narrated in the world’s voice, never as an alert', () => {
+    // §4.2 — the warning is owed, and it is owed in character.
+    const prompt = promptWithRun(
+      run({ warnings: [{ supply: 'water', carried: 1, needed: 3, risk: 'critical' }] })
+    )
+
+    expect(prompt).toContain('WARNING OWED THIS TURN')
+    expect(prompt).toContain("character's water just dropped below")
+    expect(prompt).toContain('never as a number, never as a UI-style alert')
+    expect(prompt).toContain('Severity to pitch it at: critical')
+  })
+
+  it('owes one warning per threshold crossed on the same turn', () => {
+    const prompt = promptWithRun(
+      run({
+        warnings: [
+          { supply: 'water', carried: 2, needed: 3, risk: 'tight' },
+          { supply: 'food', carried: 0, needed: 2, risk: 'critical' },
+        ],
+      })
+    )
+
+    expect(prompt).toContain("character's water just dropped below")
+    expect(prompt).toContain("character's food just dropped below")
+  })
+
+  it('never asks the AI to decide when a warning is owed or how the run ends', () => {
+    const prompt = promptWithRun(run())
+
+    expect(prompt).toContain('You never decide when a warning is owed')
+    expect(prompt).toContain('you give it a voice')
   })
 })

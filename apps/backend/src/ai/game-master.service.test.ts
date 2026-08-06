@@ -125,7 +125,42 @@ describe('generateScene — N1 recent-turns loading', () => {
 
     await generateScene({ character, locale: 'en', sessionId: 's1' })
 
-    expect(buildSystemPrompt).toHaveBeenCalledWith(character, 'en', [], recentTurns, souvenirs)
+    // A session with no run structure passes null — the prompt omits the section.
+    expect(buildSystemPrompt).toHaveBeenCalledWith(
+      character,
+      'en',
+      [],
+      recentTurns,
+      souvenirs,
+      null
+    )
+  })
+
+  it('passes the run context through to the prompt when the session carries one', async () => {
+    hasOpenRouterKey.mockReturnValue(true)
+    callOpenRouter.mockResolvedValue({ success: true, content: JSON.stringify(validAiPayload) })
+
+    const run = {
+      destination: 'Les Salines Basses',
+      objective: 'Rapporter le sceau du contremaître',
+      targetDepth: 5 as const,
+      currentDepth: 2,
+      maxDepthReached: 2,
+      mode: 'exploration' as const,
+      returnEngaged: false,
+      warnings: [{ supply: 'water' as const, carried: 1, needed: 3, risk: 'critical' as const }],
+    }
+
+    await generateScene({ character, locale: 'en', sessionId: 's1', run })
+
+    expect(buildSystemPrompt).toHaveBeenCalledWith(
+      character,
+      'en',
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      run
+    )
   })
 
   it('queries the 3 most recent Souvenirs for the character owner, ordered by createdAt desc', async () => {

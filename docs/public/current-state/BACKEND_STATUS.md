@@ -144,6 +144,27 @@ updated: 2026-08-06
   ressource déjà courte ne réalerte pas, pour que l'avertissement garde son poids. Ce lot produit
   **la donnée, pas la phrase** : la formulation en langage de personnage (§4.2) revient à
   l'injection de prompt (#228). `@see docs/public/raw/23-RUN-STRUCTURE.md` §1-§4.
+- #228 (lot 3 de #214) — la boucle de run est câblée sur la session et persistée. `GameSession`
+  porte le contrat (destination, profondeur visée, prime, objectif), le mode de jeu, la profondeur
+  courante et max, le demi-tour engagé et l'objectif sécurisé (migration Supabase
+  `add_run_structure_to_game_session` ; toutes les colonnes nullables ou par défaut, donc les
+  sessions antérieures restent jouables sans panneau de run). `services/run.service.ts` est le seul
+  pont entre les règles pures de #227 et la ligne persistée : il lit une session en `RunState`, la
+  réécrit, et **ne contient aucune règle**. Une profondeur hors barème en base rend `readContract`
+  nul plutôt que de fabriquer un run trop long — troisième garde-fou après le clamp moteur et la
+  contrainte `CHECK`.
+  `POST /api/game/session/start-run` accepte un contrat à l'auberge et renvoie la scène **avec
+  l'estimation de retour déjà à l'écran** (§4.1) ; le demi-tour voyage sur `POST /api/game/action`
+  (`engageReturn`), parce que le pivot **est** le tour que le joueur dépense. `resolveTurn` fait
+  progresser le run (descente, ou remontée une fois le demi-tour engagé), détecte les
+  franchissements de seuil, les injecte dans le prompt en **langage de personnage** — jamais un
+  nombre, jamais une alerte d'interface (§4.2) — puis résout `extracted` / `returned_empty` au
+  retour en surface. Le `SceneResponse` porte un `run` complet (profondeur, mode, estimation,
+  `canDescend`) pour que le client n'infère **aucune règle**.
+  ⏱️ **La progression est portée par le tour, jamais par le temps réel écoulé.** Une session laissée
+  ouverte ou reprise le lendemain ne consomme rien et ne change ni la narration, ni le retour : les
+  minutes affichées sont une estimation honnête pour décider, pas une horloge que le moteur relit.
+  `@see docs/public/raw/23-RUN-STRUCTURE.md` §1-§6.
 
 ## Pré-déploiement restant
 

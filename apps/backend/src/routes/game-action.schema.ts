@@ -24,6 +24,13 @@ export const gameActionSchema = z.object({
   /** Chosen choice label, passed through so the GM knows what the player picked. */
   chosenActionText: z.string().min(1).max(280).optional(),
   freeAction: z.string().min(1).max(500).optional(),
+  /**
+   * The player turns back on this turn (#228). Irreversible — once the return
+   * is engaged the run only climbs. It rides on the action rather than a
+   * dedicated endpoint because the pivot *is* the turn the player spends.
+   * @see docs/public/raw/23-RUN-STRUCTURE.md §4
+   */
+  engageReturn: z.boolean().optional(),
 })
 
 export type GameActionRequest = z.infer<typeof gameActionSchema>
@@ -40,6 +47,23 @@ export const createSessionSchema = z.object({
 })
 
 export type CreateSessionRequest = z.infer<typeof createSessionSchema>
+
+/**
+ * Accepting a contract at the inn and setting out (#228). The depth is the one
+ * commitment the player makes for the evening (~45 min at 3 floors, 2h30 at 7)
+ * and is the only field with a rule behind it: only the canon depths are
+ * accepted, so no request can open a run longer than the hard cap.
+ * @see docs/public/raw/23-RUN-STRUCTURE.md §1
+ */
+export const startRunSchema = z.object({
+  sessionId: z.string().min(1),
+  destination: z.string().min(1).max(120),
+  targetDepth: z.union([z.literal(3), z.literal(5), z.literal(7)]),
+  rewardIron: z.number().int().min(0).max(10_000),
+  objective: z.string().min(1).max(280),
+})
+
+export type StartRunRequest = z.infer<typeof startRunSchema>
 
 /** Request to voluntarily end a session (inn choice or explicit abandon). */
 export const endSessionSchema = z.object({

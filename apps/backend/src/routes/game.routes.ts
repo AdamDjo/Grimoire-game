@@ -10,6 +10,7 @@ import {
   performInventoryAction,
   resolveChosenChoice,
   resolveTurn,
+  startRun,
 } from '../services/session.service'
 
 import {
@@ -17,6 +18,7 @@ import {
   endSessionSchema,
   gameActionSchema,
   inventoryActionSchema,
+  startRunSchema,
 } from './game-action.schema'
 
 import type {
@@ -73,7 +75,7 @@ gameRouter.post('/action', async (req: Request, res: Response<ApiResponse<SceneR
     return
   }
 
-  const { sessionId, choiceId, chosenActionText, freeAction } = parsed.data
+  const { sessionId, choiceId, chosenActionText, freeAction, engageReturn } = parsed.data
   const userId = req.auth!.userId
 
   // Scope the session to the caller — a user can only act on their own session.
@@ -104,6 +106,7 @@ gameRouter.post('/action', async (req: Request, res: Response<ApiResponse<SceneR
     choice,
     chosenActionText,
     freeAction,
+    engageReturn,
   })
 
   res.json({ success: true, data: response })
@@ -129,6 +132,35 @@ gameRouter.post(
     const response = await performInventoryAction(parsed.data, req.auth!.userId)
     if (!response) {
       res.status(404).json({ success: false, error: 'Active session not found' })
+      return
+    }
+
+    res.json({ success: true, data: response })
+  }
+)
+
+/**
+ * POST /api/game/session/start-run
+ * The player accepts a contract at the inn and sets out (#228). Rejects (409) a
+ * session that already carries a contract — a run underway cannot swap its own
+ * objective. Returns the current scene, run panel included.
+ */
+gameRouter.post(
+  '/session/start-run',
+  async (req: Request, res: Response<ApiResponse<SceneResponse>>) => {
+    const parsed = startRunSchema.safeParse(req.body)
+    if (!parsed.success) {
+      res.status(400).json({
+        success: false,
+        error: parsed.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; '),
+      })
+      return
+    }
+
+    const { sessionId, ...contract } = parsed.data
+    const response = await startRun(sessionId, req.auth!.userId, contract)
+    if (!response) {
+      res.status(409).json({ success: false, error: 'Session cannot start a run' })
       return
     }
 
