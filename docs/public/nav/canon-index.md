@@ -11,6 +11,17 @@ source_of_truth: true
 > Politique : [[PRIVATE_CANON_POLICY]].
 > Ne pas tout lire : ouvrir seulement les fichiers ciblés.
 
+## ⭐ À lire en premier
+
+| Fichier                               | Quand le lire                                                                                                      |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `docs/public/raw/23-RUN-STRUCTURE.md` | **Toujours, avant toute mécanique de jeu.** Structure de run roguelike : contrat, paliers, demi-tour, retour, fins |
+
+> **Refonte roguelike du 2026-08-06.** `23-RUN-STRUCTURE` est le document pivot : il définit la
+> boucle dans laquelle toutes les autres règles s'inscrivent. Les fichiers `01`, `03`, `09`, `10`,
+> `11` et `14` ont été alignés dessus et portent des encarts datés là où une règle antérieure a été
+> révoquée. En cas de contradiction résiduelle, **`23` fait foi**.
+
 ## Fondations
 
 | Fichier                             | Quand le lire               |
@@ -24,16 +35,17 @@ source_of_truth: true
 
 ## Règles de jeu
 
-| Fichier                                    | Quand le lire                 |
-| ------------------------------------------ | ----------------------------- |
-| `docs/public/raw/04-ATTRIBUTES.md`         | SANG/SOUFFLE/CENDRE, Calamine |
-| `docs/public/raw/05-VOCATIONS.md`          | Vocations                     |
-| `docs/public/raw/06-SURVIVAL.md`           | Faim, soif, fatigue           |
-| `docs/public/raw/07-CHARACTER-CREATION.md` | Création personnage           |
-| `docs/public/raw/08-DICE-RESOLUTION.md`    | d20 aux pivots                |
-| `docs/public/raw/09-ACTION-LOOP.md`        | Boucle de tour                |
-| `docs/public/raw/10-COMBAT.md`             | Combat                        |
-| `docs/public/raw/11-INVENTORY-ECONOMY.md`  | Inventaire et économie        |
+| Fichier                                    | Quand le lire                               |
+| ------------------------------------------ | ------------------------------------------- |
+| `docs/public/raw/04-ATTRIBUTES.md`         | SANG/SOUFFLE/CENDRE, Calamine               |
+| `docs/public/raw/05-VOCATIONS.md`          | Vocations                                   |
+| `docs/public/raw/06-SURVIVAL.md`           | Faim, soif, fatigue                         |
+| `docs/public/raw/07-CHARACTER-CREATION.md` | Création personnage                         |
+| `docs/public/raw/08-DICE-RESOLUTION.md`    | d20 aux pivots                              |
+| `docs/public/raw/09-ACTION-LOOP.md`        | Boucle de tour, modes de jeu, fins de run   |
+| `docs/public/raw/10-COMBAT.md`             | Combat (spec complète, **non implémentée**) |
+| `docs/public/raw/11-INVENTORY-ECONOMY.md`  | Inventaire, fer, usure, artefacts           |
+| `docs/public/raw/23-RUN-STRUCTURE.md`      | Contrat, paliers, demi-tour, retour         |
 
 ## Social, IA, méta
 

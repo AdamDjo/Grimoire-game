@@ -201,6 +201,73 @@ D'anciens humains qui ont trop puisé dans la Cendre. Leur corps s'est saturé, 
 
 🟡 _Note : "Revenant" et "Bête de Rivage" à détailler en V1.1. Les 16 premières sont prioritaires au lancement._
 
+> **🔒 Le bestiaire est fixe (décision 8 du 2026-08-06).** Ces 18 créatures sont **la** liste. L'IA
+> ne génère **jamais** une créature nouvelle : elle n'a le droit que de puiser dans cette table et
+> d'y appliquer les variantes contrôlées (§6bis).
+>
+> _Pourquoi_ : une créature inventée à la volée n'a ni CA, ni PV, ni comportement, ni loot — donc le
+> backend ne peut pas l'arbitrer, et le joueur ne peut pas apprendre à la combattre. La
+> méta-progression de connaissance (`01-PILLARS §5`) n'a de valeur que si l'ennemi rencontré au run
+> 8 est **le même** qu'au run 3.
+
+---
+
+## 6bis. Répartition par palier
+
+La table §6 classe par biome. La boucle de run (`23-RUN-STRUCTURE §2`) a besoin d'une lecture par
+**profondeur** : plus on descend, plus la faune change de nature.
+
+| Paliers | Faune dominante                           | Ce que le joueur doit ressentir                                |
+| ------- | ----------------------------------------- | -------------------------------------------------------------- |
+| **1-2** | Communes (5→10), Calciné naissant         | « Je gère. » Rencontres gagnables sans consommer de ressources |
+| **3-4** | Rares (11→16), Calciné courant            | « Ça coûte. » Chaque combat entame les jauges et l'usure       |
+| **5-6** | Rares en groupe, Calciné ancien, Veilleur | « Je devrais peut-être remonter. » Le point de bascule         |
+| **7**   | Légendaires (17-18), Calciné majeur       | « C'est là que je meurs ou que je gagne le run. »              |
+
+Deux règles de placement :
+
+- 🟢 **La faune du palier est annoncée avant d'y descendre.** L'indice de salle (`23 §2`) porte sur
+  la **nature** de ce qui attend, jamais sur son ampleur. Voir principe 11 (`01-PILLARS §9`).
+- 🔴 **Anti-règle** : jamais de légendaire aux paliers 1-2, même « pour la surprise ». Une mort au
+  palier 2 face à un boss hors-barème est exactement la mort que le joueur ne pouvait pas voir venir.
+
+### Sur le trajet de retour
+
+Le retour est plus court, pas plus doux (`23-RUN-STRUCTURE §4`). Il puise dans la faune des paliers
+**déjà traversés**, jamais plus profonde :
+
+> Un joueur qui remonte du palier 6 croise de la faune de palier 5, 4, 3… Il ne rencontre
+> **jamais** quelque chose de plus dangereux que ce qu'il vient de battre.
+
+Ce qui rend le retour dangereux n'est donc pas la créature — c'est **l'état du joueur** : PV entamés,
+équipement usé, sac plein, eau comptée.
+
+---
+
+## 6ter. Les variantes contrôlées
+
+Le bestiaire est fixe, mais 18 créatures répétées sur des dizaines de runs lassent. La réponse n'est
+pas d'en inventer d'autres : c'est de **modifier celles-ci de façon lisible et bornée**.
+
+| Variante     | Effet mécanique                   | Signal donné au joueur                            |
+| ------------ | --------------------------------- | ------------------------------------------------- |
+| **Affamé**   | +2 dégâts, −2 CA                  | « Ses côtes saillent. Il attaque sans prudence. » |
+| **En meute** | Nombre ×2, PV individuels −30 %   | « Ils sont trois. Puis cinq. »                    |
+| **Saturé**   | Inflige de la Calamine au contact | Veines dorées visibles                            |
+| **Blessé**   | PV −40 %, fuit sous un seuil      | Traînée de sang, boitement                        |
+| **Ancien**   | +2 CA, +1 condition de combat     | Cicatrices, comportement méthodique               |
+
+Trois garde-fous :
+
+1. **Une seule variante à la fois.** Pas de « Calciné ancien affamé en meute ».
+2. **Toujours annoncée dans la description** avant le premier tour. Une variante invisible est un
+   piège, pas une variation.
+3. **Le backend applique la variante**, l'IA la décrit. Elle ne peut pas inventer un modificateur
+   qui n'est pas dans cette table.
+
+🟢 _18 créatures × 5 variantes = assez de combinaisons pour que le joueur ne s'ennuie pas, sans jamais
+lui présenter quelque chose qu'il ne peut pas anticiper._
+
 ---
 
 ## 7. Loot et tiers d'équipement
@@ -252,17 +319,23 @@ coffre/artefact → boss optionnel → sortie (avec le loot) → CONSEQUENCES
 
 🟢 _Le donjon = climax d'exploration. Risque fort, récompense forte._
 
+> **⚠️ La « sortie » n'est pas gratuite.** Depuis la refonte du 2026-08-06, cette dernière flèche
+> est un **trajet de retour joué** (`23-RUN-STRUCTURE §4`), pas une transition. Le loot n'est acquis
+> qu'une fois le joueur ressorti vivant. Voir aussi `11-INVENTORY-ECONOMY §9`.
+
 ---
 
 ## 10. Risques & garde-fous
 
-| Risque                            | Mitigation                                                    |
-| --------------------------------- | ------------------------------------------------------------- |
-| Bestiaire trop répétitif          | Variété par biome + comportements différents                  |
-| Combats tous identiques           | Comportements distincts (fuir, contourner, combattre)         |
-| Calcinés trop tragiques → malaise | Ils restent des menaces ; la pitié ne doit pas tuer le joueur |
-| Boss trop difficiles              | Toujours une option (fuir, préparer, ruse)                    |
-| Loot trop rare → frustration      | Équilibrage par playtests                                     |
+| Risque                               | Mitigation                                                                  |
+| ------------------------------------ | --------------------------------------------------------------------------- |
+| Bestiaire trop répétitif             | Variété par biome + comportements différents + variantes contrôlées (§6ter) |
+| IA qui invente des créatures         | Bestiaire fixe à 18 entrées. L'IA puise, ne crée pas (§6)                   |
+| Difficulté incohérente en profondeur | Répartition par palier (§6bis), aucun légendaire avant le palier 5          |
+| Combats tous identiques              | Comportements distincts (fuir, contourner, combattre)                       |
+| Calcinés trop tragiques → malaise    | Ils restent des menaces ; la pitié ne doit pas tuer le joueur               |
+| Boss trop difficiles                 | Toujours une option (fuir, préparer, ruse)                                  |
+| Loot trop rare → frustration         | Équilibrage par playtests                                                   |
 
 ---
 

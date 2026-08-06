@@ -15,6 +15,29 @@
 
 **Règle absolue** : aucun mécanisme de rétention ne doit créer de FOMO (_Fear Of Missing Out_). Pas de "événement limité 48h", pas de "ton perso meurt si tu joues pas cette semaine", pas de timer de connexion. Le monde attend.
 
+### ⚠️ Le crochet zéro : la boucle doit être bonne _(ajout 2026-08-06)_
+
+Tout ce fichier suppose un joueur qui **a aimé son run** et veut la suite. Le playtest du 2026-08-06
+a montré que cette prémisse n'était pas acquise : le retour joueur était _« après une partie je
+m'ennuie, il n'y a aucune raison de recommencer »_.
+
+> **Aucun crochet de rétention ne rattrape une boucle de jeu qui n'est pas amusante.** Une Chronique
+> magnifique d'un run ennuyeux ne fait pas revenir : elle documente l'ennui.
+
+L'ordre est donc :
+
+```
+0. La boucle est bonne   ← 23-RUN-STRUCTURE (contrat → paliers → demi-tour → retour)
+   1. Souvenirs nommés
+      2. Chronique
+         3. Monde qui change
+```
+
+Les crochets #1 à #3 restent valides et correctement hiérarchisés — mais ils s'appliquent **après**
+que le joueur a envie de relancer un run pour le run lui-même. Voir aussi le **crochet #4**
+(connaissance et accès, `09-ACTION-LOOP §10` et `14-META-WORLD §1bis`), qui est le premier crochet
+**mécanique** et non narratif.
+
 ---
 
 ## §1 — La hiérarchie des 3 crochets (rappel + justification)

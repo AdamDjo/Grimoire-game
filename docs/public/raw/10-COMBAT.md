@@ -6,7 +6,36 @@
 
 ## 0. Principe
 
-Le combat dans GRIMOIRE est une **application spécialisée de la boucle d'action** (`09-ACTION-LOOP`), pas un mini-jeu séparé. Pas de grille hexagonale, pas de positionnement précis au pixel : on cherche le **ressenti tactique de BG3** sans la complexité d'un wargame.
+> **⚠️ Statut de ce document (2026-08-06) — spec complète, implémentation nulle.**
+>
+> Tout ce qui suit est **déjà spécifié et validé**. Rien n'est à réécrire. En revanche, **rien n'en
+> est implémenté** : le moteur ne connaît ni initiative, ni tours, ni CA, ni conditions de combat.
+> Aujourd'hui un « combat » n'est qu'une scène narrative de plus, avec au mieux un jet de dé.
+>
+> **C'est la cause n°1 du « le jeu est ennuyeux »** : le document décrit un jeu tactique que le
+> joueur n'a jamais pu toucher.
+>
+> Ce fichier est donc à lire comme un **cahier des charges d'implémentation** pour l'EPIC #215, pas
+> comme une description de l'existant.
+
+Le combat dans GRIMOIRE utilise les mêmes attributs et le même dé que le reste du jeu
+(`09-ACTION-LOOP`). Pas de grille hexagonale, pas de positionnement précis au pixel : on cherche le
+**ressenti tactique de BG3** sans la complexité d'un wargame.
+
+> **🎛️ Correction du 2026-08-06 — le combat est un mode dédié.**
+>
+> La version précédente affirmait que le combat « n'est pas un mode de jeu » et n'était qu'une
+> application de la boucle narrative. **C'est révoqué** (décision 7 de la refonte roguelike).
+>
+> Le combat a **sa propre interface** : liste des ennemis avec leur état, ordre des tours, actions
+> catégorisées, journal des jets. Il ne se joue pas dans le même écran que l'exploration.
+>
+> _Pourquoi_ : principe 12 (`01-PILLARS §9`) — chaque registre de jeu a sa propre tête, et le
+> dynamisme naît de l'alternance. Un combat rendu comme un paragraphe de plus se **lit** comme un
+> paragraphe de plus, et le joueur ne sent jamais qu'il vient de changer d'activité.
+>
+> La bascule reste **narrative et annoncée** (§1) — ce qui change, c'est ce que le joueur voit à
+> l'écran une fois qu'elle a eu lieu.
 
 > _Le but : que chaque combat soit court, lisible, lourd de conséquences. Pas un combat trash à éviter — un combat qui change la suite du run._
 
@@ -20,7 +49,8 @@ Le combat dans GRIMOIRE est une **application spécialisée de la boucle d'actio
 
 ## 1. Quand un combat se déclenche
 
-Le combat **n'est pas un mode de jeu** que le joueur active. C'est une **bascule narrative** annoncée par l'IA.
+Le combat n'est **jamais activé par le joueur** : c'est une **bascule narrative** annoncée par l'IA,
+qui fait entrer le jeu dans son mode dédié (§0).
 
 ### Déclencheurs
 
@@ -247,6 +277,19 @@ Jet : d20 + SOUFFLE  vs  DC 12 (combat normal) ou 15 (encerclé / engagé)
 
 🟢 _La fuite est viable, mais coûte. Pas un bouton "skip combat"._
 
+### Fuir a une direction
+
+Dans la structure de run (`23-RUN-STRUCTURE`), fuir n'est pas seulement « sortir du combat » : le
+joueur choisit **vers où**.
+
+| Direction         | Effet                                                                            |
+| ----------------- | -------------------------------------------------------------------------------- |
+| ⬇️ **En avant**   | Le combat est évité, mais on s'enfonce d'un palier de plus — le retour s'allonge |
+| ⬆️ **En arrière** | Le joueur amorce le demi-tour et bascule sur le trajet de retour (`23 §3`)       |
+
+C'est ce qui transforme un combat perdu d'avance en **décision** au lieu d'une punition : le joueur
+mal en point garde toujours une porte de sortie, mais elle coûte le butin qu'il espérait plus bas.
+
 ---
 
 ## 8. Mort en combat
@@ -270,6 +313,20 @@ L'IA décide du sort selon le contexte :
 
 🟢 _La mort effective n'est jamais automatique à 0 PV. L'IA évalue : la mort doit avoir du sens narratif._
 
+> **⚖️ Correction du 2026-08-06 — le backend arbitre, l'IA habille.**
+>
+> Tel quel, ce tableau confie à l'IA une décision de vie ou de mort. C'est contraire à
+> `ARCHITECTURE_RULES` (« le backend possède toutes les règles ») **et** au principe 11
+> (`01-PILLARS §9`) : une mort décidée par un modèle est par construction une mort que le joueur
+> n'a pas pu voir venir.
+>
+> Contrat cible : **le backend calcule le sort** à partir de l'état de la scène (allié vivant ?
+> ennemis humains ? milieu hostile ?) — c'est-à-dire exactement les critères de la colonne de
+> gauche, mais évalués comme des règles. L'IA reçoit le verdict `saved | captured | dead` et écrit
+> la scène correspondante. Elle n'a **jamais** le choix du verdict.
+>
+> Le tableau ci-dessus reste la **table de vérité** de ce calcul.
+
 ### Étape 3 — Si mort effective
 
 - 🟢 Le run se termine
@@ -287,7 +344,7 @@ Pas de niveau, pas d'XP cumulatif. Les récompenses sont **immédiates et narrat
 
 | Récompense                | Source                                                                        |
 | ------------------------- | ----------------------------------------------------------------------------- |
-| 🪙 **Or**                 | Pillage des cadavres (montant selon ennemi : 1-10 brigand, 20-50 Inquisiteur) |
+| 🪙 **Fer**                | Pillage des cadavres (montant selon ennemi : 1-10 brigand, 20-50 Inquisiteur) |
 | ⚔️ **Équipement**         | Arme/armure d'un ennemi vaincu (qualité = celle de l'ennemi)                  |
 | 🔮 **Artefact** (rare)    | Loot de boss ou Veilleur archontique                                          |
 | 📖 **Souvenir nommé**     | Si combat marquant (boss vaincu, victoire impossible, choix moral fort)       |
@@ -306,7 +363,7 @@ Pas de niveau, pas d'XP cumulatif. Les récompenses sont **immédiates et narrat
 | **Combat trash systématique**                  | Les ennemis ne sont jamais "pour XP". Chaque combat = enjeu narratif (lettre, contrat, témoin)                    |
 | **CENDRE inutile**                             | Le rôle Leader est core, pas optionnel. Les builds CENDRE doivent briller en combat                               |
 | **Tisse-Verbe OP**                             | Coût Cendre élevé (10/éveil), risque Calamine (cf. `06-SURVIVAL §4`), max 1-2 éveils par combat avant danger      |
-| **Fuite abusée**                               | Coût en dégâts + perte d'or potentiel + désavantage si échec                                                      |
+| **Fuite abusée**                               | Coût en dégâts + perte de fer potentielle + désavantage si échec                                                  |
 | **Joueur ne comprend pas pourquoi il a perdu** | Transparence dés (cf. `08-DICE §4`) + narration IA des dégâts (_"Le sabre traverse ton cuir, tu chancelles"_)     |
 
 ---

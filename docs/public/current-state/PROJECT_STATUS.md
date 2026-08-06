@@ -3,7 +3,7 @@ type: status-index
 visibility: public
 rag: true
 source_of_truth: true
-updated: 2026-07-22
+updated: 2026-08-06
 ---
 
 # Project Status
@@ -13,8 +13,33 @@ les agents frontend et backend ne doivent donc pas le modifier pendant une featu
 
 ## Objectif actuel
 
-Livrer **v0.1.0 — Première version jouable** : un vertical slice Velkhar déployé couvrant
-Landing → Auberge → Forge → Session → fin de run → Chronique, avec conversion anonyme vers compte.
+Livrer **v0.2.0 — Roguelike jouable** : refonder la couche de jeu par-dessus le socle existant, de
+sorte qu'un run ait une **destination** (contrat), une **structure** (paliers), une **décision
+centrale** (le demi-tour) et un **enjeu** (le retour). Voir `docs/public/raw/23-RUN-STRUCTURE.md`.
+
+> **🎲 Refonte roguelike du 2026-08-06.** Le playtest a rendu un verdict net : _« après une partie
+> je m'ennuie, il n'y a aucune raison de recommencer »_. Le diagnostic est que le projet a un
+> **excellent moteur de narration et aucun moteur de jeu** — pas de combat tactique, pas de boucle
+> avec une destination, pas de méta-progression.
+>
+> **Le déploiement v0.1.0 est décalé** jusqu'à ce que le jeu soit satisfaisant (décision 19). Il ne
+> sert à rien de déployer un vertical slice ennuyeux. Les bloqueurs pré-déploiement #161, #129 et
+> #163 sont **gelés**, pas annulés.
+
+### Les 8 EPICs de la refonte
+
+| #                                                           | EPIC                                                   | Ordre |
+| ----------------------------------------------------------- | ------------------------------------------------------ | ----- |
+| [#214](https://github.com/AdamDjo/Grimoire-game/issues/214) | Boucle de run — contrat, paliers, demi-tour, retour    | 1     |
+| [#215](https://github.com/AdamDjo/Grimoire-game/issues/215) | Combat par tours — moteur backend + mode dédié         | 2     |
+| [#216](https://github.com/AdamDjo/Grimoire-game/issues/216) | Auberge — préparation sous contrainte, boutique, forge | 3     |
+| [#217](https://github.com/AdamDjo/Grimoire-game/issues/217) | Artefacts — pouvoirs activables payés en Calamine      | 4     |
+| [#218](https://github.com/AdamDjo/Grimoire-game/issues/218) | Lisibilité — tooltips et lore enseigné par L'Aveugle   | 5     |
+| [#219](https://github.com/AdamDjo/Grimoire-game/issues/219) | UI — refonte par modes                                 | 6     |
+| [#220](https://github.com/AdamDjo/Grimoire-game/issues/220) | Compagnons — alliés semi-autonomes                     | 7     |
+| [#221](https://github.com/AdamDjo/Grimoire-game/issues/221) | Exploits — badges et déblocages d'accès                | 7     |
+
+L'ordre n'est pas indicatif : chaque EPIC suppose le précédent livré.
 
 ## Sources par domaine
 
@@ -34,6 +59,14 @@ Landing → Auberge → Forge → Session → fin de run → Chronique, avec con
 - backend : Supabase/Prisma, auth JWT, moteur de session souverain, world-state, mémoire N1/N2,
   Souvenirs N3, Chronique et persistance du personnage ;
 - qualité : lint, type-check, tests, build, CodeQL et previews Vercel dans la CI.
+
+Ce socle est **conservé** (décision 18) : la refonte roguelike s'écrit par-dessus, elle ne le
+remplace pas. Deux exceptions connues, portées par #214 :
+
+- `SessionEndReason` : `inn` est scindé en `extracted` / `returned_empty`
+  (`docs/public/raw/09-ACTION-LOOP.md` §7) — breaking change des contrats shared ;
+- la session porte désormais un **mode de jeu** explicite (exploration / combat / auberge / retour)
+  et une **position de palier**.
 
 ## Règle de synchronisation
 

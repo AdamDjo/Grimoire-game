@@ -47,6 +47,78 @@ GRIMOIRE n'est pas un MMO. Pas de saisons, pas de raids, pas de classement publi
 - 3-5 événements actifs en parallèle, durée 1-3 mois IRL
 - Injecté en contexte de TOUS les runs actifs pendant sa durée
 
+### Niveau D — Progression (connaissance et accès) _(ajout 2026-08-06)_
+
+- Lié au **joueur**, survit à la mort du perso
+- **Ce n'est pas de la narration : c'est de la progression de jeu**
+- Débloque de la **connaissance** (bestiaire, routes, faiblesses) et de l'**accès** (contrats plus
+  profonds, sujets chez L'Aveugle, compagnons, exploits)
+- **Jamais de puissance** — voir la règle absolue en §1bis
+
+---
+
+## §1bis — Niveau D : la méta-progression de jeu
+
+> **Ajout du 2026-08-06** (décisions 4 et 15 de la refonte roguelike, EPIC #214/#221).
+
+Les niveaux A, B et C sont tous **narratifs** : ils font que le monde se souvient. Aucun ne donne au
+joueur une raison **mécanique** de relancer un run. C'est le trou identifié dans le diagnostic
+« aucune raison de rejouer ».
+
+### La règle absolue
+
+> **La méta-progression débloque de la connaissance et de l'accès. Jamais de la puissance.**
+>
+> — `01-PILLARS §5`
+
+| ✅ Persiste entre les runs                         | ❌ Ne persiste jamais                         |
+| -------------------------------------------------- | --------------------------------------------- |
+| Pages de bestiaire (CA, faiblesses, comportements) | Bonus permanents de PV, dégâts ou attribut    |
+| Routes de retour connues                           | Équipement cumulé d'un run à l'autre          |
+| Contrats plus profonds débloqués                   | Réduction de difficulté                       |
+| Sujets de conversation chez L'Aveugle              | Tout « build » qui monte run après run        |
+| Compagnons rencontrés (rappelables plus tard)      | Monnaie accumulée sans plafond                |
+| Exploits/badges → déblocages d'accès               | Toute récompense d'exploit qui rend plus fort |
+| Écho de réputation, lignée                         |                                               |
+
+### Pourquoi cette frontière
+
+Trois raisons, dans l'ordre d'importance :
+
+1. **La difficulté reste honnête.** Si le run 10 est mécaniquement plus facile que le run 1, la mort
+   au run 3 n'était qu'une taxe de temps. Avec du savoir seul, une mort reste **imputable au joueur**
+   — ce qui est exactement le principe 11 (`01-PILLARS §9`).
+2. **Le joueur progresse vraiment.** Ce qui s'améliore, c'est sa lecture du jeu : il sait quoi
+   emporter, où faire demi-tour, quelle créature fuir. C'est la progression la plus durable — et la
+   seule qui ne se dévalue jamais.
+3. **Ça reste finançable.** Une progression de puissance oblige à rééquilibrer tout le bestiaire à
+   chaque palier de build. Une progression de connaissance ne coûte que du contenu.
+
+### Le stockage
+
+La connaissance est un **état joueur**, au même titre que les Souvenirs : elle survit à la mort du
+perso et n'est jamais rattachée à un `Character`.
+
+```
+PlayerKnowledge
+  ├── bestiary        : créatures rencontrées → ce qu'on en sait
+  ├── routes          : trajets de retour connus par palier
+  ├── contracts       : profondeurs débloquées
+  ├── topics          : sujets ouverts chez L'Aveugle
+  └── feats           : exploits accomplis → accès débloqués
+```
+
+🔴 **Anti-pattern** : ne jamais dériver la connaissance à la volée depuis l'historique des
+`SceneLog`. Ce qui est su doit être **explicitement écrit** au moment où c'est appris, sinon ni le
+backend ni l'UI ne peuvent l'afficher de façon fiable.
+
+### Ce que le joueur en voit
+
+La connaissance doit être **consultable**, sinon elle n'existe pas pour lui : une page bestiaire qui
+se remplit, une carte de retour qui se dessine, une liste de contrats dont certains sont encore
+grisés. C'est ce qui rend le progrès **visible entre deux runs** — le moment où l'on décide de
+relancer.
+
 ---
 
 ## §2 — Niveau A : Souvenirs nommés (Pilier #7 — crochet #1)
@@ -317,9 +389,11 @@ Dans la création de compte (Phase D) ou page d'accueil (V1) :
 2. **À chaque run** : tes Souvenirs récents sont injectés en contexte
 3. **À chaque mois** : nouveau event lancé (visible si tu reviens)
 4. **À chaque visite** : visuels d'auberge légèrement modulés selon events
+5. **À chaque fin de run** : ce que tu as appris s'inscrit — bestiaire, routes, contrats (§1bis)
 
 ### Ce qu'on NE promet PAS
 
+- ❌ **Un perso qui devient plus fort run après run** (méta-progression = savoir et accès, jamais puissance — §1bis)
 - ❌ Quêtes longues multi-runs (trop complexe à orchestrer V1)
 - ❌ Saisons rythmées type live-service (pression éditoriale insoutenable solo dev)
 - ❌ PNJ qui vieillissent / meurent de vieillesse (mécanique complexe sans payoff évident)
