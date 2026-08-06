@@ -119,6 +119,33 @@ model GameSession {
   /// URL résolue du cache d'images de scène partagé (#207), mise à jour à
   /// chaque compression N2. Null tant qu'aucun chunk n'a encore résolu d'image.
   currentImageUrl String?
+
+  // --- Structure de run (#228) — @see docs/public/raw/23-RUN-STRUCTURE.md
+  /// Mode de jeu courant (inn | exploration | combat | return). Une session
+  /// commence à l'auberge : c'est là qu'on accepte un contrat.
+  gameMode          String   @default("inn")
+  /// Contrat accepté. Null tant que le joueur n'est pas parti — et sur toutes
+  /// les sessions antérieures à #228, qui restent jouables sans structure de run.
+  contractId        String?
+  contractDestination String?
+  /// Profondeur visée (3 | 5 | 7). Plafonnée à 7 par le moteur, jamais par la DB.
+  contractTargetDepth Int?
+  /// Fer payé par le commanditaire au retour, si le joueur revient.
+  contractRewardIron  Int?
+  contractObjective   String?
+  /// Palier courant. 0 = en surface (auberge ou sorti du donjon).
+  currentDepth      Int      @default(0)
+  /// Palier le plus profond atteint ce run. Ne redescend jamais — c'est lui qui
+  /// décrit ce que le joueur a réellement osé.
+  maxDepthReached   Int      @default(0)
+  /// Salle en cours de résolution, null entre deux salles.
+  currentRoomId     String?
+  /// True une fois le demi-tour engagé. Irréversible : on ne redescend plus.
+  returnEngaged     Boolean  @default(false)
+  /// True quand l'objectif du contrat est sécurisé. Décide `extracted` vs
+  /// `returned_empty` au retour.
+  objectiveSecured  Boolean  @default(false)
+
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 

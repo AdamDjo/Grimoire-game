@@ -2,13 +2,32 @@ import { CONDITIONS, getConditionDefinition, localeDisplayName } from '@grimoire
 
 import { gaugeTier } from '../game-rules/survival'
 
+import type { ReturnWarning } from '../game-rules/run'
 import type { MemoryChunkModel, SouvenirModel } from '../generated/prisma/models'
-import type { Character, Locale } from '@grimoire/shared'
+import type { Character, GameMode, Locale } from '@grimoire/shared'
 
 /** Narrow projection of a `SceneLog` used for the N1 recent-turns window. */
 export interface RecentTurnSummary {
   turnNumber: number
   turnSummary: string | null
+}
+
+/**
+ * Where the character stands in the run, as the prompt needs to know it.
+ * Everything here is decided by the backend — the AI receives it as fact, and
+ * `warnings` in particular is an order to narrate, not a hint to consider.
+ * @see docs/public/raw/23-RUN-STRUCTURE.md §4.2
+ */
+export interface RunPromptContext {
+  destination: string
+  objective: string
+  targetDepth: number
+  currentDepth: number
+  maxDepthReached: number
+  mode: GameMode
+  returnEngaged: boolean
+  /** Supply thresholds crossed this turn. Each one MUST surface in the prose. */
+  warnings: ReturnWarning[]
 }
 
 /**
@@ -302,6 +321,68 @@ function buildDangerCrescendoSection(character: Character): string[] {
 }
 
 /**
+ * Builds the run-structure section (#228): tells the AI where the character
+ * stands in the run — which floor, descending or climbing back — and, when the
+ * engine detected a supply crossing under what the trip home costs, orders the
+ * warning to be delivered *in character*.
+ *
+ * This is the writing half of the canon guarantee "le retour peut tuer, mais
+ * jamais par surprise". The engine decides that a warning is owed
+ * (`detectReturnWarnings`); this section decides only how it sounds. The AI
+ * never states a ration count, a minute estimate, or a threshold number — those
+ * belong to the interface, which reads them from the backend's own projection.
+ * A warning phrased as a system popup would break both the fiction and the
+ * canon rule that the world speaks, not the UI.
+ * @see docs/public/raw/23-RUN-STRUCTURE.md §4.2, §6
+ */
+function buildRunSection(run: RunPromptContext | null): string[] {
+  if (!run) return []
+
+  const lines = [
+    '',
+    'Run structure (the backend owns every value below — never contradict it):',
+    `- Contract: "${run.objective}" at ${run.destination}. Target depth: ${run.targetDepth} floors.`,
+    `- The character stands on floor ${run.currentDepth}, deepest reached ${run.maxDepthReached}.`,
+    `- Current mode: ${run.mode}.`,
+  ]
+
+  if (run.returnEngaged) {
+    lines.push(
+      '- The character has TURNED BACK and is climbing out. There is no descending again.',
+      '  The way home is a different route than the way down, and it is quieter and shorter —',
+      '  the danger here is attrition and exhaustion, not a new monster waiting at the bottom.',
+      '  Never introduce a boss or a climactic set-piece on the way home.'
+    )
+  } else {
+    lines.push(
+      '- The character is still descending. Deeper means richer and more dangerous, and it also',
+      '  means the trip home costs more. Let the descent feel like a decision being paid for.'
+    )
+  }
+
+  for (const warning of run.warnings) {
+    const supply = warning.supply === 'water' ? 'water' : 'food'
+    lines.push(
+      `- WARNING OWED THIS TURN: the character's ${supply} just dropped below what getting back`,
+      '  to the surface costs. You MUST make this land inside the narration, in the character’s',
+      '  own senses and in the world’s voice — the dry weight of a near-empty skin, a hand that',
+      '  finds less than it expected, a companion going quiet about the count. Never as a system',
+      '  message, never as a number, never as a UI-style alert. The player must finish this',
+      '  narration knowing, without being told mechanically, that the way home has become a',
+      '  problem.',
+      `  Severity to pitch it at: ${warning.risk}.`
+    )
+  }
+
+  lines.push(
+    '- You never decide when a warning is owed, how deep the run goes, whether the character',
+    '  turns back, or how the run ends. The backend resolves all of it; you give it a voice.'
+  )
+
+  return lines
+}
+
+/**
  * Builds the Game Master system prompt.
  * The AI writes narration and choice labels only; the backend owns all rules,
  * dice, stats, and canon consistency. Canon brand terms are NOT re-translated —
@@ -312,7 +393,8 @@ export function buildSystemPrompt(
   locale: Locale,
   memoryChunks: MemoryChunkModel[] = [],
   recentTurns: RecentTurnSummary[] = [],
-  souvenirs: SouvenirModel[] = []
+  souvenirs: SouvenirModel[] = [],
+  run: RunPromptContext | null = null
 ): string {
   const languageName = localeDisplayName(locale)
 
@@ -338,6 +420,7 @@ export function buildSystemPrompt(
     ...buildInventorySection(character),
     ...buildRestSection(),
     ...buildDangerCrescendoSection(character),
+    ...buildRunSection(run),
     '',
     'Respond with a single JSON object and nothing else, matching exactly:',
     '{',

@@ -9,7 +9,7 @@ import {
 import { callOpenRouter, type OpenRouterMessage, type OpenRouterUsage } from './openrouter.provider'
 import { buildStubScene } from './scene-stub'
 import { type AiScenePayload, validateAiScene } from './scene-validator'
-import { buildSystemPrompt, type RecentTurnSummary } from './system-prompt'
+import { buildSystemPrompt, type RecentTurnSummary, type RunPromptContext } from './system-prompt'
 
 import type { MemoryChunkModel, SouvenirModel } from '../generated/prisma/models'
 import type { Character, Locale } from '@grimoire/shared'
@@ -23,6 +23,13 @@ export interface GameMasterInput {
   chosenActionText?: string
   /** Free-form action typed by the player, if any. */
   freeAction?: string
+  /**
+   * Where the character stands in the run, and any supply threshold crossed
+   * this turn that the narration owes the player (#228). Null for a session
+   * with no run structure — the prompt then simply omits the section.
+   * @see docs/public/raw/23-RUN-STRUCTURE.md §4.2
+   */
+  run?: RunPromptContext | null
 }
 
 /**
@@ -159,7 +166,8 @@ export async function generateScene(input: GameMasterInput): Promise<GameMasterR
         input.locale,
         memoryChunks,
         recentTurns,
-        souvenirs
+        souvenirs,
+        input.run ?? null
       ),
     },
     { role: 'user', content: buildUserPrompt(input) },
