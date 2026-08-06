@@ -159,7 +159,7 @@ gameRouter.post(
       return
     }
 
-    res.json({ success: true, data: { status: 'ended', endReason: 'inn' } })
+    res.json({ success: true, data: { status: 'ended', endReason: 'abandon' } })
   }
 )
 

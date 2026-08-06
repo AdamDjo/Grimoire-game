@@ -17,9 +17,18 @@ updated: 2026-08-06
 > `docs/public/raw/23-RUN-STRUCTURE.md`.
 
 1. [#214](https://github.com/AdamDjo/Grimoire-game/issues/214) — **boucle de run** : contrat,
-   paliers, demi-tour, trajet de retour. Inclut le scindement de `SessionEndReason`
-   (`inn` → `extracted` / `returned_empty`) avec migration des sessions existantes, le mode de jeu
-   porté par la session, et l'adaptation de `chronicle.service.ts` aux deux fins distinctes.
+   paliers, demi-tour, trajet de retour. Découpé en 4 lots :
+   - ~~[#226](https://github.com/AdamDjo/Grimoire-game/issues/226)~~ — contrats shared + scindement
+     de `SessionEndReason` : **livré**. Les 5 fins canoniques sont figées
+     (`death | extracted | returned_empty | abandon | calcined`), `run.types.ts` publie contrat,
+     paliers, salles, indices et estimation de retour. L'ancien `inn` est **remplacé**, pas renommé :
+     il était produit par la fin volontaire à l'auberge, sans contrat à honorer → migré en `abandon`.
+   - [#227](https://github.com/AdamDjo/Grimoire-game/issues/227) — `game-rules/dungeon.ts` et
+     `game-rules/run.ts` : génération des paliers, indices partiels, estimation du retour.
+   - [#228](https://github.com/AdamDjo/Grimoire-game/issues/228) — extension Prisma `GameSession`,
+     mode de jeu porté par la session, câblage dans `resolveTurn`.
+   - [#229](https://github.com/AdamDjo/Grimoire-game/issues/229) — frontend (domaine Codex),
+     débloqué par le merge de #226.
 2. [#215](https://github.com/AdamDjo/Grimoire-game/issues/215) — **moteur de combat par tours** :
    initiative, CA, tours, actions catégorisées, conditions, fuite dirigée, table de vérité de la
    mort. La spec est complète dans `docs/public/raw/10-COMBAT.md` — rien à concevoir, tout à

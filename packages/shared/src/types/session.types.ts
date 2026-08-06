@@ -7,10 +7,26 @@ export type SessionStatus = "active" | "ended";
 
 /**
  * Why a session ended. Only bridge to the A3 narrative memory layer.
- * `calcined` = Calamine reached 100 (06-SURVIVAL §4) — the only ending
- * without heirloom inheritance transmission (09-ACTION-LOOP endReason table).
+ *
+ * - `extracted` — the player came back **with** the contract objective (paid).
+ * - `returned_empty` — the player came back alive but empty-handed (unpaid).
+ * - `death` — 0 HP, the AI narrates the unconsciousness (10-COMBAT §8).
+ * - `calcined` — Calamine reached 100 (06-SURVIVAL §4), the only ending
+ *   without heirloom inheritance transmission (09-ACTION-LOOP endReason table).
+ * - `abandon` — the player walked away voluntarily.
+ *
+ * The former `inn` value was replaced: it conflated "came home victorious" with
+ * "came home empty-handed", two endings that neither tell the same story nor
+ * pay the same. Sessions that ended through the old voluntary end-of-run flow
+ * are `abandon` — none of them ever had a contract to fulfil.
+ * @see docs/public/raw/23-RUN-STRUCTURE.md §5
  */
-export type SessionEndReason = "death" | "inn" | "abandon" | "calcined";
+export type SessionEndReason =
+  | "death"
+  | "extracted"
+  | "returned_empty"
+  | "abandon"
+  | "calcined";
 
 export interface WorldState {
   currentRegionId: string;
