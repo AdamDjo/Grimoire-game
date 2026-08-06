@@ -125,6 +125,25 @@ updated: 2026-08-06
   `ChronicleEndReason` suit par alias, et le prompt de Chronique distingue désormais les deux
   retours. Les fins `extracted`/`returned_empty` sont **typées mais pas encore produites** : c'est
   le trajet de retour (#228) qui les émettra. `@see docs/public/raw/23-RUN-STRUCTURE.md` §5.
+- #227 (lot 2 de #214) — moteur de donjon et estimation de retour, en règles pures
+  (`game-rules/dungeon.ts` et `game-rules/run.ts`, zéro Prisma, `rng` injectable comme `dice.ts`).
+  `generateDescent` produit 3 salles par palier avec indice partiel et 2-3 suites au choix ; le
+  plafond de 7 paliers est **structurel** (clampé même sur une valeur hors barème), garant du
+  plafond dur de 2h30. La part de salles hostiles croît avec la profondeur, et un boss verrouille
+  la dernière salle des paliers 5+ — sans que l'indice le distingue d'un combat ordinaire
+  (règle de l'indice, §2). `generateReturn` génère un trajet **distinct** (identifiants et types
+  retirés à neuf, jamais la descente à l'envers) et **strictement plus court**
+  (1 salle par palier contre 3), sans boss : le retour tue par épuisement, jamais par embuscade.
+  `MINUTES_PER_ROOM = 3.75` est calibré sur le barème canon plutôt que choisi rond — le contrat
+  3 paliers est le contraignant (12 salles ≈ 45 min), les contrats plus profonds restant sous
+  leur propre cible (5 paliers ≈ 75 min, 7 paliers ≈ 105 min).
+  `computeReturnEstimate` chiffre salles, minutes, eau et vivres nécessaires plus un
+  `RETURN_SAFETY_MARGIN` d'une ration : la ressource la plus rare pilote le risque
+  (`safe | tight | critical`). `detectReturnWarnings` détecte le **franchissement** de seuil, y
+  compris quand c'est la descente — et non la consommation — qui rend le retour inabordable ; une
+  ressource déjà courte ne réalerte pas, pour que l'avertissement garde son poids. Ce lot produit
+  **la donnée, pas la phrase** : la formulation en langage de personnage (§4.2) revient à
+  l'injection de prompt (#228). `@see docs/public/raw/23-RUN-STRUCTURE.md` §1-§4.
 
 ## Pré-déploiement restant
 

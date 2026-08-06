@@ -23,8 +23,11 @@ updated: 2026-08-06
      (`death | extracted | returned_empty | abandon | calcined`), `run.types.ts` publie contrat,
      paliers, salles, indices et estimation de retour. L'ancien `inn` est **remplacé**, pas renommé :
      il était produit par la fin volontaire à l'auberge, sans contrat à honorer → migré en `abandon`.
-   - [#227](https://github.com/AdamDjo/Grimoire-game/issues/227) — `game-rules/dungeon.ts` et
-     `game-rules/run.ts` : génération des paliers, indices partiels, estimation du retour.
+   - ~~[#227](https://github.com/AdamDjo/Grimoire-game/issues/227)~~ — `game-rules/dungeon.ts` et
+     `game-rules/run.ts` : **livré**. Paliers plafonnés structurellement à 7, indices partiels qui
+     ne trahissent jamais l'ampleur, retour distinct et strictement plus court, estimation de
+     retour et détection de franchissement de seuil. Règles pures, sans Prisma. Reste à câbler :
+     la formulation en langage de personnage de l'avertissement (§4.2) revient à #228.
    - [#228](https://github.com/AdamDjo/Grimoire-game/issues/228) — extension Prisma `GameSession`,
      mode de jeu porté par la session, câblage dans `resolveTurn`.
    - [#229](https://github.com/AdamDjo/Grimoire-game/issues/229) — frontend (domaine Codex),
