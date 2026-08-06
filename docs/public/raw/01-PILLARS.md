@@ -62,7 +62,16 @@ Le joueur ne joue pas un "personnage générique". Il incarne une **vocation** �
 
 > _Le même monde. Mille histoires._
 
-GRIMOIRE est un **roguelike narratif**. Chaque run est une aventure complète (3-15h), avec un début, un milieu et une fin. À la fin, le joueur reçoit sa **Chronique** — le récit de ce qu'il a vécu. Il peut recommencer avec la même vocation ou une autre.
+GRIMOIRE est un **roguelike narratif**. Chaque run est une aventure complète, avec un début, un milieu et une fin. À la fin, le joueur reçoit sa **Chronique** — le récit de ce qu'il a vécu. Il peut recommencer avec la même vocation ou une autre.
+
+> **⏱️ Durée d'un run : 2h30 maximum** (décision du 2026-08-06). Le joueur choisit sa durée cible
+> en acceptant un **contrat** à l'auberge : ~45 min pour 3 paliers, jusqu'à 2h30 pour 7 paliers.
+> Voir `23-RUN-STRUCTURE.md`.
+>
+> _Pourquoi un plafond dur_ : au-delà, le cycle de relance propre au roguelike se casse, la mort
+> permanente devient intolérable au lieu d'être tendue, et le coût des appels IA explose. Un run
+> qu'on ne peut pas finir en une soirée est un run qu'on abandonne — et le taux de complétion est
+> la North Star (§8).
 
 - Le **méta-monde** évolue entre les runs (le roi meurt, une Conjonction a eu lieu, une faction a chuté)
 - Les **choix divergents** créent des histoires fondamentalement différentes
@@ -75,15 +84,32 @@ GRIMOIRE est un **roguelike narratif**. Chaque run est une aventure complète (3
 
 > _Ta mort n'est pas stérile. Quelque chose survit._
 
-GRIMOIRE est un **roguelike** — ce qui signifie que la mort est définitive, mais qu'elle **n'est pas vide**. Le joueur laisse un héritage au personnage suivant. Cet héritage est mineur et narratif (pas de power fantasy cumulative), mais il crée la sensation d'appartenir à Velkhar sur le long terme.
+GRIMOIRE est un **roguelike** — ce qui signifie que la mort est définitive, mais qu'elle **n'est pas vide**. Ce qui survit n'est pas de la puissance : c'est de la **connaissance** et de l'**accès**.
 
-- **Héritage d'artéfact** : l'artéfact trouvé dans un run est transmis (un seul, se dégrade après 3-4 transmissions)
-- **Écho de réputation** : les PNJ reconnaissent vaguement l'ancêtre ("Tu me rappelles quelqu'un…")
-- **Connaissance du monde** : lieux visités et créatures connues rendent le monde plus familier
-- **Écho de compétence** : +1 mineur à un modificateur (max +2 cumulé sur ~10 runs)
-- **Lignée** : les noms des personnages morts sont conservés, cités, parfois honorés
+> **⚖️ La règle non négociable** (décision du 2026-08-06) :
+> **la méta-progression débloque de la connaissance et de l'accès, jamais de la puissance.**
 
-La difficulté du jeu **ne baisse pas** avec la méta-progression. Le joueur devient plus familier avec Velkhar, pas plus puissant. Façon Hades.
+| ✅ Ce qui persiste                                                     | ❌ Ce qui ne persiste jamais            |
+| ---------------------------------------------------------------------- | --------------------------------------- |
+| **Connaissance du bestiaire** : ce qu'on a affronté, ses faiblesses    | Bonus permanent de PV ou de dégâts      |
+| **Accès** : contrats, destinations, paliers profonds débloqués         | Bonus permanent d'attribut              |
+| **Sujets chez L'Aveugle** : le lore s'ouvre selon ce qu'on a vu        | Équipement cumulatif d'un run à l'autre |
+| **Compagnons recrutables** débloqués (`23-RUN-STRUCTURE`)              | Réduction permanente de la difficulté   |
+| **Exploits** (badges) et les accès qu'ils ouvrent                      | Toute forme de « build » qui monte      |
+| **Écho de réputation** : les PNJ reconnaissent vaguement l'ancêtre     |                                         |
+| **Lignée** : les noms des morts sont conservés, cités, parfois honorés |                                         |
+
+**Héritage d'artéfact** : l'artéfact équipé est transmis au successeur, mais il se **dégrade** à
+chaque transmission (`11-INVENTORY-ECONOMY §5`) — c'est précisément ce qui l'empêche de devenir une
+progression de puissance.
+
+La difficulté du jeu **ne baisse jamais** avec la méta-progression. Le joueur devient plus
+compétent, pas plus fort. Façon Hades — sauf que chez nous, même le contenu débloqué ne rend pas
+le joueur invincible : il lui ouvre des endroits plus dangereux.
+
+_Pourquoi cette règle est absolue_ : si les runs successifs rendent le personnage plus puissant, la
+survie meurt. Le joueur finit par traverser sans risque un monde censé le tuer — et le pilier 1
+s'effondre avec.
 
 **Implication système** : table `player_meta` en BDD, injectée dans le prompt du MJ IA au démarrage de chaque run.
 
@@ -140,7 +166,7 @@ GRIMOIRE navigue entre trois influences :
 
 - Ont essayé ChatGPT/Character.AI pour le RP et ont été déçus par l'amnésie
 - Connaissent Baldur's Gate 3, Disco Elysium, ou Hades
-- Acceptent une session longue (3-15h) et réfléchie
+- Acceptent une session dense et réfléchie (jusqu'à 2h30 par run)
 - Veulent une histoire _qui leur appartient_ et qu'ils peuvent _recommencer_
 
 ### Public secondaire
@@ -210,20 +236,31 @@ Objectif mature : **≥ 60% completion + ≥ 45% 2ᵉ run à J+7.**
 8. 🟢 **La survie est une pression, pas une punition.** Le joueur souffre, mais pas de façon qui le fait quitter.
 9. 🟢 **La magie est une tentation, pas un outil.** Toujours un prix, toujours un risque.
 10. 🟢 **Chaque vocation = une expérience fondamentalement différente.** Pas des skins sur le même jeu.
+11. 🟢 **La mort doit toujours être imputable à une décision que le joueur a vue venir.** Jamais un
+    pic de dégâts surprise, jamais une jauge qui se vide en silence. Le joueur doit pouvoir dire
+    _« j'aurais dû faire demi-tour »_ — pas _« je ne pouvais pas savoir »_.
+12. 🟢 **Chaque registre de jeu a sa propre tête.** Explorer, se battre, se préparer et rentrer ne
+    doivent pas se ressembler à l'écran. Le dynamisme naît de l'alternance, pas de la vitesse.
+13. 🟢 **Un mot inventé est toujours accompagné de sa fonction au premier affichage.** Ce qui est
+    nécessaire pour jouer s'explique par un tooltip ; le lore se découvre auprès de L'Aveugle.
+
+> Les principes 11 à 13 sont issus du grilling de conception du **2026-08-06**. Ils sont au même
+> rang que les dix premiers : une mécanique qui les viole est refusée.
 
 ---
 
 ## 10. Risques produit majeurs
 
-| Risque                                | Impact | Mitigation                                                   |
-| ------------------------------------- | ------ | ------------------------------------------------------------ |
-| Coût LLM (même gratuit, rate limits)  | 🔴     | OpenRouter + 1-2 appels/tour + caching                       |
-| Incohérences narr. sur un run long    | 🔴     | Canon fixe en RAG + Validateur + prompt strict               |
-| Run abandonné (trop long / trop plat) | 🔴     | Structure en 3 actes + pacing + cliffhangers                 |
-| "Survie" étouffe la narration         | 🟡     | Curseur "pas hardcore", events narratifs > micro-gestion     |
-| Dés frustrants (échecs à répétition)  | 🟡     | Mods d'attributs compensent, échec = jeu pas punition        |
-| Vocations trop similaires en pratique | 🟡     | Fiches de contraintes strictes, lentilles testées séparément |
-| Free tiers insuffisants (rate limits) | 🔴     | Quota de runs/jour, fallback providers                       |
+| Risque                                 | Impact | Mitigation                                                                 |
+| -------------------------------------- | ------ | -------------------------------------------------------------------------- |
+| Coût LLM (même gratuit, rate limits)   | 🔴     | OpenRouter + 1-2 appels/tour + caching                                     |
+| Incohérences narr. sur un run long     | 🔴     | Canon fixe en RAG + Validateur + prompt strict                             |
+| Run abandonné (trop long / trop plat)  | 🔴     | Plafond dur 2h30 + contrat à objectif clair + paliers (`23-RUN-STRUCTURE`) |
+| Boucle sans destination (« ennuyeux ») | 🔴     | Le contrat donne un objectif ; descendre/remonter donne une direction      |
+| "Survie" étouffe la narration          | 🟡     | Curseur "pas hardcore", events narratifs > micro-gestion                   |
+| Dés frustrants (échecs à répétition)   | 🟡     | Mods d'attributs compensent, échec = jeu pas punition                      |
+| Vocations trop similaires en pratique  | 🟡     | Fiches de contraintes strictes, lentilles testées séparément               |
+| Free tiers insuffisants (rate limits)  | 🔴     | Quota de runs/jour, fallback providers                                     |
 
 ---
 

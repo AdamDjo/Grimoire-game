@@ -5,12 +5,45 @@ rag: true
 source_of_truth: true
 owner: backend
 default_agent: claude
-updated: 2026-07-26
+updated: 2026-08-06
 ---
 
 # Backend Next
 
-## Phase 1 — pré-déploiement
+## Phase 0 — refonte roguelike (priorité absolue)
+
+> **🎲 Décision du 2026-08-06.** Le déploiement est décalé (cf. `PROJECT_STATUS`). La priorité
+> backend passe à la construction du **moteur de jeu** absent. Canon de référence :
+> `docs/public/raw/23-RUN-STRUCTURE.md`.
+
+1. [#214](https://github.com/AdamDjo/Grimoire-game/issues/214) — **boucle de run** : contrat,
+   paliers, demi-tour, trajet de retour. Inclut le scindement de `SessionEndReason`
+   (`inn` → `extracted` / `returned_empty`) avec migration des sessions existantes, le mode de jeu
+   porté par la session, et l'adaptation de `chronicle.service.ts` aux deux fins distinctes.
+2. [#215](https://github.com/AdamDjo/Grimoire-game/issues/215) — **moteur de combat par tours** :
+   initiative, CA, tours, actions catégorisées, conditions, fuite dirigée, table de vérité de la
+   mort. La spec est complète dans `docs/public/raw/10-COMBAT.md` — rien à concevoir, tout à
+   implémenter. Le backend arbitre, l'IA narre.
+3. [#216](https://github.com/AdamDjo/Grimoire-game/issues/216) — **auberge** : contrat, boutique,
+   forge, usure 3 paliers, contrainte de sac.
+4. [#217](https://github.com/AdamDjo/Grimoire-game/issues/217) — **artefacts activables** :
+   implémenter `awaken_artefact` (déjà typé, jamais implémenté), coût en Calamine, résolution
+   serveur.
+5. [#220](https://github.com/AdamDjo/Grimoire-game/issues/220) — **compagnons** semi-autonomes.
+6. [#221](https://github.com/AdamDjo/Grimoire-game/issues/221) — **exploits** et déblocages d'accès.
+
+Transverse à #214 et #221 : la **méta-progression de connaissance** (`PlayerKnowledge`), qui persiste
+bestiaire, routes, contrats et sujets. Jamais de puissance —
+voir `docs/public/raw/14-META-WORLD.md` §1bis.
+
+Ordre de dépendance :
+
+`#214 → #215 → #216 → #217 → #220/#221`
+
+## Phase 1 — pré-déploiement (gelée)
+
+> ⏸️ Gelée jusqu'à ce que la Phase 0 rende le jeu satisfaisant (décision 19). Les items 13-14
+> ci-dessous ne sont pas annulés, seulement reportés.
 
 1. ~~#180~~ — figer les contrats shared Survie v2 : livré (PR #196).
 2. ~~#181~~ — conditions et Désavantage : livré (PR #198).
@@ -31,10 +64,11 @@ updated: 2026-07-26
 12. ~~#186~~ — projection Survie v2 consommable par l'UI livrée : `SceneResponse` et
     `InventoryActionResponse` renvoient l'instantané de survie, les conditions actives, le fer
     persistant et la fin de run autoritaire sans recalcul de règles côté client.
-13. #161 — déployer l'API, appliquer les migrations et vérifier le healthcheck.
-14. #129 — supporter le golden path réel avec le frontend.
+13. ⏸️ #161 — déployer l'API, appliquer les migrations et vérifier le healthcheck.
+14. ⏸️ #129 — supporter le golden path réel avec le frontend. **À re-scoper** : son golden path
+    valide un parcours (landing → auberge → session) qui ne décrira plus le jeu après la refonte.
 
-Ordre de dépendance :
+Ordre de dépendance une fois la Phase 0 terminée :
 
 `#161 → #129`
 

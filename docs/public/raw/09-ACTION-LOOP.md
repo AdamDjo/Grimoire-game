@@ -51,7 +51,11 @@ Un **tour de jeu** = une réponse IA + une action joueur. Le joueur **n'attend j
 
 ---
 
-## 2. Les 3 modes du joueur
+## 2. Les 3 modes de saisie
+
+> **Ne pas confondre avec les 4 modes de jeu** (exploration / combat / auberge / retour, cf. §2bis).
+> Ici il s'agit de **comment le joueur formule son action** ; là-bas, de **dans quel registre il
+> joue**. Les trois modes de saisie ci-dessous existent dans tous les modes de jeu.
 
 Le joueur n'est jamais enfermé dans un seul mode. Il choisit naturellement à chaque tour.
 
@@ -77,6 +81,40 @@ Le joueur n'est jamais enfermé dans un seul mode. Il choisit naturellement à c
 - Permet de jouer **rapide** sans perdre la liberté
 
 🟢 _Règle : le joueur ne doit jamais avoir l'impression que "écrire" est une fonctionnalité cachée. L'icône ✍️ est toujours visible, toujours à côté des choix._
+
+---
+
+## 2bis. Les 4 modes de jeu
+
+> **Ajout du 2026-08-06** (décisions 6, 7 et 10 de la refonte roguelike).
+
+La boucle décrite dans ce fichier était **la seule** boucle du jeu : tout — auberge, exploration,
+combat — passait par le même écran, les mêmes 3-4 choix, la même mise en page. C'est la cause
+directe du ressenti « c'est toujours pareil ».
+
+Le jeu se joue désormais en **quatre modes**, chacun avec sa propre interface :
+
+| Mode               | Ce qu'on y fait                                       | Rythme                   | Boucle §1 ? |
+| ------------------ | ----------------------------------------------------- | ------------------------ | ----------- |
+| 🧭 **Exploration** | Descendre, choisir sa salle, gérer les jauges         | Posé, narratif           | ✅ oui      |
+| ⚔️ **Combat**      | Tours, initiative, actions catégorisées (`10-COMBAT`) | Tendu, tactique, chiffré | ❌ non      |
+| 🏚️ **Auberge**     | Contrat, achats, forge, sac (`23 §1`)                 | Calme, sans jet de dé    | ❌ non      |
+| ⬆️ **Retour**      | Remonter avec ce qu'il reste (`23 §4`)                | Pressé, comptable        | ✅ oui      |
+
+### Pourquoi cette séparation
+
+Principe 12 (`01-PILLARS §9`) : **chaque registre de jeu a sa propre tête, et le dynamisme naît de
+l'alternance.** Deux activités rendues de façon identique se ressentent comme une seule activité,
+quel que soit le texte affiché.
+
+### Règles de bascule
+
+1. **La bascule est toujours annoncée** par une transition explicite — jamais un changement d'écran
+   silencieux au milieu d'un paragraphe.
+2. **Le joueur ne choisit pas son mode.** Il choisit des actions ; le moteur bascule. Seule
+   exception : le demi-tour (`23 §3`), qui est explicitement une décision du joueur.
+3. **Un mode = un état serveur.** Le mode courant est porté par la session, pas déduit par le
+   frontend à partir du texte de la scène.
 
 ---
 
@@ -203,24 +241,31 @@ L'IA bascule d'acte selon :
 
 ## 7. La fin du run
 
-Trois façons de finir un run :
+> **🔄 Révision du 2026-08-06.** Cette section décrivait un run **sans destination** : le joueur
+> errait puis décidait d'arrêter. C'est précisément ce qui rendait la boucle molle — rentrer n'était
+> pas une victoire, juste un arrêt.
+>
+> Désormais le run est borné par le **contrat** accepté à l'auberge (`23-RUN-STRUCTURE §1`), et
+> rentrer est un **acte de jeu** avec son propre trajet (`23 §4`).
 
-### 🏆 Fin choisie — Retour à L'Aveugle
+### 🏆 Fin réussie — Retour avec le contrat rempli
 
-Le joueur peut, à tout moment, **rentrer à l'auberge**. À l'arrivée, L'Aveugle pose **la question** :
+Le joueur remonte vivant **et** rapporte ce que le contrat demandait. C'est la fin canonique du run :
+butin conservé, contrat payé, connaissance acquise, Chronique générée.
 
-> _« Ton aventure se termine-t-elle ici, voyageur ? »_
+### 🥀 Fin amère — Retour les mains vides
 
-→ **Choix** :
+Le joueur remonte vivant, mais sans l'objectif : demi-tour trop tôt, sac perdu, contrat échoué. Il
+**survit** — donc il garde sa connaissance et sa progression d'accès — mais ne touche rien.
 
-- **Oui** → fin du run, **Chronique générée** (voir `17-RUN-CHRONICLE.md`)
-- **Non** → le joueur peut continuer, repartir, finir une quête
-
-Le joueur **décide** quand son histoire est finie. Pas le système.
+🟢 _Distinguer ces deux fins est essentiel : elles sont vécues de façon opposée, et la Chronique ne
+doit pas les raconter de la même manière._
 
 ### 💀 Fin par la mort
 
-À 0 PV → inconscience → l'IA décide (captivité, secours, mort). Si mort effective → run terminé automatiquement, Chronique générée, héritage transmis (voir `11-INVENTORY-ECONOMY.md` §5).
+À 0 PV → inconscience → le moteur tranche selon la table de vérité de `10-COMBAT §8` (captivité,
+secours, mort). Si mort effective → run terminé, Chronique générée, héritage transmis (voir
+`11-INVENTORY-ECONOMY.md` §5).
 
 ### 🌀 Fin par la Calamine
 
@@ -230,12 +275,21 @@ Si la Cendre atteint 100 → transformation en Calciné → le perso devient un 
 
 Chaque fin de run porte un `endReason` distinct, transmis à la Chronique (`17-RUN-CHRONICLE`, `chronicle.service.ts`) pour adapter le récit :
 
-| `endReason` | Déclencheur                                         | Héritage                             |
-| ----------- | --------------------------------------------------- | ------------------------------------ |
-| `inn`       | Fin choisie à l'auberge (L'Aveugle)                 | transmis                             |
-| `death`     | Mort effective à 0 PV (l'IA tranche l'inconscience) | transmis                             |
-| `abandon`   | Abandon du perso (inactivité ou clic explicite)     | transmis                             |
-| `calcined`  | Calamine atteint 100 → transformation en Calciné    | **non transmis** (artefact corrompu) |
+| `endReason`      | Déclencheur                                      | Butin    | Héritage                             |
+| ---------------- | ------------------------------------------------ | -------- | ------------------------------------ |
+| `extracted`      | Retour vivant, contrat rempli                    | conservé | transmis                             |
+| `returned_empty` | Retour vivant, contrat échoué ou abandonné       | perdu    | transmis                             |
+| `death`          | Mort effective à 0 PV (arbitrée par le moteur)   | perdu    | transmis                             |
+| `abandon`        | Abandon du perso (inactivité ou clic explicite)  | perdu    | transmis                             |
+| `calcined`       | Calamine atteint 100 → transformation en Calciné | perdu    | **non transmis** (artefact corrompu) |
+
+> **⚠️ Changement de contrat (2026-08-06).** L'ancienne valeur `inn` confondait les deux retours
+> vivants — victorieux et bredouille — sous un seul code. Elle est **remplacée** par `extracted` et
+> `returned_empty` dans `packages/shared/src/types/session.types.ts`.
+>
+> C'est un **breaking change** du type `SessionEndReason` : migration des sessions existantes
+> (`inn` → `extracted`) et mise à jour de `chronicle.service.ts`, qui doit produire deux récits
+> distincts. Implémentation portée par l'EPIC #214.
 
 🟢 _`calcined` est la seule fin sans héritage. La Chronique reçoit ce `endReason` et bascule sur la fin spéciale « Tu es devenu ce que tu chassais »._
 
@@ -277,27 +331,38 @@ TOUR DE JEU
                        (loop ↑)
 
 
-STRUCTURE DU RUN (invisible)
+STRUCTURE DU RUN (visible — cf. 23-RUN-STRUCTURE)
 ───────────────────────────────────────
-  🌅 Installation (~30%)
-       ↓ (bascule IA)
-  ⚔️ Complications (~50%)
-       ↓ (bascule IA)
-  🌙 Climax (~20%)
+  🏚️ AUBERGE — contrat, achats, forge, sac
+       ↓
+  ⬇️ DESCENTE — 3 à 7 paliers selon le contrat
+       ↓   (le dramatique 3-actes ci-dessus reste, mais
+       ↓    il habille les paliers, il ne les remplace plus)
+       ↓
+  🔀 DEMI-TOUR — la décision centrale du jeu
+       ↓
+  ⬆️ RETOUR — trajet distinct, plus court, préparable
        ↓
   FIN
-  ├── 🏆 Joueur dit "j'arrête" chez L'Aveugle
-  ├── 💀 Mort
-  └── 🌀 Calamine = 100
+  ├── 🏆 extracted        — vivant, contrat rempli
+  ├── 🥀 returned_empty   — vivant, mains vides
+  ├── 💀 death
+  ├── 🚪 abandon
+  └── 🌀 calcined         — Calamine = 100
        ↓
   📖 CHRONIQUE générée (17-RUN-CHRONICLE)
        ↓
-  Héritage transmis (artefact + écho)
+  Héritage transmis (artefact + écho)   [sauf calcined]
        ↓
-  Retour à l'auberge (07-CHARACTER-CREATION raccourci)
+  🏚️ Retour à l'auberge — connaissance et accès acquis
 ```
 
-🟢 _Une boucle simple. Une histoire à chaque run. Le joueur acteur, jamais spectateur._
+🟢 _Une boucle avec une destination. Le joueur sait pourquoi il descend, et ce qu'il risque en
+remontant. Acteur, jamais spectateur._
+
+> **Note sur les 3 actes (§6).** La structure dramatique invisible n'est pas supprimée : elle
+> continue de rythmer la narration **à l'intérieur** d'un run. Ce qui change, c'est qu'elle n'est
+> plus la seule structure — les paliers donnent au joueur la structure **visible** qui lui manquait.
 
 ---
 
@@ -316,6 +381,20 @@ Quand le joueur fait un acte mémorable (Nat 20 légendaire, décision morale du
 ### 🪝 Crochet 3 — Le monde change
 
 Entre les runs, le **méta-monde** évolue selon les actions du joueur. Tué l'Inquisiteur Vane ? Au run 2, le Culte des Cendres est affaibli dans les villes que tu visites. Sauvé un PNJ ? Il réapparaît. Voir `14-META-WORLD.md`.
+
+### 🪝 Crochet 4 — Je sais des choses que je ne savais pas _(ajout 2026-08-06)_
+
+Les trois crochets ci-dessus sont tous **narratifs**. Ils font revenir un joueur qui aime l'histoire,
+pas un joueur qui veut jouer. C'est ce qui manquait au diagnostic « aucune raison de rejouer ».
+
+Le quatrième crochet est **mécanique** : entre deux runs, le joueur gagne de la **connaissance** et
+de l'**accès** — pages de bestiaire, sujets débloqués chez L'Aveugle, contrats plus profonds, routes
+de retour connues, compagnons rencontrés. Jamais de la puissance (`01-PILLARS §5`).
+
+> Le run 6 n'est pas plus facile que le run 1. C'est **le joueur** qui est meilleur — parce qu'il
+> sait maintenant ce qu'il y a au palier 5, et qu'il a une carte du retour.
+
+Voir `14-META-WORLD.md` et `23-RUN-STRUCTURE §7`.
 
 🟢 _La structure du run est libre, mais la **mémoire** qu'il laisse est forte. C'est pour ça qu'on revient._
 

@@ -10,9 +10,20 @@
 > - ✅ **Acquisition** d'objets (l'IA signale un objet trouvé via `itemGained`, cf. `15-GAME-MASTER §4.5` → le backend le persiste dans les 4 catégories §1).
 > - ✅ **Usage / consommation** (appliquer un `ItemEffect` : soin, réduction de Calamine, retrait de condition).
 > - ✅ **Équipement** dans les 8 slots §1.
-> - ⏳ **Différé** (hors périmètre v2) : or 🪙 in-game (§2), marché/négociation (§7), banque de L'Aveugle (§6), artisanat (§8), tiers de rareté économiques (§4), dégradation d'héritage (§5).
+> - ⏳ **Différé** (hors périmètre v2) : fer in-game (§2), marché/négociation (§7), banque de L'Aveugle (§6), artisanat (§8), tiers de rareté économiques (§4), dégradation d'héritage (§5).
 >
 > Autrement dit : v2 branche la **possession et l'usage** des objets, **pas** l'économie monétaire.
+
+> **🎲 Refonte roguelike (2026-08-06)**
+> Trois évolutions décidées lors du grilling, à lire avec `23-RUN-STRUCTURE.md` :
+>
+> - **§1 — le sac est délibérément trop petit** : la place gardée libre pour le butin est le nerf de la préparation
+> - **§4bis — usure en 3 paliers** (intact / usé / brisé), réparable à la forge de l'auberge
+> - **§5 — les artefacts deviennent des pouvoirs activables** payés en Calamine, et non des objets à effet passif
+>
+> ⚠️ **Nom de la monnaie** : la monnaie de Velkhar est le **fer**, pas l'or. Le moteur la persiste
+> sous `Inventory.iron` depuis Survie v2. Les mentions historiques de « Or 🪙 » dans ce fichier sont
+> corrigées ci-dessous ; le pictogramme 🪙 est conservé pour la lisibilité des tableaux.
 
 ---
 
@@ -22,7 +33,7 @@ GRIMOIRE a une économie à **deux niveaux** — l'un meurt avec le perso, l'aut
 
 | Niveau      | Monnaie      | Persistance         | Usage                                              |
 | ----------- | ------------ | ------------------- | -------------------------------------------------- |
-| **In-game** | 🪙 Or        | Perdu à la mort     | Achat équipement, repos, services                  |
+| **In-game** | 🪙 Fer       | Perdu à la mort     | Achat équipement, repos, services                  |
 | **Méta**    | 📖 Souvenirs | Persistent à jamais | Lore + identification d'artefacts (chez L'Aveugle) |
 
 > _La mort fait mal — mais elle ne ramène jamais à zéro. C'est ce qui te fait revenir._
@@ -66,11 +77,41 @@ Limité par **encombrement** (slots), pas par poids en kg. Lisible, simple.
 
 🟢 _Limitation intentionnelle : un perso n'est pas un coffre. Choisir ce qu'on prend = choix tactique._
 
+### 🎒 Le sac est délibérément trop petit
+
+> **C'est le nerf de la préparation** (décision du 2026-08-06, voir `23-RUN-STRUCTURE §1`).
+
+La capacité du sac n'est pas une limite technique : c'est **la contrainte qui rend l'auberge
+intéressante**. Elle crée un arbitrage impossible à esquiver :
+
+```
+   Emporter plus de vivres et d'eau
+         ↓
+   moins de place pour le butin
+         ↓
+   descendre moins profond
+
+   Emporter moins
+         ↓
+   plus de place pour le butin
+         ↓
+   descendre plus profond… mais le retour devient mortel
+```
+
+Le joueur doit **garder des slots libres à l'aller** pour ce qu'il compte ramener. Un sac plein au
+palier 3 signifie qu'on ne peut plus rien prendre — ou qu'il faut jeter quelque chose de vital.
+
+🔴 _Anti-règle : ne jamais assouplir la capacité pour « confort ». Sans cette contrainte, la
+préparation à l'auberge n'est qu'un clic, et le choix de profondeur perd son poids._
+
 ---
 
-## 2. L'or in-game (🪙)
+## 2. Le fer in-game (🪙)
 
 La monnaie courante de Velkhar. Simple, sale, **mortelle**.
+
+> **Nom canon : le fer.** Persisté par le moteur sous `Inventory.iron`. Ne jamais l'appeler « or »
+> dans l'UI ni dans les prompts IA.
 
 ### Sources
 
@@ -102,12 +143,17 @@ La monnaie courante de Velkhar. Simple, sale, **mortelle**.
 ```
 🩸 MORT DU PERSONNAGE
    ↓
-🪙 Or porté = PERDU À 100%
+🪙 Fer porté = PERDU À 100%
    ↓
 Sauf si déposé chez L'Aveugle (voir §6)
 ```
 
-🟢 _L'or est **précaire**. Le joueur doit décider : tout dépenser maintenant ? mettre en banque ? prendre le risque ?_
+🟢 _Le fer est **précaire**. Le joueur doit décider : tout dépenser maintenant ? mettre en banque ? prendre le risque ?_
+
+> **Fonction dans la boucle roguelike** : le fer ramené d'un run **finance le suivant** — équipement,
+> réparations à la forge, contrats plus ambitieux. C'est ce qui relie deux runs sans donner de
+> puissance permanente (`01-PILLARS §2`, pilier 5). Rentrer bredouille n'est pas neutre : c'est un
+> run suivant plus pauvre, donc plus court.
 
 ---
 
@@ -211,9 +257,81 @@ Pas de système de rareté à 7 niveaux. **Trois tiers, c'est tout.**
 
 ---
 
+## 4bis. L'usure de l'équipement (3 paliers)
+
+> Décision du 2026-08-06. L'équipement se dégrade en run et se répare à la forge de l'auberge.
+
+### Trois états, jamais une jauge
+
+| État          | Effet                                                              | Réparation                 |
+| ------------- | ------------------------------------------------------------------ | -------------------------- |
+| ✅ **Intact** | Effet nominal                                                      | —                          |
+| ⚠️ **Usé**    | Efficacité réduite, **sensible en jeu**                            | Peu coûteuse               |
+| ❌ **Brisé**  | **Inutilisable** — l'arme ne frappe plus, l'armure ne protège plus | **Beaucoup** plus coûteuse |
+
+🔴 _Anti-règle : **jamais de jauge de durabilité chiffrée** (« 47/100 »). Un pourcentage pousse le
+joueur à optimiser et transforme l'usure en bruit mental. Trois états se lisent d'un coup d'œil et
+se décident sans calcul._
+
+### L'usure est toujours annoncée
+
+> **L'usure ne doit jamais être une taxe silencieuse.**
+
+Chaque franchissement de palier est annoncé au joueur, en langage de personnage :
+
+> _« Ta lame a mordu quelque chose de plus dur qu'elle. Elle ne coupe plus comme avant. »_
+
+C'est une application directe du principe 11 (`01-PILLARS §9`) : un objet qui passe à **usé** en
+profondeur est un **avertissement** — un signal de plus qui dit qu'il est temps de faire demi-tour.
+
+### L'arbitrage de la forge
+
+À l'auberge, avant de repartir :
+
+> _« Je répare maintenant, ou je pars comme ça et je risque la casse en profondeur ? »_
+
+Le coût croissant entre **usé** et **brisé** rend l'attentisme punitif sans le rendre fatal. Repartir
+avec une arme usée est un choix légitime quand le fer manque — c'est exactement le genre de pari
+que le jeu doit permettre.
+
+Voir `23-RUN-STRUCTURE §1` (préparation) et §8 ci-dessous (stations d'artisanat).
+
+---
+
 ## 5. Les artefacts (🔮 le cœur de la magie)
 
 Les artefacts sont **la seule source de pouvoir magique** dans Velkhar (cf. décision L3 de `00-SOMMAIRE`). Chaque artefact est **unique** : nom propre, histoire, faiblesse, effet d'éveil.
+
+> **🔮 Décision du 2026-08-06 — l'artefact est un pouvoir activable, pas un objet à effet passif.**
+>
+> Constat : dans le moteur, un artefact n'était qu'une **potion renommée** (`healAmount` /
+> `calamineReduction`). Le joueur ne pouvait rien _faire_ avec.
+>
+> Le joueur voulait « des sorts ». La réponse retenue n'est **pas** d'ajouter un système de sorts à
+> côté du lore, mais de rendre les artefacts réellement activables :
+>
+> > _C'est exactement le système de sorts demandé, mais diégétique._
+>
+> _Pourquoi pas des sorts génériques_ : les artefacts portent l'origine du cataclysme (les
+> Archontes), le prix payé en Calamine, et la vocation Tisse-Verbe. Les remplacer par des « sorts »
+> viderait trois piliers du canon d'un coup.
+
+### Le prix est toujours de la Calamine
+
+Chaque activation **coûte de la Calamine** — la Cendre qui s'accumule dans le corps du porteur
+(`06-SURVIVAL §4`, `02-WORLD-BIBLE`). C'est la boucle centrale de la magie de Velkhar :
+
+```
+   utiliser un artefact  →  gagner de la Calamine  →  se rapprocher de la fin « Calciné »
+```
+
+L'arbitrage est permanent, et il se joue surtout au **retour** :
+
+> _« J'utilise ce pouvoir pour survivre maintenant, ou je garde ma marge de Calamine pour remonter ? »_
+
+> **⚖️ Garde-fou de calibrage** : un pouvoir d'artefact ne doit **jamais** être la solution optimale
+> par défaut. Si le meilleur jeu consiste à l'activer à chaque combat, le coût en Calamine est mal
+> réglé. Le pouvoir est un **recours**, pas une rotation.
 
 ### Deux modes d'usage
 
@@ -240,6 +358,44 @@ Les artefacts sont **la seule source de pouvoir magique** dans Velkhar (cf. déc
 ```
 
 🟢 _L'éveil ne rate **jamais** totalement. Le Tisse-Verbe paye et reçoit toujours au minimum l'effet de base._
+
+### Le pouvoir est un objet de données, pas une phrase de prompt
+
+C'est le point où le moteur diverge du canon aujourd'hui : un artefact est stocké comme un objet à
+effet passif (`healAmount`, `calamineReduction`), donc **rien n'est activable**. Le contrat cible :
+
+```ts
+type ArtifactPower = {
+  readonly id: string;
+  readonly label: string; // « Appeler la tempête »
+  readonly tier: "base" | "awakening"; // base = toute vocation, awakening = Tisse-Verbe
+  readonly calamineCost: number; // 5 pour la base, 10 pour l'éveil
+  readonly usesPerScene: number; // 1 en V1
+  readonly effect: ArtifactEffect; // résolu par le backend, jamais par l'IA
+};
+```
+
+Trois règles d'implémentation, toutes déjà impliquées par `ARCHITECTURE_RULES` :
+
+1. **Le backend résout, l'IA narre.** Le coût en Calamine, le jet, les dégâts et les conditions sont
+   calculés côté moteur ; l'IA reçoit le **résultat** et l'habille.
+2. **Le pouvoir est visible avant d'être payé.** Le joueur voit le label, le coût en Calamine et le
+   compteur d'usage restant **avant** de cliquer. Un pouvoir dont on découvre le prix après coup
+   viole le principe 11 (`01-PILLARS §9`).
+3. **Un artefact non identifié montre son coût, pas son effet.** L'inconnu porte sur ce qui va se
+   passer, jamais sur ce que ça va coûter.
+
+> L'action `awaken_artefact` est **déjà typée** dans les contrats shared mais n'a aucune
+> implémentation. Elle est le point d'entrée naturel de cette section. Voir l'EPIC #217.
+
+### Où le pouvoir s'active
+
+| Mode        | Activation                                                                |
+| ----------- | ------------------------------------------------------------------------- |
+| Combat      | Catégorie d'action **Artefact** (`10-COMBAT §4`) — consomme le tour       |
+| Exploration | Action libre dans la scène — résout un obstacle, révèle, force un passage |
+| Retour      | Autorisé, et c'est là que l'arbitrage Calamine fait le plus mal           |
+| Auberge     | Interdit — l'auberge est un lieu de préparation, pas d'usage              |
 
 ### Identification d'artefact
 
@@ -281,7 +437,7 @@ degradation_a_l_heritage: 3
 
 ## 6. La banque de L'Aveugle (optionnel)
 
-Le joueur peut **déposer** de l'or à l'auberge **avant** de partir en run.
+Le joueur peut **déposer** du fer à l'auberge **avant** de partir en run.
 
 ```
 🏠 L'Aveugle accepte des dépôts.
@@ -294,7 +450,7 @@ Le joueur peut **déposer** de l'or à l'auberge **avant** de partir en run.
 
 ### Pourquoi pas garantir 100% à la mort ?
 
-Parce que le pilier #3 (mort = tout perdu sauf héritage) est intouchable. La banque permet juste de ne pas **gaspiller** l'or au lieu de l'emmener, sans casser la tension.
+Parce que le pilier #3 (mort = tout perdu sauf héritage) est intouchable. La banque permet juste de ne pas **gaspiller** le fer au lieu de l'emmener, sans casser la tension.
 
 ---
 
@@ -372,6 +528,23 @@ Les **donjons** sont là où dorment les artefacts (cf. décision L5).
 - **Donjon majeur** (5-7 salles, boss, artefact garanti)
 - **Donjon archontique** (rare, 7-10 salles, plusieurs artefacts, boss épique)
 
+### ⛏️ Le donjon est un palier, pas un run
+
+> **Précision du 2026-08-06.** Cette section décrit la structure d'**un palier** de la descente
+> (`23-RUN-STRUCTURE §2`), pas la structure d'un run complet. Un run enchaîne **3 à 7 paliers**
+> selon le contrat accepté à l'auberge.
+
+Deux conséquences directes sur les règles ci-dessus :
+
+| Règle §9                                     | Lecture dans la boucle de run                                                                                     |
+| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| « Le joueur ne sort jamais les mains vides » | Vrai **par palier**. Un run, lui, peut parfaitement se terminer les mains vides — c'est le prix du demi-tour raté |
+| Loot garanti (artefact / fer / Tier 2)       | Garanti **à l'atteinte** du palier, pas à la remontée. Le loot n'est acquis que s'il **rentre à l'auberge**       |
+| Salle boss « optionnelle »                   | Devient le **palier terminal** du contrat : c'est là que se trouve l'objectif du contrat                          |
+
+C'est la nuance qui rend la boucle tendue : **descendre est récompensé, remonter est ce qui compte.**
+Le butin n'est jamais compté au moment où on le ramasse, seulement au moment où on ressort vivant.
+
 ---
 
 ## 10. Risques & garde-fous
@@ -395,7 +568,7 @@ Les **donjons** sont là où dorment les artefacts (cf. décision L5).
 ║                    ÉCONOMIE DE GRIMOIRE                            ║
 ╠════════════════════════════════════════════════════════════════════╣
 ║                                                                    ║
-║  IN-GAME  🪙 OR                          MÉTA   📖 SOUVENIRS       ║
+║  IN-GAME  🪙 FER                         MÉTA   📖 SOUVENIRS       ║
 ║  ─────────────────────────              ──────────────────────     ║
 ║  Source : pillage, contrats,            Source : prologue (1)      ║
 ║   vente, quêtes                          + actes mémorables        ║
@@ -414,7 +587,8 @@ Les **donjons** sont là où dorment les artefacts (cf. décision L5).
 ║  INVENTAIRE                              ÉQUIPEMENT 3 TIERS        ║
 ║  ─────────────────────────              ──────────────────────     ║
 ║  ⚔️  8 slots équipement                 1 - Commun (cuir, fer)    ║
-║  🎒 12-15 slots sac                     2 - Rare (acier, soie)    ║
+║  🎒 12 slots sac (délibérément          2 - Rare (acier, soie)    ║
+║      trop petit — §1)                                             ║
 ║  🔮 1 slot artefact (dédié)             3 - Archontique           ║
 ║  📜 trousseau illimité (narratif)            (artefacts)          ║
 ║                                                                    ║

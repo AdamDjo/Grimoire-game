@@ -69,14 +69,15 @@ Le document est organisé en **5 parties** et **23 sections** :
 
 ### PARTIE III — LES SYSTÈMES DE JEU
 
-| #   | Section               | Fichier                   | Thème                                           |
-| --- | --------------------- | ------------------------- | ----------------------------------------------- |
-| 08  | Résolution de dés     | `08-DICE-RESOLUTION.md`   | d20, DC, moments pivots, critiques              |
-| 09  | Boucle d'action       | `09-ACTION-LOOP.md`       | Choix IA + saisie libre + déclenchement des dés |
-| 10  | Combat                | `10-COMBAT.md`            | Tactique lite façon BG3 simplifié               |
-| 11  | Inventaire & Économie | `11-INVENTORY-ECONOMY.md` | Objets, équipement, argent, artisanat, commerce |
-| 12  | PNJ & Relations       | `12-NPCS-RELATIONS.md`    | PNJ persistants dans le run, faveurs, dettes    |
-| 13  | Réputation            | `13-REPUTATION.md`        | Factions, rumeurs, propagation (scope run)      |
+| #   | Section               | Fichier                   | Thème                                                    |
+| --- | --------------------- | ------------------------- | -------------------------------------------------------- |
+| 23  | **Structure de run**  | `23-RUN-STRUCTURE.md`     | ⭐ **Pivot** — contrat, paliers, demi-tour, retour, fins |
+| 08  | Résolution de dés     | `08-DICE-RESOLUTION.md`   | d20, DC, moments pivots, critiques                       |
+| 09  | Boucle d'action       | `09-ACTION-LOOP.md`       | Choix IA + saisie libre + déclenchement des dés          |
+| 10  | Combat                | `10-COMBAT.md`            | Tactique lite façon BG3 simplifié                        |
+| 11  | Inventaire & Économie | `11-INVENTORY-ECONOMY.md` | Objets, équipement, argent, artisanat, commerce          |
+| 12  | PNJ & Relations       | `12-NPCS-RELATIONS.md`    | PNJ persistants dans le run, faveurs, dettes             |
+| 13  | Réputation            | `13-REPUTATION.md`        | Factions, rumeurs, propagation (scope run)               |
 
 ### PARTIE IV — LE MONDE & L'IA
 
