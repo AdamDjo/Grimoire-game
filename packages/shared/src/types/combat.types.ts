@@ -115,6 +115,79 @@ export type CreatureVariant =
   | "ancient";
 
 /**
+ * A damage expression, as `NdM` plus a flat bonus. Kept as data rather than a
+ * rolled number so the backend rolls it — the AI never states damage, it only
+ * narrates the result the engine already decided.
+ * @see docs/public/raw/08-DICE-RESOLUTION.md §7
+ */
+export interface DamageDice {
+  /** Number of dice. */
+  count: number;
+  /** Faces per die — the canon weapon ladder, 4 to 12. */
+  faces: number;
+  /** Flat modifier added after the roll. Usually 0 for creatures. */
+  bonus: number;
+}
+
+/**
+ * How a creature must be engaged. Most are simply fought; two canon entries are
+ * not, and flattening them into stat sacks would lose exactly what makes them
+ * memorable.
+ *
+ * - `fight` — the default: rolls to hit, takes damage, dies.
+ * - `hazard` — cannot be defeated at all. The Grey Wind is "not a creature but
+ *   a cloud"; canon says outright « on ne le combat pas — on le fuit ». It has
+ *   no HP because attacking mist is not a thing the engine should let you
+ *   attempt and then lose to.
+ * - `drain` — fought normally, but its threat is an effect rather than damage.
+ *   The Memory Eater is "terrifying not by its strength but by its effect".
+ *
+ * @see 03-BESTIARY.md §4
+ */
+export type CreatureEngagement = "fight" | "hazard" | "drain";
+
+/**
+ * The canon stat block of one bestiary entry — the fixed sheet an encounter is
+ * instantiated from, as opposed to `CombatEnemy` which is one live instance of
+ * it inside a fight.
+ *
+ * Every field here is decided by the backend and merely *described* by the AI.
+ * Numbers are calibrated against the two canon anchors — a starting character
+ * has `PV = 10 + SANG` (≈11 HP) and CA 11 in leather (`10-COMBAT §4`) — so a
+ * creature's HP and damage read directly as "how many turns before this kills
+ * me", which is the only scale the player actually feels.
+ *
+ * @see 03-BESTIARY.md §6, §6bis
+ * @see 10-COMBAT.md §4
+ */
+export interface CreatureStatBlock {
+  id: CreatureId;
+  /** Canon display name, in the game's French copy. */
+  name: string;
+  tier: CreatureTier;
+  habitat: CreatureHabitat;
+  behaviour: CreatureBehaviour;
+  engagement: CreatureEngagement;
+  /** Base hit points, before any variant is applied. */
+  maxHp: number;
+  /** Armour class, on the same scale as the canon enemy table (8 → 18). */
+  armourClass: number;
+  /** Damage dealt on a hit. `null` only for creatures that deal none directly. */
+  damage: DamageDice | null;
+  /** What it drops, by tier rather than by named item. */
+  loot: LootTier[];
+  /**
+   * Floors this creature may be drawn on, inclusive. Enforces the canon
+   * anti-rule — never a legendary on floors 1-2 — structurally rather than by
+   * convention: a death on floor 2 to an off-scale boss is precisely the death
+   * the player could not see coming.
+   * @see 03-BESTIARY.md §6bis
+   */
+  minDepth: number;
+  maxDepth: number;
+}
+
+/**
  * The four action categories a player picks from on their turn. Commanding is
  * the design keystone: ash is not merely a social attribute, it is a tactical
  * support role.

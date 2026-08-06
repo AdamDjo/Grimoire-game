@@ -5,7 +5,7 @@ rag: true
 source_of_truth: true
 owner: backend
 default_agent: claude
-updated: 2026-08-06
+updated: 2026-08-07
 ---
 
 # Backend Next
@@ -43,11 +43,17 @@ updated: 2026-08-06
      bestiaire typé : **livré**. `CreatureId` (18 créatures) et `CreatureVariant` (5 variantes) sont
      des unions fermées : l'invention par l'IA est structurellement irreprésentable.
      `CombatSnapshot` rejoint `RunSnapshot` dans `SceneResponse`. Aucune valeur chiffrée posée.
-   - [#234](https://github.com/AdamDjo/Grimoire-game/issues/234) — `game-rules/bestiary.ts` : les 18
-     créatures en données, la répartition par palier (§6bis) et les 5 variantes bornées (§6ter).
-     ⚠️ Le canon donne comportements, biomes et tiers de butin, mais **pas de PV/CA/dégâts par
-     créature** : la seule référence chiffrée est la table de CA générique de `10-COMBAT §4`. À
-     trancher au début du lot — aucune valeur provisoire ne doit être écrite.
+   - ~~[#234](https://github.com/AdamDjo/Grimoire-game/issues/234)~~ — `game-rules/bestiary.ts` :
+     **livré**. Les 18 créatures en données, la répartition par palier (§6bis) et les 5 variantes
+     bornées (§6ter). Le trou chiffré du canon est comblé : PV, CA et dégâts sont dérivés des deux
+     seules ancres qu'il donne — `PV = 10 + SANG` (personnage de référence ≈ 11 PV) et CA 11 en
+     cuir — plus les deux CA imprimées telles quelles (Calciné rampant 12, Veilleur 18) et l'échelle
+     d'armes de `08-DICE-RESOLUTION §7`. Une créature se lit donc en tours-avant-de-mourir, seule
+     échelle que le joueur ressent, et les tests verrouillent les trois paliers canon plutôt que la
+     simple présence des entrées. `minDepth`/`maxDepth` rendent l'anti-règle « jamais de légendaire
+     aux paliers 1-2 » structurelle. Deux créatures échappent au statut de sac à PV via
+     `CreatureEngagement` : le Vent-Gris est un `hazard` à 0 PV (« on ne le combat pas — on le
+     fuit »), le Mangeur de Souvenir un `drain` au plus faible dégât des rares.
    - [#235](https://github.com/AdamDjo/Grimoire-game/issues/235) — `game-rules/combat.ts` et câblage
      session : initiative unique, tours, 4 catégories d'action, rôle CENDRE, fuite dirigée, mort.
    - [#236](https://github.com/AdamDjo/Grimoire-game/issues/236) — frontend, mode combat dédié

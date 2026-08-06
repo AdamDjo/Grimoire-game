@@ -5,7 +5,7 @@ rag: true
 source_of_truth: true
 owner: backend
 default_agent: claude
-updated: 2026-08-06
+updated: 2026-08-07
 ---
 
 # Backend Status
@@ -59,10 +59,17 @@ updated: 2026-08-06
   trait narratif + compétences décalées) ou `fallback` (raison explicite), toujours HTTP 200. Nom
   personnalisé et trait narratif injectés dans `ai/system-prompt.ts` pour la narration en run.
 - #207 — cache d'images de scène dynamique partagé entre joueurs : nouvelle table `SceneImage`
-  (`cacheKey` = `sceneType_biome_lieuType`, jamais dérivée du texte libre IA) et colonne
-  `GameSession.currentImageUrl`. Classification `biome`/`lieuType` par pattern-matching de
-  mots-clés canon sur le `location` texte libre (`classifyBiome`/`classifyLieuType`), toujours
-  côté backend. Génération via Pollinations.ai (gratuit, sans clé API, timeout 15s), upload vers
+  (`cacheKey` = `sceneType_depthBand_lieuType`, jamais dérivée du texte libre IA) et colonne
+  `GameSession.currentImageUrl`. **Reclé sur la profondeur** avec la refonte roguelike : le contenu
+  n'est plus un monde ouvert à biomes mais une descente en paliers, donc la variable qui doit
+  changer l'image est la **profondeur atteinte**, pas un biome deviné dans la prose. `depthBandOf`
+  (`game-rules/dungeon.ts`) découpe les 7 paliers exactement là où le bestiaire découpe ses tiers de
+  danger — `surface | upper | mid | deep | abyss` — et la profondeur vient de l'état du run, jamais
+  de la narration : une image ne peut donc plus contredire le palier où le joueur se trouve
+  réellement. `classifyBiome` a été **supprimé** ; seul `classifyLieuType` reste, par pattern-matching
+  de mots-clés canon sur le `location`. Un palier hors bornes retombe sur une bande valide plutôt que
+  de lever : un tour ne doit pas échouer parce qu'il cherchait à s'illustrer.
+  Génération via Pollinations.ai (gratuit, sans clé API, timeout 15s), upload vers
   le bucket public Supabase Storage `scene-images` (écriture service-role, lecture publique, pas
   de policy RLS additionnelle). Résolution déclenchée à chaque chunk N2 (`compressScene`), URL
   persistée sur `currentImageUrl` et relue par tous les points de construction de scène
@@ -177,13 +184,36 @@ updated: 2026-08-06
   si la créature du run 8 est **la même** qu'au run 3.
   Les conditions de combat (`CombatConditionId`, §6) sont typées **séparément** de `ConditionId` :
   elles vivent et meurent dans un seul combat, là où les conditions de survie persistent sur le run.
-  L'habitat du bestiaire est `CreatureHabitat` et non le `Biome` de `scene.types.ts` : ce dernier
+  L'habitat du bestiaire est `CreatureHabitat` et non le `LieuType` de `scene.types.ts` : ce dernier
   nomme un **lieu** et sert de clé au cache d'images, le premier est une **règle de placement** —
   d'où `anywhere`, dont les Calcinés ont besoin et qu'aucune image ne pourrait représenter.
   `CombatSnapshot` rejoint `RunSnapshot` dans `SceneResponse` : le client dessine l'interface de
   combat sans recalculer une seule règle. Ce lot ne pose **aucune valeur chiffrée** — PV, CA et
-  dégâts relèvent du bestiaire (#234), et le canon devra les fournir.
+  dégâts relèvent du bestiaire (#234).
   `@see docs/public/raw/03-BESTIARY.md` §1-§8, `docs/public/raw/10-COMBAT.md` §2-§7.
+- #234 (lot 2 de #215) — `game-rules/bestiary.ts` : les 18 créatures **en données**, avec les
+  chiffres que le canon ne donnait pas. Le canon fournit comportements, habitats et tiers de butin,
+  mais aucun PV/CA/dégât par créature ; plutôt que de reporter le lot ou d'écrire des constantes
+  provisoires, la table est **dérivée** des seules ancres chiffrées existantes : `PV = 10 + SANG`
+  (personnage de référence ≈ 11 PV), CA 11 en cuir (`10-COMBAT §4`), les deux CA imprimées telles
+  quelles — Calciné rampant 12, Veilleur 18 — et l'échelle d'armes de `08-DICE-RESOLUTION §7`.
+  _Pourquoi cette dérivation plutôt qu'une autre_ : à 11 PV, les dégâts d'une créature se lisent
+  directement en **tours avant de mourir**, et les PV en **tours pour la tuer** — la seule échelle
+  que le joueur ressent réellement. Les trois paliers de §6bis cessent donc d'être des ressentis
+  pour devenir des seuils vérifiés : « je gère » = rien ne tue en moins de 4 tours aux paliers 1-2,
+  « ça coûte » = rien ne tue en 2 tours aux paliers 3-4, « je devrais remonter » = tout ce qui tue
+  en ≤ 2 tours vit au palier 5+. Les tests vérifient cette calibration, pas la simple présence des
+  entrées — et ont effectivement rattrapé deux erreurs d'équilibrage à l'écriture.
+  `minDepth`/`maxDepth` rendent l'anti-règle canon « jamais de légendaire aux paliers 1-2 »
+  **structurelle** plutôt que confiée au futur tirage de rencontres, et `creaturesForReturn` ne
+  puise que dans les paliers déjà traversés. Deux créatures refusent le statut de sac à PV via
+  `CreatureEngagement` : le Vent-Gris est un `hazard` à 0 PV — le canon dit « on ne le combat pas —
+  on le fuit », donc attaquer un nuage ne doit pas être une option que le moteur propose puis
+  punit — et le Mangeur de Souvenir un `drain`, au plus faible dégât de tous les rares, parce que
+  son coût est un souvenir et non des PV. `applyVariant` applique les 5 variantes de §6ter avec les
+  trois garde-fous canon, dont l'unicité : la signature n'accepte qu'une variante, donc « Calciné
+  ancien affamé en meute » est irreprésentable.
+  `@see docs/public/raw/03-BESTIARY.md` §6, §6bis, §6ter, `docs/public/raw/10-COMBAT.md` §4.
 
 ## Pré-déploiement restant
 
