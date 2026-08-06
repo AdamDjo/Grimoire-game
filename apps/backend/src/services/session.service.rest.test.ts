@@ -240,7 +240,7 @@ describe('resolveTurn — rest_requested (#184)', () => {
     expect(data.energy).toBe(40)
     expect(data.hunger).toBe(40)
     expect(data.thirst).toBe(40)
-    expect(lastGameSessionUpdateData().endReason).not.toBe('inn')
+    expect(lastGameSessionUpdateData().endReason).toBeUndefined()
   })
 
   it('leaves survival untouched when the AI omits rest_requested', async () => {

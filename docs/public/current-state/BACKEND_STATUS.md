@@ -5,7 +5,7 @@ rag: true
 source_of_truth: true
 owner: backend
 default_agent: claude
-updated: 2026-07-26
+updated: 2026-08-06
 ---
 
 # Backend Status
@@ -108,6 +108,23 @@ updated: 2026-07-26
   pour indisponibilité). ⚠️ Image non construite localement (daemon Docker indisponible) : correctif
   établi par lecture de la sortie `tsup` et des imports externes du bundle, à confirmer au premier
   build Coolify.
+- #226 (lot 1 de #214) — contrats partagés de la boucle de run. Nouveau
+  `packages/shared/src/types/run.types.ts` : `RunContract` (destination, profondeur 3/5/7 plafonnée
+  à 7, durée cible 45/90/150 min, prime due au retour), `DungeonFloor`/`Room`/`RoomHint`
+  (l'indice dit la **nature** du danger, jamais son **ampleur**), `ReturnEstimate` (salles et minutes
+  restantes, eau/vivres nécessaires, `suppliesShort`) et `RunState` (mode, profondeur courante et
+  max, demi-tour engagé, objectif sécurisé). `GameMode` (`inn | exploration | combat | return`)
+  est un **mode de jeu**, à ne pas confondre avec les fins de session ni avec le type de repos
+  `rest_requested.type: 'inn'` que le backend ignore volontairement.
+  `SessionEndReason` scindé en 5 valeurs canoniques —
+  `death | extracted | returned_empty | abandon | calcined`. L'ancien `inn` confondait « rentré
+  avec l'objectif » (payé) et « rentré les mains vides » (non payé) : il est **remplacé, pas
+  renommé**. Comme il n'était produit que par la fin volontaire à l'auberge, sans contrat à honorer,
+  les sessions existantes sont migrées en `abandon` (migration Supabase
+  `split_session_end_reason_run_structure` ; aucune ligne concernée en base à ce jour).
+  `ChronicleEndReason` suit par alias, et le prompt de Chronique distingue désormais les deux
+  retours. Les fins `extracted`/`returned_empty` sont **typées mais pas encore produites** : c'est
+  le trajet de retour (#228) qui les émettra. `@see docs/public/raw/23-RUN-STRUCTURE.md` §5.
 
 ## Pré-déploiement restant
 

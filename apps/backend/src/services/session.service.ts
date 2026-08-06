@@ -633,8 +633,8 @@ export async function performInventoryAction(
 }
 
 /**
- * Ends an active session with the given reason (`inn` or `abandon`) and
- * fires the Chronicle generation, mirroring the `death` path in `resolveTurn`.
+ * Ends an active session with the given reason and fires the Chronicle
+ * generation, mirroring the `death` path in `resolveTurn`.
  * Returns null if the session doesn't exist, isn't the caller's, or has
  * already ended — the route decides how to surface that.
  */
@@ -669,12 +669,18 @@ async function endSession(
 /**
  * Ends a session via the player's voluntary choice at the inn, facing
  * L'Aveugle ("Ton aventure se termine ici").
+ *
+ * Recorded as `abandon`, not as a return: this flow predates run contracts and
+ * ends the campaign on the player's initiative, without an objective to fulfil.
+ * The contract-aware endings (`extracted` / `returned_empty`) are produced by
+ * the return trip, wired in #228.
+ * @see docs/public/raw/23-RUN-STRUCTURE.md §5
  */
 export async function endSessionAtInn(
   sessionId: string,
   userId: string
 ): Promise<GameSession | null> {
-  return endSession(sessionId, userId, 'inn')
+  return endSession(sessionId, userId, 'abandon')
 }
 
 /**

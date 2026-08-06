@@ -1,0 +1,151 @@
+/**
+ * Run structure contracts — the shape of a run: what the player sets out to do,
+ * how deep they go, and how they get back.
+ *
+ * @see docs/public/raw/23-RUN-STRUCTURE.md
+ */
+
+/**
+ * The four modes a run traverses, each with its own interface.
+ * `inn` here is a game mode (calm, tabular preparation), not an end reason.
+ * @see 23-RUN-STRUCTURE.md §6
+ */
+export type GameMode = "inn" | "exploration" | "combat" | "return";
+
+/**
+ * Contract depth in floors. The 7-floor ceiling is hard: no contract may
+ * exceed it, because run length is capped at 2h30 (01-PILLARS §2).
+ * @see 23-RUN-STRUCTURE.md §1
+ */
+export type ContractDepth = 3 | 5 | 7;
+
+/** Hard ceiling on generated floors. The engine cannot produce more. */
+export const MAX_CONTRACT_DEPTH = 7;
+
+/** Minimum depth a contract may target. */
+export const MIN_CONTRACT_DEPTH = 3;
+
+/**
+ * Target duration per depth, in minutes. Drives the honest estimate shown to
+ * the player when they accept a contract.
+ * @see 23-RUN-STRUCTURE.md §1
+ */
+export const CONTRACT_DURATION_MINUTES: Record<ContractDepth, number> = {
+  3: 45,
+  5: 90,
+  7: 150,
+};
+
+/**
+ * What the player accepts at the inn before setting out. A run is never
+ * "an adventure" — it has a destination, a depth, and a payout owed only on
+ * return.
+ * @see 23-RUN-STRUCTURE.md §1
+ */
+export interface RunContract {
+  id: string;
+  /** Location archetype the contract sends the player to. @see 03-BESTIARY.md */
+  destination: string;
+  targetDepth: ContractDepth;
+  /** Target duration in minutes, derived from `targetDepth`. */
+  targetDurationMinutes: number;
+  /** What the commissioner pays on a successful return, in iron (fer). */
+  rewardIron: number;
+  /** Player-facing description of what must be brought back. */
+  objective: string;
+}
+
+/** What a room holds. @see 23-RUN-STRUCTURE.md §2 */
+export type RoomType =
+  | "combat"
+  | "exploration"
+  | "encounter"
+  | "respite"
+  | "treasure"
+  | "boss";
+
+/**
+ * Partial clue shown before the player commits to a room.
+ *
+ * Rule of the hint: it tells the player the *nature* of what waits, never its
+ * *magnitude*. `kind` is what the character senses; `certainty` is how legible
+ * that sign is — never how dangerous.
+ * @see 23-RUN-STRUCTURE.md §2
+ */
+export interface RoomHint {
+  /** What the sign points to — danger, loot, rest, unknown. */
+  kind: "danger" | "loot" | "respite" | "unknown";
+  /** How readable the sign is. Never encodes magnitude. */
+  certainty: "clear" | "faint";
+  /** In-character phrasing of the sign ("Ça sent le sang froid"). */
+  label: string;
+}
+
+/** A single room within a floor. @see 23-RUN-STRUCTURE.md §2 */
+export interface Room {
+  id: string;
+  type: RoomType;
+  hint: RoomHint;
+  /** True once the player has entered and resolved this room. */
+  cleared: boolean;
+}
+
+/**
+ * One floor of the descent. Deeper floors are richer and deadlier — that curve
+ * is what creates the temptation to push on.
+ * @see 23-RUN-STRUCTURE.md §2
+ */
+export interface DungeonFloor {
+  /** 1-indexed depth. Never exceeds `MAX_CONTRACT_DEPTH`. */
+  depth: number;
+  rooms: Room[];
+  /** Rooms offered as the next step, by id. 2-3 entries. */
+  nextChoices: string[];
+}
+
+/** How risky the engine judges the return trip to be. */
+export type ReturnRisk = "safe" | "tight" | "critical";
+
+/**
+ * Honest estimate of the trip home, shown before *every* decision to descend.
+ * This is the mechanical guarantee behind the design rule: death must always be
+ * traceable to a decision the player saw coming.
+ * @see 23-RUN-STRUCTURE.md §3, §4
+ */
+export interface ReturnEstimate {
+  /** Rooms left to traverse to reach the surface from the current position. */
+  remainingRooms: number;
+  /** Estimated minutes to get back. */
+  estimatedMinutes: number;
+  /** Water rations the trip is expected to consume. */
+  waterNeeded: number;
+  /** Food rations the trip is expected to consume. */
+  foodNeeded: number;
+  risk: ReturnRisk;
+  /**
+   * True when current supplies no longer cover the return from this depth.
+   * Drives the in-character threshold warning — never a system popup.
+   * @see 23-RUN-STRUCTURE.md §4
+   */
+  suppliesShort: boolean;
+}
+
+/**
+ * Where the player stands in the run: how deep, how far along, and whether the
+ * trip home has been engaged.
+ * @see 23-RUN-STRUCTURE.md §3
+ */
+export interface RunState {
+  contract: RunContract;
+  mode: GameMode;
+  /** 1-indexed floor the player currently occupies. */
+  currentDepth: number;
+  /** Deepest floor reached this run. Persisted, and never decreases. */
+  maxDepthReached: number;
+  /** Id of the room being resolved, null between rooms. */
+  currentRoomId: string | null;
+  /** True once the player has committed to the turn back (§3). */
+  returnEngaged: boolean;
+  /** True when the contract objective has been secured. Decides `extracted`. */
+  objectiveSecured: boolean;
+}

@@ -113,7 +113,8 @@ model GameSession {
   /// normalisé). Persistée pour que la reprise garde la même langue (#168).
   locale     String   @default("en")
   status     String   @default("active") // active | ended
-  /// Why the session ended (death | inn | abandon | calcined). Null while active. Bridge to A3.
+  /// Why the session ended (death | extracted | returned_empty | abandon | calcined).
+  /// Null while active. Bridge to A3. @see docs/public/raw/23-RUN-STRUCTURE.md §5
   endReason  String?
   /// URL résolue du cache d'images de scène partagé (#207), mise à jour à
   /// chaque compression N2. Null tant qu'aucun chunk n'a encore résolu d'image.
@@ -231,7 +232,8 @@ model Chronicle {
   characterId String
   sessionId   String
 
-  /// Why the run ended (death | inn | abandon | calcined), copied from GameSession.endReason.
+  /// Why the run ended (death | extracted | returned_empty | abandon | calcined),
+  /// copied from GameSession.endReason.
   endReason String
 
   title        String

@@ -31,7 +31,7 @@ const character = {
 const baseSession = {
   id: 's1',
   turnNumber: 12,
-  endReason: 'inn',
+  endReason: 'abandon',
   locale: 'fr',
   character,
 }
@@ -102,7 +102,7 @@ describe('generateChronicle', () => {
         userId: 'user1',
         characterId: 'char1',
         sessionId: 's1',
-        endReason: 'inn',
+        endReason: 'abandon',
         title: validOutput.title,
         bodyMarkdown: validOutput.body_markdown,
         mood: validOutput.mood,

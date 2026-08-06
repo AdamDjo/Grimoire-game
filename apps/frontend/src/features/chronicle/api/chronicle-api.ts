@@ -2,7 +2,7 @@ import type { ChronicleView, PublicChroniclePayload } from '../model/chronicle.t
 import type { ApiResponse, Chronicle } from '@grimoire/shared'
 
 const CHRONICLE_MOODS = new Set(['tragic', 'epic', 'melancholic', 'serene', 'absurd'])
-const END_REASONS = new Set(['death', 'inn', 'abandon'])
+const END_REASONS = new Set(['death', 'extracted', 'returned_empty', 'abandon', 'calcined'])
 
 function textOrFallback(value: string | undefined, fallback: string): string {
   const normalized = value?.trim()

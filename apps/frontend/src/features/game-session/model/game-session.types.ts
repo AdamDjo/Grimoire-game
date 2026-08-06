@@ -62,7 +62,7 @@ export interface GameSessionResponse {
 }
 
 export interface GameSessionEndResponse {
-  endReason: 'inn' | 'abandon'
+  endReason: SessionEndReason
   status: 'ended'
 }
 
