@@ -3,6 +3,7 @@ import type {
   Attribute,
   SurvivalStats,
 } from "./character.types";
+import type { CombatSnapshot } from "./combat.types";
 import type { DiceRoll } from "./dice.types";
 import type { ItemGained } from "./inventory.types";
 import type { GameMode, ReturnEstimate, RunContract } from "./run.types";
@@ -16,7 +17,7 @@ export type SceneType =
   | "shop"
   | "rest";
 
-/** Canon biome, drives survival narration and the scene-image cache key. @see docs/public/raw/06-SURVIVAL.md §5 */
+/** Canon biome, drives survival narration. @see docs/public/raw/06-SURVIVAL.md §5 */
 export type Biome = "tissan" | "doigts" | "rivage" | "marais_lekh" | "coeur";
 
 /** Canon dungeon archetype, or generic outdoor. @see docs/public/raw/03-BESTIARY.md §9 */
@@ -26,6 +27,31 @@ export type LieuType =
   | "cryptes"
   | "cavernes_cendre"
   | "donjon_profond";
+
+/**
+ * Depth band a scene is drawn for — the axis the scene image is indexed on.
+ *
+ * Biome used to play this role, and it stopped fitting when the game became a
+ * descent: `coeur` names a walled city, which is not where a run happens, and
+ * two floors of the same dungeon shared one image no matter how deep the
+ * player had gone. The bands mirror the bestiary's own reading of depth
+ * (03-BESTIARY §6bis), so the picture darkens on exactly the floors where the
+ * fauna does.
+ *
+ * @see docs/public/raw/03-BESTIARY.md §6bis
+ * @see docs/public/raw/23-RUN-STRUCTURE.md §2
+ */
+export type DepthBand =
+  /** Floor 0 — the inn and the world above. The only band that is not a descent. */
+  | "surface"
+  /** Floors 1-2 — « je gère ». Daylight still reaches down. */
+  | "upper"
+  /** Floors 3-4 — « ça coûte ». No natural light left. */
+  | "mid"
+  /** Floors 5-6 — « je devrais peut-être remonter ». The tipping point. */
+  | "deep"
+  /** Floor 7 — « c'est là que je meurs ou que je gagne le run ». */
+  | "abyss";
 
 export interface Choice {
   id: string;
@@ -100,6 +126,13 @@ export interface SceneResponse {
    * @see docs/public/raw/23-RUN-STRUCTURE.md §3
    */
   run?: RunSnapshot;
+  /**
+   * The fight in progress, if any. Absent outside combat mode. Like `run`, the
+   * client renders this as given: armour class, damage and the end of the
+   * fight are all arbitrated by the backend, never recomputed here.
+   * @see docs/public/raw/10-COMBAT.md §3
+   */
+  combat?: CombatSnapshot;
 }
 
 /**

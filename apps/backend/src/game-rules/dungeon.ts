@@ -1,5 +1,6 @@
 import {
   type ContractDepth,
+  type DepthBand,
   type DungeonFloor,
   MAX_CONTRACT_DEPTH,
   type Room,
@@ -36,6 +37,28 @@ export const MINUTES_PER_ROOM = 3.75
 
 /** A boss locks the far end of deep floors. @see 23-RUN-STRUCTURE.md §2 */
 const BOSS_FLOOR_THRESHOLD = 5
+
+/**
+ * Maps a floor to the band its scene image is drawn for.
+ *
+ * The cuts are the bestiary's own (03-BESTIARY §6bis), deliberately not a new
+ * scale: the image changes on the same floors where the fauna changes, so what
+ * the player sees and what they fight tell one story. Depth comes from the
+ * backend-owned run state, never from the AI's prose — a narrator who calls a
+ * corridor "abyssal" on floor 1 must not be able to pull the floor-7 art.
+ *
+ * Out-of-range floors clamp rather than throw: this feeds an image cache, and
+ * a bad picture must never be able to fail a turn.
+ *
+ * @see docs/public/raw/03-BESTIARY.md §6bis
+ */
+export function depthBandOf(depth: number): DepthBand {
+  if (!Number.isFinite(depth) || depth <= 0) return 'surface'
+  if (depth <= 2) return 'upper'
+  if (depth <= 4) return 'mid'
+  if (depth <= 6) return 'deep'
+  return 'abyss'
+}
 
 /**
  * Room types offered on the way down, ordered from safest to most hostile.

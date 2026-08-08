@@ -1,8 +1,8 @@
 # Phase 1B — Backlog archivé
 
 > **Statut : archivé.** Cette photographie Phase 1B n'est plus une source de tâches.
-> Sources vivantes : [[../../current-state/PROJECT_STATUS]] · [[../../current-state/FRONTEND_NEXT]] ·
-> [[../../current-state/BACKEND_NEXT]].
+> Sources vivantes : [[../../current-state/PROJECT_STATUS]] · [[../../current-state/FRONTEND]] ·
+> [[../../current-state/BACKEND]].
 
 ## Garde-fous produit
 

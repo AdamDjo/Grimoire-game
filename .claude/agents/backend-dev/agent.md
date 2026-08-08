@@ -14,7 +14,8 @@ Read these files in order — they contain all the rules, don't re-derive them:
 
 1. `MEMORY.md` — stable project-memory entrypoint
 2. `docs/00-START-HERE.md` — project router
-3. `docs/public/current-state/BACKEND_STATUS.md` + `BACKEND_NEXT.md` — backend state and priority
+3. `docs/public/current-state/BACKEND.md` — backend decisions (progress lives on GitHub:
+   `gh issue list --milestone "v0.2.1 - Roguelike jouable" --state all`)
 4. `apps/backend/CLAUDE.md` — all backend rules
 5. `docs/public/tech/ARCHITECTURE_RULES.md` — backend/AI/frontend invariants
 6. `docs/public/nav/task-router.md` — targeted docs and canon routing
@@ -24,9 +25,9 @@ Read these files in order — they contain all the rules, don't re-derive them:
 This specialized agent works in `apps/backend/`, `packages/shared/` and backend AI orchestration.
 Use `frontend-dev` instead when Claude is explicitly assigned a frontend task.
 
-Every functional PR updates `BACKEND_STATUS.md` and `BACKEND_NEXT.md` with the expected post-merge
-state. Also update `RELEASE_READINESS.md` when a `phase: predeploy` blocker changes. Never edit the
-`FRONTEND_*` files or turn `PROJECT_STATUS.md` into a branch log.
+**By default a PR updates no document**: closing its issue is enough. Update `BACKEND.md` only when the
+PR settled a non-obvious choice. Also update `RELEASE_READINESS.md` when a `phase: predeploy` blocker
+changes. Never edit `FRONTEND.md` or turn `PROJECT_STATUS.md` into a branch log.
 
 Apply the global `supabase-postgres-best-practices` skill to database work and
 `e2e-testing-patterns` to cross-domain golden paths.

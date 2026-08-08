@@ -12,11 +12,14 @@ Pour chaque tâche, lire uniquement les fichiers nécessaires.
 | Tâche                        | Lire                                                                                                        |
 | ---------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | Comprendre le projet         | `docs/00-START-HERE.md` + `docs/public/current-state/PROJECT_STATUS.md`                                     |
+| Savoir quoi faire maintenant | `gh issue list --milestone "v0.2.1 - Roguelike jouable"` — l'avancement vit sur GitHub, pas dans les docs   |
 | Préparer une release         | `docs/public/current-state/RELEASE_READINESS.md`                                                            |
-| Travailler sur le frontend   | `docs/public/current-state/FRONTEND_STATUS.md` + `docs/public/current-state/FRONTEND_NEXT.md`               |
-| Travailler sur le backend    | `docs/public/current-state/BACKEND_STATUS.md` + `docs/public/current-state/BACKEND_NEXT.md`                 |
-| Savoir quoi faire maintenant | choisir `FRONTEND_NEXT.md` ou `BACKEND_NEXT.md` selon le chantier                                           |
-| Mémoire opérationnelle IA    | `MEMORY.md` → `docs/00-START-HERE.md` → paire `STATUS/NEXT` du domaine                                      |
+| Travailler sur le frontend   | `docs/public/current-state/FRONTEND.md`                                                                     |
+| Travailler sur le backend    | `docs/public/current-state/BACKEND.md`                                                                      |
+| Boucle de run / donjon       | `docs/public/raw/23-RUN-STRUCTURE.md`                                                                       |
+| Combat / bestiaire           | `docs/public/raw/10-COMBAT.md` + `docs/public/raw/03-BESTIARY.md`                                           |
+| Survie, conditions, Calamine | `docs/public/raw/06-SURVIVAL.md`                                                                            |
+| Mémoire opérationnelle IA    | `MEMORY.md` → `docs/00-START-HERE.md` → doc du domaine                                                      |
 | UI/frontend                  | `docs/public/design/GAME_DESIGN.md` + `docs/public/design/DESIGN_TOKENS.md`                                 |
 | Game Session (maintenance)   | `docs/public/design/GAME_DESIGN.md` + canon Session gameplay ci-dessous                                     |
 | UI Kit (livré/maintenance)   | `docs/public/design/UI_KIT.md` + `docs/public/design/DESIGN_TOKENS.md`                                      |

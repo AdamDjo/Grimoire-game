@@ -1,15 +1,15 @@
+import { type ContractDepth, MAX_CONTRACT_DEPTH } from '@grimoire/shared'
 import { describe, expect, it } from 'vitest'
 
 import {
   countDescentRooms,
   countReturnRooms,
+  depthBandOf,
   generateDescent,
   generateReturn,
   RETURN_ROOMS_PER_FLOOR,
   ROOMS_PER_FLOOR,
 } from './dungeon'
-
-import type { ContractDepth } from '@grimoire/shared'
 
 /** Deterministic rng cycling through fixed values, so draws are reproducible. */
 function seededRng(values: number[]): () => number {
@@ -185,5 +185,33 @@ describe('room counts', () => {
 
   it('keeps the return cheaper than the descent, floor for floor', () => {
     expect(RETURN_ROOMS_PER_FLOOR).toBeLessThan(ROOMS_PER_FLOOR)
+  })
+})
+
+describe('depthBandOf', () => {
+  it('cuts the bands exactly where the bestiary cuts its danger tiers', () => {
+    expect(depthBandOf(0)).toBe('surface')
+    expect(depthBandOf(1)).toBe('upper')
+    expect(depthBandOf(2)).toBe('upper')
+    expect(depthBandOf(3)).toBe('mid')
+    expect(depthBandOf(4)).toBe('mid')
+    expect(depthBandOf(5)).toBe('deep')
+    expect(depthBandOf(6)).toBe('deep')
+    expect(depthBandOf(7)).toBe('abyss')
+  })
+
+  it('gives every reachable floor a band', () => {
+    for (let depth = 0; depth <= MAX_CONTRACT_DEPTH; depth++) {
+      expect(depthBandOf(depth)).toBeTruthy()
+    }
+  })
+
+  // This feeds an image cache: a bad depth must degrade to a picture, never throw
+  // and fail the turn that was only trying to illustrate itself.
+  it('clamps junk depths instead of throwing', () => {
+    expect(depthBandOf(-1)).toBe('surface')
+    expect(depthBandOf(Number.NaN)).toBe('surface')
+    expect(depthBandOf(Number.POSITIVE_INFINITY)).toBe('surface')
+    expect(depthBandOf(999)).toBe('abyss')
   })
 })

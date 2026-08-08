@@ -13,21 +13,7 @@ vi.mock('../lib/supabase-storage', () => ({
   uploadSceneImage: (...args: unknown[]) => uploadSceneImage(...args),
 }))
 
-const { classifyBiome, classifyLieuType, buildCacheKey, resolveSceneImage } =
-  await import('./scene-image.service')
-
-describe('classifyBiome', () => {
-  it('matches each canon biome keyword', () => {
-    expect(classifyBiome('a vast Tissan desert')).toBe('tissan')
-    expect(classifyBiome('the Doigts mountains')).toBe('doigts')
-    expect(classifyBiome('a rocky rivage')).toBe('rivage')
-    expect(classifyBiome('the Marais Lekh')).toBe('marais_lekh')
-  })
-
-  it('defaults to coeur when no keyword matches', () => {
-    expect(classifyBiome('a quiet street in Velkhar')).toBe('coeur')
-  })
-})
+const { classifyLieuType, buildCacheKey, resolveSceneImage } = await import('./scene-image.service')
 
 describe('classifyLieuType', () => {
   it('matches each canon lieuType keyword', () => {
@@ -43,8 +29,14 @@ describe('classifyLieuType', () => {
 })
 
 describe('buildCacheKey', () => {
-  it('joins sceneType, biome and lieuType with underscores', () => {
-    expect(buildCacheKey('combat', 'coeur', 'plein_air')).toBe('combat_coeur_plein_air')
+  it('joins sceneType, depthBand and lieuType with underscores', () => {
+    expect(buildCacheKey('combat', 'surface', 'plein_air')).toBe('combat_surface_plein_air')
+  })
+
+  it('separates two floors of the same archetype by their band', () => {
+    expect(buildCacheKey('combat', 'upper', 'cryptes')).not.toBe(
+      buildCacheKey('combat', 'abyss', 'cryptes')
+    )
   })
 })
 
@@ -64,11 +56,11 @@ describe('resolveSceneImage', () => {
   })
 
   it('returns the cached URL on a cache hit without generating anything', async () => {
-    sceneImageFindUnique.mockResolvedValue({ url: 'https://cache/combat_coeur_plein_air.jpg' })
+    sceneImageFindUnique.mockResolvedValue({ url: 'https://cache/combat_surface_plein_air.jpg' })
 
-    const url = await resolveSceneImage('combat', 'coeur', 'plein_air')
+    const url = await resolveSceneImage('combat', 'surface', 'plein_air')
 
-    expect(url).toBe('https://cache/combat_coeur_plein_air.jpg')
+    expect(url).toBe('https://cache/combat_surface_plein_air.jpg')
     expect(hasSupabaseServiceKey).not.toHaveBeenCalled()
     expect(fetch).not.toHaveBeenCalled()
   })
@@ -77,7 +69,7 @@ describe('resolveSceneImage', () => {
     sceneImageFindUnique.mockResolvedValue(null)
     hasSupabaseServiceKey.mockReturnValue(false)
 
-    const url = await resolveSceneImage('combat', 'coeur', 'plein_air')
+    const url = await resolveSceneImage('combat', 'surface', 'plein_air')
 
     expect(url).toBeNull()
     expect(fetch).not.toHaveBeenCalled()
@@ -89,15 +81,15 @@ describe('resolveSceneImage', () => {
     uploadSceneImage.mockResolvedValue('https://cache/new.jpg')
     sceneImageCreate.mockResolvedValue({})
 
-    const url = await resolveSceneImage('rest', 'coeur', 'plein_air')
+    const url = await resolveSceneImage('rest', 'surface', 'plein_air')
 
     expect(url).toBe('https://cache/new.jpg')
     expect(uploadSceneImage).toHaveBeenCalledWith(
-      'rest_coeur_plein_air.jpg',
+      'rest_surface_plein_air.jpg',
       expect.any(Uint8Array)
     )
     expect(sceneImageCreate).toHaveBeenCalledWith({
-      data: { cacheKey: 'rest_coeur_plein_air', url: 'https://cache/new.jpg' },
+      data: { cacheKey: 'rest_surface_plein_air', url: 'https://cache/new.jpg' },
     })
   })
 
@@ -108,7 +100,7 @@ describe('resolveSceneImage', () => {
     sceneImageCreate.mockRejectedValue(new Error('unique constraint'))
     sceneImageFindUnique.mockResolvedValueOnce({ url: 'https://cache/winner.jpg' })
 
-    const url = await resolveSceneImage('rest', 'coeur', 'plein_air')
+    const url = await resolveSceneImage('rest', 'surface', 'plein_air')
 
     expect(url).toBe('https://cache/winner.jpg')
   })
@@ -118,7 +110,7 @@ describe('resolveSceneImage', () => {
     hasSupabaseServiceKey.mockReturnValue(true)
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status: 500 }))
 
-    const url = await resolveSceneImage('combat', 'coeur', 'plein_air')
+    const url = await resolveSceneImage('combat', 'surface', 'plein_air')
 
     expect(url).toBeNull()
     expect(uploadSceneImage).not.toHaveBeenCalled()
@@ -129,7 +121,7 @@ describe('resolveSceneImage', () => {
     hasSupabaseServiceKey.mockReturnValue(true)
     uploadSceneImage.mockResolvedValue(null)
 
-    const url = await resolveSceneImage('combat', 'coeur', 'plein_air')
+    const url = await resolveSceneImage('combat', 'surface', 'plein_air')
 
     expect(url).toBeNull()
     expect(sceneImageCreate).not.toHaveBeenCalled()

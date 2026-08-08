@@ -65,11 +65,11 @@ Exécuter dans l'ordre :
    - Fichiers dans `apps/frontend/` → `domain: frontend`.
    - Fichiers dans `apps/backend/` ou `packages/shared/` → `domain: backend`.
    - Fichiers d'orchestration/prompt/provider IA → ajouter `domain: ai`.
-   - `fix/*` → `["type: bug"]`
-   - `hotfix/*` → `["type: bug", "priority: high"]`
-   - `chore/*` → `["type: chore"]`
-   - `release/*` → `["type: release"]`
-   - Ne jamais recréer un ancien label de phase ou les domaines `shared`, `database`, `devops`.
+   - Reprendre depuis l'issue liée la version de release : `release: v0.2`.
+   - Ces trois axes — `domain: *`, `phase: *`, `release: *` — sont les **seuls** labels du repo, avec
+     `status: blocked`. Ne jamais créer un label absent de `gh label list` : les familles `type:`,
+     `priority:`, `size:`, `epic:` et les domaines `shared`/`database`/`devops` ont été supprimés le
+     2026-08-08 et ne doivent pas ressusciter.
 
 8. **Créer la PR via `gh pr create`**
    - owner: `AdamDjo`

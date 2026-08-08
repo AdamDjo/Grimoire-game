@@ -1,7 +1,7 @@
 name: "Bug Report"
 description: "Signaler un bug dans Grimoire"
 title: "[BUG] "
-labels: ["type: bug", "status: needs-info"]
+labels: []
 body:
   - type: markdown
     attributes:
@@ -48,10 +48,7 @@ body:
       options:
         - "frontend"
         - "backend"
-        - "shared"
         - "ai"
-        - "database"
-        - "devops"
     validations:
       required: true
 

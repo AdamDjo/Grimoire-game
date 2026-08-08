@@ -14,7 +14,8 @@ Read only the task-relevant memory, in this order:
 
 1. `MEMORY.md` — stable project-memory entrypoint
 2. `docs/00-START-HERE.md` — project router
-3. `docs/public/current-state/FRONTEND_STATUS.md` + `FRONTEND_NEXT.md` — frontend state and priority
+3. `docs/public/current-state/FRONTEND.md` — frontend decisions (progress lives on GitHub:
+   `gh issue list --milestone "v0.2.1 - Roguelike jouable" --state all`)
 4. `apps/frontend/CLAUDE.md` — frontend implementation rules
 5. `docs/public/nav/task-router.md` — targeted design and canon routing
 
@@ -25,9 +26,10 @@ Do not load backend status unless the task explicitly changes a shared or backen
 Work in `apps/frontend/`. Modify `packages/shared/` only when the task explicitly includes a shared
 contract; deliver that contract before its frontend consumption whenever possible.
 
-Every functional frontend PR updates `FRONTEND_STATUS.md` and `FRONTEND_NEXT.md` with the expected
-post-merge state. Also update `RELEASE_READINESS.md` when a `phase: predeploy` blocker changes. Never
-turn `PROJECT_STATUS.md` into a branch log or edit `BACKEND_*` for a frontend-only change.
+**By default a PR updates no document**: closing its issue is enough. Update `FRONTEND.md` only when the
+PR settled a non-obvious choice. Also update `RELEASE_READINESS.md` when a `phase: predeploy` blocker
+changes. Never turn `PROJECT_STATUS.md` into a branch log or edit `BACKEND.md` for a frontend-only
+change.
 
 ## Frontend invariants
 

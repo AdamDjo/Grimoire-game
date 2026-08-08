@@ -6,12 +6,15 @@ allowed-tools: Read, Glob
 
 Show the current project status by:
 
-1. Read `MEMORY.md`, then `docs/public/current-state/PROJECT_STATUS.md`.
-2. Read `RELEASE_READINESS.md` for a global/release request, or only the matching
-   `FRONTEND_STATUS.md` + `FRONTEND_NEXT.md` / `BACKEND_STATUS.md` + `BACKEND_NEXT.md` pair.
-3. Never infer an active branch from `PROJECT_STATUS.md`; use git status when needed.
-4. Count completed vs total release blockers from the selected status file.
-5. Present a clean summary:
+1. Read ticket progress from GitHub, never from a `.md`:
+   `gh issue list --milestone "v0.2.1 - Roguelike jouable" --state all`.
+2. Read `MEMORY.md`, then `docs/public/current-state/PROJECT_STATUS.md` for the phase and the
+   dependency order of the roguelike chantiers.
+3. Read `RELEASE_READINESS.md` for a global/release request, or only the matching domain document
+   (`FRONTEND.md` or `BACKEND.md`) for a domain decision.
+4. Never infer an active branch from a document; use git status when needed.
+5. Count completed vs total release blockers from `RELEASE_READINESS.md`.
+6. Present a clean summary:
 
 Format:
 

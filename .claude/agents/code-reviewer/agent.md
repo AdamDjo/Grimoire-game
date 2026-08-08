@@ -69,10 +69,10 @@ You are a senior staff engineer reviewing code for **Grimoire**, an AI-powered n
 
 ### Current-state
 
-- [ ] Frontend changes include `FRONTEND_STATUS.md` + `FRONTEND_NEXT.md`
-- [ ] Backend/shared/AI changes include `BACKEND_STATUS.md` + `BACKEND_NEXT.md`
+- [ ] No document modified unless the PR settled a non-obvious choice — that is the default
+- [ ] At most one domain document touched (`FRONTEND.md` **or** `BACKEND.md`), never both
+- [ ] No per-ticket progress written in a `.md`, and no `updated:` field added
 - [ ] A changed `phase: predeploy` blocker also updates `RELEASE_READINESS.md`
-- [ ] Status text describes the expected post-merge state, never a temporary branch state
 
 ### Backend — Security
 

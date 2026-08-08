@@ -1,31 +1,14 @@
 import { prisma } from '../lib/prisma'
 import { hasSupabaseServiceKey, uploadSceneImage } from '../lib/supabase-storage'
 
-import type { Biome, LieuType, SceneType } from '@grimoire/shared'
+import type { DepthBand, LieuType, SceneType } from '@grimoire/shared'
 
 const GENERATION_TIMEOUT_MS = 15000
 
 /**
- * Classifies the current biome from the free-text `location` the AI narrates.
- * The backend is the sole authority (never the AI) so the cache key stays
- * stable regardless of narration phrasing. Keywords are the canon biome names
- * themselves (06-SURVIVAL.md §5) — `coeur` (Velkhar) is the default when no
- * other biome keyword matches, since most early-game scenes are there.
- */
-export function classifyBiome(location: string): Biome {
-  const normalized = location.toLowerCase()
-
-  if (/tissan|désert|desert/.test(normalized)) return 'tissan'
-  if (/doigt|montagne/.test(normalized)) return 'doigts'
-  if (/rivage|côte|cote|plage/.test(normalized)) return 'rivage'
-  if (/marais|lekh/.test(normalized)) return 'marais_lekh'
-  return 'coeur'
-}
-
-/**
  * Classifies the dungeon archetype from the free-text `location`, using the
- * canon list (03-BESTIARY.md §9). `plein_air` is the default — most scenes
- * are not inside a dungeon.
+ * canon list (03-BESTIARY.md §9). `plein_air` is the default — it covers the
+ * surface and any floor the narration does not mark as built or enclosed.
  */
 export function classifyLieuType(location: string): LieuType {
   const normalized = location.toLowerCase()
@@ -37,29 +20,49 @@ export function classifyLieuType(location: string): LieuType {
   return 'plein_air'
 }
 
-/** Builds the finite, structured cache key — never derived from AI free text directly. */
-export function buildCacheKey(sceneType: SceneType, biome: Biome, lieuType: LieuType): string {
-  return `${sceneType}_${biome}_${lieuType}`
+/**
+ * Builds the finite, structured cache key.
+ *
+ * Indexed on depth rather than biome since the run loop landed: a run is a
+ * descent, so what the player must read off the picture is how far down they
+ * are, not which region of the map the fiction sits in. `depthBand` comes from
+ * the run state and `lieuType` from the narration, which keeps the key bounded
+ * at 6 scene types × 5 bands × 5 archetypes.
+ *
+ * @see docs/public/raw/03-BESTIARY.md §6bis
+ */
+export function buildCacheKey(
+  sceneType: SceneType,
+  depthBand: DepthBand,
+  lieuType: LieuType
+): string {
+  return `${sceneType}_${depthBand}_${lieuType}`
 }
 
-function buildImagePrompt(sceneType: SceneType, biome: Biome, lieuType: LieuType): string {
-  const biomeLabel: Record<Biome, string> = {
-    tissan: 'a scorching desert with dunes and mirages',
-    doigts: 'jagged cold mountains with archontic ruins',
-    rivage: 'a temperate coastline with a rocky shore',
-    marais_lekh: 'a misty contaminated swamp',
-    coeur: 'the walled city of Velkhar, dense and lived-in',
+function buildImagePrompt(sceneType: SceneType, depthBand: DepthBand, lieuType: LieuType): string {
+  /**
+   * Light is the through-line: it thins band by band until there is none left
+   * but the ash itself. That gradient is what makes two floors of the same
+   * archetype read as different places.
+   */
+  const depthLabel: Record<DepthBand, string> = {
+    surface: 'above ground under an open sky, warm daylight',
+    upper: 'a shallow underground level, pale daylight still falling from above',
+    mid: 'a deep underground level, no daylight left, lit only by torchlight',
+    deep: 'a very deep oppressive underground level, heavy darkness, distant golden glow',
+    abyss: 'the deepest level of all, near-total darkness lit by burning golden ash',
   }
-  const lieuLabel: Partial<Record<LieuType, string>> = {
+  const lieuLabel: Record<LieuType, string> = {
+    plein_air: 'open terrain, wind-carved rock and drifting golden dust',
     ruines_archontiques: 'ancient haunted ruins of a fallen civilization',
     cryptes: 'an old crypt with stone tombs',
     cavernes_cendre: 'a cavern saturated with golden ash mist',
-    donjon_profond: 'a deep dangerous dungeon',
+    donjon_profond: 'a deep dangerous dungeon of worked stone',
   }
 
   const parts = [
     'dark fantasy game background art, painterly, no text, no UI',
-    biomeLabel[biome],
+    depthLabel[depthBand],
     lieuLabel[lieuType],
     sceneType === 'combat' ? 'tense atmosphere' : undefined,
     sceneType === 'rest' ? 'calm campfire mood' : undefined,
@@ -95,7 +98,7 @@ async function generateImage(prompt: string): Promise<Uint8Array | null> {
 }
 
 /**
- * Resolves the shared cache image URL for a `sceneType`/`biome`/`lieuType`
+ * Resolves the shared cache image URL for a `sceneType`/`depthBand`/`lieuType`
  * combination. Returns the existing URL on a cache hit; on a miss, generates
  * once, uploads to Supabase Storage, persists the cache row, and returns the
  * new URL. Never throws — returns null on any failure so the caller falls
@@ -105,10 +108,10 @@ async function generateImage(prompt: string): Promise<Uint8Array | null> {
  */
 export async function resolveSceneImage(
   sceneType: SceneType,
-  biome: Biome,
+  depthBand: DepthBand,
   lieuType: LieuType
 ): Promise<string | null> {
-  const cacheKey = buildCacheKey(sceneType, biome, lieuType)
+  const cacheKey = buildCacheKey(sceneType, depthBand, lieuType)
 
   const existing = await prisma.sceneImage.findUnique({ where: { cacheKey } })
   if (existing) {
@@ -119,7 +122,7 @@ export async function resolveSceneImage(
     return null
   }
 
-  const bytes = await generateImage(buildImagePrompt(sceneType, biome, lieuType))
+  const bytes = await generateImage(buildImagePrompt(sceneType, depthBand, lieuType))
   if (!bytes) {
     return null
   }

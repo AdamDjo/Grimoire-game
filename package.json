@@ -10,7 +10,7 @@
     "check:current-state": "node scripts/check-current-state.mjs",
     "check:doc-links": "node scripts/check-doc-links.mjs",
     "check:project-memory": "node scripts/check-project-memory.mjs",
-    "test:current-state": "node --test scripts/check-current-state.test.mjs",
+    "test:current-state": "node --test scripts/check-current-state.test.mjs scripts/pr-status-comment.test.mjs",
     "check:ui-kit-assets": "node scripts/check-ui-kit-assets.mjs",
     "prepare": "husky",
     "knip": "knip",
@@ -44,7 +44,8 @@
       "undici": ">=7.29.0",
       "ip-address": ">=10.3.1",
       "hono": ">=4.12.34",
-      "uuid@>=3.0.0 <11.1.1": ">=11.1.1"
+      "uuid@>=3.0.0 <11.1.1": ">=11.1.1",
+      "nanoid@<3.3.17": ">=3.3.17"
     }
   },
   "devDependencies": {

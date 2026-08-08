@@ -24,7 +24,7 @@ Le statut ne doit jamais être recopié dans `MEMORY.md`, les fichiers agents ou
 - Claude est assigné par défaut au backend/shared/IA et Codex au frontend.
 - Ce choix réduit les conflits, mais ne constitue pas une permission exclusive.
 - Une demande utilisateur explicite peut confier n'importe quel domaine à Claude ou Codex.
-- L'agent assigné suit toujours les instructions et la paire `STATUS/NEXT` du domaine, indépendamment
+- L'agent assigné suit toujours les instructions et le document du domaine, indépendamment
   de son identité.
 
 ## Ressources toujours versionnées

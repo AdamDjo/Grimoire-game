@@ -23,16 +23,26 @@ Closes #<!-- numéro d'issue -->
 Phases autorisées : `phase: predeploy` ou `phase: postdeploy`. Remplacer le commentaire sur la
 ligne **Phase** par une seule valeur.
 
-## Current-state
+## Décisions à consigner
 
-Les documents cochés décrivent l'état attendu **après merge**, jamais une branche « en validation ».
+**Par défaut, une PR ne modifie aucun document.** L'avancement se lit sur GitHub : cette PR ferme son
+issue, c'est suffisant. On ne documente que les **choix non évidents** — pourquoi telle valeur, telle
+fermeture de type, tel garde-fou.
 
-- [ ] `FRONTEND_STATUS.md` + `FRONTEND_NEXT.md` mis à jour si frontend
-- [ ] `BACKEND_STATUS.md` + `BACKEND_NEXT.md` mis à jour si backend/shared/AI
-- [ ] `RELEASE_READINESS.md` mis à jour si un bloqueur `phase: predeploy` change
-- [ ] Current-state non applicable
+- [ ] Aucune décision non évidente — aucun document modifié
+- [ ] `BACKEND.md` mis à jour (décision backend/shared/AI)
+- [ ] `FRONTEND.md` mis à jour (décision frontend)
+- [ ] `RELEASE_READINESS.md` mis à jour (un bloqueur `phase: predeploy` change)
+- [ ] `nav/log.md` complété (pivot ou décision structurante)
 
-Justification current-state: <!-- obligatoire si « non applicable » est coché -->
+Décision consignée : <!-- une ligne, si un document est coché -->
+
+`BACKEND.md` et `FRONTEND.md` ne se modifient **pas** dans la même PR. Une refonte transverse
+assumée (consolidation, renommage de docs) est la seule exception, et doit se déclarer :
+
+- [ ] Refonte transverse des docs
+
+Justification docs transverses: <!-- obligatoire si la case est cochée -->
 
 ## Checklist technique
 

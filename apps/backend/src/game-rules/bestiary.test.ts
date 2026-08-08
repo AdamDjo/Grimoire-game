@@ -1,0 +1,215 @@
+import { MAX_CONTRACT_DEPTH } from '@grimoire/shared'
+import { describe, expect, it } from 'vitest'
+
+import {
+  applyVariant,
+  creaturesForDepth,
+  creaturesForReturn,
+  getCreature,
+  listCreatures,
+} from './bestiary'
+
+import type { CreatureStatBlock, CreatureVariant } from '@grimoire/shared'
+
+/** Canon reference character: `PV = 10 + SANG` with SANG +1, leather armour. */
+const PLAYER_HP = 11
+
+/** Average of a damage expression, used to read a creature as turns-to-kill. */
+function averageDamage(creature: CreatureStatBlock): number {
+  if (!creature.damage) return 0
+  const { count, faces, bonus } = creature.damage
+  return count * ((faces + 1) / 2) + bonus
+}
+
+/** Turns this creature needs to drop the reference character. */
+function turnsToKillPlayer(creature: CreatureStatBlock): number {
+  const perTurn = averageDamage(creature)
+  return perTurn === 0 ? Infinity : PLAYER_HP / perTurn
+}
+
+describe('bestiary coverage', () => {
+  it('holds exactly the 18 canon creatures', () => {
+    expect(listCreatures()).toHaveLength(18)
+  })
+
+  it('keys every entry by its own id', () => {
+    for (const creature of listCreatures()) {
+      expect(getCreature(creature.id).id).toBe(creature.id)
+    }
+  })
+
+  // The gap this table was written to close: no entry may be left unquantified.
+  it('gives every creature a complete stat block', () => {
+    for (const creature of listCreatures()) {
+      expect(creature.name.length).toBeGreaterThan(0)
+      expect(creature.loot.length).toBeGreaterThan(0)
+      expect(creature.minDepth).toBeGreaterThanOrEqual(1)
+      expect(creature.maxDepth).toBeLessThanOrEqual(MAX_CONTRACT_DEPTH)
+      expect(creature.minDepth).toBeLessThanOrEqual(creature.maxDepth)
+    }
+  })
+
+  it('gives every fightable creature HP, an AC and damage', () => {
+    for (const creature of listCreatures().filter((c) => c.engagement === 'fight')) {
+      expect(creature.maxHp).toBeGreaterThan(0)
+      expect(creature.armourClass).toBeGreaterThan(0)
+      expect(creature.damage).not.toBeNull()
+    }
+  })
+})
+
+describe('canon figures taken verbatim', () => {
+  // These two are printed in the canon enemy AC table; they are not ours to tune.
+  it('keeps the AC values the canon states outright', () => {
+    expect(getCreature('calcined_common').armourClass).toBe(12)
+    expect(getCreature('watcher').armourClass).toBe(18)
+  })
+
+  it('keeps AC inside the canon 8-18 bracket for everything fightable', () => {
+    for (const creature of listCreatures().filter((c) => c.engagement === 'fight')) {
+      expect(creature.armourClass).toBeGreaterThanOrEqual(8)
+      expect(creature.armourClass).toBeLessThanOrEqual(18)
+    }
+  })
+
+  it('never exceeds the canon weapon damage ladder', () => {
+    for (const creature of listCreatures()) {
+      if (!creature.damage) continue
+      expect(creature.damage.faces).toBeLessThanOrEqual(12)
+      expect(creature.damage.faces).toBeGreaterThanOrEqual(4)
+    }
+  })
+})
+
+describe('depth calibration', () => {
+  it('never places a legendary within reach of floors 1-2', () => {
+    for (const depth of [1, 2]) {
+      expect(creaturesForDepth(depth).filter((c) => c.tier === 'legendary')).toHaveLength(0)
+    }
+  })
+
+  it('offers something to fight on every floor of a run', () => {
+    for (let depth = 1; depth <= MAX_CONTRACT_DEPTH; depth++) {
+      expect(creaturesForDepth(depth).length).toBeGreaterThan(0)
+    }
+  })
+
+  // The three canon depth bands are stated as feelings, and each one is really
+  // a claim about how fast the fauna kills. These lock that ladder in place.
+
+  // Floors 1-2, « je gère » : winnable without spending resources, so nothing
+  // may drop an intact character in under four turns.
+  it('leaves the player at least four turns against anything on floors 1-2', () => {
+    for (const creature of [...creaturesForDepth(1), ...creaturesForDepth(2)]) {
+      expect(turnsToKillPlayer(creature)).toBeGreaterThanOrEqual(4)
+    }
+  })
+
+  // Floors 3-4, « ça coûte » : it bites, but a fight is still survivable.
+  // Hazards are exempt by nature — the Grey Wind is lethal precisely because
+  // standing in it is not a fight, and the answer to it is to run.
+  it('keeps floors 3-4 costly without being lethal in two turns', () => {
+    const fightable = [...creaturesForDepth(3), ...creaturesForDepth(4)].filter(
+      (creature) => creature.engagement !== 'hazard'
+    )
+    for (const creature of fightable) {
+      expect(turnsToKillPlayer(creature)).toBeGreaterThan(2)
+    }
+  })
+
+  // Floors 5+, « je devrais peut-être remonter » then « c'est là que je meurs ».
+  it('confines creatures that kill in two turns or less to floors 5+', () => {
+    const fightable = listCreatures().filter((creature) => creature.engagement !== 'hazard')
+    for (const creature of fightable) {
+      if (turnsToKillPlayer(creature) <= 2) {
+        expect(creature.minDepth).toBeGreaterThanOrEqual(5)
+      }
+    }
+  })
+
+  it('makes the deepest floor strictly deadlier than the shallowest', () => {
+    const worstEarly = Math.max(...creaturesForDepth(1).map(averageDamage))
+    const worstLate = Math.max(...creaturesForDepth(MAX_CONTRACT_DEPTH).map(averageDamage))
+    expect(worstLate).toBeGreaterThan(worstEarly)
+  })
+})
+
+describe('the return trip', () => {
+  it('never draws anything deeper than the floors already traversed', () => {
+    const returning = creaturesForReturn(4)
+    for (const creature of returning) {
+      expect(creature.minDepth).toBeLessThanOrEqual(4)
+    }
+  })
+
+  it('excludes the legendaries when the player never reached floor 7', () => {
+    expect(creaturesForReturn(5).filter((c) => c.tier === 'legendary')).toHaveLength(0)
+  })
+})
+
+describe('special engagements', () => {
+  // Canon: « on ne le combat pas — on le fuit ». It must not read as fightable.
+  it('gives the Grey Wind no HP to attack', () => {
+    const greyWind = getCreature('grey_wind')
+    expect(greyWind.engagement).toBe('hazard')
+    expect(greyWind.maxHp).toBe(0)
+  })
+
+  // "Terrifiant non par sa force mais par son effet."
+  it('makes the Memory Eater the least damaging of the rares', () => {
+    const memoryEater = getCreature('memory_eater')
+    expect(memoryEater.engagement).toBe('drain')
+
+    const otherRares = listCreatures().filter(
+      (c) => c.tier === 'rare' && c.id !== 'memory_eater' && c.engagement === 'fight'
+    )
+    for (const rare of otherRares) {
+      expect(averageDamage(memoryEater)).toBeLessThan(averageDamage(rare))
+    }
+  })
+})
+
+describe('applyVariant', () => {
+  const base = getCreature('calcined_common')
+
+  it('returns the creature untouched when no variant applies', () => {
+    expect(applyVariant(base, null)).toEqual(base)
+  })
+
+  it('makes the hungry variant hit harder and guard worse', () => {
+    const hungry = applyVariant(base, 'hungry')
+    expect(averageDamage(hungry)).toBe(averageDamage(base) + 2)
+    expect(hungry.armourClass).toBe(base.armourClass - 2)
+  })
+
+  it('thins individual HP for pack and wounded', () => {
+    expect(applyVariant(base, 'pack').maxHp).toBeLessThan(base.maxHp)
+    expect(applyVariant(base, 'wounded').maxHp).toBeLessThan(applyVariant(base, 'pack').maxHp)
+  })
+
+  it('hardens the ancient variant', () => {
+    expect(applyVariant(base, 'ancient').armourClass).toBe(base.armourClass + 2)
+  })
+
+  it('leaves saturated numerically identical — it acts on contact, not on build', () => {
+    expect(applyVariant(base, 'saturated')).toEqual(base)
+  })
+
+  // A variant makes a creature frail, never already-dead.
+  it('never reduces any creature below 1 HP', () => {
+    const variants: CreatureVariant[] = ['hungry', 'pack', 'saturated', 'wounded', 'ancient']
+    for (const creature of listCreatures()) {
+      for (const variant of variants) {
+        expect(applyVariant(creature, variant).maxHp).toBeGreaterThanOrEqual(
+          creature.maxHp === 0 ? 0 : 1
+        )
+      }
+    }
+  })
+
+  it('never mutates the shared stat block', () => {
+    const before = { ...getCreature('watcher') }
+    applyVariant(getCreature('watcher'), 'hungry')
+    expect(getCreature('watcher')).toEqual(before)
+  })
+})

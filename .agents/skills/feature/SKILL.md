@@ -16,8 +16,8 @@ Exécuter dans l'ordre :
    - Déduire un ou plusieurs domaines autorisés : `domain: frontend`, `domain: backend`, `domain: ai`.
      `packages/shared` appartient à `domain: backend`.
    - Si la phase ou le domaine est ambigu, demander avant de créer l'issue.
-   - Créer l'issue avec `gh issue create`, les labels `type: feature`, phase et domaine, puis
-     l'assigner à `AdamDjo`.
+   - Créer l'issue avec `gh issue create`, phase et domaine pour seuls labels, puis l'assigner à
+     `AdamDjo`. Aucun label `type:`, `priority:` ou `size:` : ces familles ont été supprimées.
    - Noter le numéro de l'issue créée → `<numéro>`
 
 2. **Ajouter l'issue au projet Scrum Board**
