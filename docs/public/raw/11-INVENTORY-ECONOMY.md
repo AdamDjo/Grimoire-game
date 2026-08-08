@@ -89,20 +89,20 @@ intéressante**. Elle crée un arbitrage impossible à esquiver :
          ↓
    moins de place pour le butin
          ↓
-   descendre moins profond
+   devoir rentrer plus tôt
 
    Emporter moins
          ↓
    plus de place pour le butin
          ↓
-   descendre plus profond… mais le retour devient mortel
+   avancer plus longtemps… mais le retour devient mortel
 ```
 
 Le joueur doit **garder des slots libres à l'aller** pour ce qu'il compte ramener. Un sac plein au
-palier 3 signifie qu'on ne peut plus rien prendre — ou qu'il faut jeter quelque chose de vital.
+milieu d'une quête signifie qu'on ne peut plus rien prendre — ou qu'il faut jeter quelque chose de vital.
 
 🔴 _Anti-règle : ne jamais assouplir la capacité pour « confort ». Sans cette contrainte, la
-préparation à l'auberge n'est qu'un clic, et le choix de profondeur perd son poids._
+préparation à l'auberge n'est qu'un clic, et la décision de continuer perd son poids._
 
 ---
 
@@ -277,12 +277,13 @@ se décident sans calcul._
 
 > **L'usure ne doit jamais être une taxe silencieuse.**
 
-Chaque franchissement de palier est annoncé au joueur, en langage de personnage :
+Chaque changement d'état de l'objet est annoncé au joueur, en langage de personnage :
 
 > _« Ta lame a mordu quelque chose de plus dur qu'elle. Elle ne coupe plus comme avant. »_
 
-C'est une application directe du principe 11 (`01-PILLARS §9`) : un objet qui passe à **usé** en
-profondeur est un **avertissement** — un signal de plus qui dit qu'il est temps de faire demi-tour.
+C'est une application directe du principe 11 (`01-PILLARS §9`) : le monde futur reste mystérieux,
+mais la dégradation déjà subie n'est jamais cachée. Une arme **usée** est une information réelle sur
+laquelle le joueur peut décider de faire demi-tour.
 
 ### L'arbitrage de la forge
 
@@ -528,21 +529,21 @@ Les **donjons** sont là où dorment les artefacts (cf. décision L5).
 - **Donjon majeur** (5-7 salles, boss, artefact garanti)
 - **Donjon archontique** (rare, 7-10 salles, plusieurs artefacts, boss épique)
 
-### ⛏️ Le donjon est un palier, pas un run
+### ⛏️ Le donjon est un lieu de quête, pas nécessairement le run entier
 
-> **Précision du 2026-08-06.** Cette section décrit la structure d'**un palier** de la descente
-> (`23-RUN-STRUCTURE §2`), pas la structure d'un run complet. Un run enchaîne **3 à 7 paliers**
-> selon le contrat accepté à l'auberge.
+> **Révision du 2026-08-08.** Un contrat peut conduire à un donjon, mais aussi à une escorte, une
+> enquête, une chasse ou un dilemme. Le moteur peut segmenter un donjon en salles et paliers
+> internes ; cette structure reste cachée au joueur en v0.2.1 (`23-RUN-STRUCTURE §4`).
 
 Deux conséquences directes sur les règles ci-dessus :
 
-| Règle §9                                     | Lecture dans la boucle de run                                                                                     |
-| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| « Le joueur ne sort jamais les mains vides » | Vrai **par palier**. Un run, lui, peut parfaitement se terminer les mains vides — c'est le prix du demi-tour raté |
-| Loot garanti (artefact / fer / Tier 2)       | Garanti **à l'atteinte** du palier, pas à la remontée. Le loot n'est acquis que s'il **rentre à l'auberge**       |
-| Salle boss « optionnelle »                   | Devient le **palier terminal** du contrat : c'est là que se trouve l'objectif du contrat                          |
+| Règle §9                                     | Lecture dans la boucle de run                                                                       |
+| -------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| « Le joueur ne sort jamais les mains vides » | Vrai pour un donjon complété. Un run interrompu peut finir à vide si le joueur rentre sans objectif |
+| Loot garanti (artefact / fer / Tier 2)       | Garanti à la résolution du lieu, mais acquis seulement si le joueur rentre vivant à l'Auberge       |
+| Salle boss « optionnelle »                   | Peut porter l'objectif d'un contrat de donjon sans que sa présence soit annoncée à l'avance         |
 
-C'est la nuance qui rend la boucle tendue : **descendre est récompensé, remonter est ce qui compte.**
+C'est la nuance qui rend la boucle tendue : **continuer est récompensé, rentrer est ce qui compte.**
 Le butin n'est jamais compté au moment où on le ramasse, seulement au moment où on ressort vivant.
 
 ---

@@ -6,7 +6,7 @@ source_of_truth: true
 owner: release-coordination
 ---
 
-# Release Readiness — v0.1.0 (décalée) → v0.2.0
+# Release Readiness — v0.1.0 (décalée) → v0.2.1
 
 Toute PR qui change un bloqueur `phase: predeploy` met à jour ce fichier selon l'état attendu après
 merge. La checklist opérationnelle détaillée vit dans l'issue #163.
@@ -17,9 +17,14 @@ merge. La checklist opérationnelle détaillée vit dans l'issue #163.
 > circonscrits et connus. Elle est décalée parce que **le jeu n'est pas satisfaisant** — verdict de
 > playtest : _« après une partie je m'ennuie, il n'y a aucune raison de recommencer »_ (décision 19).
 >
-> Le travail bascule sur la **refonte roguelike v0.2.0** (8 EPICs, #214→#221). Ce fichier reste la
+> Le travail bascule sur la **refonte roguelike narrative v0.2.1**. Ce fichier reste la
 > source de vérité du déploiement et sera réactivé une fois la boucle de jeu satisfaisante ; sa
 > checklist reste valable.
+
+> **Révision du 2026-08-08.** La release ne cherche plus à remplacer le storytelling par quatre
+> interfaces de modes. Elle conserve une interface narrative continue, ajoute le combat tactique et
+> garde la structure du donjon cachée. Le backlog correspondant vit dans le milestone GitHub
+> `v0.2.1 - Roguelike jouable`.
 
 ## Fondations livrées
 
@@ -59,7 +64,7 @@ parcours (landing → auberge → session) qui ne décrira plus le jeu après la
 
 Prérequis de fait au déploiement : le jeu doit être satisfaisant avant d'être publié.
 
-L'avancement des 8 EPICs (#214 → #221) se lit sur GitHub, jamais ici — un tableau recopié à la main
+L'avancement des EPICs et de leurs issues livrables se lit sur GitHub, jamais ici — un tableau recopié à la main
 devient faux au premier merge :
 
 ```bash
@@ -77,9 +82,9 @@ multi-provider (#159), pgvector (#114), World events (#117) et échange Souvenir
 
 `NO-GO`, pour deux raisons distinctes qu'il ne faut pas confondre :
 
-1. **Raison produit (bloquante, prioritaire)** — la boucle de jeu n'est pas satisfaisante. Les 8
-   EPICs de la Phase 0 doivent être livrés et le jeu jugé amusant par l'auteur avant de rouvrir la
-   question du déploiement.
+1. **Raison produit (bloquante, prioritaire)** — la boucle de jeu n'est pas satisfaisante. Les
+   chantiers pré-déploiement du milestone v0.2.1 doivent être livrés et le jeu jugé amusant par
+   l'auteur avant de rouvrir la question du déploiement.
 2. **Raison technique (circonscrite)** — l'API n'est pas déployée (#161) et le golden path n'est pas
    vert sur un environnement de release (#129, à re-scoper). La sécurité, elle, est qualifiée
    depuis #162.

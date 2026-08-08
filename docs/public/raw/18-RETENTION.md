@@ -27,7 +27,7 @@ m'ennuie, il n'y a aucune raison de recommencer »_.
 L'ordre est donc :
 
 ```
-0. La boucle est bonne   ← 23-RUN-STRUCTURE (contrat → paliers → demi-tour → retour)
+0. La boucle est bonne   ← 23-RUN-STRUCTURE (quête → voyage → mystère → combat → retour)
    1. Souvenirs nommés
       2. Chronique
          3. Monde qui change

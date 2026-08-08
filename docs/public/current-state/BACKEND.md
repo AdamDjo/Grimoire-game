@@ -16,8 +16,8 @@ default_agent: claude
 Priorité courante : refonte roguelike (décision du 2026-08-06, cf. [[PROJECT_STATUS]]).
 Canon de référence : `docs/public/raw/23-RUN-STRUCTURE.md`, `10-COMBAT.md`, `03-BESTIARY.md`.
 
-Ordre de dépendance : `#214 → #215 → #216 → #217 → #220/#221`.
-Transverse à #214 et #221 : la méta-progression de connaissance (`PlayerKnowledge`) persiste
+Ordre de dépendance produit : quête/run → combat → Auberge → artefacts → compagnons/exploits.
+Transverse à la boucle et aux exploits : la méta-progression de connaissance (`PlayerKnowledge`) persiste
 bestiaire, routes, contrats et sujets — **jamais de puissance** (`14-META-WORLD.md` §1bis).
 
 ## Décisions d'implémentation
@@ -34,24 +34,31 @@ calcined`. L'ancien `inn` confondait « rentré avec l'objectif » (payé) et «
   volontaire à l'auberge, sans contrat à honorer, les sessions existantes sont migrées en `abandon`
   (migration `split_session_end_reason_run_structure`). #226
 - **`GameMode` ≠ fin de session ≠ type de repos** — `inn | exploration | combat | return` est un
-  **mode de jeu**. Ne pas le confondre avec `rest_requested.type: 'inn'`, que le backend ignore
-  volontairement. #226
+  état serveur. Ne pas le confondre avec `rest_requested.type: 'inn'`, que le backend ignore
+  volontairement. Depuis le grilling du 2026-08-08, il n'impose plus quatre interfaces : il permet
+  surtout au frontend de transformer la scène quand un combat commence.
+- **Un contrat est une quête structurée, pas un niveau de donjon.** Un seul contrat principal est
+  actif ; le backend possède objectif, destination, commanditaire, danger, durée, récompense,
+  conditions d'échec et progression. L'IA habille ces données sans les modifier.
+- **Le run commence au départ de l'Auberge.** Le contrat reste modifiable avant le départ, puis se
+  verrouille. Les ressources et conséquences s'appliquent dès le voyage, pas seulement au premier
+  palier de donjon.
+- **L'objectif est injecté à chaque tour.** L'IA respecte les détours mais ne peut pas oublier la
+  quête ; réussite et échec sont des verdicts backend.
 - **Le plafond de 7 paliers est structurel**, clampé même sur une valeur hors barème : c'est le
   garant du plafond dur de 2h30. Trois garde-fous indépendants — clamp moteur, contrainte `CHECK`,
   et `readContract` qui rend nul plutôt que de fabriquer un run trop long. #227 #228
-- **`MINUTES_PER_ROOM = 3.75`** est calibré sur le barème canon, pas choisi rond. Le contrat
-  3 paliers est le contraignant (12 salles ≈ 45 min) ; les contrats plus profonds restent sous leur
-  propre cible (5 paliers ≈ 75 min, 7 paliers ≈ 105 min). #227
+- **`MINUTES_PER_ROOM = 3.75` reste un calibrage interne.** Il borne la durée des expéditions, mais
+  la profondeur, le nombre de salles et les minutes du retour ne sont jamais exposés en v0.2.1.
 - **Le retour est un trajet distinct**, jamais la descente à l'envers : identifiants et types tirés
   à neuf, 1 salle par palier contre 3, aucun boss. Le retour tue par épuisement, jamais par
   embuscade. #227
-- **L'indice dit la nature du danger, jamais son ampleur** — un boss verrouille la dernière salle
-  des paliers 5+ sans que l'indice le distingue d'un combat ordinaire (§2). #227
-- **`detectReturnWarnings` détecte le franchissement**, y compris quand c'est la _descente_ — et non
-  la consommation — qui rend le retour inabordable. Une ressource déjà courte ne réalerte pas, pour
-  que l'avertissement garde son poids. #227
-- **L'avertissement est injecté en langage de personnage** — jamais un nombre, jamais une alerte
-  d'interface (§4.2). #228
+- **La structure du donjon est secrète en v0.2.1.** Le moteur peut conserver salles, connexions,
+  paliers et profondeur pour arbitrer ; ni indices de danger, ni types de salles, ni carte, ni
+  estimation ne doivent atteindre le joueur.
+- **Les estimations et avertissements de retour ne sont plus des sorties produit.** Le moteur peut
+  calculer un coût interne pour garder un trajet cohérent, mais il ne l'injecte ni dans la prose ni
+  dans la réponse consommée par l'UI.
 - **⏱️ La progression est portée par le tour, jamais par le temps réel.** Une session laissée ouverte
   ou reprise le lendemain ne consomme rien : les minutes affichées sont une estimation honnête pour
   décider, pas une horloge que le moteur relit. #228
@@ -105,16 +112,15 @@ calcined`. L'ancien `inn` confondait « rentré avec l'objectif » (payé) et «
   l'état mécanique réel transmis (ratio PV, palier de Calamine, conditions, mourant). Aucun état
   d'acte/chapitre serveur, explicitement hors scope. #185
 
-### Images de scène — #207
+### Images de scène — révision v0.2.1
 
-- **La clé de cache est reclée sur la profondeur, jamais sur le texte IA.** Le contenu n'est pas un
-  monde ouvert à biomes mais une descente en paliers : la variable qui change l'image est la
-  **profondeur atteinte**. `depthBandOf` découpe les 7 paliers exactement là où le bestiaire découpe
-  ses tiers de danger (`surface | upper | mid | deep | abyss`), et la profondeur vient de l'état du
-  run — une image ne peut donc plus contredire le palier réel. `classifyBiome` a été **supprimé**.
-- **Un palier hors bornes retombe sur une bande valide plutôt que de lever** : un tour ne doit pas
-  échouer parce qu'il cherchait à s'illustrer. Toute panne (génération, upload, course sur la clé
-  unique) retombe sur `null` sans faire échouer le tour.
+- **Aucune génération runtime.** La génération Pollinations et son cache `SceneImage` deviennent
+  une implémentation à retirer ; qualité, coût et disponibilité d'un fournisseur ne doivent pas
+  bloquer un tour.
+- **Bibliothèque fermée de 45 à 60 assets pré-générés.** Le backend ou le contrat de scène référence
+  une famille et une variante connues ; il ne compose jamais une image depuis la prose IA.
+- **Fallback obligatoire.** Une clé absente retombe sur le décor de thème sans faire échouer le tour.
+- **L'image représente la scène actuelle et ne donne aucun indice sur la prochaine salle.**
 - Détail : `docs/public/tech/DYNAMIC_SCENE_IMAGES.md`.
 
 ### Sécurité et infrastructure — #162
@@ -141,8 +147,9 @@ calcined`. L'ancien `inn` confondait « rentré avec l'objectif » (payé) et «
 - **La mémoire interne est en pivot anglais fixe**, indépendante de la locale de narration : un
   changement de langue en cours de run ne doit jamais traduire ni corrompre le canon. #168
 - **Le client n'infère aucune règle** — `SceneResponse` et `InventoryActionResponse` portent
-  l'instantané de survie, les conditions actives, le fer persistant, le `run` complet
-  (`canDescend` inclus), le `CombatSnapshot` et le `endReason` autoritaire. #186 #228 #233
+  l'instantané de survie, les conditions actives, le fer persistant, l'objectif joueur, le
+  `CombatSnapshot` et le `endReason` autoritaire. La structure cachée du run (`canDescend`, paliers,
+  estimation) ne doit pas devenir une information affichable par accident.
 - **`POST /api/character/resolve-vocation` est stateless** (aucune écriture Prisma, toujours HTTP 200) : l'IA propose une des 4 vocations canon, le serveur reste souverain sur l'identifiant retenu
   via `z.enum`. Réponse en union discriminée `resolved` | `fallback`. #152
 
