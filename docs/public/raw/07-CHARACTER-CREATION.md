@@ -251,9 +251,9 @@ Si le joueur ramène un artefact non identifié d'un run (cf. `11-INVENTORY-ECON
 
 ---
 
-## 6. Sortie de l'auberge — première scène du run
+## 6. Après la création — préparer le premier contrat
 
-Une fois la fiche compilée, L'Aveugle propose une **destination de départ** selon la vocation :
+Une fois la fiche compilée, L'Aveugle recommande une **première quête** selon la vocation :
 
 | Vocation / Concept | Destination suggérée                                                     |
 | ------------------ | ------------------------------------------------------------------------ |
@@ -263,9 +263,14 @@ Une fois la fiche compilée, L'Aveugle propose une **destination de départ** se
 | Tisse-Verbe        | _"Une femme à Tissan cherche quelqu'un comme toi. Elle paye en savoir."_ |
 | Concept libre      | _L'IA invente une accroche basée sur le trait narratif_                  |
 
-→ Le joueur **accepte** OU **clique ✍️ pour proposer autre chose**. L'IA s'adapte.
+Cette recommandation ne lance pas directement le run. Le joueur rejoint l'Auberge complète :
+Comptoir, L'Aveugle, Contrats et Forge. Il peut préparer son sac et choisir un autre contrat parmi
+les trois offres ordinaires.
 
-→ La **boucle d'action** (voir `09-ACTION-LOOP`) démarre. Plus de modal. On joue.
+→ Un contrat principal doit être accepté avant le départ.
+
+→ Le run et la consommation de ressources commencent au franchissement de la porte. La **boucle
+d'action** (voir `09-ACTION-LOOP`) reste la même pendant le voyage, la quête et le retour.
 
 ---
 
@@ -332,9 +337,13 @@ Fiche compilée (récap)
    ↓
 1ᵉʳ Souvenir gratuit (3 choix lore)
    ↓
-L'Aveugle suggère une destination de départ
+L'Aveugle recommande une première quête
    ↓
-Sortie de l'auberge — LA BOUCLE D'ACTION COMMENCE (09)
+Hub : Comptoir · L'Aveugle · Contrats · Forge
+   ↓
+Contrat accepté + préparation terminée
+   ↓
+Sortie de l'auberge — LE RUN COMMENCE (09, 23)
 
 
 RUN ≥ 2

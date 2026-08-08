@@ -32,9 +32,11 @@ Promesse produit : **un monde qui se souvient**. Le joueur agit librement, le ba
 2. L'Aveugle demande son nom.
 3. Le joueur crée son personnage : vocation ou concept libre.
 4. L'IA réagit en prose, mais le backend garde les règles.
-5. Le joueur quitte l'auberge et entre dans le run.
-6. Les choix importants créent des faits persistants.
-7. La mort ou la fin génère une trace pour les runs suivants.
+5. Le joueur explore les scènes de l'Auberge, prépare son sac et choisit une quête principale.
+6. Le run commence dès le départ : voyage, quête, donjon et retour restent une narration continue.
+7. Le combat transforme temporairement l'interface en espace tactique.
+8. Les choix importants créent des faits persistants.
+9. La mort ou la fin génère une trace pour les runs suivants.
 
 ## Canon public minimal
 
@@ -52,14 +54,18 @@ Promesse produit : **un monde qui se souvient**. Le joueur agit librement, le ba
 - Tokens : toujours utiliser [`DESIGN_TOKENS.md`](DESIGN_TOKENS.md).
 - UI : dense, lisible, cinématique, jamais générique fantasy.
 - Les écrans gameplay doivent prioriser la narration, l'état du personnage, les conséquences et l'action libre.
+- Une seule coque narrative porte Auberge, voyage, quête, donjon et retour.
+- Aucun type de salle, carte, palier, profondeur ou estimation de retour n'est affiché en v0.2.1.
+- Le combat est la seule transformation complète : il reste visuellement ancré dans la scène.
 
 ## Écrans à construire
 
 - Landing : promesse claire + SEO bilingue, sans exposer le canon complet.
-- Auberge de L'Aveugle : hub de run, création, Souvenirs, artefacts.
+- Auberge de L'Aveugle : hub narratif à scènes, avec Comptoir, L'Aveugle, Contrats et Forge.
 - Character Create : 4 vocations + concept libre.
 - World Map : carte du Makhzen, régions, points d'intérêt.
-- Session : narration, action libre, choix, dés aux pivots, inventaire, survie.
+- Session : narration continue, objectif repliable, action libre, choix, dés, inventaire, survie.
+- Combat : transformation tactique cinématographique de la Session, jamais mini-jeu détaché.
 
 ## Composants attendus
 
@@ -68,6 +74,8 @@ Promesse produit : **un monde qui se souvient**. Le joueur agit librement, le ba
 - `SurvieGauge` : faim, soif, fatigue.
 - `VocationCard`.
 - Composants L'Aveugle : scène, dialogue, choix vocation, concept libre, échange Souvenirs.
+- Navigation Auberge : destinations persistantes sans casser la fiction.
+- Contrat : tags textuels de danger et durée, jamais score ou prévisualisation des rencontres.
 
 ## Règles IA côté design
 

@@ -182,3 +182,29 @@ domaine. L'agent frontend Claude est conservé et protégé contre une suppressi
 - le dashboard Obsidian et les instructions d'agents legacy ont été réparés.
 - `.agents/skills/` est la source canonique unique des skills projet ; `.claude/skills/` utilise des
   liens relatifs contrôlés en CI, et les 10 skills passent le validateur officiel.
+
+---
+
+## 2026-08-08 — Grilling : le roguelike reste un storytelling continu
+
+Le grilling produit mené avec Adem révoque la séparation décidée le 2026-08-06 entre quatre
+interfaces Auberge / exploration / combat / retour. Cette séparation répondait au bon diagnostic —
+le jeu manquait de moteur — mais à la mauvaise cause : l'interface narrative n'est pas le problème.
+Ce sont les règles, le risque, les objectifs et les conséquences qui doivent créer le jeu.
+
+Décisions validées :
+
+- l'Auberge, le voyage, la quête, le donjon et le retour utilisent une seule coque storytelling ;
+- seul le combat transforme temporairement la scène en interface tactique ;
+- l'Auberge devient un hub de scènes avec Comptoir, L'Aveugle, Contrats et Forge ;
+- un contrat principal est obligatoire et devient une quête générique structurée par le backend ;
+- trois contrats ordinaires affichent seulement un tag textuel de danger et de durée ;
+- le run commence au départ de l'Auberge et l'IA reçoit l'objectif à chaque tour ;
+- pour v0.2.1, salles, indices, carte, paliers, profondeur et estimation de retour sont cachés ;
+- « Faire demi-tour » reste toujours disponible hors combat ; le retour est joué, distinct, plus
+  court et plus facile ;
+- les scènes utilisent 45 à 60 images pré-générées et réutilisables, sans génération runtime.
+
+Le compromis de mystère total est volontaire : l'état actuel du personnage reste lisible, mais le
+jeu ne prédit pas les dangers futurs. Les playtests v0.2.1 décideront si des avertissements doivent
+revenir. Coordination documentaire et backlog : #244 ; EPICs #250, #251, #252 et #253.

@@ -110,7 +110,8 @@ Avantage Premium : queue Redis 2 niveaux (`priority:high` Premium / `priority:no
 → [19-MONETIZATION §2](19-MONETIZATION.md), [20-ARCHITECTURE §6](20-ARCHITECTURE.md)
 
 **FLUX schnell / FLUX dev** _🤖 IA / Tech_
-Modèles de génération d'images. **FLUX schnell** = rapide + gratuit (utilisé pour tous). **FLUX dev** = qualité supérieure (utilisé pour illustration Chronique Premium uniquement).
+Modèles de génération d'images historiquement envisagés pour la Chronique. Les **images de scène
+v0.2.1 sont pré-générées pendant le développement** et ne déclenchent aucun modèle au runtime.
 → [17-RUN-CHRONICLE §4](17-RUN-CHRONICLE.md), [19-MONETIZATION §1.3](19-MONETIZATION.md)
 
 ## G
@@ -127,8 +128,9 @@ Tier d'utilisateur avec compte créé (email + magic link). Cap = **150 requête
 ## H
 
 **Hub permanent** _⚙️ Mécanique_
-L'Auberge de L'Aveugle — point d'entrée unique de chaque run. Pas de menu, pas de lobby. Le joueur arrive toujours là.
-→ [07-CHARACTER-CREATION §3](07-CHARACTER-CREATION.md)
+L'Auberge de L'Aveugle — point d'entrée unique de chaque run. Pas de menu, pas de lobby : quatre
+destinations fictionnelles restent accessibles, Comptoir, L'Aveugle, Contrats et Forge.
+→ [07-CHARACTER-CREATION](07-CHARACTER-CREATION.md), [23-RUN-STRUCTURE §1](23-RUN-STRUCTURE.md)
 
 ## L
 
@@ -239,8 +241,11 @@ Peuple des oasis fertiles, érudits et marchands. Voix PNJ lyrique, métaphores 
 → [GAME_DESIGN §5](../docs/GAME_DESIGN.md), [15-GAME-MASTER §1](15-GAME-MASTER.md)
 
 **Run** _⚙️ Mécanique_
-Une session de jeu complète (2-4h en V1, 3-15h annoncé long terme). Commence à l'Auberge, finit par mort ou choix de fin. Génère une Chronique.
-→ [09-ACTION-LOOP](09-ACTION-LOOP.md), [17-RUN-CHRONICLE](17-RUN-CHRONICLE.md)
+Une session de jeu complète de 2h30 maximum. Elle commence à l'Auberge, devient mécaniquement active
+au départ avec un contrat principal, puis finit par retour, mort, Calamine ou abandon. Auberge,
+voyage, quête, donjon et retour partagent la même interface narrative ; chaque fin génère une
+Chronique.
+→ [09-ACTION-LOOP](09-ACTION-LOOP.md), [23-RUN-STRUCTURE](23-RUN-STRUCTURE.md), [17-RUN-CHRONICLE](17-RUN-CHRONICLE.md)
 
 ## S
 

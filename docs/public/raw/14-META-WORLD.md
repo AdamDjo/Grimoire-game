@@ -51,8 +51,8 @@ GRIMOIRE n'est pas un MMO. Pas de saisons, pas de raids, pas de classement publi
 
 - Lié au **joueur**, survit à la mort du perso
 - **Ce n'est pas de la narration : c'est de la progression de jeu**
-- Débloque de la **connaissance** (bestiaire, routes, faiblesses) et de l'**accès** (contrats plus
-  profonds, sujets chez L'Aveugle, compagnons, exploits)
+- Débloque de la **connaissance** (bestiaire, destinations, faiblesses) et de l'**accès** (contrats
+  plus dangereux, sujets chez L'Aveugle, compagnons, exploits)
 - **Jamais de puissance** — voir la règle absolue en §1bis
 
 ---
@@ -74,8 +74,8 @@ joueur une raison **mécanique** de relancer un run. C'est le trou identifié da
 | ✅ Persiste entre les runs                         | ❌ Ne persiste jamais                         |
 | -------------------------------------------------- | --------------------------------------------- |
 | Pages de bestiaire (CA, faiblesses, comportements) | Bonus permanents de PV, dégâts ou attribut    |
-| Routes de retour connues                           | Équipement cumulé d'un run à l'autre          |
-| Contrats plus profonds débloqués                   | Réduction de difficulté                       |
+| Destinations et dangers déjà rencontrés            | Équipement cumulé d'un run à l'autre          |
+| Contrats plus dangereux débloqués                  | Réduction de difficulté                       |
 | Sujets de conversation chez L'Aveugle              | Tout « build » qui monte run après run        |
 | Compagnons rencontrés (rappelables plus tard)      | Monnaie accumulée sans plafond                |
 | Exploits/badges → déblocages d'accès               | Toute récompense d'exploit qui rend plus fort |
@@ -87,9 +87,9 @@ Trois raisons, dans l'ordre d'importance :
 
 1. **La difficulté reste honnête.** Si le run 10 est mécaniquement plus facile que le run 1, la mort
    au run 3 n'était qu'une taxe de temps. Avec du savoir seul, une mort reste **imputable au joueur**
-   — ce qui est exactement le principe 11 (`01-PILLARS §9`).
+   — l'état du personnage reste lisible, même si le monde conserve ses secrets (`01-PILLARS §9`).
 2. **Le joueur progresse vraiment.** Ce qui s'améliore, c'est sa lecture du jeu : il sait quoi
-   emporter, où faire demi-tour, quelle créature fuir. C'est la progression la plus durable — et la
+   emporter, quelle créature fuir et quel avertissement narratif reconnaître. C'est la progression la plus durable — et la
    seule qui ne se dévalue jamais.
 3. **Ça reste finançable.** Une progression de puissance oblige à rééquilibrer tout le bestiaire à
    chaque palier de build. Une progression de connaissance ne coûte que du contenu.
@@ -102,8 +102,8 @@ perso et n'est jamais rattachée à un `Character`.
 ```
 PlayerKnowledge
   ├── bestiary        : créatures rencontrées → ce qu'on en sait
-  ├── routes          : trajets de retour connus par palier
-  ├── contracts       : profondeurs débloquées
+  ├── destinations    : lieux et risques déjà rencontrés
+  ├── contracts       : familles de quêtes et dangers débloqués
   ├── topics          : sujets ouverts chez L'Aveugle
   └── feats           : exploits accomplis → accès débloqués
 ```
@@ -115,9 +115,9 @@ backend ni l'UI ne peuvent l'afficher de façon fiable.
 ### Ce que le joueur en voit
 
 La connaissance doit être **consultable**, sinon elle n'existe pas pour lui : une page bestiaire qui
-se remplit, une carte de retour qui se dessine, une liste de contrats dont certains sont encore
-grisés. C'est ce qui rend le progrès **visible entre deux runs** — le moment où l'on décide de
-relancer.
+se remplit, des destinations connues et une liste de contrats dont certains sont encore grisés.
+La v0.2.1 n'affiche pas de carte de donjon, profondeur ou route de retour : le progrès devient
+visible entre les runs sans révéler la structure d'un run futur.
 
 ---
 

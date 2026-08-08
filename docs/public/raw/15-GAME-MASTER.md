@@ -16,6 +16,25 @@ Si l'IA tente de décider (« le marchand baisse son prix de 30% », « tu trouv
 
 C'est la règle qui protège le jeu de l'effondrement : sans elle, l'IA dérive en quelques tours vers une fanfiction incohérente, et le joueur perd confiance.
 
+### §0bis — Contrat actif et continuité de quête
+
+Un contrat est une quête structurée par le backend. À chaque tour hors Auberge, le prompt reçoit :
+
+- l'objectif principal et la destination ;
+- les étapes accomplies et les faits qui conditionnent la suite ;
+- les conditions de réussite ou d'échec déjà déclenchées ;
+- le décor courant sélectionné par le jeu ;
+- les derniers détours réellement choisis par le joueur.
+
+L'IA doit respecter l'action libre, même si elle éloigne temporairement de l'objectif. Elle adapte
+la scène, rappelle la quête quand le contexte le justifie et propose régulièrement au moins une voie
+naturelle pour reprendre sa progression. Elle ne téléporte pas le joueur, ne refuse pas un détour et
+ne déclare jamais seule un contrat réussi ou échoué.
+
+La structure cachée du run n'entre pas dans la prose joueur : aucun type de prochaine salle, indice,
+palier, profondeur ou estimation de retour. Les calculs internes éventuellement fournis au moteur ne
+doivent pas apparaître dans le contexte narratif du modèle.
+
 ---
 
 ## §1 — Les 3 voix d'écriture (Pilier #6)
@@ -71,6 +90,11 @@ GRIMOIRE n'a **aucun audio en V1**. Tout passe par le **texte**. Mais le texte a
 | **Changepeau** | Elliptique, énigmatique    | Phrases inachevées, pronoms flous        | _« On t'attendait. Enfin — on disait. Tu décideras toi-même. »_                                                 |
 
 **Tous les PNJ génériques** (marchands, gardes, ivrognes, pèlerins) tombent dans une de ces 5 voix selon leur origine. **Pas de voix unique par PNJ secondaire** — économie de prompt.
+
+Le tenancier du Comptoir de l'Auberge appartient à cette catégorie tant qu'une identité canonique
+distincte n'est pas écrite. Il vend eau, vivres, soins et ressources. L'Aveugle reste la voix du
+lore, des Souvenirs, des recommandations et des contrats spéciaux ; il n'absorbe pas toutes les
+fonctions commerciales de l'Auberge.
 
 ---
 

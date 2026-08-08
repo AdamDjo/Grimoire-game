@@ -16,12 +16,12 @@ default_agent: codex
 Priorité courante : refonte roguelike (décision du 2026-08-06, cf. [[PROJECT_STATUS]]).
 Canon de référence : `docs/public/raw/23-RUN-STRUCTURE.md`, `09-ACTION-LOOP.md` §2bis.
 
-**Le problème que la refonte doit résoudre** : le frontend rend _toutes_ les activités du jeu dans le
-même écran narratif. C'est la cause directe du ressenti « c'est toujours pareil ». Chaque mode doit
-avoir sa propre interface et son propre rythme (principe 12, `01-PILLARS` §9).
+**Décision du grilling du 2026-08-08** : le problème n'est pas l'interface narrative commune, mais
+l'absence de règles qui mettent l'histoire sous pression. Auberge, voyage, quête, donjon et retour
+gardent donc une seule coque narrative. Le combat est la seule transformation d'interface.
 
-Un écran de mode dépend du contrat backend correspondant : **ne pas démarrer un mode avant que
-`packages/shared` porte ses types.**
+Un composant mécanique dépend toujours du contrat backend correspondant : **ne pas l'implémenter
+avant que `packages/shared` porte ses types.**
 
 ## Décisions d'implémentation
 
@@ -29,16 +29,26 @@ Une entrée n'est ajoutée ici que si elle explique un **choix non évident**. L
 ticket soit livré se lit sur GitHub.
 
 - **Le mode courant vient du serveur, jamais déduit du texte de scène.** Corollaire frontend de la
-  souveraineté backend : le client dessine, il n'arbitre pas. #219
+  souveraineté backend : le client dessine, il n'arbitre pas. En v0.2.1, ce mode déclenche surtout
+  la transformation combat ; il ne sélectionne pas quatre applications visuellement séparées.
+- **Une seule coque narrative hors combat.** L'image, la voix et les composants contextuels changent,
+  mais la continuité Auberge → voyage → quête/donjon → retour ne casse jamais.
+- **L'Auberge est un hub de scènes, pas un tableau.** Comptoir, L'Aveugle, Contrats et Forge restent
+  accessibles comme destinations persistantes dans la fiction.
+- **Le donjon ne révèle pas son moteur en v0.2.1.** Aucun type de salle, indice, icône, carte,
+  palier, profondeur ou estimation de retour n'est rendu. Le HUD conserve uniquement l'objectif
+  principal repliable, les jauges et « Faire demi-tour » hors combat.
+- **Le combat transforme la scène au lieu d'ouvrir un mini-jeu étranger.** Le décor reste visible,
+  la dernière narration consultable et l'action libre disponible ; la fin rend la place au récit.
 - **`updatedStats` reste `Record<string, number>`** — `isDying` n'est pas transporté sur le réseau
   dans ce canal ; il est mis à jour côté backend et lu dans l'instantané de survie. #201
 - **Le HUD n'affiche que les jauges variables** (PV, Soif, Faim, Fatigue, Calamine) ; le Triptyque
   est rendu en scores fixes. Mélanger les deux brouillait ce que le joueur peut agir. #186
 - **Le Désavantage est explicite sur le jet**, avec sa cause — la transparence mécanique est une
   règle produit, pas un détail d'UI. #186
-- **La Forge ouvre directement le premier run** ; l'Auberge interactive est réservée aux sessions
-  commencées ou terminées. Elle tient en `100dvh` sur desktop, tablette et mobile, avec défilement
-  interne du dialogue uniquement. #186
+- **Tous les runs commencent à l'Auberge.** La Forge ne lance plus directement le premier run : un
+  contrat principal doit être accepté avant le départ. L'Auberge tient en `100dvh` sur desktop,
+  tablette et mobile, avec défilement interne du dialogue uniquement.
 - **Le brouillon de création est versionné** (`CharacterCreateDraft` v2 : nom personnalisé, trait
   narratif, compétences décalées) — un brouillon d'une version antérieure ne doit pas se déserialiser
   en silence. #152
@@ -54,6 +64,9 @@ ticket soit livré se lit sur GitHub.
   final. Détail `docs/public/tech/SECURITY.md`. #162
 - **L'inventaire est structuré selon les quatre catégories canon**, pas selon une commodité
   d'affichage. #183 #186
+- **Les scènes utilisent une bibliothèque pré-générée de 45 à 60 images.** Deux ou trois variantes
+  par famille sont réutilisables ; aucune génération runtime en v0.2.1 et aucun sens mécanique ne
+  dépend de l'image seule.
 - **Tailwind pour le responsive, jamais un hook JS.**
 
 ## Dette et suivis connus
@@ -62,10 +75,10 @@ ticket soit livré se lit sur GitHub.
   **jamais** été câblés à l'UI (tooltips SANG/SOUFFLE/CENDRE, Calamine, jauges, conditions). C'est de
   la valeur joueur déjà écrite et non livrée.
 - **#217 — coût en Calamine et usages restants doivent être visibles _avant_ activation**, pas après.
-- **#216 — l'écran de sac est là où se joue l'arbitrage vivres/butin** : c'est l'écran, pas un
-  panneau secondaire.
-- **#214 — l'encart de demi-tour est l'écran de décision central du jeu** (sac, eau, estimation de
-  retour, paliers).
+- L'arbitrage vivres/butin doit rester lisible dans l'inventaire sans transformer l'Auberge en
+  tableau de gestion.
+- L'ancien encart de demi-tour avec estimation et paliers est révoqué pour v0.2.1. « Faire
+  demi-tour » reste disponible en permanence hors combat, sans prédiction du trajet.
 - CSP de production à revérifier à #161.
 - #129 est **à re-scoper** : les golden paths testés ne décrivent plus le jeu après la refonte.
 

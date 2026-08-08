@@ -18,8 +18,9 @@ gh issue list --milestone "v0.2.1 - Roguelike jouable" --state all
 ## Objectif actuel
 
 Livrer **v0.2.1 — Roguelike jouable** : refonder la couche de jeu par-dessus le socle existant, de
-sorte qu'un run ait une **destination** (contrat), une **structure** (paliers), une **décision
-centrale** (le demi-tour) et un **enjeu** (le retour). Voir `docs/public/raw/23-RUN-STRUCTURE.md`.
+sorte qu'un run soit une **quête narrative dirigée** par un contrat, mise sous pression par des
+règles roguelike cachées, des ressources, des combats et un retour joué. Voir
+`docs/public/raw/23-RUN-STRUCTURE.md`.
 
 > **🎲 Refonte roguelike du 2026-08-06.** Le playtest a rendu un verdict net : _« après une partie je
 > m'ennuie, il n'y a aucune raison de recommencer »_. Le diagnostic est que le projet a un
@@ -30,13 +31,25 @@ centrale** (le demi-tour) et un **enjeu** (le retour). Voir `docs/public/raw/23-
 > sert à rien de déployer un vertical slice ennuyeux. Les bloqueurs pré-déploiement #161, #129 et
 > #163 sont **gelés**, pas annulés.
 
+> **🎭 Continuité narrative du 2026-08-08.** Le grilling produit a révoqué les quatre interfaces
+> séparées et la structure de donjon visible. Auberge, voyage, quête, donjon et retour conservent la
+> même interface storytelling ; seul le combat transforme temporairement la scène. Paliers, salles,
+> indices, profondeur et estimation de retour restent cachés en v0.2.1.
+
 ## Ordre des chantiers
 
-Les 8 EPICs de coordination ont été fermés le 2026-08-08 : un ticket qui ne livre rien ne fait que
-recopier l'état de ses enfants. Ce qui avait de la valeur en eux — **l'ordre n'est pas indicatif,
-chaque chantier suppose le précédent livré** — est une décision, elle vit donc ici :
+Les EPICs servent de **carte de coordination**, jamais de preuve d'avancement : leurs issues enfants
+livrables portent le travail réel. L'ordre n'est pas indicatif ; chaque chantier suppose les
+contrats du précédent livrés :
 
-`boucle de run → combat → auberge → artefacts → lisibilité / UI par modes → compagnons / exploits`
+`quête et boucle narrative → Auberge vivante → combat → images → artefacts → compagnons / exploits`
+
+| Carte de coordination                   | EPIC GitHub |
+| --------------------------------------- | ----------- |
+| Quêtes et boucle narrative continue     | #251        |
+| Auberge vivante et préparation          | #252        |
+| Combat tactique intégré au storytelling | #250        |
+| Bibliothèque visuelle des scènes        | #253        |
 
 Le board ne porte plus que des tickets livrables, avec trois axes de label : `domain: *` (posé
 automatiquement par `.github/labeler.yml`), `release: *`, et `phase: *` qui pilote l'assignation de
@@ -66,12 +79,13 @@ peut inverser ce choix sans changer les règles du domaine.
 - qualité : lint, type-check, tests, build, CodeQL et previews Vercel dans la CI.
 
 Ce socle est **conservé** (décision 18) : la refonte roguelike s'écrit par-dessus, elle ne le remplace
-pas. Deux exceptions connues, portées par #214 :
+pas. Trois évolutions structurantes sont autorisées :
 
 - `SessionEndReason` : `inn` est scindé en `extracted` / `returned_empty`
   (`docs/public/raw/09-ACTION-LOOP.md` §7) — breaking change des contrats shared ;
-- la session porte désormais un **mode de jeu** explicite (exploration / combat / auberge / retour)
-  et une **position de palier**.
+- la session porte un état serveur explicite et une structure de progression cachée ; ils arbitrent
+  le jeu sans imposer quatre interfaces au frontend ;
+- le contrat devient une quête générique structurée, pas seulement une destination de donjon.
 
 ## Règle de tenue des docs
 

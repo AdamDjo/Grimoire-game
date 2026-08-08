@@ -53,9 +53,9 @@ Un **tour de jeu** = une réponse IA + une action joueur. Le joueur **n'attend j
 
 ## 2. Les 3 modes de saisie
 
-> **Ne pas confondre avec les 4 modes de jeu** (exploration / combat / auberge / retour, cf. §2bis).
-> Ici il s'agit de **comment le joueur formule son action** ; là-bas, de **dans quel registre il
-> joue**. Les trois modes de saisie ci-dessous existent dans tous les modes de jeu.
+> Ici, « mode » décrit uniquement **comment le joueur formule son action**. Auberge, voyage,
+> exploration, donjon et retour conservent la même boucle narrative ; le combat transforme
+> temporairement cette boucle (cf. §2bis).
 
 Le joueur n'est jamais enfermé dans un seul mode. Il choisit naturellement à chaque tour.
 
@@ -84,37 +84,34 @@ Le joueur n'est jamais enfermé dans un seul mode. Il choisit naturellement à c
 
 ---
 
-## 2bis. Les 4 modes de jeu
+## 2bis. Continuité narrative et combat
 
-> **Ajout du 2026-08-06** (décisions 6, 7 et 10 de la refonte roguelike).
+> **Révision du 2026-08-08.** La séparation du 2026-08-06 en quatre interfaces est révoquée après
+> grilling produit. Elle confondait structure roguelike et changement d'écran, au détriment de
+> l'identité storytelling de GRIMOIRE.
 
-La boucle décrite dans ce fichier était **la seule** boucle du jeu : tout — auberge, exploration,
-combat — passait par le même écran, les mêmes 3-4 choix, la même mise en page. C'est la cause
-directe du ressenti « c'est toujours pareil ».
+La boucle §1 reste le langage commun de l'Auberge, du voyage, de la quête, du donjon et du retour.
+L'image, la voix, les destinations persistantes et les composants contextuels évoluent, mais le
+joueur ne quitte jamais son histoire pour ouvrir une carte de salles ou un tableau de gestion.
 
-Le jeu se joue désormais en **quatre modes**, chacun avec sa propre interface :
+| Registre           | Présentation                                                          |
+| ------------------ | --------------------------------------------------------------------- |
+| **Auberge**        | Scènes narratives + destinations Comptoir, L'Aveugle, Contrats, Forge |
+| **Voyage / quête** | Boucle §1, objectif repliable, survie et inventaire                   |
+| **Donjon**         | Boucle §1, structure moteur cachée, aucun type de salle ou profondeur |
+| **Retour**         | Boucle §1, trajet plus court et plus facile, sans estimation affichée |
+| **Combat**         | Transformation tactique temporaire, puis retour à la boucle §1        |
 
-| Mode               | Ce qu'on y fait                                       | Rythme                   | Boucle §1 ? |
-| ------------------ | ----------------------------------------------------- | ------------------------ | ----------- |
-| 🧭 **Exploration** | Descendre, choisir sa salle, gérer les jauges         | Posé, narratif           | ✅ oui      |
-| ⚔️ **Combat**      | Tours, initiative, actions catégorisées (`10-COMBAT`) | Tendu, tactique, chiffré | ❌ non      |
-| 🏚️ **Auberge**     | Contrat, achats, forge, sac (`23 §1`)                 | Calme, sans jet de dé    | ❌ non      |
-| ⬆️ **Retour**      | Remonter avec ce qu'il reste (`23 §4`)                | Pressé, comptable        | ✅ oui      |
+### Règles de continuité
 
-### Pourquoi cette séparation
-
-Principe 12 (`01-PILLARS §9`) : **chaque registre de jeu a sa propre tête, et le dynamisme naît de
-l'alternance.** Deux activités rendues de façon identique se ressentent comme une seule activité,
-quel que soit le texte affiché.
-
-### Règles de bascule
-
-1. **La bascule est toujours annoncée** par une transition explicite — jamais un changement d'écran
-   silencieux au milieu d'un paragraphe.
-2. **Le joueur ne choisit pas son mode.** Il choisit des actions ; le moteur bascule. Seule
-   exception : le demi-tour (`23 §3`), qui est explicitement une décision du joueur.
-3. **Un mode = un état serveur.** Le mode courant est porté par la session, pas déduit par le
-   frontend à partir du texte de la scène.
+1. **Une seule coque narrative** porte tout le run hors combat.
+2. **Le combat est la seule transformation franche** : il conserve le décor et la dernière scène
+   consultable, mais rend ennemis, initiative, actions et jets tactiques.
+3. **L'état serveur reste autoritaire.** Le frontend peut lire `GameMode` pour savoir quand rendre
+   le combat ; il ne l'infère jamais depuis la prose.
+4. **Le demi-tour est toujours accessible hors combat.** Il ne dépend pas d'un choix proposé par
+   l'IA.
+5. **L'action libre survit au combat.** Le backend la traduit vers une action tactique autorisée.
 
 ---
 
@@ -331,17 +328,19 @@ TOUR DE JEU
                        (loop ↑)
 
 
-STRUCTURE DU RUN (visible — cf. 23-RUN-STRUCTURE)
+STRUCTURE DU RUN (mécanique cachée — cf. 23-RUN-STRUCTURE)
 ───────────────────────────────────────
-  🏚️ AUBERGE — contrat, achats, forge, sac
+  🏚️ AUBERGE NARRATIVE — comptoir, L'Aveugle, contrats, forge
        ↓
-  ⬇️ DESCENTE — 3 à 7 paliers selon le contrat
-       ↓   (le dramatique 3-actes ci-dessus reste, mais
-       ↓    il habille les paliers, il ne les remplace plus)
+  📜 UN CONTRAT PRINCIPAL — danger et durée seulement
        ↓
-  🔀 DEMI-TOUR — la décision centrale du jeu
+  🏜️ VOYAGE → QUÊTE / DONJON — même interface narrative
+       ↕
+  ⚔️ COMBAT — transformation tactique temporaire
        ↓
-  ⬆️ RETOUR — trajet distinct, plus court, préparable
+  🔀 DEMI-TOUR — toujours disponible hors combat
+       ↓
+  ⬆️ RETOUR — distinct, plus court, plus facile, sans estimation
        ↓
   FIN
   ├── 🏆 extracted        — vivant, contrat rempli
@@ -357,12 +356,12 @@ STRUCTURE DU RUN (visible — cf. 23-RUN-STRUCTURE)
   🏚️ Retour à l'auberge — connaissance et accès acquis
 ```
 
-🟢 _Une boucle avec une destination. Le joueur sait pourquoi il descend, et ce qu'il risque en
-remontant. Acteur, jamais spectateur._
+🟢 _Une boucle avec une destination. Le joueur sait pourquoi il part, mais jamais exactement ce que
+le monde lui réserve. Acteur, jamais spectateur._
 
 > **Note sur les 3 actes (§6).** La structure dramatique invisible n'est pas supprimée : elle
-> continue de rythmer la narration **à l'intérieur** d'un run. Ce qui change, c'est qu'elle n'est
-> plus la seule structure — les paliers donnent au joueur la structure **visible** qui lui manquait.
+> continue de rythmer la narration **à l'intérieur** d'un run. La structure mécanique existe en
+> parallèle côté backend, mais reste invisible pour préserver le mystère.
 
 ---
 
@@ -388,11 +387,11 @@ Les trois crochets ci-dessus sont tous **narratifs**. Ils font revenir un joueur
 pas un joueur qui veut jouer. C'est ce qui manquait au diagnostic « aucune raison de rejouer ».
 
 Le quatrième crochet est **mécanique** : entre deux runs, le joueur gagne de la **connaissance** et
-de l'**accès** — pages de bestiaire, sujets débloqués chez L'Aveugle, contrats plus profonds, routes
-de retour connues, compagnons rencontrés. Jamais de la puissance (`01-PILLARS §5`).
+de l'**accès** — pages de bestiaire, sujets débloqués chez L'Aveugle, contrats plus dangereux,
+destinations et compagnons rencontrés. Jamais de la puissance (`01-PILLARS §5`).
 
 > Le run 6 n'est pas plus facile que le run 1. C'est **le joueur** qui est meilleur — parce qu'il
-> sait maintenant ce qu'il y a au palier 5, et qu'il a une carte du retour.
+> reconnaît une créature, comprend un avertissement et sait quelles provisions emporter.
 
 Voir `14-META-WORLD.md` et `23-RUN-STRUCTURE §7`.
 

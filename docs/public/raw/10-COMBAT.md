@@ -27,12 +27,13 @@ Le combat dans GRIMOIRE utilise les mêmes attributs et le même dé que le rest
 > La version précédente affirmait que le combat « n'est pas un mode de jeu » et n'était qu'une
 > application de la boucle narrative. **C'est révoqué** (décision 7 de la refonte roguelike).
 >
-> Le combat a **sa propre interface** : liste des ennemis avec leur état, ordre des tours, actions
-> catégorisées, journal des jets. Il ne se joue pas dans le même écran que l'exploration.
+> Le combat est la **seule transformation tactique de l'interface narrative** : liste des ennemis
+> avec leur état, ordre des tours, actions catégorisées et journal des jets. Le décor du lieu et la
+> dernière scène restent dans la continuité ; à la fin, le joueur revient au storytelling.
 >
-> _Pourquoi_ : principe 12 (`01-PILLARS §9`) — chaque registre de jeu a sa propre tête, et le
-> dynamisme naît de l'alternance. Un combat rendu comme un paragraphe de plus se **lit** comme un
-> paragraphe de plus, et le joueur ne sent jamais qu'il vient de changer d'activité.
+> _Pourquoi_ : principe 12 (`01-PILLARS §9`) — le storytelling porte tout le run, mais un combat
+> rendu comme un paragraphe de plus se **lit** comme un paragraphe de plus. La scène doit donc se
+> resserrer et révéler ses règles sans donner l'impression de quitter l'aventure.
 >
 > La bascule reste **narrative et annoncée** (§1) — ce qui change, c'est ce que le joueur voit à
 > l'écran une fois qu'elle a eu lieu.
@@ -50,7 +51,7 @@ Le combat dans GRIMOIRE utilise les mêmes attributs et le même dé que le rest
 ## 1. Quand un combat se déclenche
 
 Le combat n'est **jamais activé par le joueur** : c'est une **bascule narrative** annoncée par l'IA,
-qui fait entrer le jeu dans son mode dédié (§0).
+qui transforme temporairement la scène en combat (§0).
 
 ### Déclencheurs
 
@@ -282,10 +283,10 @@ Jet : d20 + SOUFFLE  vs  DC 12 (combat normal) ou 15 (encerclé / engagé)
 Dans la structure de run (`23-RUN-STRUCTURE`), fuir n'est pas seulement « sortir du combat » : le
 joueur choisit **vers où**.
 
-| Direction         | Effet                                                                            |
-| ----------------- | -------------------------------------------------------------------------------- |
-| ⬇️ **En avant**   | Le combat est évité, mais on s'enfonce d'un palier de plus — le retour s'allonge |
-| ⬆️ **En arrière** | Le joueur amorce le demi-tour et bascule sur le trajet de retour (`23 §3`)       |
+| Direction         | Effet                                                                   |
+| ----------------- | ----------------------------------------------------------------------- |
+| ⬇️ **En avant**   | Le combat est évité, mais le joueur poursuit sa quête et ses risques    |
+| ⬆️ **En arrière** | Le joueur amorce le demi-tour et commence le trajet de retour (`23 §5`) |
 
 C'est ce qui transforme un combat perdu d'avance en **décision** au lieu d'une punition : le joueur
 mal en point garde toujours une porte de sortie, mais elle coûte le butin qu'il espérait plus bas.

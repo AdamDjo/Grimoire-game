@@ -1,331 +1,286 @@
 # 23 — Structure du Run
 
-> _Descendre est facile. C'est remonter qui tue._
+> _Le monde ne te montre pas sa carte. Il te laisse seulement choisir si tu continues._
 
 ---
 
 ## 0. Principe
 
-Ce fichier définit **la forme d'un run** : ce que le joueur part faire, jusqu'où il descend, et
-comment il rentre. Il est né du grilling de conception du **2026-08-06**, qui a identifié la cause
-du symptôme _« je teste une fois, puis je n'ai plus envie de jouer »_ :
+Ce fichier définit la forme d'un run : pourquoi le joueur part, comment la quête reste cohérente,
+où vit la structure roguelike et comment il rentre. La révision du **2026-08-08** remplace la
+séparation en quatre interfaces décidée le 2026-08-06.
 
-> **Le jeu avait un excellent moteur de narration et zéro moteur de jeu.**
-> La survie, les dés, les conditions et l'inventaire existaient — mais **rien ne les mettait sous
-> pression**, parce que le run n'avait ni objectif, ni structure, ni fin désirable.
+> **GRIMOIRE reste un storytelling continu.** Le roguelike vient des règles, des ressources, du
+> risque, de la mort et des conséquences — pas d'une carte de salles ni d'un changement d'écran.
 
-Un run n'est pas une promenade conversationnelle. C'est un **aller-retour sous contrainte** :
+Le run complet suit cette continuité :
 
-```
-AUBERGE (préparation)  →  DESCENTE (paliers)  →  DEMI-TOUR  →  RETOUR  →  AUBERGE
-```
-
-Tout ce qui suit sert une seule tension : **prendre encore un palier, ou rentrer avec ce qu'on a ?**
-
----
-
-## 1. Le contrat
-
-Le joueur ne part pas « à l'aventure ». Il **accepte un contrat** à l'auberge, qui fixe :
-
-| Le contrat définit         | Effet                                                     |
-| -------------------------- | --------------------------------------------------------- |
-| 🎯 **La destination**      | Quel type de lieu (voir les 4 archétypes, `03-BESTIARY`)  |
-| 📏 **La profondeur visée** | Nombre de paliers — détermine risque et récompense        |
-| ⏱️ **La durée cible**      | ~45 min (3 paliers) → 2h30 maximum (7 paliers)            |
-| 🪙 **La récompense**       | Ce que le commanditaire paye au retour, **si** on revient |
-
-### Barème de durée
-
-| Paliers | Durée cible  | Profil                                     |
-| ------- | ------------ | ------------------------------------------ |
-| 3       | ~45 min      | Court, tendu, idéal pour une session brève |
-| 5       | ~1h30        | Standard                                   |
-| 7       | **2h30 max** | Long, réservé aux joueurs préparés         |
-
-> **⏱️ Le plafond de 2h30 est dur.** Aucun contrat ne peut le dépasser (`01-PILLARS §2`).
-> Le joueur choisit sa durée : c'est **lui** qui décide de l'engagement qu'il prend ce soir-là.
-
-🟢 _Le contrat résout d'un coup trois problèmes : le run a un objectif, la durée est prévisible, et
-le joueur sait pourquoi il part._
-
----
-
-## 2. Les paliers
-
-Un run descend par **paliers successifs**. Chaque palier est plus dangereux et plus riche que le
-précédent — c'est la courbe qui crée la tentation.
-
-```
-        AUBERGE
-           │
-     ┌─────▼─────┐
-     │ PALIER 1  │  créatures faibles · loot commun
-     ├───────────┤
-     │ PALIER 2  │
-     ├───────────┤
-     │ PALIER 3  │  ← profondeur minimale d'un contrat
-     ├───────────┤
-     │    ...    │  danger ↗   loot ↗   coût du retour ↗
-     ├───────────┤
-     │ PALIER 7  │  ← profondeur maximale · boss · artefacts
-     └───────────┘
+```text
+AUBERGE → CONTRAT → VOYAGE → QUÊTE / DONJON → DEMI-TOUR → RETOUR → AUBERGE
+                               ↕
+                         COMBAT TACTIQUE
 ```
 
-### Salles à choix
-
-Chaque palier se traverse par des **salles**. À chaque salle franchie, le joueur choisit sa suite
-parmi 2-3 salles, décrites par des **indices partiels** :
-
-```
-        ┌──────────────────────────────┐
-        │  Devant toi, trois passages. │
-        └──────────────────────────────┘
-                       │
-     ┌─────────────────┼─────────────────┐
-     ▼                 ▼                 ▼
- « Ça sent le     « Un courant     « Des marques
-   sang froid »     d'air sec »      griffées »
-  [risque élevé]   [neutre]        [inconnu]
-```
-
-**Règle de l'indice** : l'indice renseigne sur la **nature** du danger, jamais sur son **ampleur**.
-Le joueur choisit en connaissance de cause sans que le jeu lui donne la solution.
-
-🟢 _Emprunté à Slay the Spire : le choix de salle est le geste de jeu le plus fréquent. C'est là que
-se joue la rejouabilité, bien plus que dans la variété des ennemis._
-
-### Types de salles
-
-| Type               | Contenu                                                      |
-| ------------------ | ------------------------------------------------------------ |
-| ⚔️ **Combat**      | Rencontre hostile (`10-COMBAT`)                              |
-| 🔍 **Exploration** | Énigme, fouille, découverte de lore                          |
-| 🎭 **Rencontre**   | PNJ, dilemme moral, marchand isolé, compagnon recrutable     |
-| 🔥 **Répit**       | Repos court, soin, réparation de fortune — rare et précieux  |
-| 💰 **Trésor**      | Loot, parfois gardé, parfois piégé                           |
-| 💀 **Boss**        | Fin de palier profond — verrouille l'accès au palier suivant |
+L'Auberge, le voyage, le donjon et le retour utilisent la **même interface narrative**. Seul le
+combat transforme temporairement la scène en interface tactique dédiée.
 
 ---
 
-## 3. Le demi-tour — le cœur du jeu
+## 1. L'Auberge — point d'entrée unique
 
-À la fin de chaque palier, le jeu pose **la seule question qui compte** :
+Chaque partie commence à l'Auberge de L'Aveugle. Ce n'est ni un menu ni un tableau de gestion :
+c'est un lieu vivant composé de scènes illustrées et de dialogues.
 
-```
-┌────────────────────────────────────────────────────┐
-│  Tu as atteint le palier 4.                        │
-│                                                     │
-│  🎒 Sac : 9/12 · 💧 Eau : 2 rations                │
-│  ⏱️ Retour estimé : ~25 min · 3 paliers à remonter │
-│                                                     │
-│  [ DESCENDRE ENCORE ]      [ FAIRE DEMI-TOUR ]     │
-└────────────────────────────────────────────────────┘
-```
+Quatre destinations restent accessibles sans coût depuis l'interface narrative :
 
-Le joueur voit **toujours** son estimation de retour avant de décider. C'est l'application directe
-du principe 11 (`01-PILLARS §9`) : _la mort doit être imputable à une décision vue venir._
+| Destination   | Fonction                                                       |
+| ------------- | -------------------------------------------------------------- |
+| **Comptoir**  | Acheter eau, vivres, soins et ressources                       |
+| **L'Aveugle** | Lore, Souvenirs, commentaire des contrats et contrats spéciaux |
+| **Contrats**  | Consulter les trois quêtes ordinaires disponibles              |
+| **Forge**     | Réparer et préparer l'équipement                               |
 
----
-
-## 4. Le retour
-
-> **Le retour n'est pas une cinématique. C'est la deuxième moitié du jeu.**
-
-C'est la décision de design la plus structurante de ce document. Dans la plupart des jeux, une fois
-l'objectif atteint, on appuie sur « rentrer ». Ici, **rentrer est un trajet**.
-
-### Ses trois propriétés
-
-| Propriété              | Détail                                                                 |
-| ---------------------- | ---------------------------------------------------------------------- |
-| 🧭 **Trajet distinct** | Ce n'est pas la descente rejouée à l'envers — le chemin a changé       |
-| ⚡ **Plus court**      | Le retour est nettement plus rapide que la descente : on ne rejoue pas |
-| 🎒 **Préparable**      | Ce qu'on a gardé dans le sac à l'aller décide de la survie au retour   |
-
-### Pourquoi plus court
-
-Un retour aussi long que la descente serait **du remplissage** : le joueur a déjà vu ces lieux, la
-tension retomberait et le run dépasserait 2h30. Le retour est court **et plus dense** : moins de
-salles, mais aucune n'est gratuite.
-
-### Ce qui rend le retour dangereux
-
-- Le sac est **lourd** du butin : moins de place pour l'eau et les soins
-- Les jauges de survie sont **déjà entamées** (`06-SURVIVAL`)
-- L'équipement s'est **usé** en profondeur (`11-INVENTORY-ECONOMY`)
-- La Calamine accumulée par les artefacts **ne redescend pas** toute seule
-
-### La règle absolue du retour
-
-> **Le retour peut tuer, mais jamais par surprise.**
-
-Concrètement, le moteur doit garantir :
-
-1. Une **estimation de retour** visible avant chaque décision de descendre
-2. Un **avertissement au franchissement de seuil** : quand une ressource passe sous le nécessaire
-   pour rentrer, le jeu le dit — clairement, en langage de personnage, pas en pop-up système
-3. Aucun **pic de dégâts non annoncé** au retour : la mort au retour vient de l'épuisement du
-   joueur, résultat de ses arbitrages, jamais d'une embuscade arbitraire
-
-🔴 _Anti-règle : jamais de « gotcha » au retour. Si le joueur meurt à trois salles de la sortie, il
-doit pouvoir nommer la décision qui l'a tué._
+Ces destinations sont des raccourcis de navigation, pas des écrans étrangers à la fiction. Chacune
+ouvre une scène avec son propre décor, son interlocuteur et ses choix narratifs.
 
 ---
 
-## 5. Les fins de run
+## 2. Le contrat est une quête
 
-La fin d'un run n'est plus binaire. `SessionEndReason` distingue :
+Le joueur ne choisit pas un « niveau ». Il accepte une **quête principale** qui donne une direction
+à son histoire.
 
-| Fin                  | Déclencheur                                          | Récompense                                             |
-| -------------------- | ---------------------------------------------------- | ------------------------------------------------------ |
-| 🏆 **Retour réussi** | Le joueur rentre **avec** le butin du contrat        | Butin + paiement du contrat + connaissance + Chronique |
-| 🥀 **Retour à vide** | Le joueur rentre vivant mais sans remplir le contrat | Ce qu'il a ramassé + connaissance + Chronique          |
-| 💀 **Mort**          | 0 PV, l'IA tranche l'inconscience (`10-COMBAT §8`)   | Chronique + héritage transmis                          |
-| 🌀 **Calciné**       | Calamine à 100                                       | Chronique spéciale, **pas d'héritage**                 |
-| 🚪 **Abandon**       | Le joueur quitte volontairement                      | Chronique minimale                                     |
+Un contrat peut être une exploration de donjon, une escorte, une enquête, une chasse, une
+récupération, une négociation ou un dilemme. La majorité des contrats majeurs mène vers un lieu
+très dangereux, mais le système ne suppose jamais que toute quête est un donjon.
 
-> ⚠️ **Correction de contrat** : l'ancien `endReason: "inn"` confondait « rentré victorieux » et
-> « rentré bredouille ». Ces deux fins ne racontent pas la même histoire et ne payent pas pareil.
-> Elles doivent être distinguées dans `session.types.ts`.
+### Ce que le backend possède
 
-### Ce que rapporte un run
+| Champ               | Rôle                                                               |
+| ------------------- | ------------------------------------------------------------------ |
+| Objectif            | Condition mécanique de réussite                                    |
+| Destination         | Lieu ou personne vers laquelle la narration doit converger         |
+| Commanditaire       | Source et voix de la quête                                         |
+| Danger              | Niveau qualitatif utilisé pour la génération et l'équilibrage      |
+| Durée cible         | Engagement court, long ou majeur                                   |
+| Récompense          | Paiement et conséquences en cas de réussite                        |
+| Conditions d'échec  | États qui rendent la quête impossible ou marquent le retour à vide |
+| État de progression | Étapes accomplies, objectif sécurisé, réussite ou échec            |
 
-Trois choses, dans cet ordre d'importance :
+Le backend choisit et valide cette structure. L'IA lui donne sa prose, ses personnages et ses
+scènes ; elle ne peut ni inventer la condition de victoire ni déclarer seule la quête terminée.
 
-1. 🪙 **Le butin** — finance le run suivant (équipement, réparations, contrats plus ambitieux)
-2. 🧠 **La connaissance** — bestiaire, faiblesses, sujets débloqués chez L'Aveugle, accès
-3. 📖 **La Chronique** — le récit de ce qui vient de se passer (`17-RUN-CHRONICLE`)
-4. 🏅 **Les exploits** éventuellement obtenus (badges, voir §7)
+### Le panneau
 
-**Jamais de puissance permanente** (`01-PILLARS §2`, pilier 5).
+- présente **trois contrats ordinaires** simultanément ;
+- conserve la sélection jusqu'à la fin d'un run ou un événement du monde ;
+- affiche un **tag textuel de danger** et un **tag de durée**, sans score ni icône ;
+- ne révèle jamais les rencontres, la structure du lieu ni les récompenses cachées.
 
----
+L'Aveugle peut commenter ces contrats, en recommander un selon l'histoire du joueur et révéler des
+contrats spéciaux débloqués par le lore ou les Souvenirs. Les contrats ordinaires restent cependant
+disponibles sans dépendre d'une décision du modèle IA.
 
-## 6. Les modes de jeu
+### Liberté et verrouillage
 
-Un run traverse quatre **modes**, chacun avec sa propre interface (`09-ACTION-LOOP`, principe 12) :
-
-| Mode               | Ce que l'écran doit faire ressentir                                     |
-| ------------------ | ----------------------------------------------------------------------- |
-| 🏠 **Auberge**     | Calme, tabulaire. On compare, on arbitre. Aucun danger                  |
-| 🧭 **Exploration** | Le texte respire. On lit, on choisit, l'image porte l'ambiance          |
-| ⚔️ **Combat**      | Ça se resserre. Tour par tour, état des ennemis, tension                |
-| 🏃 **Retour**      | Compte à rebours implicite. Les ressources fondent, la pression se voit |
-
-🟢 _Le passage d'un mode à l'autre est une **transition franche**. C'est l'alternance qui crée le
-dynamisme — pas la vitesse d'affichage du texte._
-
----
-
-## 7. Les exploits (badges)
-
-Objectifs optionnels détectés en fin de run. Exemples :
-
-- Collecter 3 artefacts dans un seul run
-- Terminer un run sans boire une seule potion
-- Vaincre L'Haragon
-
-> **⚖️ Un exploit débloque de l'accès ou de la connaissance, jamais de la puissance.**
-> Un contrat inédit, une destination, un compagnon recrutable, un sujet chez L'Aveugle, une entrée
-> de bestiaire — jamais des PV, des dégâts ou un bonus d'attribut.
-
-🟢 _Fonction réelle : les exploits **enseignent le jeu par l'expérimentation**. « Finir un run sans
-potion » apprend la gestion de ressources bien mieux qu'un tutoriel._
-
-Les exploits sont détectés **côté backend** à partir de l'historique réel du run, jamais déclarés
-par l'IA.
+- Un seul contrat principal peut être actif.
+- Un contrat est obligatoire pour quitter l'Auberge en v0.2.1.
+- Le joueur peut en changer sans pénalité tant qu'il n'est pas parti.
+- Le contrat se verrouille au franchissement de la porte de l'Auberge.
+- Aucun contrat n'est bloqué selon l'équipement : le jeu avertit, le joueur décide.
+- Des objectifs secondaires peuvent émerger, sans devenir des contrats supplémentaires.
 
 ---
 
-## 8. Les compagnons
+## 3. Le run commence au départ
 
-Le joueur peut emmener **1 à 2 compagnons**, jamais plus.
+Le run ne commence pas à l'entrée d'un donjon. Il commence lorsque le joueur quitte l'Auberge :
+les ressources sont engagées, les conséquences persistent et la quête devient active.
 
-| Propriété              | Détail                                                                        |
-| ---------------------- | ----------------------------------------------------------------------------- |
-| 🤝 **Semi-autonomes**  | Ils agissent seuls en combat — aucun micro-management                         |
-| ❤️ **Loyauté**         | Ils réagissent aux décisions du joueur (fuir, sacrifier, abandonner du butin) |
-| 💀 **Mort permanente** | Un compagnon mort ne revient pas                                              |
-| 🎒 **Coûteux**         | Ils consomment vivres et eau, et prennent de la place                         |
+Le voyage est déjà du roguelike narratif : il peut consommer de l'eau ou des vivres, produire une
+rencontre, offrir un objet, infliger une condition ou déclencher un combat. Le joueur continue
+d'utiliser la boucle normale : narration, image, choix proposés et action libre.
 
-_Pourquoi si peu_ : un groupe de quatre transforme le jeu en gestion tactique et dilue la survie —
-le joueur cesse d'être vulnérable. Le charisme d'un compagnon ne vient pas du nombre, il vient du
-fait qu'on **peut le perdre par sa faute**.
+### Cohérence de la quête
 
-> **Garde-fou** : un compagnon ne doit jamais rendre le run plus facile **en net**. Il apporte une
-> capacité que le joueur n'a pas, mais il consomme des ressources et il peut mourir.
+Le backend réinjecte l'objectif et son état au narrateur à chaque tour. L'IA doit :
 
-Le rôle **Commandement** de CENDRE (`10-COMBAT §5`) trouve ici son emploi réel.
+1. respecter toute action libre du joueur ;
+2. adapter la scène aux détours réellement choisis ;
+3. ne jamais oublier le contrat actif ;
+4. proposer régulièrement au moins une voie naturelle vers l'objectif ;
+5. rappeler la quête dans la prose lorsqu'elle devient pertinente, sans répéter la même phrase.
 
----
-
-## 9. Risques & garde-fous
-
-| Risque                                          | Mitigation                                                                                |
-| ----------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| **Le joueur descend toujours au maximum**       | La courbe de danger doit rendre le palier suivant réellement menaçant ; le sac se remplit |
-| **Le joueur rentre toujours au premier palier** | Le paiement du contrat n'est dû qu'à l'objectif atteint — rentrer trop tôt coûte          |
-| **Le retour devient du remplissage**            | Retour nettement plus court que la descente, chemin distinct, aucune salle gratuite       |
-| **Mort au retour ressentie comme injuste**      | Estimation visible + avertissements de seuil + aucun pic non annoncé (§4)                 |
-| **Run qui dépasse 2h30**                        | Plafond dur au niveau du contrat ; le moteur ne peut pas générer plus de 7 paliers        |
-| **Paliers répétitifs**                          | Salles à choix + variantes contrôlées du bestiaire (`03-BESTIARY`)                        |
-| **Méta-progression qui rend le jeu facile**     | Règle absolue : connaissance et accès uniquement (`01-PILLARS §2`)                        |
-| **Compagnon qui trivialise la survie**          | Coût en ressources + mort permanente + pas de micro-gestion (§8)                          |
+Le HUD porte un rappel repliable de l'objectif principal. Il n'affiche ni checklist ni flèche de
+direction. Un détour n'échoue pas automatiquement : la quête échoue seulement si le joueur revient
+sans l'objectif, l'abandonne explicitement ou accomplit une action qui la rend impossible.
 
 ---
 
-## 10. Synthèse
+## 4. Donjons — structure cachée, expérience narrative
 
-```
-                    🏠 AUBERGE
-                        │
-          ┌─────────────▼─────────────┐
-          │  Contrat  : destination,  │
-          │             profondeur,   │
-          │             durée         │
-          │  Sac      : trop petit    │
-          │  Forge    : réparer ?     │
-          │  Compagnon: qui emmener ? │
-          └─────────────┬─────────────┘
-                        ▼
-              ⛏️  DESCENTE (paliers)
-                        │
-        ┌───────────────▼───────────────┐
-        │  Salle à choix (indice partiel)│
-        │  Combat · Explo · Rencontre    │
-        │  Répit · Trésor · Boss         │
-        └───────────────┬───────────────┘
-                        ▼
-            ┌───────────────────────┐
-            │  DESCENDRE ENCORE ?   │ ◄── le cœur du jeu
-            │  (estimation visible) │
-            └───────┬───────────┬───┘
-               oui  │           │  non
-                    ▲           ▼
-              (remonte)   🏃 RETOUR
-                          (distinct, court,
-                           préparable)
-                                │
-                    ┌───────────▼───────────┐
-                    │  🏆 Réussi            │
-                    │  🥀 À vide            │
-                    │  💀 Mort              │
-                    │  🌀 Calciné           │
-                    └───────────┬───────────┘
-                                ▼
-                    Butin · Connaissance
-                    Chronique · Exploits
-                                │
-                                ▼
-                          🏠 AUBERGE
+Le moteur peut continuer à générer des paliers, des salles, des connexions, des rencontres et une
+profondeur. Ces données servent les règles, la persistance, le bestiaire et la durée du run. Elles
+ne deviennent pas une carte affichée au joueur.
+
+Pour la v0.2.1, l'interface ne révèle jamais :
+
+- le type mécanique d'une salle ;
+- une icône combat, trésor, repos ou rencontre ;
+- un indice annonçant ce qui attend derrière un passage ;
+- le numéro du palier ou la profondeur maximale ;
+- la carte ou les connexions du donjon ;
+- une estimation chiffrée ou qualitative du retour.
+
+L'image montre le **lieu présent**, jamais la prochaine conséquence. La narration décrit ce que le
+personnage voit maintenant ; les choix restent des actions fictionnelles, pas des cartes de salles.
+
+Exemple :
+
+> _Le corridor se divise autour d'un pilier fendu. Une galerie descend sous les racines de pierre ;
+> l'autre disparaît derrière une porte sans poignée._
+
+Le backend sait où mènent ces choix. Le joueur, lui, avance dans l'inconnu.
+
+> **Compromis assumé v0.2.1 :** le mystère prime sur la prévisibilité du trajet. Les jauges et
+> l'état du personnage restent lisibles, et le demi-tour reste toujours disponible, mais le jeu ne
+> prédit pas les dangers futurs. Ce choix doit être réévalué après playtest si les morts paraissent
+> arbitraires.
+
+---
+
+## 5. Le demi-tour
+
+« Faire demi-tour » est une action permanente hors combat. Elle ne dépend pas d'une proposition de
+l'IA et n'attend pas la fin d'un palier. Le joueur reste libre de renoncer dès qu'il estime son état
+trop fragile.
+
+En combat, le demi-tour passe par l'action de fuite et ses règles propres (`10-COMBAT.md §7`). Une
+fuite vers l'arrière engage le retour ; une fuite vers l'avant poursuit la quête.
+
+---
+
+## 6. Le retour
+
+> **Le retour n'est pas une téléportation.**
+
+Il se joue dans la même interface narrative que l'aller. Il reste :
+
+| Propriété         | Décision                                                               |
+| ----------------- | ---------------------------------------------------------------------- |
+| **Distinct**      | Le moteur génère un trajet différent, jamais l'aller rejoué à l'envers |
+| **Plus court**    | Quelques scènes seulement pour éviter le remplissage                   |
+| **Plus facile**   | Moins de rencontres dures que pendant la progression                   |
+| **Encore risqué** | Les ressources et blessures accumulées continuent de peser             |
+
+Le jeu ne montre aucune estimation avant ou pendant ce trajet en v0.2.1. Les règles internes
+peuvent calculer sa longueur et son coût pour garantir la cohérence, sans exposer ces valeurs au
+frontend ni les transformer en avertissement narratif.
+
+---
+
+## 7. Le combat — seule transformation d'interface
+
+Quand un combat commence, la scène narrative se transforme de façon cinématographique : le décor
+reste reconnaissable, mais l'espace central révèle ennemis, initiative, actions, états et jets.
+
+Le joueur conserve l'action libre. Le backend rattache l'intention à une action tactique autorisée
+— attaque, défense, commandement, artefact ou fuite — puis arbitre. L'IA raconte le verdict sans
+inventer de règle. À la fin du combat, l'interface revient naturellement au storytelling.
+
+---
+
+## 8. Les images de scène
+
+La v0.2.1 utilise une bibliothèque pré-générée et contrôlée, sans génération au runtime :
+
+| Famille   | Cible initiale |
+| --------- | -------------- |
+| Auberge   | 6 à 8 images   |
+| Voyages   | 12 à 15 images |
+| Donjons   | 25 à 35 images |
+| **Total** | **45 à 60**    |
+
+Une même image peut servir à plusieurs scènes de la même famille, avec deux ou trois variantes pour
+limiter la répétition. La narration rend la scène unique. Une image manquante ou impossible à
+charger retombe sur un décor de thème ; aucune information nécessaire pour jouer ne dépend de
+l'image seule.
+
+---
+
+## 9. Les fins de run
+
+| Fin               | Déclencheur                                     | Récompense                                  |
+| ----------------- | ----------------------------------------------- | ------------------------------------------- |
+| **Retour réussi** | Le joueur rentre avec l'objectif du contrat     | Butin + paiement + connaissance + Chronique |
+| **Retour à vide** | Le joueur rentre vivant sans remplir le contrat | Connaissance + Chronique, pas de paiement   |
+| **Mort**          | Mort effective arbitrée par le moteur           | Chronique + héritage transmis               |
+| **Calciné**       | Calamine à 100                                  | Chronique spéciale, pas d'héritage          |
+| **Abandon**       | Le joueur quitte volontairement                 | Chronique minimale                          |
+
+`SessionEndReason` reste fermé sur `death | extracted | returned_empty | abandon | calcined`.
+L'IA reçoit la fin autoritaire et écrit la Chronique correspondante.
+
+---
+
+## 10. Ce que rapporte un run
+
+1. **Butin** — finance la préparation suivante.
+2. **Connaissance** — bestiaire, routes, sujets et contrats débloqués.
+3. **Chronique** — histoire exacte des décisions et conséquences du joueur.
+4. **Exploits** — accès ou connaissance, jamais puissance permanente.
+
+La méta-progression reste de la connaissance et de l'accès uniquement (`01-PILLARS.md §2`).
+
+---
+
+## 11. Risques et garde-fous
+
+| Risque                                 | Garde-fou                                                           |
+| -------------------------------------- | ------------------------------------------------------------------- |
+| L'IA oublie la quête                   | État objectif backend injecté à chaque tour                         |
+| Le joueur tourne en rond               | Rappels naturels + voie vers l'objectif dans les choix proposés     |
+| Le contrat devient un menu de niveau   | Quête fictionnelle, commanditaire, destination et conséquences      |
+| Le joueur part sans direction          | Un contrat principal obligatoire en v0.2.1                          |
+| Le donjon ressemble à un jeu de cartes | Aucun type, icône, carte ou palier visible                          |
+| Le mystère paraît injuste              | Jauges lisibles + demi-tour permanent + audit playtest après v0.2.1 |
+| Le retour devient du remplissage       | Trajet distinct, plus court et plus facile                          |
+| Les images coûtent ou ralentissent     | Bibliothèque pré-générée, réutilisée et servie statiquement         |
+| L'image contredit le texte             | Familles de scènes bornées + narration contrainte au décor courant  |
+| L'action libre casse les règles        | Backend souverain ; l'IA n'arbitre jamais                           |
+
+---
+
+## 12. Synthèse
+
+```text
+🏠 AUBERGE NARRATIVE
+   Comptoir · L'Aveugle · Contrats · Forge
+        ↓
+📜 UN CONTRAT PRINCIPAL
+   danger + durée visibles, contenu inconnu
+        ↓
+🏜️ VOYAGE NARRATIF
+   ressources · rencontres · détours · objectif persistant
+        ↓
+🕯️ QUÊTE / DONJON
+   même interface · structure mécanique entièrement cachée
+        ↕
+⚔️ COMBAT
+   transformation tactique temporaire
+        ↓
+↩️ DEMI-TOUR TOUJOURS POSSIBLE
+        ↓
+🌒 RETOUR NARRATIF
+   distinct · court · plus facile · non instantané
+        ↓
+📖 CHRONIQUE → 🏠 AUBERGE
 ```
 
 ---
 
-_Le **combat** qui remplit les salles est détaillé dans `10-COMBAT.md`._
-_Les **créatures** et les archétypes de lieu sont détaillés dans `03-BESTIARY.md`._
-_Le **sac**, l'**usure** et les **artefacts** sont détaillés dans `11-INVENTORY-ECONOMY.md`._
-_Les **jauges de survie** qui rendent le retour dangereux sont détaillées dans `06-SURVIVAL.md`._
-_La **méta-progression** est cadrée par `01-PILLARS.md §2` (pilier 5) et `14-META-WORLD.md`._
-_La **Chronique** de fin de run est détaillée dans `17-RUN-CHRONICLE.md`._
+_Le combat est détaillé dans `10-COMBAT.md`._
+_La boucle narrative est détaillée dans `09-ACTION-LOOP.md`._
+_Le sac, l'usure et les artefacts sont détaillés dans `11-INVENTORY-ECONOMY.md`._
+_La méta-progression est détaillée dans `14-META-WORLD.md`._
+_La Chronique est détaillée dans `17-RUN-CHRONICLE.md`._
