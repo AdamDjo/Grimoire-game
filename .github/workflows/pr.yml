@@ -14,18 +14,35 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - name: Test current-state guard
-        run: node --test scripts/check-current-state.test.mjs
+      - name: Test doc automation scripts
+        run: node --test scripts/check-current-state.test.mjs scripts/pr-status-comment.test.mjs
       - name: Check public documentation links
         run: node scripts/check-doc-links.mjs
       - name: Check project memory and skills
         run: node scripts/check-project-memory.mjs
-      - name: Check current-state files
+      - name: Check documentation upkeep rule
         env:
           PR_BODY: ${{ github.event.pull_request.body }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: node scripts/check-current-state.mjs "$BASE_SHA" "$HEAD_SHA"
+
+  status:
+    name: Project Status
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+      - name: Post or update the project status comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          MILESTONE: v0.2.1 - Roguelike jouable
+        run: node scripts/pr-status-comment.mjs
 
   label:
     name: Auto Label
@@ -81,9 +98,9 @@ jobs:
           PHASE=$(printf '%s\n' "$PR_BODY" | sed -n 's/^- \*\*Phase\*\* : phase: \(predeploy\|postdeploy\)[[:space:]]*$/\1/p' | head -n 1)
 
           if [[ "$PHASE" == "predeploy" ]]; then
-            MILESTONE="v0.1.0 - Première version jouable"
+            MILESTONE="v0.2.1 - Roguelike jouable"
           elif [[ "$PHASE" == "postdeploy" ]]; then
-            echo "Post-deploy PR: no v0.1.0 milestone."
+            echo "Post-deploy PR: no predeploy milestone."
             exit 0
           else
             echo "No supported phase found in PR body for branch: $BRANCH"

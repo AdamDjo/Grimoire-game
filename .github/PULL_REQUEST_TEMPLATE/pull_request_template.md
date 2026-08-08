@@ -37,6 +37,13 @@ fermeture de type, tel garde-fou.
 
 Décision consignée : <!-- une ligne, si un document est coché -->
 
+`BACKEND.md` et `FRONTEND.md` ne se modifient **pas** dans la même PR. Une refonte transverse
+assumée (consolidation, renommage de docs) est la seule exception, et doit se déclarer :
+
+- [ ] Refonte transverse des docs
+
+Justification docs transverses: <!-- obligatoire si la case est cochée -->
+
 ## Checklist technique
 
 - [ ] Conventions du domaine respectées
