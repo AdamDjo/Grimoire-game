@@ -115,7 +115,6 @@ describe('tickConditions', () => {
     let conditions = [condition({ id: 'poison', appliedAtTurn: 1 })]
     const tick1 = tickConditions(conditions, survival, 2)
     survival = tick1.survival
-    conditions = tick1.conditions
     expect(tick1.lethal).toBe(true)
     expect(survival.hp).toBe(0)
   })
