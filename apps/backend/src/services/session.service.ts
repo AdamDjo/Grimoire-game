@@ -5,6 +5,7 @@ import {
   type Attributes,
   type Choice,
   type ContractDepth,
+  type Difficulty,
   type InventoryActionResponse,
   type InventoryItemRef,
   type Locale,
@@ -353,12 +354,51 @@ export async function buildOpeningScene(context: SessionContext): Promise<SceneR
  */
 export const INVALID_CHOICE = Symbol('invalid-choice')
 
+/** Ascending danger, so the scene's stakes can be compared and maxed. */
+const RISK_ORDER: readonly Difficulty[] = ['safe', 'low', 'medium', 'high', 'deadly']
+
+/** The stakes a free-form action is arbitrated under, inherited from the scene. */
+type InheritedStakes = Pick<Choice, 'type' | 'riskLevel'>
+
+/** A scene with nothing at stake: a calm turn, narrated without a d20. */
+const CALM_STAKES: InheritedStakes = { type: 'action', riskLevel: 'safe' }
+
+/**
+ * The stakes a free-form action inherits: those of the most dangerous choice the
+ * scene itself puts on the table. A scene that offers a `deadly` combat option is
+ * a deadly combat situation, so describing an action in prose is arbitrated
+ * exactly like clicking — no input channel is invulnerable by construction (#238).
+ *
+ * Both fields come from the *same* choice on purpose. `riskLevel` alone decides
+ * whether a d20 is rolled, but `type` decides which attribute it tests and, above
+ * all, whether a failure draws blood: only `combat`/`flee` cost HP
+ * (`PHYSICAL_RISK_TYPES`). Inheriting a `deadly` risk while defaulting the type to
+ * `action` would roll a die that can never kill — the exact invulnerability #238
+ * exists to remove.
+ *
+ * Choices with no `riskLevel` count as `safe`; a scene with no choices at all (or
+ * unparsable ones) yields calm stakes.
+ * @see docs/public/raw/08-DICE-RESOLUTION.md §9, docs/public/raw/06-SURVIVAL.md §6
+ */
+function inheritedSceneStakes(choices: readonly InheritedStakes[]): InheritedStakes {
+  return choices.reduce<InheritedStakes>((worst, choice) => {
+    const risk = choice.riskLevel ?? 'safe'
+    return RISK_ORDER.indexOf(risk) > RISK_ORDER.indexOf(worst.riskLevel ?? 'safe')
+      ? { type: choice.type, riskLevel: risk }
+      : worst
+  }, CALM_STAKES)
+}
+
 /**
  * Resolves the `Choice` that drives a turn's mechanics from the persisted
  * world-state — never from client-supplied risk. When a `choiceId` is given it
  * is looked up in the latest scene's stored `choices`; its real `type`/`riskLevel`
  * decide the d20 and stakes. An unknown `choiceId` yields `INVALID_CHOICE`.
- * A free-form action (no `choiceId`) is a deliberate safe, no-roll turn.
+ *
+ * A free-form action (no `choiceId`) inherits the scene's own stakes — both its
+ * risk and its type — rather than falling back to a safe `action`: before #238
+ * typing prose bypassed the d20 entirely, making the text box a way to attempt
+ * lethal actions risk-free.
  */
 export async function resolveChosenChoice(
   sessionId: string,
@@ -366,15 +406,21 @@ export async function resolveChosenChoice(
   chosenActionText: string | undefined,
   freeAction: string | undefined
 ): Promise<Choice | typeof INVALID_CHOICE> {
-  if (!choiceId) {
-    return { id: 'free-action', text: freeAction ?? '', type: 'action', riskLevel: 'safe' }
-  }
-
   const lastScene = await prisma.sceneLog.findFirst({
     where: { sessionId },
     orderBy: { turnNumber: 'desc' },
   })
   const choices = persistedChoicesSchema.safeParse(lastScene?.choices)
+
+  if (!choiceId) {
+    const stakes = choices.success ? inheritedSceneStakes(choices.data) : CALM_STAKES
+    return {
+      id: 'free-action',
+      text: freeAction ?? '',
+      ...stakes,
+    }
+  }
+
   const chosen = choices.success ? choices.data.find((c) => c.id === choiceId) : undefined
   if (!chosen) {
     return INVALID_CHOICE
