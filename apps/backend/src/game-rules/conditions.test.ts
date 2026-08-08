@@ -112,7 +112,7 @@ describe('tickConditions', () => {
 
   it('a condition can kill the character over time (Definition of Done #181)', () => {
     let survival = full({ hp: 1 })
-    let conditions = [condition({ id: 'poison', appliedAtTurn: 1 })]
+    const conditions = [condition({ id: 'poison', appliedAtTurn: 1 })]
     const tick1 = tickConditions(conditions, survival, 2)
     survival = tick1.survival
     expect(tick1.lethal).toBe(true)
