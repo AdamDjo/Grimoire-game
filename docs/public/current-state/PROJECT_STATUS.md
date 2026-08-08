@@ -12,12 +12,12 @@ structurantes. Il ne porte **aucun avancement par ticket** : c'est GitHub qui le
 peut pas être périmé.
 
 ```bash
-gh issue list --milestone "v0.2.0 - Roguelike jouable" --state all
+gh issue list --milestone "v0.2.1 - Roguelike jouable" --state all
 ```
 
 ## Objectif actuel
 
-Livrer **v0.2.0 — Roguelike jouable** : refonder la couche de jeu par-dessus le socle existant, de
+Livrer **v0.2.1 — Roguelike jouable** : refonder la couche de jeu par-dessus le socle existant, de
 sorte qu'un run ait une **destination** (contrat), une **structure** (paliers), une **décision
 centrale** (le demi-tour) et un **enjeu** (le retour). Voir `docs/public/raw/23-RUN-STRUCTURE.md`.
 
@@ -87,3 +87,19 @@ ticket à la main, et dérivaient malgré tout.
   `git log -1 --format=%cs -- <fichier>` est la seule date fiable.
 - Un pivot ou une décision structurante s'inscrit dans [[../nav/log]], qui est append-only et ne
   périme donc jamais.
+
+### Le statut apparaît dans chaque PR, sans éditer un fichier
+
+Le besoin « voir où en est le projet depuis la PR » et la règle « une PR ne modifie aucun document »
+ne s'opposent que si le statut est écrit à la main. Il est donc **généré** : le job `Project Status`
+de `.github/workflows/pr.yml` lit le milestone via `gh issue list` et poste un commentaire unique,
+réécrit à chaque push (marqueur `<!-- grimoire:project-status -->`, script
+`scripts/pr-status-comment.mjs`).
+
+Un hook git a été écarté : local à une seule machine, contournable par `--no-verify`, et il aurait
+réintroduit dans les commits exactement le churn que cette consolidation supprime.
+
+Le garde-fou `scripts/check-current-state.mjs` applique la règle **à l'envers** de sa version
+d'origine : il ne réclame plus aucun document, il refuse qu'une PR en touche trop — deux documents de
+domaine, un fichier supprimé ressuscité, un champ `updated:` réintroduit. Une refonte transverse
+assumée coche `Refonte transverse des docs` dans le template et la justifie.

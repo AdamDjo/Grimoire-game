@@ -14,7 +14,7 @@ Point d'entrée unique, pour un humain comme pour un agent. Aucun état vivant i
 **Sur GitHub, pas dans les docs.**
 
 ```bash
-gh issue list --milestone "v0.2.0 - Roguelike jouable" --state all
+gh issue list --milestone "v0.2.1 - Roguelike jouable" --state all
 ```
 
 Objectif courant et décisions structurantes : [[public/current-state/PROJECT_STATUS]].

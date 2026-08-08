@@ -2,7 +2,7 @@
 
 > Lire d'abord : `../../MEMORY.md`, puis `../../docs/00-START-HERE.md`.
 > Décisions du domaine : `../../docs/public/current-state/BACKEND.md`.
-> Avancement : `gh issue list --milestone "v0.2.0 - Roguelike jouable" --state all` (GitHub, jamais un `.md`).
+> Avancement : `gh issue list --milestone "v0.2.1 - Roguelike jouable" --state all` (GitHub, jamais un `.md`).
 > Contrats actifs : `../../docs/public/tech/ARCHITECTURE_RULES.md`.
 
 ## Scope

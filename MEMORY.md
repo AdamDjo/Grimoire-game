@@ -15,7 +15,7 @@ produit.
 
 1. `docs/00-START-HERE.md`
 2. `docs/public/current-state/PROJECT_STATUS.md`
-3. **Avancement des tickets** : `gh issue list --milestone "v0.2.0 - Roguelike jouable" --state all` — jamais un `.md`
+3. **Avancement des tickets** : `gh issue list --milestone "v0.2.1 - Roguelike jouable" --state all` — jamais un `.md`
 4. Domaine concerné : `docs/public/current-state/BACKEND.md` ou `FRONTEND.md`
 5. `docs/public/current-state/RELEASE_READINESS.md` uniquement pour le pré-déploiement ou une release
 6. `docs/public/nav/task-router.md` pour charger le canon ciblé

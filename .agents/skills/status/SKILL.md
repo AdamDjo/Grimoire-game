@@ -7,7 +7,7 @@ allowed-tools: Read, Glob
 Show the current project status by:
 
 1. Read ticket progress from GitHub, never from a `.md`:
-   `gh issue list --milestone "v0.2.0 - Roguelike jouable" --state all`.
+   `gh issue list --milestone "v0.2.1 - Roguelike jouable" --state all`.
 2. Read `MEMORY.md`, then `docs/public/current-state/PROJECT_STATUS.md` for the phase and the EPIC
    dependency order.
 3. Read `RELEASE_READINESS.md` for a global/release request, or only the matching domain document

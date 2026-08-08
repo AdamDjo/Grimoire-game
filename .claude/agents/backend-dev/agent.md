@@ -15,7 +15,7 @@ Read these files in order — they contain all the rules, don't re-derive them:
 1. `MEMORY.md` — stable project-memory entrypoint
 2. `docs/00-START-HERE.md` — project router
 3. `docs/public/current-state/BACKEND.md` — backend decisions (progress lives on GitHub:
-   `gh issue list --milestone "v0.2.0 - Roguelike jouable" --state all`)
+   `gh issue list --milestone "v0.2.1 - Roguelike jouable" --state all`)
 4. `apps/backend/CLAUDE.md` — all backend rules
 5. `docs/public/tech/ARCHITECTURE_RULES.md` — backend/AI/frontend invariants
 6. `docs/public/nav/task-router.md` — targeted docs and canon routing

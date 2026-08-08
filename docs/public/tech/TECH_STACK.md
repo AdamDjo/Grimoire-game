@@ -78,7 +78,7 @@
 ## Références ciblées
 
 - État projet : [`../current-state/PROJECT_STATUS.md`](../current-state/PROJECT_STATUS.md)
-- Avancement des tickets : `gh issue list --milestone "v0.2.0 - Roguelike jouable" --state all` (GitHub, jamais un `.md`)
+- Avancement des tickets : `gh issue list --milestone "v0.2.1 - Roguelike jouable" --state all` (GitHub, jamais un `.md`)
 - Décisions par domaine : [`../current-state/BACKEND.md`](../current-state/BACKEND.md) · [`../current-state/FRONTEND.md`](../current-state/FRONTEND.md)
 - Design : [`../design/GAME_DESIGN.md`](../design/GAME_DESIGN.md)
 - Architecture : [`ARCHITECTURE_RULES.md`](ARCHITECTURE_RULES.md)
