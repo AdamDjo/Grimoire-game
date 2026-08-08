@@ -7,31 +7,21 @@ import { pathToFileURL } from "node:url";
 export const MILESTONE = "v0.2.1 - Roguelike jouable";
 export const MARKER = "<!-- grimoire:project-status -->";
 
-// Ordre de dépendance des EPICs : chacun suppose le précédent livré.
-// Source : docs/public/current-state/PROJECT_STATUS.md § Ordre des EPICs.
-const EPIC_ORDER = [214, 215, 216, 217, 218, 219, 220, 221];
-
+// Les EPICs de coordination ont été retirés du board : un ticket qui ne livre rien
+// ne fait que dupliquer l'état de ses enfants. L'ordre des chantiers reste une
+// décision, consignée dans PROJECT_STATUS.md § Ordre des chantiers.
 export function summarize(issues) {
-  const epics = [];
-  const tickets = [];
-
-  issues.forEach((issue) => {
-    if (issue.title.startsWith("[EPIC]")) {
-      epics.push(issue);
-    } else {
-      tickets.push(issue);
-    }
-  });
+  const tickets = issues.filter((issue) => !issue.title.startsWith("[EPIC]"));
 
   const byNumber = (a, b) => a.number - b.number;
   const closed = tickets.filter((t) => t.state === "CLOSED").sort(byNumber);
   const open = tickets.filter((t) => t.state !== "CLOSED").sort(byNumber);
 
-  return { epics, tickets, closed, open };
+  return { tickets, closed, open };
 }
 
 export function renderStatus(issues, { milestone = MILESTONE } = {}) {
-  const { epics, tickets, closed, open } = summarize(issues);
+  const { tickets, closed, open } = summarize(issues);
   const total = tickets.length;
   const done = closed.length;
   const percent = total === 0 ? 0 : Math.round((done / total) * 100);
@@ -45,20 +35,6 @@ export function renderStatus(issues, { milestone = MILESTONE } = {}) {
     `\`${bar}\` **${done}/${total}** tickets fermés (${percent} %)`,
     "",
   ];
-
-  const orderedEpics = [...epics].sort(
-    (a, b) => EPIC_ORDER.indexOf(a.number) - EPIC_ORDER.indexOf(b.number),
-  );
-
-  if (orderedEpics.length > 0) {
-    lines.push("### EPICs — chaque EPIC suppose le précédent livré", "");
-    orderedEpics.forEach((epic) => {
-      const icon = epic.state === "CLOSED" ? "✅" : "⬜";
-      const title = epic.title.replace(/^\[EPIC\]\s*/, "");
-      lines.push(`${icon} **#${epic.number}** ${title}`);
-    });
-    lines.push("");
-  }
 
   if (open.length > 0) {
     lines.push("### Tickets ouverts", "");

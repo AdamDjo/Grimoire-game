@@ -30,13 +30,17 @@ centrale** (le demi-tour) et un **enjeu** (le retour). Voir `docs/public/raw/23-
 > sert à rien de déployer un vertical slice ennuyeux. Les bloqueurs pré-déploiement #161, #129 et
 > #163 sont **gelés**, pas annulés.
 
-## Ordre des EPICs
+## Ordre des chantiers
 
-Les 8 EPICs de la refonte vivent sur GitHub (#214 → #221). Ce qui ne s'y lit pas, et qui est donc
-consigné ici : **l'ordre n'est pas indicatif — chaque EPIC suppose le précédent livré.**
+Les 8 EPICs de coordination ont été fermés le 2026-08-08 : un ticket qui ne livre rien ne fait que
+recopier l'état de ses enfants. Ce qui avait de la valeur en eux — **l'ordre n'est pas indicatif,
+chaque chantier suppose le précédent livré** — est une décision, elle vit donc ici :
 
-`#214 boucle de run → #215 combat → #216 auberge → #217 artefacts → #218 lisibilité / #219 UI par
-modes → #220 compagnons / #221 exploits`
+`boucle de run → combat → auberge → artefacts → lisibilité / UI par modes → compagnons / exploits`
+
+Le board ne porte plus que des tickets livrables, avec trois axes de label : `domain: *` (posé
+automatiquement par `.github/labeler.yml`), `release: *`, et `phase: *` qui pilote l'assignation de
+milestone dans `.github/workflows/pr.yml`.
 
 ## Sources par domaine
 

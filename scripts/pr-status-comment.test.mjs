@@ -16,10 +16,9 @@ const ISSUES = [
   { number: 226, title: "feat(shared): contrats", state: "CLOSED", labels: [] },
 ];
 
-test("sépare les EPICs des tickets", () => {
-  const { epics, tickets, closed, open } = summarize(ISSUES);
+test("écarte les EPICs du décompte de tickets", () => {
+  const { tickets, closed, open } = summarize(ISSUES);
 
-  assert.equal(epics.length, 2);
   assert.equal(tickets.length, 3);
   assert.equal(closed.length, 1);
   assert.equal(open.length, 2);
@@ -35,12 +34,12 @@ test("porte le marqueur idempotent", () => {
   assert.ok(renderStatus(ISSUES).startsWith(MARKER));
 });
 
-test("ordonne les EPICs par dépendance, pas par état", () => {
+test("n'affiche aucun EPIC, même ouvert", () => {
   const output = renderStatus(ISSUES);
 
-  assert.ok(output.indexOf("#214") < output.indexOf("#215"));
-  assert.match(output, /✅ \*\*#214\*\*/);
-  assert.match(output, /⬜ \*\*#215\*\*/);
+  assert.doesNotMatch(output, /EPIC/);
+  assert.doesNotMatch(output, /#214/);
+  assert.doesNotMatch(output, /#215/);
 });
 
 test("signale un ticket bloqué", () => {
