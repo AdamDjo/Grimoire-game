@@ -1,0 +1,206 @@
+.game-input {
+  --game-field-frame-brightness: 0.9;
+  --game-field-frame-saturation: 0.88;
+  --game-field-halo-color: transparent;
+  --game-field-halo-size: 0px;
+
+  align-items: center;
+  color: var(--gold-light, #f0d48a);
+  display: inline-grid;
+  grid-template-columns: minmax(0, 1fr);
+  isolation: isolate;
+  min-height: 64px;
+  min-width: 0;
+  position: relative;
+  width: 100%;
+}
+
+.game-input::before {
+  border: 14px solid transparent;
+  border-image-source: url('/ui-kit/controls/game-input-frame-v2.webp');
+  border-image-slice: 42 fill;
+  border-image-width: 14px;
+  border-image-repeat: stretch;
+  box-sizing: border-box;
+  content: '';
+  filter: brightness(var(--game-field-frame-brightness))
+    saturate(var(--game-field-frame-saturation))
+    drop-shadow(0 0 var(--game-field-halo-size) var(--game-field-halo-color));
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  transition: filter 180ms cubic-bezier(0.2, 0, 0, 1);
+  z-index: -1;
+}
+
+.game-input--framed::before {
+  background: url('/ui-kit/character-create/character-input-frame.webp') center / 100% 100%
+    no-repeat;
+  border: 0;
+  border-image: none;
+  filter: brightness(var(--game-field-frame-brightness))
+    saturate(var(--game-field-frame-saturation))
+    drop-shadow(0 0 var(--game-field-halo-size) var(--game-field-halo-color));
+}
+
+.game-input--framed-v2::before {
+  background: url('/ui-kit/character-create/character-input-frame-v2.webp') center / 100% 100%
+    no-repeat;
+  border: 0;
+  border-image: none;
+  filter: brightness(var(--game-field-frame-brightness))
+    saturate(var(--game-field-frame-saturation))
+    drop-shadow(0 0 var(--game-field-halo-size) var(--game-field-halo-color));
+}
+
+.game-input:not(.game-input--disabled):hover {
+  --game-field-frame-brightness: 1.04;
+  --game-field-frame-saturation: 1.04;
+  --game-field-halo-color: color-mix(in srgb, var(--gold, #d9a441) 18%, transparent);
+  --game-field-halo-size: 7px;
+}
+
+.game-input:focus-within {
+  --game-field-frame-brightness: 1.14;
+  --game-field-frame-saturation: 1.12;
+  --game-field-halo-color: color-mix(in srgb, var(--gold-light, #efd48d) 32%, transparent);
+  --game-field-halo-size: 10px;
+}
+
+.game-input--with-leading {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.game-input--with-trailing {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.game-input--with-leading.game-input--with-trailing {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
+.game-input__control {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  caret-color: var(--gold-light, #efd48d);
+  color: var(--parchment, #e8dcc0);
+  font-family: var(--font-game-ui);
+  font-size: var(--text-game-body);
+  font-weight: 400;
+  line-height: 1.4;
+  grid-column: auto;
+  height: 100%;
+  min-width: 0;
+  outline: 0;
+  padding: 0 1.75rem;
+  position: relative;
+  z-index: 1;
+}
+
+.game-input__control::placeholder {
+  color: color-mix(in srgb, var(--parchment, #e8dcc0) 62%, transparent);
+  opacity: 1;
+}
+
+/* Le cadre parent porte l'indicateur de focus. Neutraliser ici le :focus-visible
+   global évite une seconde bordure rectangulaire à l'intérieur du master. */
+.game-input__control:focus-visible {
+  box-shadow: none;
+  outline: 0;
+}
+
+.game-input__leading,
+.game-input__trailing {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.game-input__leading {
+  padding-left: 1.75rem;
+}
+
+.game-input__trailing {
+  padding-right: 1rem;
+}
+
+.game-input__leading > svg {
+  height: 1.1rem;
+  width: 1.1rem;
+}
+
+.game-input__trailing > button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0;
+}
+
+.game-input__trailing > button:focus-visible {
+  box-shadow: none;
+  outline: 1px solid currentColor;
+  outline-offset: -6px;
+}
+
+.game-input.game-input--invalid {
+  --game-field-frame-brightness: 0.94;
+  --game-field-frame-saturation: 1.28;
+  --game-field-halo-color: color-mix(in srgb, var(--blood, #c0392b) 25%, transparent);
+  --game-field-halo-size: 8px;
+
+  color: var(--blood, #c0392b);
+}
+
+.game-input.game-input--invalid::before {
+  filter: sepia(0.3) brightness(var(--game-field-frame-brightness))
+    saturate(var(--game-field-frame-saturation))
+    drop-shadow(0 0 var(--game-field-halo-size) var(--game-field-halo-color));
+}
+
+.game-input--disabled {
+  color: rgba(170, 165, 154, 0.5);
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.game-input--disabled::before {
+  filter: grayscale(1) brightness(0.65);
+}
+
+.game-input__control:disabled {
+  color: rgba(180, 175, 165, 0.55);
+  cursor: not-allowed;
+}
+
+@media (max-width: 720px) {
+  .game-input--framed::before {
+    background-image: url('/ui-kit/character-create/character-input-frame-mobile.webp');
+  }
+
+  .game-input--framed-v2::before {
+    background-image: url('/ui-kit/character-create/character-input-frame-v2-mobile.webp');
+  }
+
+  .game-input {
+    min-height: 58px;
+  }
+
+  .game-input__control {
+    padding-inline: 1.4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-input::before {
+    transition-duration: 0.01ms;
+  }
+}

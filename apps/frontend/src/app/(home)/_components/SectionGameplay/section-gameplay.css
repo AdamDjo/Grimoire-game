@@ -1,0 +1,249 @@
+.gameplay-section {
+  display: grid;
+  grid-template-columns: minmax(0, 56vw) minmax(380px, 1fr);
+  padding: 9vh clamp(28px, 4.6vw, 78px) 7vh;
+}
+
+/* Voile du dip-to-dark : plein noir quand le pin démarre (posé par GSAP en
+   motion normale), se lève sur les premiers % du pin. Inerte en reduced motion. */
+.gameplay-section__veil {
+  background: var(--void);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.gameplay-section .media-vignette {
+  background:
+    radial-gradient(circle at 28% 48%, rgba(3, 3, 2, 0.09), rgba(3, 3, 2, 0.62) 72%),
+    linear-gradient(90deg, rgba(3, 3, 2, 0.08), rgba(3, 3, 2, 0.17) 46%, rgba(3, 3, 2, 0.68) 100%),
+    linear-gradient(180deg, rgba(3, 3, 2, 0.47), transparent 35%, rgba(3, 3, 2, 0.54));
+}
+
+.gameplay-section__cards {
+  max-width: 780px;
+  padding-left: clamp(10px, 3vw, 54px);
+  transform: rotate(-3deg);
+  width: min(49vw, 820px);
+}
+
+.gameplay-section__copy h2 {
+  font-family: var(--font-accent);
+  text-transform: none;
+}
+
+.gameplay-section__copy h2 span {
+  white-space: nowrap;
+}
+
+.gameplay-section__label {
+  color: rgba(239, 225, 194, 0.72);
+  font-family: var(--font-display);
+  font-size: 17px;
+  letter-spacing: 0.08em;
+  margin: 0 0 clamp(20px, 3vh, 32px);
+  text-transform: uppercase;
+}
+
+/* Ornement de section unifié : filet décoratif posé SOUS le H2 (même image et
+   mêmes dimensions que le World). Pseudo-élément sur le titre → position:relative. */
+.gameplay-section__title {
+  position: relative;
+  padding-bottom: 40px;
+}
+
+.gameplay-section__title::after {
+  background: url('/landing/ui/ornament-divider-trimmed.png') center / contain no-repeat;
+  content: '';
+  height: 26px;
+  left: 0;
+  position: absolute;
+  top: 100%;
+  width: 220px;
+}
+
+.gameplay-section__body {
+  margin: 56px 0 38px;
+}
+
+.gameplay-stats {
+  background-image: image-set(
+    url('/landing/ui/gameplay-stats-frame-trimmed.webp') type('image/webp'),
+    url('/landing/ui/gameplay-stats-frame-trimmed.png') type('image/png')
+  );
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  border: 0;
+  bottom: 4vh;
+  grid-template-columns: repeat(3, 1fr);
+  left: clamp(28px, 4.6vw, 78px);
+  padding: 7px 16px;
+  width: 59vw;
+}
+
+/* Légende du triptyque de ressources : posée juste au-dessus du cadre art
+   (le cadre .gameplay-stats est ancré bottom:4vh, l'espace libre est au-dessus).
+   Discrète : couleur/spacing ici, prose serif. */
+.gameplay-stats__caption {
+  bottom: calc(4vh + 128px);
+  color: rgba(239, 225, 194, 0.72);
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-style: italic;
+  left: clamp(28px, 4.6vw, 78px);
+  margin: 0;
+  max-width: min(59vw, 620px);
+  width: 59vw;
+}
+
+.gameplay-stat {
+  grid-template-columns: auto auto auto 1fr;
+  padding: 22px 26px;
+}
+
+.gameplay-stat + .gameplay-stat {
+  border-left: 0;
+}
+
+.gameplay-stat__sigil {
+  border: 1px solid rgba(218, 170, 74, 0.54);
+}
+
+.gameplay-stat__sigil::before {
+  background: currentColor;
+  content: '';
+  height: 1px;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+}
+
+.gameplay-stat__label {
+  font-family: var(--font-display);
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.gameplay-stat__value {
+  font-family: var(--font-accent);
+}
+
+.gameplay-stat__track span {
+  border: 1px solid currentColor;
+  height: 12px;
+  opacity: 0.42;
+}
+
+.gameplay-stat__track span.is-filled {
+  background: currentColor;
+  box-shadow: 0 0 12px currentColor;
+  opacity: 0.9;
+}
+
+@media (max-width: 1100px) {
+  .gameplay-section {
+    grid-template-columns: 1fr;
+    padding-bottom: 7vh;
+  }
+
+  .gameplay-section__cards {
+    width: min(70vw, 620px);
+  }
+
+  .gameplay-section__copy {
+    margin-left: clamp(20px, 7vw, 80px);
+    margin-top: 52px;
+  }
+
+  /* Stats bar en flux plutôt qu'absolute : en colonne, l'ancrage bottom
+     chevaucherait le copy. On la remet dans le flux sous le texte. */
+  .gameplay-stats {
+    position: static;
+    inset: auto;
+    margin: 48px auto 0;
+    width: 100%;
+  }
+
+  /* Légende suit le cadre en flux (au-dessus de lui, avant la barre). */
+  .gameplay-stats__caption {
+    position: static;
+    inset: auto;
+    margin: 44px auto 0;
+    text-align: center;
+    width: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  /* Trois colonnes deviennent illisibles en tablette portrait : les jauges de
+     Souffle et Cendre se chevauchaient. Le cadre horizontal cède la place à un
+     panneau sobre en trois lignes, toujours dans le flux naturel. */
+  .gameplay-stats {
+    background: rgba(7, 6, 5, 0.88);
+    border: 1px solid rgba(218, 170, 74, 0.28);
+    grid-template-columns: 1fr;
+    padding: 0;
+  }
+
+  .gameplay-stat + .gameplay-stat {
+    border-left: 0;
+    border-top: 1px solid rgba(218, 170, 74, 0.18);
+  }
+}
+
+@media (max-width: 720px) {
+  .gameplay-section {
+    display: block;
+    min-height: auto;
+    padding: 120px 18px 170px;
+  }
+
+  /* Plate gameplay (gros plan de grimoire) trop claire et chargée derrière le
+     copy sur écran étroit : sans le dip-to-dark du pin desktop, le texte perdait
+     son contraste. On empile un voile noir permanent SOUS le contenu (la vignette
+     vit dans `.media-layer` en `-z-2`, donc sous les cartes/copy en z-2/z-3) :
+     dense en haut/bas où court le texte, un peu plus clair au centre pour garder
+     la profondeur de la plate. Résultat : fond sombre lisible, sans écraser
+     totalement l'image. */
+  .gameplay-section .media-vignette {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(3, 3, 2, 0.9) 0%,
+        rgba(3, 3, 2, 0.7) 32%,
+        rgba(3, 3, 2, 0.72) 60%,
+        rgba(3, 3, 2, 0.92) 100%
+      ),
+      radial-gradient(circle at 50% 42%, rgba(3, 3, 2, 0.36), rgba(3, 3, 2, 0.72) 78%);
+  }
+
+  .gameplay-section__cards {
+    padding-left: 0;
+    transform: none;
+    width: 100%;
+  }
+
+  .gameplay-section__copy {
+    margin: 54px 0 0;
+  }
+
+  .gameplay-section__label {
+    margin-bottom: 32px;
+  }
+
+  .gameplay-section__copy h2 {
+    font-size: clamp(34px, 9vw, 44px);
+  }
+
+  .gameplay-section__copy h2 span {
+    white-space: normal;
+  }
+
+  .gameplay-stats {
+    bottom: 26px;
+    left: 18px;
+    width: calc(100% - 36px);
+  }
+}

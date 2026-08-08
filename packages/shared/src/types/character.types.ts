@@ -1,38 +1,110 @@
-export interface CharacterStats {
+/**
+ * Velkhar character model — canon triptyque + survie.
+ * @see docs/public/raw/04-ATTRIBUTES.md, 06-SURVIVAL.md
+ */
+
+import type { PersistedInventoryItem } from "./inventory.types";
+import type { ShiftedSkill } from "./vocation-resolution.types";
+
+/** The three canon attributes (SANG / SOUFFLE / CENDRE). Values range 3–18. */
+export type Attribute = "blood" | "breath" | "ash";
+
+export type Attributes = Record<Attribute, number>;
+
+/**
+ * Attribute modifier from the raw value (3–18).
+ * Canon table: 3=-3, 4-5=-2, 6-7=-1, 8-11=0, 12-13=+1, 14-15=+2, 16-17=+3, 18=+4.
+ */
+export function attributeModifier(value: number): number {
+  if (value <= 3) return -3;
+  if (value <= 5) return -2;
+  if (value <= 7) return -1;
+  if (value <= 11) return 0;
+  if (value <= 13) return 1;
+  if (value <= 15) return 2;
+  if (value <= 17) return 3;
+  return 4;
+}
+
+/** Max HP derived from the blood attribute. Canon: PV_max = 10 + mod SANG. */
+export function maxHpFromBlood(blood: number): number {
+  return 10 + attributeModifier(blood);
+}
+
+/**
+ * Persistent altered states beyond the gauges. The id is the sole discriminant —
+ * it is also the engine id used by the AI's `applyCondition` proposal.
+ * @see docs/public/raw/06-SURVIVAL.md §2
+ */
+export type ConditionId =
+  | "fever"
+  | "poison"
+  | "wound"
+  | "freeze"
+  | "stun"
+  | "blindness"
+  | "marsh_disease"
+  | "cendre_corrupt"
+  | "shaken_reason"
+  | "petrification";
+
+/** Which side decided to apply the condition. @see docs/public/raw/06-SURVIVAL.md §2 */
+export type ConditionSource = "backend" | "ai";
+
+/**
+ * How an active condition's duration is resolved.
+ * "until_cured": lasts until an explicit heal/cure. "turns": expires after N turns from appliedAtTurn.
+ */
+export type ConditionExpiryRule =
+  | { type: "until_cured" }
+  | { type: "turns"; count: number };
+
+export interface ActiveCondition {
+  id: ConditionId;
+  source: ConditionSource;
+  appliedAtTurn: number;
+  expiresRule: ConditionExpiryRule;
+}
+
+/** Survival gauges (0–100), all tied to the blood attribute. */
+export interface SurvivalStats {
   hp: number;
-  maxHp: number;
-  mana: number;
-  maxMana: number;
-  strength: number;
-  agility: number;
-  intelligence: number;
-  charisma: number;
-  luck: number;
-  level: number;
-  xp: number;
-  xpToNextLevel: number;
+  maxHp: number; // = maxHpFromBlood(attributes.blood)
+  thirst: number;
+  hunger: number;
+  energy: number;
+  /** Accumulated Cendre corruption (0–100). 100 = death (Calciné). */
+  calamine: number;
+  /** True after the first 0-HP hit: one telegraphed turn of reprieve before a second 0-HP hit is definitive death. */
+  isDying: boolean;
+  /** Consecutive turns thirst or hunger has been at 0 — drives the prolonged-neglect Calamine source. */
+  neglectStreak: number;
 }
 
-export interface CharacterTrait {
-  id: string;
-  name: string;
-  description: string;
-  effect: TraitEffect;
-}
-
-export interface TraitEffect {
-  statModifiers?: Partial<Record<keyof CharacterStats, number>>;
-  specialAbility?: string;
+export interface CharacterStats {
+  attributes: Attributes;
+  survival: SurvivalStats;
+  conditions: ActiveCondition[];
+  inventory: PersistedInventoryItem[];
 }
 
 export interface Character {
   id: string;
   userId: string;
   name: string;
-  race: string;
-  class: string;
-  traits: CharacterTrait[];
-  baseStats: CharacterStats;
+  /** People id, see PEOPLES in constants/peoples. */
+  people: string;
+  /** Vocation id, see VOCATIONS in constants/vocations. */
+  vocation: string;
+  /** Free-form concept when the player picks the "custom vocation" path. */
+  freeConcept?: string;
+  /** AI-personalized vocation name shown in place of the canon preset name, when resolved from a free concept. */
+  customVocationName?: string;
+  /** AI-authored narrative trait tied to the resolved free-concept vocation. */
+  narrativeTrait?: string;
+  /** Canon vocation skills renamed to fit the free concept, when resolved. */
+  shiftedSkills?: ShiftedSkill[];
+  stats: CharacterStats;
   backstory?: string;
   avatarUrl?: string;
   createdAt: string;
@@ -40,7 +112,11 @@ export interface Character {
 
 export interface CreateCharacterInput {
   name: string;
-  race: string;
-  class: string;
-  universeType: string;
+  people: string;
+  vocation: string;
+  freeConcept?: string;
+  backstory?: string;
+  customVocationName?: string;
+  narrativeTrait?: string;
+  shiftedSkills?: ShiftedSkill[];
 }

@@ -1,0 +1,18 @@
+.vocation-emblem {
+  display: block;
+  height: auto;
+  object-fit: contain;
+  width: var(--vocation-emblem-size);
+}
+
+.vocation-emblem--sm {
+  --vocation-emblem-size: 4rem;
+}
+
+.vocation-emblem--md {
+  --vocation-emblem-size: 6rem;
+}
+
+.vocation-emblem--lg {
+  --vocation-emblem-size: 8rem;
+}

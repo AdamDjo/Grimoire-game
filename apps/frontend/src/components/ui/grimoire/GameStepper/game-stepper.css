@@ -1,0 +1,253 @@
+.game-stepper {
+  --game-step-size: 68px;
+  --game-step-color: rgba(184, 152, 101, 0.58);
+  --game-step-accent: var(--gold, #d9a441);
+  --game-step-light: var(--gold-light, #efd48d);
+
+  min-width: 0;
+  width: 100%;
+}
+
+.game-stepper__list {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.game-stepper__item {
+  flex: 1 1 0;
+  min-width: 0;
+  position: relative;
+}
+
+.game-stepper__item:not(:last-child)::after {
+  background: linear-gradient(
+    90deg,
+    currentColor,
+    color-mix(in srgb, currentColor 36%, transparent)
+  );
+  content: '';
+  height: 1px;
+  left: calc(50% + var(--game-step-size) / 2);
+  position: absolute;
+  right: calc(-50% + var(--game-step-size) / 2);
+  top: calc(var(--game-step-size) / 2);
+  transition:
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+  z-index: 0;
+}
+
+.game-stepper__item--completed:not(:last-child)::after {
+  background: linear-gradient(90deg, var(--game-step-accent), rgba(217, 164, 65, 0.44));
+  box-shadow: 0 0 7px rgba(217, 164, 65, 0.24);
+}
+
+.game-stepper__button {
+  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: var(--game-step-color);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  font: inherit;
+  gap: 0.65rem;
+  margin: 0 auto;
+  min-width: 44px;
+  padding: 0;
+  position: relative;
+  text-align: center;
+  z-index: 1;
+}
+
+.game-stepper__button:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+
+.game-stepper__frame {
+  align-items: center;
+  background: rgba(11, 9, 7, 0.88);
+  border-radius: 50%;
+  display: inline-flex;
+  height: var(--game-step-size);
+  isolation: isolate;
+  justify-content: center;
+  position: relative;
+  width: var(--game-step-size);
+}
+
+.game-stepper__frame::before {
+  background: url('/ui-kit/stepper/step-frame.webp') center / contain no-repeat;
+  content: '';
+  filter: grayscale(0.32) brightness(0.74);
+  inset: -7%;
+  pointer-events: none;
+  position: absolute;
+  transition:
+    filter 180ms ease,
+    transform 180ms cubic-bezier(0.2, 0, 0, 1);
+  z-index: 1;
+}
+
+.game-stepper--creation .game-stepper__frame::before {
+  background-image: url('/ui-kit/character-create/character-medallion.webp');
+  filter: grayscale(0.18) brightness(0.8);
+  inset: -18%;
+}
+
+.game-stepper--creation .game-stepper__item--active .game-stepper__frame::before {
+  filter: brightness(1.18) saturate(1.12);
+}
+
+.game-stepper__frame::after {
+  border-radius: 50%;
+  box-shadow: 0 0 0 transparent;
+  content: '';
+  inset: 8%;
+  pointer-events: none;
+  position: absolute;
+  transition: box-shadow 180ms ease;
+}
+
+.game-stepper__glyph {
+  align-items: center;
+  display: inline-flex;
+  height: 42%;
+  justify-content: center;
+  position: relative;
+  width: 42%;
+  z-index: 2;
+}
+
+.game-stepper__glyph > svg,
+.game-stepper__glyph > img {
+  height: 100%;
+  width: 100%;
+}
+
+.game-stepper__label {
+  color: currentColor;
+  font-family: var(--font-game-ui);
+  font-size: var(--text-game-label);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  transition: color 180ms ease;
+}
+
+.game-stepper__button:hover:not(:disabled) .game-stepper__frame::before {
+  filter: brightness(1.04) saturate(1.04);
+  transform: scale(1.025);
+}
+
+.game-stepper__button:focus-visible {
+  box-shadow: none;
+  outline: 2px solid var(--game-step-light);
+  outline-offset: 5px;
+}
+
+.game-stepper__item--active .game-stepper__button {
+  color: var(--game-step-light);
+}
+
+.game-stepper__item--active .game-stepper__frame::before {
+  filter: brightness(1.2) saturate(1.18);
+}
+
+.game-stepper__item--active .game-stepper__frame::after {
+  box-shadow:
+    0 0 18px rgba(239, 212, 141, 0.38),
+    inset 0 0 10px rgba(217, 164, 65, 0.22);
+}
+
+.game-stepper__item--completed .game-stepper__button {
+  color: rgba(218, 170, 74, 0.86);
+}
+
+.game-stepper__item--completed .game-stepper__glyph::after {
+  color: var(--game-step-light);
+  content: '✓';
+  font-family: var(--font-ui);
+  font-size: calc(var(--game-step-size) * 0.34);
+  font-weight: 600;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -52%);
+}
+
+.game-stepper__item--completed .game-stepper__glyph > * {
+  opacity: 0;
+}
+
+.game-stepper--vertical .game-stepper__list {
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.game-stepper--vertical .game-stepper__item {
+  flex: none;
+}
+
+.game-stepper--vertical .game-stepper__button {
+  align-items: center;
+  flex-direction: row;
+  gap: 1rem;
+  margin: 0;
+  text-align: left;
+}
+
+.game-stepper--vertical .game-stepper__item:not(:last-child)::after {
+  bottom: calc(-1.25rem - var(--game-step-size) / 2);
+  height: auto;
+  left: calc(var(--game-step-size) / 2);
+  right: auto;
+  top: calc(var(--game-step-size) / 2);
+  width: 1px;
+}
+
+@media (max-width: 720px) {
+  .game-stepper--creation .game-stepper__frame::before {
+    background-image: url('/ui-kit/character-create/character-medallion-mobile.webp');
+  }
+
+  .game-stepper--responsive .game-stepper__list {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .game-stepper--responsive .game-stepper__item {
+    flex: none;
+  }
+
+  .game-stepper--responsive .game-stepper__button {
+    align-items: center;
+    flex-direction: row;
+    gap: 1rem;
+    margin: 0;
+    text-align: left;
+  }
+
+  .game-stepper--responsive .game-stepper__item:not(:last-child)::after {
+    bottom: calc(-1rem - var(--game-step-size) / 2);
+    height: auto;
+    left: calc(var(--game-step-size) / 2);
+    right: auto;
+    top: calc(var(--game-step-size) / 2);
+    width: 1px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-stepper__frame::before,
+  .game-stepper__frame::after,
+  .game-stepper__label {
+    transition-duration: 0.01ms;
+  }
+}

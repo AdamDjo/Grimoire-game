@@ -1,0 +1,209 @@
+body:has(.aveugle-threshold) .main-navigation {
+  inset: 0 0 auto;
+  position: absolute;
+}
+
+.aveugle-threshold {
+  align-items: center;
+  display: grid;
+  min-height: 100dvh;
+  overflow: hidden;
+  padding: 1rem clamp(1rem, 5vw, 5rem) clamp(1rem, 2.5vh, 1.5rem);
+  position: relative;
+}
+
+.aveugle-threshold__scene,
+.aveugle-threshold__veil {
+  inset: 0;
+  position: absolute;
+}
+
+.aveugle-threshold__scene {
+  background: url('/scenes/aveugle-cendres.webp') center 42% / cover no-repeat;
+  filter: saturate(0.88) contrast(1.08) brightness(0.9);
+  transform: scale(1.015);
+}
+
+.aveugle-threshold__veil {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(5, 4, 3, 0.18) 0%,
+      rgba(5, 4, 3, 0.3) 45%,
+      rgba(5, 4, 3, 0.93) 100%
+    ),
+    linear-gradient(90deg, rgba(5, 4, 3, 0.72) 0%, transparent 55%);
+}
+
+.aveugle-threshold__dialogue {
+  max-width: min(56rem, 68vw, calc((100dvh - 13.25rem) * 1.497));
+  position: relative;
+  width: 100%;
+  z-index: 1;
+}
+
+.aveugle-threshold__location {
+  color: var(--gold-light);
+  font-family: var(--font-game-ui);
+  font-size: clamp(1rem, 1.35vw, 1.2rem);
+  letter-spacing: 0.18em;
+  margin: 0 0 0.75rem 0.25rem;
+  text-shadow: 0 2px 8px #000;
+  text-transform: uppercase;
+}
+
+.aveugle-threshold__panel {
+  aspect-ratio: 1533 / 1024;
+  background: transparent;
+  filter: drop-shadow(0 1.75rem 3rem rgba(0, 0, 0, 0.62));
+  min-height: 0;
+}
+
+.aveugle-threshold__panel > .game-panel__content {
+  align-content: center;
+  display: grid;
+  height: 100%;
+  padding: 9% 11% 13%;
+}
+
+.aveugle-threshold__speaker {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+}
+
+.aveugle-threshold__speaker .game-icon {
+  filter: brightness(0.94) drop-shadow(0 8px 18px rgba(0, 0, 0, 0.55));
+  flex: 0 0 auto;
+}
+
+.aveugle-threshold__speaker h1 {
+  color: var(--gold-light);
+  font-family: var(--font-game-heading);
+  font-size: clamp(1.6rem, 2.5vw, 2.25rem);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1.15;
+  margin: 0;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.aveugle-threshold blockquote {
+  border-left: 1px solid rgba(217, 164, 65, 0.55);
+  color: var(--parchment);
+  font-family: var(--font-game-heading);
+  font-size: clamp(1.55rem, 2.5vw, 2.15rem);
+  font-style: italic;
+  line-height: 1.45;
+  margin: clamp(1.75rem, 3vw, 2.5rem) 0 0;
+  max-width: 36ch;
+  padding-bottom: 0.12em;
+  padding-left: 1.25rem;
+  text-wrap: pretty;
+}
+
+.aveugle-threshold__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: clamp(2rem, 3.5vw, 3rem);
+}
+
+@media (min-width: 641px) and (max-width: 900px) {
+  .aveugle-threshold {
+    padding: 2rem clamp(1rem, 4vw, 2rem) clamp(1.25rem, 3vh, 2rem);
+  }
+
+  .aveugle-threshold__dialogue {
+    max-width: min(40rem, 78vw);
+  }
+
+  .aveugle-threshold__panel {
+    aspect-ratio: auto;
+  }
+
+  .aveugle-threshold__panel > .game-panel__content {
+    align-content: center;
+    height: auto;
+    padding: clamp(3.75rem, 8vw, 5rem) clamp(2.5rem, 7vw, 4.25rem) clamp(4rem, 8vw, 5.25rem);
+  }
+
+  .aveugle-threshold__speaker {
+    align-items: flex-start;
+  }
+
+  .aveugle-threshold__speaker .game-icon {
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+
+  .aveugle-threshold blockquote {
+    line-height: 1.5;
+    margin-top: 1.35rem;
+  }
+
+  .aveugle-threshold__actions {
+    margin-top: 1.35rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .aveugle-threshold {
+    align-items: start;
+    min-height: 100dvh;
+    padding: 7.25rem 0.75rem 0;
+  }
+
+  .aveugle-threshold__scene {
+    background-position: 61% center;
+  }
+
+  .aveugle-threshold__dialogue {
+    max-width: 100%;
+  }
+
+  .aveugle-threshold__location {
+    margin-bottom: 0.5rem;
+  }
+
+  .aveugle-threshold__panel {
+    aspect-ratio: auto;
+  }
+
+  .aveugle-threshold__panel > .game-panel__content {
+    align-content: start;
+    height: auto;
+    padding: 4rem 2rem 4.5rem;
+  }
+
+  .aveugle-threshold__speaker {
+    align-items: flex-start;
+  }
+
+  .aveugle-threshold__speaker .game-icon {
+    height: 2.25rem;
+    width: 2.25rem;
+  }
+
+  .aveugle-threshold blockquote {
+    line-height: 1.5;
+    margin-top: 1.25rem;
+  }
+
+  .aveugle-threshold__actions,
+  .aveugle-threshold__actions .game-button {
+    width: 100%;
+  }
+
+  .aveugle-threshold__actions .game-button {
+    padding-inline: 1.1rem;
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aveugle-threshold__scene {
+    transform: none;
+  }
+}

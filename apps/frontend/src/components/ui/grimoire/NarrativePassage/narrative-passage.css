@@ -1,0 +1,28 @@
+.narrative-passage {
+  color: color-mix(in srgb, var(--parchment) 88%, var(--gold));
+  font-family: var(--font-game-heading);
+  font-size: var(--text-game-lead);
+  font-style: italic;
+  line-height: var(--text-body-editorial--line-height);
+  max-width: 52rem;
+  text-wrap: pretty;
+}
+
+.narrative-passage--center {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.narrative-passage p {
+  margin: 0;
+}
+
+.narrative-passage--drop-cap p:first-child::first-letter {
+  color: var(--gold-light);
+  float: left;
+  font-family: var(--font-game-display);
+  font-size: 3.25em;
+  font-style: normal;
+  line-height: 0.78;
+  margin: 0.13em 0.12em 0 0;
+}

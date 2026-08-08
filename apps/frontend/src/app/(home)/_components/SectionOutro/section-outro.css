@@ -1,0 +1,273 @@
+.outro-section {
+  align-items: end;
+  display: grid;
+  justify-items: center;
+  padding: 11vh clamp(24px, 5vw, 84px) 5vh;
+}
+
+/* Voile noir plein levé au scrub à l'entrée de l'outro : l'auberge se dévoile
+   depuis le même noir que la sortie du world (transition dip-to-dark, sans
+   plate de passage). Même grammaire que les voiles gameplay/world. */
+.outro-section__veil {
+  background: var(--void);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.outro-section .media-vignette {
+  background:
+    radial-gradient(
+      circle at 66% 48%,
+      rgba(3, 3, 2, 0.04),
+      rgba(3, 3, 2, 0.41) 46%,
+      rgba(3, 3, 2, 0.68) 100%
+    ),
+    linear-gradient(90deg, rgba(3, 3, 2, 0.62), transparent 42%, rgba(3, 3, 2, 0.3)),
+    linear-gradient(180deg, rgba(3, 3, 2, 0.27), transparent 42%, rgba(3, 3, 2, 0.63));
+}
+
+.outro-quote {
+  color: rgba(239, 225, 194, 0.82);
+  font-family: var(--font-serif);
+  font-size: clamp(20px, 1.6vw, 30px);
+  font-style: italic;
+  left: clamp(34px, 9vw, 170px);
+  line-height: 1.34;
+  position: absolute;
+  top: 23vh;
+}
+
+.outro-quote::after {
+  background: url('/landing/ui/auberge-divider-trimmed.png') center / contain no-repeat;
+  bottom: -28px;
+  content: '';
+  height: 18px;
+  left: 50%;
+  position: absolute;
+  transform: translateX(-50%);
+  width: min(100%, 280px);
+}
+
+.outro-section__content {
+  margin-bottom: clamp(56px, 9vh, 100px);
+}
+
+/* Logo ancré en haut de l'écran (pas centré avec le titre/CTA). Centré
+   horizontalement via translateX ; le titre et le CTA restent dans le bloc
+   centré `.outro-section__content` en dessous. */
+.outro-logo {
+  color: var(--gold-light);
+  font-family: var(--font-display);
+  font-size: clamp(30px, 2.8vw, 48px);
+  left: 50%;
+  margin: 0;
+  position: absolute;
+  top: 8vh;
+  transform: translateX(-50%);
+}
+
+.outro-logo span {
+  color: var(--gold);
+  font-size: 13px;
+  letter-spacing: 0.34em;
+}
+
+.outro-section__content h2 {
+  color: var(--parchment);
+  font-family: var(--font-serif);
+  font-size: clamp(52px, 4.8vw, 86px);
+}
+
+.outro-section__content > p:not(.outro-logo) {
+  color: rgba(239, 225, 194, 0.82);
+  font-size: clamp(22px, 1.6vw, 30px);
+  margin: 22px 0 26px;
+}
+
+.outro-footer {
+  align-items: center;
+  bottom: 24px;
+  color: rgba(239, 225, 194, 0.7);
+  display: grid;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  gap: clamp(24px, 4vw, 64px);
+  grid-template-columns: minmax(220px, 1fr) auto minmax(220px, 1fr);
+  left: clamp(24px, 5vw, 84px);
+  padding-top: 28px;
+  right: clamp(24px, 5vw, 84px);
+}
+
+.outro-footer::before {
+  background: url('/landing/ui/auberge-divider-trimmed.png') center / contain no-repeat;
+  content: '';
+  height: 20px;
+  left: 50%;
+  position: absolute;
+  top: -8px;
+  transform: translateX(-50%);
+  width: min(100%, 380px);
+}
+
+.outro-footer__made {
+  display: grid;
+  gap: 3px;
+  justify-self: start;
+}
+
+.outro-footer__heart {
+  color: var(--gold);
+  display: inline-block;
+  font-size: 12px;
+  margin-inline: 2px;
+  text-shadow: 0 0 12px rgba(217, 164, 65, 0.42);
+}
+
+.outro-footer__copyright {
+  color: rgba(239, 225, 194, 0.62);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.outro-footer__support {
+  align-items: center;
+  border-block: 1px solid rgba(217, 164, 65, 0.3);
+  color: var(--gold-light);
+  display: inline-flex;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  gap: 9px;
+  justify-self: center;
+  letter-spacing: 0.1em;
+  padding: 10px 4px;
+  text-transform: uppercase;
+  transition:
+    border-color 350ms ease,
+    color 350ms ease,
+    transform 350ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.outro-footer__support:hover {
+  border-color: rgba(240, 212, 138, 0.72);
+  color: var(--parchment);
+  transform: translateY(-2px);
+}
+
+.outro-footer__links {
+  display: flex;
+  gap: clamp(24px, 3vw, 46px);
+  justify-self: end;
+}
+
+.outro-footer__links a {
+  color: rgba(239, 225, 194, 0.7);
+  position: relative;
+  transition: color 350ms ease;
+}
+
+.outro-footer__links a::after {
+  background: var(--gold);
+  bottom: -5px;
+  content: '';
+  height: 1px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.outro-footer__links a:hover {
+  color: var(--gold-light);
+}
+
+.outro-footer__links a:hover::after {
+  transform: scaleX(1);
+}
+
+.outro-footer__link-disabled {
+  color: rgba(239, 225, 194, 0.38);
+  cursor: not-allowed;
+  position: relative;
+}
+
+.outro-footer__link-disabled::after {
+  background: rgba(217, 164, 65, 0.38);
+  border-radius: 50%;
+  content: '';
+  height: 3px;
+  position: absolute;
+  right: -8px;
+  top: 2px;
+  width: 3px;
+}
+
+@media (max-width: 720px) {
+  .outro-section {
+    justify-items: stretch;
+    padding: 130px 20px 110px;
+  }
+
+  /* En flux normal, le blockquote est étiré sur toute la largeur utile (padding
+     20px de part et d'autre) et son texte est centré. Pas de `left` : un décalage
+     positionnel pousserait le bloc — et le divider `::after` centré dessus — hors
+     de l'axe de l'écran. `margin-top` : dégage l'espace sous le logo absolu (la
+     section est `align-items:end`, le padding-top ne repousse pas ce premier
+     enfant grid). */
+  /* `margin-bottom` : le divider `::after` déborde 28px sous le bloc citation ;
+     sans marge, le titre `L'Aveugle t'attend.` remontait dessus (chevauchement).
+     On dégage la hauteur du divider (28px de débord + ~18px de trait) plus une
+     respiration. `margin-top` réduit pour remonter le bloc sous le logo. */
+  .outro-quote {
+    left: auto;
+    margin-bottom: 64px;
+    margin-top: 48px;
+    position: relative;
+    top: auto;
+  }
+
+  /* Sous le header sticky (~85px) : à 40px le logo passait derrière le header et
+     se superposait à son propre lockup pendant le pin outro. */
+  .outro-logo {
+    top: 100px;
+  }
+
+  .outro-footer {
+    bottom: 24px;
+    gap: 14px 24px;
+    grid-template-columns: 1fr auto;
+    left: 20px;
+    right: 20px;
+  }
+
+  .outro-footer__support {
+    justify-self: end;
+  }
+
+  .outro-footer__links {
+    grid-column: 1 / -1;
+    justify-self: center;
+  }
+}
+
+@media (max-width: 520px) {
+  .outro-section {
+    padding-bottom: 190px;
+  }
+
+  .outro-footer {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .outro-footer__made,
+  .outro-footer__support,
+  .outro-footer__links {
+    grid-column: 1;
+    justify-self: center;
+    text-align: center;
+  }
+}

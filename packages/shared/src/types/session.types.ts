@@ -1,12 +1,22 @@
-import type { CharacterStats } from './character.types';
-import type { Inventory } from './inventory.types';
-import type { QuestState } from './quest.types';
+import type { CharacterStats } from "./character.types";
+import type { Inventory } from "./inventory.types";
+import type { Locale } from "./locale.types";
+import type { QuestState } from "./quest.types";
 
-export type SessionStatus = 'active' | 'game_over' | 'completed';
+export type SessionStatus = "active" | "ended";
+
+/**
+ * Why a session ended. Only bridge to the A3 narrative memory layer.
+ * `calcined` = Calamine reached 100 (06-SURVIVAL §4) — the only ending
+ * without heirloom inheritance transmission (09-ACTION-LOOP endReason table).
+ */
+export type SessionEndReason = "death" | "inn" | "abandon" | "calcined";
 
 export interface WorldState {
   currentRegionId: string;
   currentLocation: string;
+  /** Current biome, drives survival narration. @see 06-SURVIVAL.md §5 */
+  biome: string;
   factionReputation: Record<string, number>;
   discoveredRegions: string[];
   discoveredNpcs: string[];
@@ -18,35 +28,35 @@ export interface GameSession {
   id: string;
   userId: string;
   characterId: string;
-  universeId: string;
   status: SessionStatus;
+  /** Set when status is 'ended'. Undefined while the session is active. */
+  endReason?: SessionEndReason;
+  locale: Locale;
   currentStats: CharacterStats;
   inventory: Inventory;
   questState: QuestState;
   worldState: WorldState;
   turnCount: number;
-  difficultyLevel: number;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface CreateSessionInput {
   characterId: string;
-  universeId: string;
+  locale?: Locale;
 }
 
 export interface GameActionInput {
   sessionId: string;
-  choiceId: string;
+  choiceId?: string;
+  /** Free-form action typed by the player (canon: free-action). */
+  freeAction?: string;
 }
 
 export interface SessionSummary {
   id: string;
   characterName: string;
-  universeName: string;
-  universeType: string;
   status: SessionStatus;
   turnCount: number;
-  characterLevel: number;
   updatedAt: string;
 }

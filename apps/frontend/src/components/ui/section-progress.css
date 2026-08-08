@@ -1,0 +1,105 @@
+.section-progress {
+  right: clamp(32px, 5vw, 96px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.section-progress__rail {
+  background: rgba(232, 220, 192, 0.14);
+  bottom: 0;
+  left: 50%;
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  width: 1px;
+}
+
+.section-progress__fill {
+  background: linear-gradient(180deg, var(--gold-light), var(--gold));
+  box-shadow: 0 0 8px rgba(217, 164, 65, 0.65);
+  display: block;
+  height: 100%;
+  width: 100%;
+  will-change: transform;
+}
+
+.section-progress__list {
+  display: flex;
+  flex-direction: column;
+  gap: 46px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.section-progress__marker {
+  height: 14px;
+  position: relative;
+}
+
+.section-progress__diamond {
+  background: var(--void);
+  border: 1px solid rgba(232, 220, 192, 0.3);
+  display: block;
+  height: 9px;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  transition:
+    width 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    height 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 420ms ease,
+    border-color 420ms ease,
+    box-shadow 420ms ease;
+  width: 9px;
+}
+
+.section-progress__label {
+  color: rgba(232, 220, 192, 0.4);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  left: calc(100% + 18px);
+  letter-spacing: 0.16em;
+  line-height: 1;
+  position: absolute;
+  transition:
+    color 420ms ease,
+    text-shadow 420ms ease;
+  white-space: nowrap;
+}
+
+.section-progress__marker.is-passed .section-progress__diamond {
+  background: var(--gold);
+  border-color: var(--gold);
+}
+
+.section-progress__marker.is-passed .section-progress__label {
+  color: rgba(232, 220, 192, 0.7);
+}
+
+.section-progress__marker.is-active .section-progress__diamond {
+  background: var(--gold-light);
+  border-color: var(--gold-light);
+  height: 14px;
+  width: 14px;
+}
+
+.section-progress__marker.is-active .section-progress__label {
+  color: var(--gold-light);
+  text-shadow: 0 0 14px rgba(217, 164, 65, 0.7);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-progress__marker.is-active .section-progress__diamond {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 1100px) {
+  .section-progress {
+    display: none;
+  }
+}

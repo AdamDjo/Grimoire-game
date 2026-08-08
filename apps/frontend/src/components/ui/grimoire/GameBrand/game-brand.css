@@ -1,0 +1,38 @@
+.game-brand {
+  display: block;
+  height: auto;
+  object-fit: contain;
+  user-select: none;
+}
+
+.game-brand--lockup.game-brand--sm {
+  width: min(100%, 12rem);
+}
+
+.game-brand--lockup.game-brand--md {
+  width: min(100%, 20rem);
+}
+
+.game-brand--lockup.game-brand--lg {
+  width: min(100%, 30rem);
+}
+
+.game-brand--lockup.game-brand--xl {
+  width: min(100%, 42rem);
+}
+
+.game-brand--sigil.game-brand--sm {
+  width: 3rem;
+}
+
+.game-brand--sigil.game-brand--md {
+  width: 5rem;
+}
+
+.game-brand--sigil.game-brand--lg {
+  width: 8rem;
+}
+
+.game-brand--sigil.game-brand--xl {
+  width: 12rem;
+}

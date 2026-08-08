@@ -1,0 +1,247 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// ---------------------------------------------------------------------------
+// Vision domaine complète (voir docs/public/raw/*.md) — NON migrée ici :
+// Peuples, Vocations (catalogues statiques, pas de table), Factions/réputation,
+// Quêtes, Inventaire/Items complet, Traces, World Events. Ces modèles
+// arriveront avec les écrans qui en ont besoin (World Map, inventaire complet).
+//
+// Migré aujourd'hui (coeur du world-state de session + méta) : User, Character
+// (avec fer et topics vus de l'Aveugle), GameSession, SceneLog, MemoryChunk,
+// Souvenir (anonyme ou nommé), Chronicle.
+// ---------------------------------------------------------------------------
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id         String      @id
+  email      String      @unique
+  /// Compteur lifetime des requêtes de jeu en tant qu'utilisateur anonyme (cap = 30).
+  anonymousRequestCount Int @default(0)
+  /// Préférence de langue de narration IA explicitement choisie par le joueur
+  /// (tag BCP-47 normalisé). Null tant qu'aucun choix explicite : on retombe
+  /// alors sur la locale navigateur puis l'anglais (#168).
+  preferredLocale String?
+  createdAt  DateTime    @default(now())
+  characters Character[]
+  souvenirs  Souvenir[]
+  chronicles Chronicle[]
+}
+
+model Character {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  people    String
+  vocation  String
+  /// Concept libre saisi par le joueur quand vocation = "libre".
+  freeConcept String?
+  backstory   String?
+  avatarUrl   String?
+
+  /// Nom de vocation personnalisé par L'Aveugle quand `vocation` a été
+  /// résolue depuis un concept libre. @see docs/public/raw/07-CHARACTER-CREATION.md §2
+  customVocationName String?
+  /// Trait narratif attribué par L'Aveugle lors de la résolution du concept libre.
+  narrativeTrait     String?
+  /// Compétences canon de la vocation renommées pour coller au concept libre
+  /// (ShiftedSkill[] JSON), voir @grimoire/shared.
+  shiftedSkills      Json?   @default("[]")
+
+  // Triptyque canon SANG/SOUFFLE/CENDRE (3-18).
+  blood  Int
+  breath Int
+  ash    Int
+
+  // Jauges de survie (0-100), voir SurvivalStats.
+  hp       Int
+  maxHp    Int
+  thirst   Int
+  hunger   Int
+  energy   Int
+  calamine Int
+
+  /// True after the first 0-HP hit: one telegraphed turn of reprieve before a
+  /// second 0-HP hit is definitive death. @see docs/public/raw/06-SURVIVAL.md §7
+  isDying Boolean @default(false)
+
+  /// Consecutive turns thirst or hunger has been at 0 — drives the prolonged
+  /// neglect Calamine source. Resets once both gauges are back above 0.
+  neglectStreak Int @default(0)
+
+  /// États altérés persistants (ActiveCondition[] JSON), voir @grimoire/shared.
+  /// @see docs/public/raw/06-SURVIVAL.md §2
+  activeConditions Json @default("[]")
+
+  /// Inventaire réel (PersistedInventoryItem[] JSON), voir @grimoire/shared.
+  /// @see docs/public/raw/11-INVENTORY-ECONOMY.md §1
+  inventory Json @default("[]")
+
+  /// Fer (🪙), monnaie in-game de Velkhar. Aucune mécanique de gain/dépense
+  /// n'est encore branchée ailleurs dans le backend — champ persistant seul.
+  iron Int @default(0)
+
+  /// Ids des topics du catalogue statique de L'Aveugle déjà vus par ce joueur
+  /// (le contenu des topics reste statique côté frontend, seul l'état "vu" persiste).
+  aveugleSeenTopics String[] @default([])
+
+  createdAt DateTime @default(now())
+  sessions  GameSession[]
+
+  /// One character per user for now (no multi-character roster yet) — also
+  /// closes the createCharacter() findFirst/create race condition.
+  @@unique([userId])
+}
+
+model GameSession {
+  id          String   @id @default(uuid())
+  characterId String
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  turnNumber Int      @default(1)
+  location   String   @default("auberge-aveugle")
+  /// Langue de narration IA résolue à la création de la session (tag BCP-47
+  /// normalisé). Persistée pour que la reprise garde la même langue (#168).
+  locale     String   @default("en")
+  status     String   @default("active") // active | ended
+  /// Why the session ended (death | inn | abandon | calcined). Null while active. Bridge to A3.
+  endReason  String?
+  /// URL résolue du cache d'images de scène partagé (#207), mise à jour à
+  /// chaque compression N2. Null tant qu'aucun chunk n'a encore résolu d'image.
+  currentImageUrl String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  scenes        SceneLog[]
+  memoryChunks  MemoryChunk[]
+}
+
+model SceneLog {
+  id        String      @id @default(uuid())
+  sessionId String
+  session   GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  turnNumber Int
+  sceneType  String
+  location   String
+  narrative  String
+  /// Condensé factuel court (<=200 car.) du tour, généré par l'IA — alimente la fenêtre N1.
+  turnSummary String?
+  /// Choix proposés au joueur pour ce tour (Choice[] sérialisé).
+  choices    Json
+  /// Choix effectivement pris par le joueur (Choice | null).
+  chosenChoice Json?
+  /// Conséquences appliquées (ChoiceConsequence | null).
+  consequences Json?
+  /// Jet de dés serveur pour ce tour, si applicable (DiceRoll | null).
+  diceRoll   Json?
+  source     String // "ai" | "stub"
+
+  createdAt DateTime @default(now())
+}
+
+model MemoryChunk {
+  id        String      @id @default(uuid())
+  sessionId String
+  session   GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  /// Résumé narratif à la 3e personne (~150 tokens max).
+  summary   String
+  /// Faits clés du segment compressé (String[] sérialisé, 3-5 items).
+  keyFacts       Json
+  /// Sous-ensemble de faits critiques épinglés (mort PNJ, artefact, quête, choix moral).
+  keyFactsPinned Json
+  /// Ambiance dominante du segment : calm | tense | festive | sacred | dangerous.
+  mood           String
+  /// Évolution des PNJ croisés (NpcEvolution[] sérialisé).
+  npcsEvolution  Json
+
+  turnRangeStart Int
+  turnRangeEnd   Int
+
+  createdAt DateTime @default(now())
+}
+
+/// Bibliothèque d'images de scène partagée entre tous les joueurs (#207).
+/// Une ligne par combinaison sceneType_biome_lieuType rencontrée ; générée une
+/// seule fois puis réutilisée par tous les chunks qui matchent la même clé.
+/// @see docs/public/tech/DYNAMIC_SCENE_IMAGES.md
+model SceneImage {
+  id        String   @id @default(uuid())
+  cacheKey  String   @unique
+  url       String
+  createdAt DateTime @default(now())
+}
+
+/// Named Souvenir (N3 inter-run memory, #115). Cross-run and permanent —
+/// linked to `User` only (no cascade relation to Session/Character, which
+/// must be free to disappear while the Souvenir survives them). `characterId`
+/// and `sessionId` are kept as plain strings for provenance/display only.
+model Souvenir {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  characterId String
+  sessionId   String
+
+  title String
+  body  String
+  /// SouvenirType (@grimoire/shared) stored as a plain string, matching
+  /// SceneLog.sceneType's convention — no Prisma enum in this schema.
+  type  String
+
+  /// True for an anonymous Souvenir (generic lore fragment, spendable as
+  /// currency with L'Aveugle — 11-INVENTORY-ECONOMY.md §3). False (default)
+  /// for a named Souvenir (a specific marked act of the player, narrative
+  /// only, never spendable). The player-facing word "Souvenir" covers both
+  /// sub-types on purpose (canon); this flag is the only backend distinction.
+  anonymous Boolean @default(false)
+
+  /// True once this Souvenir has been spent with L'Aveugle in exchange for
+  /// lore (#147). Only ever set on an anonymous Souvenir.
+  sharedWithAveugle Boolean @default(false)
+  /// AI-generated lore text produced when this Souvenir was spent, kept for
+  /// display history. Null until `sharedWithAveugle` is set to true.
+  aveugleLoreResult String?
+
+  createdAt DateTime @default(now())
+}
+
+/// End-of-run literary synthesis (#116). One-time, generated when a
+/// GameSession ends (death | inn | abandon). Linked to `User` only (no
+/// cascade relation to Session/Character, which must be free to disappear
+/// while the Chronicle survives them, mirroring `Souvenir`). `characterId`
+/// and `sessionId` are kept as plain strings for provenance/display only.
+/// No slug/public-URL field yet — public sharing is a deferred, separate ticket.
+model Chronicle {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  characterId String
+  sessionId   String
+
+  /// Why the run ended (death | inn | abandon | calcined), copied from GameSession.endReason.
+  endReason String
+
+  title        String
+  bodyMarkdown String
+  /// ChronicleMood (@grimoire/shared) stored as a plain string, matching
+  /// Souvenir.type's convention — no Prisma enum in this schema.
+  mood         String
+  /// ChronicleKeyMoment[] sérialisé ({label, scene_ref}[]).
+  keyMoments   Json
+  tagline      String
+
+  createdAt DateTime @default(now())
+}

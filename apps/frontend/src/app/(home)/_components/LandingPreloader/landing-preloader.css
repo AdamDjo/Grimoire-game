@@ -1,0 +1,170 @@
+/* Voile de preload : au-dessus de tout (chrome z-60, grain z-60), verrouille la
+   première impression sur le sigil doré le temps que le contexte se décode. */
+.landing-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  pointer-events: none;
+}
+
+.landing-preloader__veil {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(
+      ellipse at 50% 46%,
+      rgba(47, 33, 16, 0.44) 0%,
+      rgba(12, 9, 6, 0.92) 38%,
+      transparent 68%
+    ),
+    radial-gradient(120% 90% at 50% 42%, rgba(18, 14, 9, 0.98) 0%, rgba(4, 3, 3, 1) 72%),
+    var(--void);
+  /* Sortie en fondu + léger scale depuis le centre (GSAP), pas un wipe. */
+  transform-origin: center;
+  pointer-events: auto;
+  overflow: hidden;
+}
+
+.landing-preloader__veil::before {
+  background: url('/landing/textures/grain.svg') center / 180px 180px repeat;
+  content: '';
+  inset: -40px;
+  mix-blend-mode: soft-light;
+  opacity: 0.09;
+  pointer-events: none;
+  position: absolute;
+}
+
+.landing-preloader__veil::after {
+  background: radial-gradient(ellipse at center, transparent 38%, rgba(0, 0, 0, 0.72) 100%);
+  content: '';
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.landing-preloader__stage {
+  align-items: center;
+  display: grid;
+  isolation: isolate;
+  justify-items: center;
+  opacity: 0;
+  position: relative;
+  width: min(88vw, 780px);
+  z-index: 1;
+}
+
+.landing-preloader__logo {
+  grid-area: 1 / 1;
+  position: relative;
+  width: min(66vw, 360px);
+  z-index: 2;
+}
+
+.landing-preloader__logo-image {
+  display: block;
+  filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.68));
+  height: auto;
+  width: 100%;
+}
+
+.landing-preloader__rule {
+  background: linear-gradient(90deg, transparent, rgba(217, 164, 65, 0.34));
+  height: 1px;
+  position: absolute;
+  top: 68%;
+  width: min(25vw, 240px);
+}
+
+.landing-preloader__rule--left {
+  right: calc(50% + min(35vw, 275px));
+}
+
+.landing-preloader__rule--right {
+  background: linear-gradient(90deg, rgba(217, 164, 65, 0.34), transparent);
+  left: calc(50% + min(35vw, 275px));
+}
+
+.landing-preloader__status {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: absolute;
+  top: calc(100% + clamp(18px, 3vw, 28px));
+}
+
+.landing-preloader__status-label {
+  color: var(--gold-light);
+  font-family: var(--font-accent);
+  font-size: clamp(15px, 1.2vw, 18px);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: normal;
+  line-height: 1.2;
+  padding-bottom: 1px;
+  text-shadow:
+    0 0 24px rgba(198, 154, 67, 0.28),
+    0 2px 16px rgba(0, 0, 0, 0.74);
+}
+
+.landing-preloader__status-marks {
+  display: flex;
+  gap: 9px;
+}
+
+.landing-preloader__status-marks span {
+  animation: preloader-status-pulse 1.35s ease-in-out infinite;
+  background: var(--gold-light);
+  height: 4px;
+  opacity: 0.24;
+  transform: rotate(45deg) scale(0.72);
+  width: 4px;
+}
+
+.landing-preloader__status-marks span:nth-child(2) {
+  animation-delay: 150ms;
+}
+
+.landing-preloader__status-marks span:nth-child(3) {
+  animation-delay: 300ms;
+}
+
+@keyframes preloader-status-pulse {
+  0%,
+  60%,
+  100% {
+    opacity: 0.24;
+    transform: rotate(45deg) scale(0.72);
+  }
+
+  30% {
+    opacity: 1;
+    transform: rotate(45deg) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-preloader__stage {
+    opacity: 1;
+  }
+
+  .landing-preloader__status-marks span {
+    animation: none;
+    opacity: 0.72;
+    transform: rotate(45deg) scale(1);
+  }
+}
+
+@media (max-width: 640px) {
+  .landing-preloader__logo {
+    width: min(62vw, 220px);
+  }
+
+  .landing-preloader__rule {
+    display: none;
+  }
+}

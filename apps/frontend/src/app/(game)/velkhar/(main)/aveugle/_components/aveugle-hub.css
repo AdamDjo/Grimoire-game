@@ -1,0 +1,712 @@
+body:has(.aveugle-hub) .main-navigation {
+  display: none;
+}
+
+body:has(.aveugle-hub) {
+  overflow: hidden;
+}
+
+.aveugle-hub {
+  background: var(--void);
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.aveugle-hub__layout.game-scene-layout {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.aveugle-hub__layout.game-scene-layout::after {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(5, 4, 3, 0.08) 0%,
+      rgba(5, 4, 3, 0.08) 58%,
+      rgba(5, 4, 3, 0.72) 76%
+    ),
+    linear-gradient(180deg, rgba(5, 4, 3, 0.12) 0%, transparent 44%, rgba(5, 4, 3, 0.88) 100%);
+}
+
+.aveugle-hub__scene {
+  background: url('/scenes/aveugle-cendres.webp') 42% center / cover no-repeat;
+  filter: saturate(0.84) contrast(1.08) brightness(0.88);
+  height: 100%;
+  transform: scale(1.012);
+  width: 100%;
+}
+
+.aveugle-hub__ambience,
+.aveugle-hub__fire-glow {
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.aveugle-hub__ambience {
+  background:
+    radial-gradient(circle at 83% 32%, rgba(167, 105, 34, 0.13), transparent 30%),
+    linear-gradient(115deg, transparent 44%, rgba(22, 14, 7, 0.48) 76%);
+  opacity: 0.64;
+}
+
+.aveugle-hub__fire-glow {
+  background: radial-gradient(circle at 12% 31%, rgba(217, 128, 42, 0.22), transparent 19%);
+  mix-blend-mode: screen;
+  opacity: 0.34;
+  transform-origin: 12% 31%;
+}
+
+.aveugle-hub__layout .game-scene-layout__top {
+  padding: 0;
+}
+
+.aveugle-hub__player-bar {
+  backdrop-filter: blur(8px);
+  background: rgba(7, 6, 4, 0.86);
+  box-shadow:
+    inset 0 1px rgba(240, 212, 138, 0.18),
+    inset 0 -1px rgba(217, 164, 65, 0.32),
+    0 1rem 2.5rem rgba(0, 0, 0, 0.3);
+  min-height: 5.25rem;
+  padding: 0.55rem clamp(1rem, 3vw, 2.75rem);
+}
+
+.aveugle-hub__player-bar .player-identity {
+  height: 100%;
+}
+
+.aveugle-hub__player-bar .player-identity__copy strong {
+  font-size: clamp(1.15rem, 1.4vw, 1.4rem);
+}
+
+.aveugle-hub__player-bar .player-identity__copy span {
+  font-size: 1rem;
+}
+
+.aveugle-hub__player-bar .vocation-emblem {
+  filter: brightness(0.9) drop-shadow(0 0.35rem 0.6rem rgba(0, 0, 0, 0.5));
+}
+
+.aveugle-hub__layout.game-scene-layout--sidebar .game-scene-layout__body {
+  gap: clamp(0.75rem, 1.4vw, 1.5rem);
+  grid-template-columns: minmax(0, 2.2fr) minmax(25rem, 1fr);
+  min-height: 0;
+  overflow: hidden;
+  padding: clamp(0.75rem, 1.4vw, 1.5rem) clamp(1rem, 2vw, 2rem) 0;
+}
+
+.aveugle-hub__layout .game-scene-layout__sidebar {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.aveugle-hub__layout .game-scene-layout__main {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.aveugle-hub__stage {
+  align-content: space-between;
+  display: grid;
+  height: 100%;
+  padding: 0.5rem 0 2.4rem;
+}
+
+.aveugle-hub__stage .location-identity {
+  filter: drop-shadow(0 0.3rem 0.8rem rgba(0, 0, 0, 0.8));
+  font-size: clamp(1.1rem, 1.45vw, 1.35rem);
+  width: fit-content;
+}
+
+.aveugle-hub__scene-caption {
+  max-width: 28rem;
+  padding-left: 1rem;
+  position: relative;
+  text-shadow: 0 0.2rem 0.7rem rgba(0, 0, 0, 0.9);
+}
+
+.aveugle-hub__scene-caption::before {
+  background: var(--gold-dark);
+  content: '';
+  inset: 0 auto 0 0;
+  position: absolute;
+  width: 1px;
+}
+
+.aveugle-hub__scene-caption p {
+  color: var(--parchment);
+  font-family: var(--font-game-heading);
+  font-size: clamp(1.1rem, 1.35vw, 1.3rem);
+  font-style: italic;
+  line-height: 1.5;
+  margin: 0;
+  padding-bottom: 0.1em;
+}
+
+.aveugle-hub__sidebar {
+  display: grid;
+  height: 100%;
+  min-height: 0;
+}
+
+.aveugle-hub__dock {
+  display: grid;
+  gap: 0.65rem;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+}
+
+.aveugle-hub__dock-nav {
+  backdrop-filter: blur(8px);
+  background: rgba(7, 6, 4, 0.78);
+  border-block: 1px solid rgba(217, 164, 65, 0.26);
+  display: grid;
+  gap: 0.25rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 0.3rem;
+}
+
+.aveugle-hub__dock-nav .game-button {
+  font-size: 0.95rem;
+  min-height: 44px;
+  min-width: 0;
+  padding-inline: 0.45rem;
+  white-space: nowrap;
+}
+
+.aveugle-hub__dock-nav .game-button[aria-pressed='true'] {
+  background: rgba(217, 164, 65, 0.12);
+  box-shadow: inset 0 -1px var(--gold-dark);
+  color: var(--gold-light);
+}
+
+.aveugle-hub__dialogue.game-panel {
+  align-self: stretch;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.aveugle-hub__dialogue > .game-panel__content {
+  height: 100%;
+}
+
+.aveugle-hub__dialogue-content {
+  align-content: start;
+  display: grid;
+  gap: clamp(1.25rem, 2vh, 1.75rem);
+  height: 100%;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: clamp(1.75rem, 3vh, 2.7rem) clamp(1.5rem, 2.5vw, 2.5rem);
+  scrollbar-color: rgba(217, 164, 65, 0.55) transparent;
+  scrollbar-width: thin;
+}
+
+.aveugle-hub__dialogue-content > header {
+  align-items: center;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.aveugle-hub__speaker-mark {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  transform-origin: center;
+}
+
+.aveugle-hub__speaker-mark > .game-icon {
+  filter: brightness(0.9) drop-shadow(0 0.4rem 0.8rem rgba(0, 0, 0, 0.7));
+}
+
+.aveugle-hub__dialogue-content h1 {
+  color: var(--gold-light);
+  font-family: var(--font-game-heading);
+  font-size: clamp(1.5rem, 2vw, 1.9rem);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  line-height: 1.15;
+  margin: 0;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.aveugle-hub__conversation-stage {
+  display: grid;
+  gap: clamp(1.25rem, 2.2vh, 1.75rem);
+}
+
+.aveugle-hub__choice-copy {
+  align-items: center;
+  display: flex;
+  gap: 0.6rem;
+  justify-content: space-between;
+  min-width: 0;
+  width: 100%;
+}
+
+.aveugle-hub__choice-copy small {
+  color: var(--gold-light);
+  font-family: var(--font-game-body);
+  font-size: 0.78rem;
+  font-style: normal;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.aveugle-hub__dialogue-content blockquote {
+  border-left: 1px solid var(--gold-dark);
+  color: var(--parchment);
+  font-family: var(--font-game-heading);
+  font-size: clamp(1.35rem, 1.8vw, 1.7rem);
+  font-style: italic;
+  line-height: 1.5;
+  margin: 0;
+  min-height: 4.5rem;
+  padding: 0.15rem 0 0.18rem 1.1rem;
+  text-wrap: pretty;
+}
+
+.aveugle-hub__dialogue-content .dialogue-choice {
+  font-size: clamp(1.08rem, 1.35vw, 1.22rem);
+  min-height: 56px;
+  padding-block: 0.75rem;
+}
+
+.aveugle-hub__dialogue-content .dialogue-choice__icon .game-icon {
+  height: 1.75rem;
+  width: 1.75rem;
+}
+
+.aveugle-hub__dialogue-content .narrative-composer__control {
+  font-size: clamp(1.05rem, 1.25vw, 1.18rem);
+  min-height: 7rem;
+}
+
+.aveugle-hub__other-question {
+  justify-self: start;
+  min-width: 12rem;
+}
+
+.aveugle-hub__composer {
+  display: grid;
+  gap: 1rem;
+}
+
+.aveugle-hub__composer > .game-button {
+  justify-self: start;
+}
+
+.aveugle-hub__response-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.aveugle-hub__response-actions .game-button,
+.aveugle-hub__other-question,
+.aveugle-hub__composer > .game-button {
+  font-size: 1.05rem;
+}
+
+.aveugle-hub__empty,
+.aveugle-hub__exchange > p,
+.aveugle-hub__interaction-error p,
+.aveugle-hub__conversation-stage > [role='status'] {
+  color: var(--ink-2);
+  font-family: var(--font-game-body);
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.aveugle-hub__exchange {
+  border-top: 1px solid var(--border-gold);
+  display: grid;
+  gap: 1rem;
+  padding-top: 1.25rem;
+}
+
+.aveugle-hub__exchange h2 {
+  color: var(--gold-light);
+  font-family: var(--font-game-heading);
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.aveugle-hub__interaction-error {
+  border-left: 1px solid var(--blood);
+  display: grid;
+  gap: 0.8rem;
+  padding-left: 1rem;
+}
+
+.aveugle-hub__interaction-error .game-button {
+  justify-self: start;
+}
+
+.aveugle-hub__departure {
+  display: flex;
+  justify-content: center;
+  padding: 0.75rem 1rem 1rem;
+  position: relative;
+}
+
+.aveugle-hub__departure::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(5, 4, 3, 0.86) 24%,
+    rgba(5, 4, 3, 0.86) 76%,
+    transparent
+  );
+  content: '';
+  inset: -1rem 0 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: -1;
+}
+
+.aveugle-hub__departure .game-button {
+  min-width: min(32rem, calc(100vw - 2rem));
+}
+
+.aveugle-hub--loading {
+  min-height: 100dvh;
+  overflow: hidden;
+  padding: 8rem 2rem 2rem;
+}
+
+.aveugle-hub--loading .aveugle-hub__scene {
+  inset: 0;
+  position: absolute;
+}
+
+.aveugle-hub--loading::after {
+  background: rgba(5, 4, 3, 0.64);
+  content: '';
+  inset: 0;
+  position: absolute;
+}
+
+.aveugle-hub__skeleton {
+  animation: aveugle-hub-pulse 1.8s ease-in-out infinite;
+  background: rgba(240, 212, 138, 0.09);
+  border: 1px solid rgba(217, 164, 65, 0.24);
+  position: relative;
+  z-index: 1;
+}
+
+.aveugle-hub__skeleton--scene {
+  height: 4.75rem;
+  width: min(42rem, 60vw);
+}
+
+.aveugle-hub__skeleton--panel {
+  height: min(36rem, 72vh);
+  margin: 1rem 0 0 auto;
+  width: min(29rem, 34vw);
+}
+
+.aveugle-hub--error {
+  align-items: center;
+  display: grid;
+  justify-items: center;
+}
+
+.aveugle-hub__load-error {
+  backdrop-filter: blur(10px);
+  background: rgba(7, 6, 4, 0.88);
+  border: 1px solid var(--border-gold);
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+  max-width: 34rem;
+  padding: clamp(2rem, 5vw, 3.5rem);
+  position: relative;
+  text-align: center;
+  z-index: 1;
+}
+
+.aveugle-hub__load-error h1 {
+  color: var(--gold-light);
+  font-family: var(--font-game-heading);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  margin: 0;
+}
+
+.aveugle-hub__load-error p {
+  color: var(--ink-2);
+  font-family: var(--font-game-body);
+  font-size: 1.1rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+@keyframes aveugle-hub-pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@media (max-width: 1100px) {
+  .aveugle-hub__layout.game-scene-layout--sidebar .game-scene-layout__body {
+    grid-template-columns: minmax(0, 1.45fr) minmax(23rem, 1fr);
+  }
+
+  .aveugle-hub__dialogue-content {
+    padding-inline: 2rem;
+  }
+}
+
+@media (max-height: 760px) and (min-width: 901px) {
+  .aveugle-hub__player-bar {
+    min-height: 4.5rem;
+  }
+
+  .aveugle-hub__dialogue-content {
+    gap: 1rem;
+    padding-block: 1.55rem;
+  }
+
+  .aveugle-hub__conversation-stage {
+    gap: 1rem;
+  }
+
+  .aveugle-hub__dialogue-content blockquote {
+    font-size: 1.35rem;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  body:has(.aveugle-hub) {
+    overflow: hidden;
+  }
+
+  .aveugle-hub {
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .aveugle-hub__layout.game-scene-layout {
+    align-content: start;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .aveugle-hub__player-bar {
+    min-height: 4.75rem;
+    padding-block: 0.4rem;
+  }
+
+  .aveugle-hub__layout.game-scene-layout--sidebar .game-scene-layout__body {
+    gap: 0.45rem;
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(7rem, 22dvh) auto;
+    min-height: 0;
+    overflow: visible;
+    padding: 0.65rem 0.75rem 0;
+  }
+
+  .aveugle-hub__stage {
+    height: 100%;
+    min-height: 0;
+    padding: 0.15rem 0 0.7rem;
+  }
+
+  .aveugle-hub__sidebar {
+    height: auto;
+    min-height: 0;
+    margin-inline: auto;
+    max-width: 46rem;
+    width: 100%;
+  }
+
+  .aveugle-hub__layout .game-scene-layout__sidebar {
+    align-self: start;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .aveugle-hub__dialogue-content {
+    gap: 1rem;
+    height: auto;
+    max-height: none;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 1.55rem clamp(1.5rem, 5vw, 2.25rem) 1.85rem;
+  }
+
+  .aveugle-hub__dock {
+    gap: 0.45rem;
+    height: auto;
+    min-height: 0;
+  }
+
+  .aveugle-hub__dialogue.game-panel {
+    align-self: start;
+    height: fit-content;
+    max-height: calc(78dvh - 12rem);
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .aveugle-hub__dialogue > .game-panel__content {
+    height: auto;
+    max-height: calc(78dvh - 12rem);
+  }
+
+  .aveugle-hub__dialogue-content {
+    max-height: calc(78dvh - 12rem);
+  }
+
+  .aveugle-hub__dialogue-content > header {
+    gap: 0.75rem;
+  }
+
+  .aveugle-hub__speaker-mark > .game-icon {
+    height: 3rem;
+    width: 3rem;
+  }
+
+  .aveugle-hub__dialogue-content blockquote {
+    font-size: clamp(1.2rem, 3vw, 1.45rem);
+    min-height: 0;
+  }
+
+  .aveugle-hub__conversation-stage {
+    gap: 1rem;
+  }
+
+  .aveugle-hub__departure {
+    padding: 0.75rem 1rem 1.35rem;
+  }
+
+  .aveugle-hub__layout .game-scene-layout__bottom {
+    align-self: start;
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .aveugle-hub__layout .game-scene-layout__top {
+    padding-inline: 0;
+  }
+
+  .aveugle-hub__player-bar {
+    min-height: 4rem;
+    padding-inline: 0.75rem;
+  }
+
+  .aveugle-hub__player-bar .player-identity__copy strong {
+    font-size: 1.05rem;
+  }
+
+  .aveugle-hub__player-bar .player-identity__copy span {
+    font-size: 0.82rem;
+  }
+
+  .aveugle-hub__layout.game-scene-layout--sidebar .game-scene-layout__body {
+    gap: 0.45rem;
+    grid-template-rows: 4.75rem auto;
+    padding: 0.45rem 0.55rem 0;
+  }
+
+  .aveugle-hub__stage {
+    align-content: start;
+    min-height: 0;
+    padding: 0.15rem 0;
+  }
+
+  .aveugle-hub__stage .location-identity {
+    font-size: 1rem;
+  }
+
+  .aveugle-hub__scene-caption {
+    display: none;
+  }
+
+  .aveugle-hub__dialogue-content {
+    min-height: 0;
+    padding: 1.25rem 1.2rem 1.6rem;
+  }
+
+  .aveugle-hub__dock-nav .game-button {
+    font-size: 0.82rem;
+  }
+
+  .aveugle-hub__dock-nav .game-icon {
+    display: none;
+  }
+
+  .aveugle-hub__speaker-mark > .game-icon {
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+
+  .aveugle-hub__dialogue-content h1 {
+    font-size: 1.35rem;
+  }
+
+  .aveugle-hub__dialogue-content blockquote {
+    font-size: 1.16rem;
+    min-height: 0;
+  }
+
+  .aveugle-hub__dialogue-content .dialogue-choice {
+    font-size: 1rem;
+    min-height: 50px;
+    padding-block: 0.6rem;
+  }
+
+  .aveugle-hub__dialogue-content .dialogue-choice__icon .game-icon {
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+
+  .aveugle-hub__departure {
+    padding: 0.65rem 0.55rem 1.1rem;
+  }
+
+  .aveugle-hub__departure .game-button {
+    min-height: 52px;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .aveugle-hub__skeleton--scene,
+  .aveugle-hub__skeleton--panel {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aveugle-hub__scene {
+    transform: none;
+  }
+
+  .aveugle-hub__skeleton {
+    animation: none;
+  }
+}

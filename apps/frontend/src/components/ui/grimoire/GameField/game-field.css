@@ -1,0 +1,32 @@
+.game-field {
+  display: grid;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+.game-field__label {
+  color: var(--gold-light, #f0d48a);
+  font-family: var(--font-game-ui);
+  font-size: var(--text-game-label);
+  font-weight: 500;
+  letter-spacing: 0.11em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.game-field__required,
+.game-field__error {
+  color: var(--blood, #c0392b);
+}
+
+.game-field__hint,
+.game-field__error {
+  font-family: var(--font-game-ui);
+  font-size: var(--text-game-body-sm);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.game-field__hint {
+  color: color-mix(in srgb, var(--parchment, #e8dcc0) 74%, transparent);
+}

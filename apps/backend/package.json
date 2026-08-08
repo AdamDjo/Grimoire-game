@@ -1,11 +1,13 @@
 {
   "name": "@grimoire/backend",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js",
+    "build": "tsup",
+    "start": "node dist/index.mjs",
+    "postinstall": "prisma generate",
+    "prisma:migrate": "node scripts/prisma-migrate.mjs migrate",
     "type-check": "tsc --noEmit",
     "lint": "eslint src/",
     "test": "vitest run",
@@ -14,11 +16,16 @@
   },
   "dependencies": {
     "@grimoire/shared": "workspace:*",
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
     "@supabase/supabase-js": "^2.47.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.0",
     "express": "^4.21.0",
+    "express-async-errors": "^3.1.1",
     "express-rate-limit": "^7.4.0",
+    "helmet": "^8.3.0",
+    "jose": "^6.2.3",
     "zod": "^3.24.0"
   },
   "devDependencies": {
@@ -28,10 +35,12 @@
     "@types/express": "^5.0.0",
     "@types/node": "^22.0.0",
     "@typescript-eslint/parser": "^8.56.0",
-    "@vitest/coverage-v8": "^2",
+    "@vitest/coverage-v8": "^3",
     "prettier": "^3.4.0",
+    "prisma": "^7.8.0",
+    "tsup": "^8.5.1",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0",
-    "vitest": "^2"
+    "vitest": "^3"
   }
 }

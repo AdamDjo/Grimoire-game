@@ -1,0 +1,22 @@
+.game-ornament {
+  display: block;
+  height: auto;
+  object-fit: contain;
+  user-select: none;
+}
+
+.game-ornament--sm {
+  width: min(100%, 18rem);
+}
+
+.game-ornament--md {
+  width: min(100%, 28rem);
+}
+
+.game-ornament--lg {
+  width: min(100%, 42rem);
+}
+
+.game-ornament--xl {
+  width: min(100%, 60rem);
+}

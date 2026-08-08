@@ -1,0 +1,270 @@
+.login-form {
+  backdrop-filter: blur(14px);
+  filter: drop-shadow(0 24px 50px rgba(0, 0, 0, 0.58));
+  min-height: 0;
+}
+
+.login-form.game-panel--padding-lg {
+  padding: clamp(2.75rem, 5vh, 3.5rem) clamp(2.75rem, 5vw, 4.5rem);
+}
+
+.login-form__header {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.login-form__header h1 {
+  color: var(--gold-light);
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 500;
+  letter-spacing: 0.035em;
+  line-height: 1.16;
+  margin: 0.3rem 0 0.7rem;
+  text-wrap: balance;
+}
+
+.login-form__header > p:last-child {
+  color: var(--ink-2);
+  font-family: var(--font-serif);
+  font-size: 1.02rem;
+  line-height: 1.55;
+  margin: 0;
+  max-width: 29rem;
+  text-wrap: pretty;
+}
+
+.login-form__eyebrow {
+  color: var(--gold);
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  margin: 0.4rem 0 0;
+  text-transform: uppercase;
+}
+
+.login-form .game-divider {
+  margin-block: 1rem 1.15rem;
+}
+
+.login-form__preservation {
+  align-items: flex-start;
+  background: rgba(53, 196, 172, 0.07);
+  border: 1px solid color-mix(in srgb, var(--soul) 32%, transparent);
+  color: var(--ink-2);
+  display: flex;
+  gap: 0.7rem;
+  margin-top: 1.2rem;
+  padding: 0.8rem 0.9rem;
+}
+
+.login-form__preservation .game-icon {
+  flex: none;
+}
+
+.login-form__preservation p,
+.login-form__account-switch {
+  font-family: var(--font-game-ui);
+  font-size: 0.84rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.login-form__account-switch {
+  color: var(--ink-2);
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.login-form__account-switch a,
+.login-form__recovery-link a {
+  color: var(--gold-light);
+  text-decoration: underline;
+  text-decoration-color: rgba(240, 212, 138, 0.32);
+  text-underline-offset: 0.25em;
+}
+
+.login-form__fields {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.login-form__options {
+  align-items: center;
+  color: var(--ink-2);
+  display: flex;
+  font-family: var(--font-ui);
+  font-size: 0.84rem;
+  justify-content: space-between;
+}
+
+.login-form__options a,
+.login-form__footer a {
+  color: var(--gold-light);
+  text-decoration: underline;
+  text-decoration-color: rgba(240, 212, 138, 0.32);
+  text-underline-offset: 0.25em;
+  transition:
+    color 180ms ease,
+    text-decoration-color 180ms ease;
+}
+
+.login-form__options a:hover,
+.login-form__footer a:hover {
+  color: var(--parchment);
+  text-decoration-color: currentColor;
+}
+
+.login-form__remember {
+  align-items: center;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 0.55rem;
+  min-height: 44px;
+}
+
+.login-form__remember input {
+  appearance: none;
+  background: rgba(8, 7, 5, 0.76);
+  border: 1px solid rgba(240, 212, 138, 0.58);
+  box-shadow: inset 0 0 0 2px rgba(10, 8, 6, 0.88);
+  color: var(--gold-light);
+  display: grid;
+  height: 1rem;
+  place-content: center;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+  width: 1rem;
+}
+
+.login-form__remember input::before {
+  background: currentColor;
+  clip-path: polygon(14% 44%, 0 59%, 40% 100%, 100% 18%, 84% 4%, 38% 70%);
+  content: '';
+  height: 0.58rem;
+  scale: 0;
+  transition: scale 160ms cubic-bezier(0.2, 0, 0, 1);
+  width: 0.58rem;
+}
+
+.login-form__remember input:checked {
+  background: rgba(217, 164, 65, 0.18);
+  border-color: var(--gold-light);
+  box-shadow:
+    inset 0 0 0 2px rgba(10, 8, 6, 0.88),
+    0 0 10px rgba(217, 164, 65, 0.18);
+}
+
+.login-form__remember input:checked::before {
+  scale: 1;
+}
+
+.login-form__remember input:focus-visible {
+  border-color: var(--gold-light);
+  box-shadow:
+    inset 0 0 0 2px rgba(10, 8, 6, 0.88),
+    0 0 0 3px rgba(217, 164, 65, 0.26);
+  outline: 0;
+}
+
+.login-form__submit {
+  margin: 0.35rem auto 0;
+  width: min(100%, 22rem);
+}
+
+.login-form__oauth {
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.login-form__oauth .game-button {
+  font-size: 0.92rem;
+  min-width: 0;
+  width: 100%;
+}
+
+.login-form__recovery-link {
+  font-family: var(--font-game-ui);
+  font-size: 0.82rem;
+  margin: -0.2rem 0 0.15rem;
+  text-align: center;
+}
+
+.login-form__status {
+  color: var(--gold-light);
+  font-family: var(--font-ui);
+  min-height: 1.5rem;
+  text-align: center;
+}
+
+.login-form__status p {
+  margin: 0;
+}
+
+.login-form__status[role='alert'] {
+  color: color-mix(in srgb, var(--blood) 58%, var(--parchment));
+}
+
+.login-form__footer {
+  color: var(--ink-2);
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  margin: 1rem 0 0;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .login-form.game-panel--padding-lg {
+    padding: 2.6rem 1.35rem 3rem;
+  }
+
+  .login-form__options {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .login-form__oauth {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-height: 760px) and (min-width: 641px) {
+  .login-form.game-panel--padding-lg {
+    padding: 2.2rem 4rem;
+  }
+
+  .login-form__header .game-icon {
+    height: 40px;
+    width: 40px;
+  }
+
+  .login-form__header h1 {
+    font-size: 2rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .login-form__header > p:last-child {
+    font-size: 0.94rem;
+  }
+
+  .login-form .game-divider {
+    margin-block: 0.6rem 0.75rem;
+  }
+
+  .login-form__fields {
+    gap: 0.55rem;
+  }
+
+  .login-form .game-input {
+    min-height: 56px;
+  }
+
+  .login-form__footer {
+    margin-top: 0.65rem;
+  }
+}

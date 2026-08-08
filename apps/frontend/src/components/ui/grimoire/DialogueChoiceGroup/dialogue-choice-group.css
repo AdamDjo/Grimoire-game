@@ -1,0 +1,5 @@
+.dialogue-choice-group {
+  display: grid;
+  gap: 0.65rem;
+  width: 100%;
+}

@@ -1,0 +1,326 @@
+import { describe, expect, it } from 'vitest'
+
+import { buildSystemPrompt, type RecentTurnSummary } from './system-prompt'
+
+import type { MemoryChunkModel, SouvenirModel } from '../generated/prisma/models'
+
+const character = {
+  id: 'char1',
+  userId: 'user1',
+  name: 'Yarel of the Salt Roads',
+  people: 'sahelin',
+  vocation: 'salt-walker',
+  stats: {
+    attributes: { blood: 10, breath: 10, ash: 10 },
+    survival: {
+      hp: 20,
+      maxHp: 20,
+      thirst: 100,
+      hunger: 100,
+      energy: 100,
+      calamine: 0,
+      isDying: false,
+      neglectStreak: 0,
+    },
+    conditions: [],
+    inventory: [],
+  },
+  createdAt: new Date().toISOString(),
+}
+
+function chunk(overrides: Partial<MemoryChunkModel>): MemoryChunkModel {
+  return {
+    id: 'c1',
+    sessionId: 's1',
+    summary: 'Yarel crossed the salt flats.',
+    keyFacts: ['crossed the flats'],
+    keyFactsPinned: [],
+    mood: 'calm',
+    npcsEvolution: [],
+    turnRangeStart: 1,
+    turnRangeEnd: 8,
+    createdAt: new Date(),
+    ...overrides,
+  }
+}
+
+function souvenir(overrides: Partial<SouvenirModel>): SouvenirModel {
+  return {
+    id: 'sv1',
+    userId: 'user1',
+    characterId: 'char1',
+    sessionId: 's1',
+    title: 'The Trader Who Never Lied',
+    body: 'Yarel watched the old trader take his last breath by the dry well.',
+    type: 'npc-death',
+    anonymous: false,
+    sharedWithAveugle: false,
+    aveugleLoreResult: null,
+    createdAt: new Date(),
+    ...overrides,
+  }
+}
+
+describe('buildSystemPrompt — N2 memory injection', () => {
+  it('injects no memory section when there are no chunks', () => {
+    const prompt = buildSystemPrompt(character, 'en')
+
+    expect(prompt).not.toContain('Story so far')
+    expect(prompt).not.toContain('Critical facts to always remember')
+  })
+
+  it('injects the summaries of every passed chunk, in the order given', () => {
+    const chunks = [
+      chunk({ id: 'c2', turnRangeStart: 9, turnRangeEnd: 16, summary: 'Second chunk summary' }),
+      chunk({ id: 'c1', turnRangeStart: 1, turnRangeEnd: 8, summary: 'First chunk summary' }),
+    ]
+
+    const prompt = buildSystemPrompt(character, 'en', chunks)
+
+    expect(prompt).toContain('Story so far')
+    expect(prompt).toContain('(turns 9-16) Second chunk summary')
+    expect(prompt).toContain('(turns 1-8) First chunk summary')
+    expect(prompt.indexOf('Second chunk summary')).toBeLessThan(
+      prompt.indexOf('First chunk summary')
+    )
+  })
+
+  it('deduplicates pinned facts cumulated across all passed chunks', () => {
+    const chunks = [
+      chunk({
+        id: 'c1',
+        keyFactsPinned: ['NPC died: the Trader', 'Artifact obtained: shrine relic'],
+      }),
+      chunk({
+        id: 'c2',
+        keyFactsPinned: ['Artifact obtained: shrine relic', 'Quest started: find the well'],
+      }),
+    ]
+
+    const prompt = buildSystemPrompt(character, 'en', chunks)
+
+    expect(prompt).toContain('Critical facts to always remember')
+    const occurrences = prompt.split('Artifact obtained: shrine relic').length - 1
+    expect(occurrences).toBe(1)
+    expect(prompt).toContain('NPC died: the Trader')
+    expect(prompt).toContain('Quest started: find the well')
+  })
+
+  it('omits the pinned-facts section when no chunk has any pinned fact', () => {
+    const chunks = [chunk({ keyFactsPinned: [] })]
+
+    const prompt = buildSystemPrompt(character, 'en', chunks)
+
+    expect(prompt).toContain('Story so far')
+    expect(prompt).not.toContain('Critical facts to always remember')
+  })
+})
+
+describe('buildSystemPrompt — N1 recent-turns injection', () => {
+  it('injects no recent-turns section when the list is empty', () => {
+    const prompt = buildSystemPrompt(character, 'en', [], [])
+
+    expect(prompt).not.toContain('Recent turns')
+  })
+
+  it('injects no recent-turns section when every entry has a null turnSummary', () => {
+    const recentTurns: RecentTurnSummary[] = [
+      { turnNumber: 2, turnSummary: null },
+      { turnNumber: 1, turnSummary: null },
+    ]
+
+    const prompt = buildSystemPrompt(character, 'en', [], recentTurns)
+
+    expect(prompt).not.toContain('Recent turns')
+  })
+
+  it('formats recent turns in chronological order (oldest first), regardless of input order', () => {
+    const recentTurns: RecentTurnSummary[] = [
+      { turnNumber: 3, turnSummary: 'Yarel found a shrine.' },
+      { turnNumber: 1, turnSummary: 'Yarel left the Aveugle.' },
+      { turnNumber: 2, turnSummary: 'Yarel crossed the dunes.' },
+    ]
+
+    const prompt = buildSystemPrompt(character, 'en', [], recentTurns)
+
+    expect(prompt).toContain('Recent turns (most recent scenes, in order):')
+    expect(prompt).toContain('- (turn 1) Yarel left the Aveugle.')
+    expect(prompt).toContain('- (turn 2) Yarel crossed the dunes.')
+    expect(prompt).toContain('- (turn 3) Yarel found a shrine.')
+    expect(prompt.indexOf('turn 1')).toBeLessThan(prompt.indexOf('turn 2'))
+    expect(prompt.indexOf('turn 2')).toBeLessThan(prompt.indexOf('turn 3'))
+  })
+
+  it('filters out entries with a null turnSummary while keeping the valid ones', () => {
+    const recentTurns: RecentTurnSummary[] = [
+      { turnNumber: 2, turnSummary: null },
+      { turnNumber: 1, turnSummary: 'Yarel left the Aveugle.' },
+    ]
+
+    const prompt = buildSystemPrompt(character, 'en', [], recentTurns)
+
+    expect(prompt).toContain('- (turn 1) Yarel left the Aveugle.')
+    expect(prompt).not.toContain('turn 2')
+  })
+
+  it('places the N1 recent-turns section after the N2 memory section', () => {
+    const chunks = [chunk({ summary: 'Chunk summary' })]
+    const recentTurns: RecentTurnSummary[] = [{ turnNumber: 9, turnSummary: 'Latest turn.' }]
+
+    const prompt = buildSystemPrompt(character, 'en', chunks, recentTurns)
+
+    expect(prompt.indexOf('Story so far')).toBeGreaterThanOrEqual(0)
+    expect(prompt.indexOf('Recent turns')).toBeGreaterThan(prompt.indexOf('Story so far'))
+  })
+})
+
+describe('buildSystemPrompt — N3 Souvenirs injection (#115)', () => {
+  it('injects no Souvenirs section when the list is empty', () => {
+    const prompt = buildSystemPrompt(character, 'en', [], [], [])
+
+    expect(prompt).not.toContain('named Souvenirs')
+  })
+
+  it('injects each Souvenir title and body', () => {
+    const souvenirs = [
+      souvenir({ id: 'sv1', title: 'The Trader Who Never Lied', body: 'He died at dusk.' }),
+      souvenir({ id: 'sv2', title: 'The Vow at the Well', body: 'She swore to return.' }),
+    ]
+
+    const prompt = buildSystemPrompt(character, 'en', [], [], souvenirs)
+
+    expect(prompt).toContain("player's named Souvenirs from past runs")
+    expect(prompt).toContain('"The Trader Who Never Lied" — He died at dusk.')
+    expect(prompt).toContain('"The Vow at the Well" — She swore to return.')
+  })
+
+  it('documents the optional souvenir_candidate field in the JSON output instructions', () => {
+    const prompt = buildSystemPrompt(character, 'en')
+
+    expect(prompt).toContain('"souvenir_candidate"?')
+    expect(prompt).toContain('npc-death')
+  })
+})
+
+describe('buildSystemPrompt — gauge-tiers narration injection (#201)', () => {
+  it('injects no gauge-tiers section when every gauge is above 75', () => {
+    const prompt = buildSystemPrompt(character, 'en')
+
+    expect(prompt).not.toContain('survival gauges are degraded')
+  })
+
+  it('mentions a strained gauge lightly (51-75)', () => {
+    const strained = {
+      ...character,
+      stats: {
+        ...character.stats,
+        survival: { ...character.stats.survival, thirst: 60 },
+      },
+    }
+
+    const prompt = buildSystemPrompt(strained, 'en')
+
+    expect(prompt).toContain('survival gauges are degraded')
+    expect(prompt).toContain('- Thirst (60/100): mention it lightly in passing')
+    expect(prompt).not.toContain('Hunger (')
+    expect(prompt).not.toContain('Energy (')
+  })
+
+  it('describes real suffering for a severe gauge (26-50)', () => {
+    const severe = {
+      ...character,
+      stats: {
+        ...character.stats,
+        survival: { ...character.stats.survival, hunger: 40 },
+      },
+    }
+
+    const prompt = buildSystemPrompt(severe, 'en')
+
+    expect(prompt).toContain('- Hunger (40/100): describe real, perceptible suffering')
+  })
+
+  it('flags a critical gauge and names the backend-applied Désavantage (0-25)', () => {
+    const critical = {
+      ...character,
+      stats: {
+        ...character.stats,
+        survival: { ...character.stats.survival, energy: 10 },
+      },
+    }
+
+    const prompt = buildSystemPrompt(critical, 'en')
+
+    expect(prompt).toContain('- Energy (10/100): describe acute suffering')
+    expect(prompt).toContain('Désavantage on rolls')
+  })
+
+  it('lists multiple degraded gauges independently', () => {
+    const multi = {
+      ...character,
+      stats: {
+        ...character.stats,
+        survival: { ...character.stats.survival, thirst: 20, hunger: 40, energy: 60 },
+      },
+    }
+
+    const prompt = buildSystemPrompt(multi, 'en')
+
+    expect(prompt).toContain('- Thirst (20/100): describe acute suffering')
+    expect(prompt).toContain('- Hunger (40/100): describe real, perceptible suffering')
+    expect(prompt).toContain('- Energy (60/100): mention it lightly in passing')
+  })
+
+  it('instructs the AI never to state a mechanical penalty itself', () => {
+    const critical = {
+      ...character,
+      stats: {
+        ...character.stats,
+        survival: { ...character.stats.survival, thirst: 5 },
+      },
+    }
+
+    const prompt = buildSystemPrompt(critical, 'en')
+
+    expect(prompt).toContain('Never state or imply a specific mechanical penalty yourself')
+  })
+})
+
+describe('buildSystemPrompt — item_gained injection (#183)', () => {
+  it('states the player carries no items when the inventory is empty', () => {
+    const prompt = buildSystemPrompt(character, 'en')
+
+    expect(prompt).toContain('The player currently carries no items.')
+  })
+
+  it('lists each carried item by name and category', () => {
+    const withItems = {
+      ...character,
+      stats: {
+        ...character.stats,
+        inventory: [
+          { id: 'i1', name: 'Waterskin', category: 'bag' as const, quantity: 1 },
+          {
+            id: 'i2',
+            name: 'Salt-iron blade',
+            category: 'equipment' as const,
+            quantity: 1,
+            slot: 'main-hand' as const,
+          },
+        ],
+      },
+    }
+
+    const prompt = buildSystemPrompt(withItems, 'en')
+
+    expect(prompt).toContain('Waterskin (category: "bag")')
+    expect(prompt).toContain('Salt-iron blade (category: "equipment")')
+  })
+
+  it('documents the optional item_gained field in the JSON output instructions', () => {
+    const prompt = buildSystemPrompt(character, 'en')
+
+    expect(prompt).toContain('"item_gained"?')
+    expect(prompt).toContain('Never propose category "heirloom"')
+  })
+})

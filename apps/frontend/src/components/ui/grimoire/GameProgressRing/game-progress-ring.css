@@ -1,0 +1,55 @@
+.game-progress-ring {
+  --game-ring-color: var(--gold);
+  --game-ring-size: 84px;
+
+  align-items: center;
+  color: var(--gold-light);
+  display: inline-flex;
+  flex-direction: column;
+  font-family: var(--font-ui);
+  gap: 0.5rem;
+  min-width: var(--game-ring-size);
+}
+
+.game-progress-ring--danger { --game-ring-color: var(--blood); }
+.game-progress-ring--aqua { --game-ring-color: var(--soul); }
+.game-progress-ring--ember { --game-ring-color: var(--cendre); }
+.game-progress-ring--sm { --game-ring-size: 68px; }
+.game-progress-ring--lg { --game-ring-size: 104px; }
+
+.game-progress-ring__dial {
+  align-items: center;
+  background:
+    radial-gradient(circle, rgba(9, 8, 6, 0.98) 58%, transparent 60%),
+    conic-gradient(var(--game-ring-color) var(--game-ring-progress), rgba(217, 164, 65, 0.16) 0);
+  border: 1px solid rgba(217, 164, 65, 0.72);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 4px rgba(10, 8, 6, 0.82),
+    0 0 18px color-mix(in srgb, var(--game-ring-color) 22%, transparent);
+  display: inline-flex;
+  height: var(--game-ring-size);
+  justify-content: center;
+  width: var(--game-ring-size);
+}
+
+.game-progress-ring__center {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.game-progress-ring__icon { display: inline-flex; }
+.game-progress-ring__value {
+  font-family: var(--font-accent);
+  font-size: 1.15rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.game-progress-ring__label {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+}

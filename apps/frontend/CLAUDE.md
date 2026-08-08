@@ -1,63 +1,100 @@
-# Frontend Agent Instructions
+# Frontend — Next.js App Router
+
+> Lire d'abord : `../../MEMORY.md`, puis `../../docs/00-START-HERE.md`.
+> Statut vivant : `../../docs/public/current-state/FRONTEND_STATUS.md` + `FRONTEND_NEXT.md`.
+> Design/gameplay : `../../docs/public/design/GAME_DESIGN.md`.
+> Tokens UI : `../../docs/public/design/DESIGN_TOKENS.md`.
+> Architecture/API : `../../docs/public/tech/ARCHITECTURE_RULES.md`.
+> Canon (source de vérité) : `../../docs/public/nav/canon-index.md` → `../../docs/public/raw/*`.
+
+## Règle absolue — lire le canon AVANT de coder
+
+**Toute copie affichée, règle de jeu visible ou lore présenté à l'écran doit être vérifié dans `docs/public/raw/` AVANT d'écrire le code.** Jamais de valeur, de libellé ou de comportement « provisoire, à valider plus tard ». Si `GAME_DESIGN.md` (résumé) contredit le canon `raw/`, le `raw/` gagne. Le canon est versionné → lisible directement dans tout worktree. Voir `../../docs/public/nav/PRIVATE_CANON_POLICY.md`.
 
 ## Scope
 
-This agent works ONLY on `apps/frontend/`. Never modify files outside this directory.
+Travailler uniquement dans `apps/frontend/`, sauf changement de contrat partagé explicitement inclus
+dans la tâche. Codex est assigné au frontend par défaut, mais Claude suit exactement ces mêmes règles
+lorsqu'il reçoit une tâche frontend. Toute PR frontend met à jour `FRONTEND_STATUS.md` et
+`FRONTEND_NEXT.md` selon l'état attendu après merge, ainsi que `RELEASE_READINESS.md` si elle change
+un bloqueur `phase: predeploy`.
 
-## Architecture
+## Architecture — colocation
 
-- Next.js 15 (App Router) + React 19 + TypeScript
-- Tailwind CSS 4 for styling (no CSS modules)
-- Zustand for UI/client state
-- React Query for server state & caching
-- All API calls proxied through `/api/[...path]/route.ts`
-- Frontend is display-only: shows scenes, presents choices, displays stats
-
-## Directory Structure
-
-```
+```txt
 src/
 ├── app/
-│   ├── (auth)/         # Login, register pages
-│   ├── (menu)/         # Main menu, universe selection
-│   ├── (game)/         # Game session, character creation
-│   ├── api/            # Proxy route to backend
-│   ├── layout.tsx      # Root layout with providers
-│   └── page.tsx        # Landing/redirect
-├── components/
-│   ├── ui/             # Generic UI (buttons, modals, cards)
-│   ├── game/           # Scene display, choice buttons, notifications
-│   ├── character/      # Stats panel, character creation form
-│   └── universe/       # Universe cards, generation UI
-├── hooks/              # Custom React hooks
-├── stores/             # Zustand stores
-└── lib/                # Utils, API client, constants
+│   ├── (home)/
+│   ├── (auth)/
+│   ├── (main)/velkhar/
+│   ├── (game)/velkhar/
+│   └── api/[...path]/route.ts
+├── components/ui/
+├── hooks/
+├── stores/
+└── lib/
 ```
 
-## Rules
+- `_components/` = privé à une route.
+- `components/ui/` = réutilisable multi-routes.
+- Les pages doivent composer des composants, pas contenir toute la logique.
+- Toutes les API frontend passent par `app/api/[...path]/route.ts`.
 
-- Import types ONLY from `@grimoire/shared`
-- React components: `PascalCase.tsx` (e.g., `SceneDisplay.tsx`)
-- Other files: `kebab-case.ts` (e.g., `use-game-session.ts`)
-- Named exports only
-- Never put game logic in frontend - it's backend's job
-- Use server components by default, `'use client'` only when needed
-- Tailwind for all styling, use design tokens/theme variables
+## Nommage des fichiers
 
-## State Management
+- `components/ui/` : fichiers plats kebab-case (`media-layer.tsx`), toujours exportés
+  depuis `components/ui/index.ts`. Réutilisable multi-routes, jamais de copy hardcodée.
+- `app/(route)/_components/NomDuComposant/` : dossier PascalCase + fichier principal
+  `NomDuComposant.tsx` (jamais `index.tsx`) + sous-composants privés colocalisés en
+  PascalCase.tsx + CSS colocalisé `nom-du-composant.css`.
+- Un composant sans sous-composants ni CSS dédié reste un fichier plat
+  `app/(route)/_components/nom-du-composant.tsx`.
 
-- **Zustand stores**: UI state (sidebar open, theme, modals)
-- **React Query**: All server data (sessions, characters, scenes)
-- Never duplicate server state in Zustand
+## Landing
 
-## API Pattern
+- Sections scroll de `(home)` dans `_components/Section<N><Nom>/`.
+- Contenu/copy à garder cohérent avec `../../docs/public/design/GAME_DESIGN.md`.
+- Phase 1A (landing) livrée — plans landing archivés, pas de plan actif restant.
 
-```typescript
-// All API calls go through the proxy:
-// Frontend -> /api/game/action -> Backend -> /api/game/action
+## UI
+
+- Ne jamais hardcoder couleur ou police.
+- Utiliser les tokens de `../../docs/public/design/DESIGN_TOKENS.md` et les variables CSS existantes.
+- Pas de logique de jeu critique côté client.
+- Textes UI/code en anglais, conversation utilisateur en français.
+- Appliquer le skill global `vercel-react-best-practices` pour tout code React/Next.js.
+- Appliquer `e2e-testing-patterns` aux golden paths, tests Cypress et régressions navigateur.
+
+## Accessibilité
+
+- `IconButton.label` obligatoire.
+- `StatItem.iconLabel` obligatoire.
+- Navigation sémantique : `header`, `nav`, `footer`.
+- `aria-current="page"` sur le lien actif.
+- Utiliser `<button>`, jamais `<div onClick>`.
+
+## State
+
+- Zustand : UI state uniquement.
+- React Query : server state.
+- Ne pas dupliquer l'état serveur dans Zustand.
+
+## SSR Hydration
+
+```tsx
+const [particles, setParticles] = useState<Particle[]>([])
+
+useEffect(() => {
+  setParticles(generate())
+}, [])
 ```
 
-## Testing
+Éviter tout `Math.random()` rendu directement côté serveur.
 
-- Run `pnpm type-check --filter frontend` to verify types
-- Run `pnpm dev --filter frontend` to test dev server
+## Tests
+
+```bash
+pnpm type-check --filter @grimoire/frontend
+pnpm test --filter @grimoire/frontend
+pnpm cypress open
+```

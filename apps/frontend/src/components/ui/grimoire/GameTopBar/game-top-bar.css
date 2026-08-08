@@ -1,0 +1,56 @@
+.game-top-bar {
+  align-items: center;
+  background: linear-gradient(rgba(7, 6, 4, 0.76), rgba(7, 6, 4, 0.92));
+
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  min-height: 72px;
+  padding: 0.8rem clamp(1.25rem, 3vw, 3rem);
+  position: relative;
+  width: 100%;
+}
+.game-top-bar::before {
+  border: 18px solid transparent;
+  border-image: url('/ui-kit/surfaces/structural-frame-v2.webp') 48 62 fill / 18px;
+  content: '';
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+}
+
+.game-top-bar--transparent {
+  backdrop-filter: blur(10px);
+  background: linear-gradient(180deg, rgba(6, 5, 3, 0.62), rgba(6, 5, 3, 0.14) 76%, transparent);
+  border-bottom: 1px solid rgba(217, 164, 65, 0.14);
+  min-height: 78px;
+}
+
+.game-top-bar--transparent::before {
+  display: none;
+}
+.game-top-bar__start,
+.game-top-bar__center,
+.game-top-bar__end {
+  align-items: center;
+  display: flex;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+.game-top-bar__center {
+  justify-content: center;
+}
+.game-top-bar__end {
+  justify-content: flex-end;
+}
+
+@media (max-width: 760px) {
+  .game-top-bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .game-top-bar__center {
+    display: none;
+  }
+}

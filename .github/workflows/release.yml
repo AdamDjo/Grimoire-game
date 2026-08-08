@@ -18,14 +18,14 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Install pnpm
         run: npm install -g pnpm@9.15.0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 20
           cache: pnpm
@@ -41,12 +41,15 @@ jobs:
 
       - name: Extract and validate version
         id: version
+        env:
+          INPUT_VERSION: ${{ github.event.inputs.version }}
+          REF_NAME: ${{ github.ref_name }}
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            RAW="${{ github.event.inputs.version }}"
+            RAW="$INPUT_VERSION"
           else
             # release/1.2.3 → 1.2.3
-            BRANCH="${{ github.ref_name }}"
+            BRANCH="$REF_NAME"
             RAW="${BRANCH#release/}"
           fi
           # Normalize: strip leading 'v' then re-add it
@@ -64,9 +67,17 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          gh release create "${VERSION}" \
-            --title "Release ${VERSION}" \
-            --generate-notes
+          # Idempotent: a re-push on the release branch must not fail the job.
+          # Without this, the "Open PR" step below is skipped and the release stalls.
+          if gh release view "${VERSION}" >/dev/null 2>&1; then
+            echo "Release ${VERSION} already exists, retargeting it to ${GITHUB_SHA}"
+            git tag -f "${VERSION}" "${GITHUB_SHA}"
+            git push --force origin "refs/tags/${VERSION}"
+          else
+            gh release create "${VERSION}" \
+              --title "Release ${VERSION}" \
+              --generate-notes
+          fi
 
       - name: Open PR release → main
         env:
@@ -87,10 +98,15 @@ jobs:
           git checkout develop && git merge origin/main && git push origin develop
           \`\`\`"
 
+          # Only skip when the PR genuinely exists — any other failure must fail the job.
+          if [ -n "$(gh pr list --base main --head "${BRANCH}" --state open --json number --jq '.[].number')" ]; then
+            echo "PR ${BRANCH} → main already open, nothing to do"
+            exit 0
+          fi
+
           gh pr create \
             --base main \
             --head "${BRANCH}" \
             --title "release: ${VERSION}" \
             --body "${PR_BODY}" \
-            --label "type: release" \
-            --assignee "AdamDjo" || echo "PR already exists"
+            --assignee "AdamDjo"

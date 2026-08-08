@@ -1,0 +1,68 @@
+.dialogue-choice {
+  align-items: center;
+  appearance: none;
+  background: rgba(8, 7, 5, 0.84);
+  border: 0;
+  box-shadow:
+    inset 0 0 0 1px rgba(217, 164, 65, 0.68),
+    inset 0 0 0 4px rgba(38, 27, 16, 0.58);
+  color: var(--gold-light);
+  cursor: pointer;
+  display: grid;
+  font-family: var(--font-game-body);
+  font-size: var(--text-game-body);
+  gap: 1rem;
+  grid-template-columns: auto minmax(0, 1fr);
+  min-height: 56px;
+  padding: 0.8rem 1.25rem;
+  text-align: left;
+  transition:
+    box-shadow 180ms ease,
+    color 180ms ease,
+    transform 180ms cubic-bezier(0.2, 0, 0, 1);
+  width: 100%;
+}
+
+.dialogue-choice:hover:not(:disabled),
+.dialogue-choice--selected {
+  box-shadow:
+    inset 0 0 0 1px rgba(240, 212, 138, 0.9),
+    inset 0 0 0 4px rgba(64, 43, 19, 0.68),
+    0 0 18px rgba(217, 164, 65, 0.14);
+  color: var(--parchment);
+}
+
+.dialogue-choice:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.dialogue-choice:focus-visible {
+  box-shadow:
+    inset 0 0 0 1px rgba(240, 212, 138, 0.9),
+    inset 0 0 0 4px rgba(64, 43, 19, 0.68),
+    0 0 0 3px rgba(217, 164, 65, 0.28);
+  outline: 0;
+}
+
+.dialogue-choice:disabled {
+  cursor: not-allowed;
+  filter: grayscale(0.8);
+  opacity: 0.48;
+}
+
+.dialogue-choice__icon {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  min-width: 32px;
+}
+
+.dialogue-choice__label {
+  min-width: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialogue-choice {
+    transition-duration: 0.01ms;
+  }
+}

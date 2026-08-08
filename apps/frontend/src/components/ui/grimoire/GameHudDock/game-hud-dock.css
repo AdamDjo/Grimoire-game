@@ -1,0 +1,35 @@
+.game-hud-dock {
+  background: rgba(7, 6, 4, 0.94);
+  box-shadow: 0 -14px 32px rgba(0, 0, 0, 0.38);
+  isolation: isolate;
+  padding: clamp(1.25rem, 2vw, 2rem);
+  position: relative;
+  width: 100%;
+}
+
+.game-hud-dock::before {
+  border: 22px solid transparent;
+  border-image: url('/ui-kit/surfaces/structural-frame-v2.webp') 48 62 fill / 22px;
+  content: '';
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+}
+
+.game-hud-dock__content {
+  align-items: center;
+  display: flex;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  justify-content: space-between;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 800px) {
+  .game-hud-dock__content {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

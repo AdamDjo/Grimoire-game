@@ -2,14 +2,26 @@
   "hooks": {
     "PreToolUse": [
       {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"\nconst input = JSON.parse(process.env.CLAUDE_TOOL_INPUT || '{}');\nconst path = input.file_path || '';\nif (path.includes('apps/frontend/') && !path.includes('agent.md')) {\n  process.stdout.write('[Agent] Tâche frontend détectée → utiliser l\\'agent frontend-dev\\n');\n} else if (path.includes('apps/backend/') && !path.includes('agent.md')) {\n  process.stdout.write('[Agent] Tâche backend détectée → utiliser l\\'agent backend-dev\\n');\n}\n\""
+          }
+        ]
+      },
+      {
         "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
-            "command": "node -e \"const i=process.env.CLAUDE_TOOL_INPUT||''; if(i.includes('git commit')) process.stdout.write('[Claude Hook] Pense à lancer le code-reviewer avant de committer.\\n');\""
+            "command": "node -e \"\nconst input = JSON.parse(process.env.CLAUDE_TOOL_INPUT || '{}');\nconst cmd = input.command || '';\nif (cmd.includes('git commit') || cmd.includes('git push') || cmd.includes('gh pr')) {\n  process.stdout.write('[Agent] Avant de committer/PR → lancer code-reviewer d\\'abord\\n');\n}\n\""
           }
         ]
       }
     ]
-  }
+  },
+  "model": "sonnet",
+  "alwaysThinkingEnabled": false,
+  "autoCompactWindow": 150000
 }

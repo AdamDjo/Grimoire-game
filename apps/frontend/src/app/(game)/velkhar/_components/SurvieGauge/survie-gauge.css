@@ -1,0 +1,5 @@
+.survie-gauge {
+  display: grid;
+  gap: 0.9rem;
+  min-width: 0;
+}

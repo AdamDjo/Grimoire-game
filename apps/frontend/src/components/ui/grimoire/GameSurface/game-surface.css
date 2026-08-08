@@ -1,0 +1,80 @@
+.game-surface {
+  --game-surface-frame: url('/ui-kit/surfaces/structural-frame-v2.webp');
+  --game-surface-slice: 48 62 fill;
+  isolation: isolate;
+  min-width: 0;
+  position: relative;
+}
+
+.game-surface::before {
+  border: 24px solid transparent;
+  border-image-source: var(--game-surface-frame);
+  border-image-slice: var(--game-surface-slice);
+  border-image-width: 24px;
+  content: '';
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+}
+
+.game-surface--card {
+  color: var(--parchment);
+  min-height: 17rem;
+}
+
+.game-surface--stats {
+  --game-surface-frame: url('/ui-kit/surfaces/structural-frame-v2.webp');
+  --game-surface-slice: 48 62 fill;
+
+  color: var(--parchment);
+  min-height: 10rem;
+}
+
+.game-surface--parchment {
+  --game-surface-frame: url('/ui-kit/surfaces/parchment-frame.webp');
+  --game-surface-slice: 48 58 fill;
+
+  color: var(--ink-manuscript);
+  min-height: 12rem;
+}
+
+.game-surface--padding-none {
+  padding: 0;
+}
+
+.game-surface--padding-sm {
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.game-surface--padding-md {
+  padding: clamp(2.25rem, 5vw, 4rem);
+}
+
+.game-surface--padding-lg {
+  padding: clamp(3rem, 7vw, 5.5rem);
+}
+
+.game-surface__content {
+  font-family: var(--font-game-body);
+  font-size: var(--text-game-body);
+  line-height: var(--text-body-editorial--line-height, 1.6);
+  min-height: inherit;
+  position: relative;
+  z-index: 1;
+}
+
+.game-surface--stats .game-surface__content {
+  font-family: var(--font-game-ui);
+  font-size: var(--text-game-label);
+}
+
+@media (max-width: 640px) {
+  .game-surface--padding-md {
+    padding: 2.25rem 1.75rem;
+  }
+
+  .game-surface--padding-lg {
+    padding: 2.75rem 2rem;
+  }
+}

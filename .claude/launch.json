@@ -1,0 +1,18 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "frontend",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dev", "--filter", "@grimoire/frontend"],
+      "port": 3000,
+      "autoPort": true
+    },
+    {
+      "name": "backend",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dev", "--filter", "@grimoire/backend"],
+      "port": 3001
+    }
+  ]
+}

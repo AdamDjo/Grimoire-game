@@ -1,26 +1,303 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --void: #0a0806;
+  --parchment: #e8dcc0;
+  --gold: #d9a441;
+  --gold-light: #f0d48a;
+  --gold-hover: #f0d48a;
+  --gold-dark: rgba(217, 164, 65, 0.55);
+  --blood: #c0392b;
+  --soul: #35c4ac;
+  --cendre: #e3b341;
+  --border-gold: rgba(217, 164, 65, 0.34);
+  --ink-manuscript: #2a2118;
+  --font-display: var(--next-font-disp), Georgia, serif;
+  --font-serif: var(--next-font-serif), Georgia, serif;
+  --font-accent: var(--next-font-accent), Georgia, serif;
+  --font-ui: var(--next-font-ui), Arial, sans-serif;
+  --font-manuscript: var(--next-font-manuscript), cursive;
+  --font-game-display: var(--font-display);
+  --font-game-heading: var(--font-accent);
+  --font-game-body: var(--font-serif);
+  --font-game-ui: var(--font-ui);
+  --text-game-title: clamp(2.15rem, 1.8vw + 1.55rem, 3.75rem);
+  --text-game-heading: clamp(1.625rem, 0.9vw + 1.25rem, 2.375rem);
+  --text-game-lead: clamp(1.125rem, 0.35vw + 1.02rem, 1.375rem);
+  --text-game-quote: clamp(1.2rem, 0.5vw + 1.05rem, 1.5rem);
+  --text-game-body: clamp(1.125rem, 0.28vw + 1.04rem, 1.3125rem);
+  --text-game-body-sm: clamp(1.025rem, 0.2vw + 0.96rem, 1.125rem);
+  --text-game-label: clamp(1.05rem, 0.18vw + 0.98rem, 1.16rem);
+  --text-game-button-sm: clamp(1.3rem, 0.32vw + 1.18rem, 1.5rem);
+  --text-game-button: clamp(1.3rem, 0.45vw + 1.15rem, 1.625rem);
+  --motion-fast: 160ms;
+  --motion-ui: 220ms;
+  --motion-step: 280ms;
+  --motion-page: 650ms;
+  --ease-grimoire-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-grimoire-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ink: var(--parchment);
+  --ink-2: rgba(232, 220, 192, 0.75);
+  --focus-ring: 0 0 0 3px rgba(217, 164, 65, 0.3);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-void: var(--void);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-light);
+  --color-parchment: var(--parchment);
+  --color-blood: var(--blood);
+  --color-soul: var(--soul);
+  --color-cendre: var(--cendre);
+  --font-display: var(--font-display);
+  --font-serif: var(--font-serif);
+  --font-ui: var(--font-ui);
+  --font-accent: var(--font-accent);
+  --font-game-display: var(--font-game-display);
+  --font-game-heading: var(--font-game-heading);
+  --font-game-body: var(--font-game-body);
+  --font-game-ui: var(--font-game-ui);
+  --text-game-title: var(--text-game-title);
+  --text-game-heading: var(--text-game-heading);
+  --text-game-lead: var(--text-game-lead);
+  --text-game-quote: var(--text-game-quote);
+  --text-game-body: var(--text-game-body);
+  --text-game-body-sm: var(--text-game-body-sm);
+  --text-game-label: var(--text-game-label);
+  --text-game-button-sm: var(--text-game-button-sm);
+  --text-game-button: var(--text-game-button);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* Type scale fluide : clamp(min mobile, vw + base, max desktop). Évite les
+     paliers px durs (les overrides ≤720px des sections deviennent inutiles). */
+  --text-h1: clamp(44px, 2.6vw + 28px, 72px);
+  --text-h1--line-height: 1.05;
+  --text-h1--letter-spacing: 0.06em;
+  --text-h2: clamp(32px, 1.4vw + 22px, 44px);
+  --text-h2--line-height: 1.15;
+  --text-accroche: clamp(20px, 0.7vw + 15px, 26px);
+  --text-body-editorial: clamp(18px, 0.5vw + 15px, 24px);
+  --text-body-editorial--line-height: 1.6;
+  --text-ui: 16px;
+  --text-ui--line-height: 1.6;
+  --text-card-num: clamp(32px, 0.9vw + 25px, 40px);
+  --text-card-title: clamp(21px, 0.5vw + 17px, 25px);
+  --text-card-manuscript: clamp(20px, 0.5vw + 16px, 24px);
+  --text-stat-label: 17px;
+  --text-stat-label--letter-spacing: 0.16em;
+  --text-stat-value: 20px;
+  --text-btn-primary: clamp(20px, 0.7vw + 15px, 26px);
+  --text-btn-secondary: clamp(21px, 0.7vw + 16px, 27px);
+
+  --animate-shiny-text-multi: shiny-text-multi 8s ease-in-out infinite;
+  @keyframes shiny-text-multi {
+    0% {
+      background-position:
+        calc(-100% - var(--shiny-width)) 0,
+        0 0;
+    }
+    45%,
+    55% {
+      background-position:
+        calc(100% + var(--shiny-width)) 0,
+        0 0;
+    }
+    100% {
+      background-position:
+        calc(-100% - var(--shiny-width)) 0,
+        0 0;
+    }
+  }
+
+  --animate-gold-pulse: gold-pulse 2.4s ease-in-out infinite;
+  @keyframes gold-pulse {
+    0%,
+    100% {
+      box-shadow:
+        0 0 8px rgba(240, 212, 138, 0.7),
+        0 0 20px rgba(217, 164, 65, 0.4);
+    }
+    50% {
+      box-shadow:
+        0 0 14px rgba(240, 212, 138, 0.95),
+        0 0 34px rgba(217, 164, 65, 0.6);
+    }
   }
 }
 
+html {
+  min-height: 100%;
+  background: var(--void);
+  color-scheme: dark;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  background: var(--void);
+  color: var(--parchment);
+  font-family: var(--font-serif);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+}
+
+::selection {
+  background: rgba(218, 170, 74, 0.45);
+  color: #fff7df;
+}
+
+:focus-visible {
+  border-radius: 3px;
+  box-shadow: var(--focus-ring);
+  outline: 1px solid var(--gold-light);
+  outline-offset: 3px;
+}
+
+html {
+  scrollbar-color: rgba(217, 164, 65, 0.58) rgba(5, 4, 3, 0.72);
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  height: 9px;
+  width: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(5, 4, 3, 0.72);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(240, 212, 138, 0.72), rgba(146, 95, 35, 0.78));
+  border: 2px solid rgba(5, 4, 3, 0.72);
+}
+
+html.has-landing-scroll-progress {
+  scrollbar-width: none;
+}
+
+html.has-landing-scroll-progress::-webkit-scrollbar {
+  height: 0;
+  width: 0;
+}
+
+.landing-experience {
+  background:
+    radial-gradient(circle at 70% 12%, rgba(198, 154, 67, 0.11), transparent 30rem),
+    linear-gradient(180deg, #050403, #090806 45%, #030302);
+  isolation: isolate;
+  min-height: 100vh;
+  position: relative;
+}
+
+.landing-experience__exit-curtain {
+  background:
+    radial-gradient(circle at 50% 44%, rgba(34, 24, 13, 0.18), transparent 38%),
+    #050403;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  visibility: hidden;
+  z-index: 90;
+}
+
+.landing-experience::after {
+  background-image:
+    radial-gradient(circle at 18% 52%, rgba(239, 212, 141, 0.045), transparent 16rem),
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+  background-size:
+    auto,
+    3px 3px,
+    3px 3px;
+  content: '';
+  inset: 0;
+  mix-blend-mode: soft-light;
+  opacity: 0.28;
+  pointer-events: none;
+  position: fixed;
+  z-index: 60;
+}
+
+/* Grain animé : une nappe de bruit (feTurbulence SVG en data-URI) dont la
+   position saute en steps(6) — chaque pas repositionne le motif, donc le grain
+   "grouille" comme une pellicule, sans interpolation fluide. Opacité très basse
+   (≤0.06) : présent à la limite du perçu, jamais une texture franche. Distinct
+   du ::after (vignette + grille statiques) pour ne pas les faire scintiller.
+   Coupé en reduced-motion. z-index sous les braises (55) n'a pas d'importance :
+   les deux sont pointer-events:none et se composent visuellement. */
+.landing-experience::before {
+  background-image: url('/landing/textures/grain.svg');
+  background-size: 180px 180px;
+  content: '';
+  inset: -60px;
+  mix-blend-mode: overlay;
+  opacity: 0.05;
+  pointer-events: none;
+  position: fixed;
+  z-index: 59;
+  animation: landing-grain 0.6s steps(6) infinite;
+}
+
+@keyframes landing-grain {
+  0% {
+    transform: translate(0, 0);
+  }
+  16% {
+    transform: translate(-24px, 18px);
+  }
+  33% {
+    transform: translate(20px, -14px);
+  }
+  50% {
+    transform: translate(-16px, -22px);
+  }
+  66% {
+    transform: translate(22px, 16px);
+  }
+  83% {
+    transform: translate(-20px, 12px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-experience::before {
+    animation: none;
+  }
+}
+
+.landing-section {
+  min-height: 100dvh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* SplitText (reveals de titres non-hero) : le masque de ligne clippe le débord
+   vertical de la ligne qui monte. Sur les titres en leading-none/serti, les
+   ascendantes/descendantes (g, p, y, accents) frôlent le bord du masque —
+   on réserve un chouïa de padding pour ne rien couper. La classe -mask est
+   dérivée automatiquement de linesClass par mask:'lines'. */
+.split-line {
+  will-change: transform;
+}
+
+.split-line-mask {
+  padding-block: 0.12em;
+  margin-block: -0.12em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
 }

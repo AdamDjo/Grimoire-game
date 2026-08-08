@@ -1,0 +1,39 @@
+.media-layer__video,
+.media-layer__fallback {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  object-fit: cover;
+}
+
+.media-layer__video {
+  z-index: 1;
+}
+
+.media-layer__fallback {
+  z-index: 0;
+}
+
+.media-layer__video + .media-layer__fallback {
+  opacity: 0.82;
+}
+/* TODO: Assombrir un peu plus le vignette */
+.media-vignette {
+  background:
+    radial-gradient(circle at 74% 50%, rgba(239, 212, 141, 0.12), transparent 19rem),
+    radial-gradient(
+      circle at 61% 56%,
+      transparent 0,
+      rgba(3, 3, 2, 0.34) 43%,
+      rgba(3, 3, 2, 0.94) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(3, 3, 2, 0.94) 0%,
+      rgba(3, 3, 2, 0.55) 38%,
+      rgba(3, 3, 2, 0.46) 62%,
+      rgba(3, 3, 2, 0.76) 100%
+    ),
+    linear-gradient(180deg, rgba(3, 3, 2, 0.7), transparent 30%, rgba(3, 3, 2, 0.82));
+  pointer-events: none;
+}

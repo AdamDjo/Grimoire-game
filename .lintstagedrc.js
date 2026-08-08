@@ -1,7 +1,7 @@
 // @ts-check
-'use strict'
+"use strict";
 
-const path = require('path')
+const path = require("path");
 
 /**
  * lint-staged config using functions so ESLint runs in the correct workspace
@@ -10,26 +10,26 @@ const path = require('path')
  * @type {import('lint-staged').Configuration}
  */
 module.exports = {
-  'apps/frontend/**/*.{ts,tsx}': (files) => {
-    const cwd = path.join(__dirname, 'apps/frontend')
-    const relative = files.map((f) => path.relative(cwd, f)).join(' ')
+  "apps/frontend/**/*.{ts,tsx}": (files) => {
+    const cwd = path.join(__dirname, "apps/frontend");
+    const relative = files.map((f) => path.relative(cwd, f)).join(" ");
     return [
       `pnpm --filter frontend exec eslint --fix ${relative}`,
       `pnpm --filter frontend exec prettier --write ${relative}`,
-    ]
+    ];
   },
-  'apps/backend/**/*.ts': (files) => {
-    const cwd = path.join(__dirname, 'apps/backend')
-    const relative = files.map((f) => path.relative(cwd, f)).join(' ')
+  "apps/backend/**/*.ts": (files) => {
+    const cwd = path.join(__dirname, "apps/backend");
+    const relative = files.map((f) => path.relative(cwd, f)).join(" ");
     return [
       `pnpm --filter backend exec eslint --fix ${relative}`,
       `pnpm --filter backend exec prettier --write ${relative}`,
-    ]
+    ];
   },
-  'packages/**/*.{ts,tsx,js}': (files) => {
-    return [`prettier --write ${files.join(' ')}`]
+  "packages/**/*.{ts,tsx,js}": (files) => {
+    return [`pnpm --filter frontend exec prettier --write ${files.join(" ")}`];
   },
-  '*.{json,md,yml,yaml}': (files) => {
-    return [`prettier --write ${files.join(' ')}`]
+  "*.{json,md,yml,yaml}": (files) => {
+    return [`pnpm --filter frontend exec prettier --write ${files.join(" ")}`];
   },
-}
+};

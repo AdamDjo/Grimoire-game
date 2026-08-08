@@ -1,0 +1,63 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "timezone": "Europe/Paris",
+  "schedule": ["every weekend"],
+  "labels": ["type: chore"],
+  "assignees": ["AdamDjo"],
+  "packageRules": [
+    {
+      "description": "Auto-merge patch updates for all deps",
+      "matchUpdateTypes": ["patch"],
+      "automerge": true,
+      "automergeType": "pr",
+      "automergeStrategy": "squash"
+    },
+    {
+      "description": "Auto-merge minor updates for tooling",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor"],
+      "automerge": true,
+      "automergeType": "pr",
+      "automergeStrategy": "squash"
+    },
+    {
+      "description": "Group frontend deps",
+      "matchFileNames": ["apps/frontend/package.json"],
+      "groupName": "frontend dependencies",
+      "addLabels": ["domain: frontend"]
+    },
+    {
+      "description": "Group backend deps",
+      "matchFileNames": ["apps/backend/package.json"],
+      "groupName": "backend dependencies",
+      "addLabels": ["domain: backend"]
+    },
+    {
+      "description": "Group tooling deps",
+      "matchFileNames": ["package.json"],
+      "groupName": "tooling dependencies"
+    },
+    {
+      "description": "Group shared packages",
+      "matchFileNames": ["packages/**/package.json"],
+      "groupName": "shared packages",
+      "addLabels": ["domain: backend"]
+    },
+    {
+      "description": "Never auto-merge major updates",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "addLabels": ["priority: high"]
+    },
+    {
+      "description": "Pin GitHub Actions to digest",
+      "matchManagers": ["github-actions"],
+      "pinDigests": false
+    }
+  ],
+  "ignoreDeps": [],
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2,
+  "rebaseWhen": "conflicted"
+}
