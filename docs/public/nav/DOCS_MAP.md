@@ -15,12 +15,13 @@ source_of_truth: true
 
 ## Public
 
-- `current-state/PROJECT_STATUS.md` : index stable de l'état vivant.
-- `current-state/RELEASE_READINESS.md` : décision go/no-go et coordination v0.1.0.
-- `current-state/FRONTEND_STATUS.md` + `FRONTEND_NEXT.md` : état et file d'attente frontend.
-- `current-state/BACKEND_STATUS.md` + `BACKEND_NEXT.md` : état et file d'attente backend.
-- `current-state/NEXT_ACTIONS.md` : routeur de compatibilité, sans duplication de backlog.
-- `current-state/` : seules sources vivantes de statut, actions et release.
+- `current-state/PROJECT_STATUS.md` : objectif courant et décisions structurantes. **L'avancement par
+  ticket vit sur GitHub** (`gh issue list`), jamais ici.
+- `current-state/BACKEND.md` : décisions d'architecture backend/shared/IA.
+- `current-state/FRONTEND.md` : décisions d'implémentation frontend.
+- `current-state/RELEASE_READINESS.md` : décision go/no-go et bloqueurs de déploiement.
+- Consolidation du 2026-08-08 : les paires `*_STATUS`/`*_NEXT` et `NEXT_ACTIONS.md` ont été
+  supprimées — quatre fichiers décrivaient le même ticket à la main et dérivaient malgré tout.
 - `archive/plans/` : anciens plans UI Kit, Game Session, moteur et backlog Phase 1B ; historique uniquement.
 - `nav/PRIVATE_CANON_POLICY.md` : règle public/privé.
 - `nav/RAG_RULES.md` : conventions RAG/mémoire.

@@ -169,5 +169,5 @@ gagnante plutôt que de traiter ça comme une erreur.
 - Génération par tour individuel (retenu : par chunk N2 uniquement).
 - Personnalisation de l'image par joueur (délibérément partagée/anonyme).
 - Redis et pgvector : évalués et différés séparément, voir
-  [[BACKEND_STATUS]] (post-déploiement, #114) et `20-ARCHITECTURE.md:56`
+  [[BACKEND]] (post-déploiement, #114) et `20-ARCHITECTURE.md:56`
   (Redis dès 2+ instances backend, pas avant).

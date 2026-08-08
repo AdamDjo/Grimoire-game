@@ -4,7 +4,6 @@ visibility: public
 rag: true
 source_of_truth: true
 owner: release-coordination
-updated: 2026-08-06
 ---
 
 # Release Readiness — v0.1.0 (décalée) → v0.2.0
@@ -60,17 +59,14 @@ parcours (landing → auberge → session) qui ne décrira plus le jeu après la
 
 Prérequis de fait au déploiement : le jeu doit être satisfaisant avant d'être publié.
 
-| Bloc                             | État     | Référence |
-| -------------------------------- | -------- | --------- |
-| Alignement du canon              | En cours | #222      |
-| Boucle de run (contrat → retour) | À faire  | #214      |
-| Combat par tours                 | À faire  | #215      |
-| Auberge sous contrainte          | À faire  | #216      |
-| Artefacts activables             | À faire  | #217      |
-| Lisibilité (tooltips, lore)      | À faire  | #218      |
-| UI par modes                     | À faire  | #219      |
-| Compagnons                       | À faire  | #220      |
-| Exploits                         | À faire  | #221      |
+L'avancement des 8 EPICs (#214 → #221) se lit sur GitHub, jamais ici — un tableau recopié à la main
+devient faux au premier merge :
+
+```bash
+gh issue list --milestone "v0.2.1" --state all
+```
+
+Ordre de dépendance et rationale : [[PROJECT_STATUS]].
 
 ## Post-déploiement
 

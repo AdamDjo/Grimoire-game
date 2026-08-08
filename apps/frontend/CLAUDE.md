@@ -1,7 +1,8 @@
 # Frontend — Next.js App Router
 
 > Lire d'abord : `../../MEMORY.md`, puis `../../docs/00-START-HERE.md`.
-> Statut vivant : `../../docs/public/current-state/FRONTEND_STATUS.md` + `FRONTEND_NEXT.md`.
+> Décisions du domaine : `../../docs/public/current-state/FRONTEND.md`.
+> Avancement : `gh issue list --milestone "v0.2.1" --state all` (GitHub, jamais un `.md`).
 > Design/gameplay : `../../docs/public/design/GAME_DESIGN.md`.
 > Tokens UI : `../../docs/public/design/DESIGN_TOKENS.md`.
 > Architecture/API : `../../docs/public/tech/ARCHITECTURE_RULES.md`.
@@ -15,9 +16,10 @@
 
 Travailler uniquement dans `apps/frontend/`, sauf changement de contrat partagé explicitement inclus
 dans la tâche. Codex est assigné au frontend par défaut, mais Claude suit exactement ces mêmes règles
-lorsqu'il reçoit une tâche frontend. Toute PR frontend met à jour `FRONTEND_STATUS.md` et
-`FRONTEND_NEXT.md` selon l'état attendu après merge, ainsi que `RELEASE_READINESS.md` si elle change
-un bloqueur `phase: predeploy`.
+lorsqu'il reçoit une tâche frontend. **Par défaut, une PR ne modifie aucun document** : elle ferme son
+issue, c'est suffisant. Elle met à jour `FRONTEND.md` uniquement si elle a tranché un choix non évident
+(pourquoi tel comportement, telle contrainte de rendu, tel garde-fou), et `RELEASE_READINESS.md` si elle
+change un bloqueur `phase: predeploy`.
 
 ## Architecture — colocation
 

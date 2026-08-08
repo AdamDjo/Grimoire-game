@@ -1,7 +1,8 @@
 # Backend — Express + Game Master
 
 > Lire d'abord : `../../MEMORY.md`, puis `../../docs/00-START-HERE.md`.
-> Statut vivant : `../../docs/public/current-state/BACKEND_STATUS.md` + `BACKEND_NEXT.md`.
+> Décisions du domaine : `../../docs/public/current-state/BACKEND.md`.
+> Avancement : `gh issue list --milestone "v0.2.1" --state all` (GitHub, jamais un `.md`).
 > Architecture active : `../../docs/public/tech/ARCHITECTURE_RULES.md`.
 > Routeur : `../../docs/public/nav/task-router.md`.
 > Canon ciblé : `../../docs/public/nav/canon-index.md` → `../../docs/public/raw/*`.
@@ -10,9 +11,10 @@
 
 Travailler uniquement dans `apps/backend/`, sauf changement de contrat partagé dans `packages/shared/`.
 Claude est assigné à ce domaine par défaut ; Codex suit les mêmes règles s'il reçoit explicitement
-une tâche backend/shared/IA. Toute PR de ce domaine met à jour `BACKEND_STATUS.md` et
-`BACKEND_NEXT.md` selon l'état attendu après merge, ainsi que `RELEASE_READINESS.md` si elle change
-un bloqueur `phase: predeploy`.
+une tâche backend/shared/IA. **Par défaut, une PR ne modifie aucun document** : elle ferme son issue,
+c'est suffisant. Elle met à jour `BACKEND.md` uniquement si elle a tranché un choix non évident
+(pourquoi telle valeur, telle fermeture de type, tel garde-fou), et `RELEASE_READINESS.md` si elle
+change un bloqueur `phase: predeploy`.
 
 ## Principe fondamental
 

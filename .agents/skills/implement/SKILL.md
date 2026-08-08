@@ -12,8 +12,9 @@ Feature to implement: $ARGUMENTS
 
 ### Step 1: Understand
 
-- Read `MEMORY.md`, `docs/public/current-state/PROJECT_STATUS.md`, then only the matching domain pair:
-  `FRONTEND_STATUS.md` + `FRONTEND_NEXT.md` or `BACKEND_STATUS.md` + `BACKEND_NEXT.md`
+- Read `MEMORY.md`, `docs/public/current-state/PROJECT_STATUS.md`, then only the matching domain
+  document: `FRONTEND.md` or `BACKEND.md`
+- Read ticket progress from GitHub, never from a `.md`: `gh issue list --milestone "v0.2.1" --state all`
 - Read the relevant tool entry and workspace instructions: `AGENTS.md` for Codex, `CLAUDE.md` for
   Claude
 - Read existing related code to understand patterns
@@ -45,11 +46,12 @@ Feature to implement: $ARGUMENTS
 - Verify no imports are broken
 - Check that the feature integrates with existing code
 
-### Step 6: Update Progress
+### Step 6: Record Decisions
 
-- A frontend PR updates `FRONTEND_STATUS.md` and `FRONTEND_NEXT.md` in the same branch
-- A backend/shared/AI PR updates `BACKEND_STATUS.md` and `BACKEND_NEXT.md` in the same branch
-- Write the expected post-merge state; never leave branch or review status in merged documentation
+- **By default, a PR updates no document**: closing its issue is enough — GitHub carries progress
+- Update the single domain document (`FRONTEND.md` **or** `BACKEND.md`, never both) only when the PR
+  settled a non-obvious choice: why this value, this closed type, this guard
+- Never write per-ticket progress in a `.md`: it becomes wrong at the first merge
 - Update `RELEASE_READINESS.md` when a `phase: predeploy` blocker changes
-- Keep `PROJECT_STATUS.md` stable and `NEXT_ACTIONS.md` as a pointer-only compatibility router
+- Add a `docs/public/nav/log.md` entry for a pivot or a structural decision
 - Report what was done and what's next
