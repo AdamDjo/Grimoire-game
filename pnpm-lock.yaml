@@ -30,7 +30,7 @@ overrides:
   ip-address: ">=10.3.1"
   hono: ">=4.12.34"
   uuid@>=3.0.0 <11.1.1: ">=11.1.1"
-  nanoid@<3.3.17: ">=3.3.17"
+  nanoid@<3.3.17: ~3.3.17
 
 importers:
   .:
@@ -8762,12 +8762,12 @@ packages:
       }
     engines: { node: ">=8.0.0" }
 
-  nanoid@6.0.1:
+  nanoid@3.3.18:
     resolution:
       {
-        integrity: sha512-3wVS3i51pE2pi1k5FFL/95BGfVS0kSsvDVuGXHOtxox/TywUmtgq+3qiTOTbs9J7KfHaXPiN171k/A6dBnaXFw==,
+        integrity: sha512-DTg4MJbGMWkfi6VZFdNt2/caMbQy4Ou+Op/hJQvGEWcnVfoA1QA+xzRKAzw9jD6+GVOOeYr/mIcuDSdug6F6+w==,
       }
-    engines: { node: ^22 || ^24 || >=26 }
+    engines: { node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1 }
     hasBin: true
 
   napi-postinstall@0.3.4:
@@ -16667,7 +16667,7 @@ snapshots:
     dependencies:
       lru.min: 1.1.4
 
-  nanoid@6.0.1: {}
+  nanoid@3.3.18: {}
 
   napi-postinstall@0.3.4: {}
 
@@ -17064,7 +17064,7 @@ snapshots:
 
   postcss@8.5.23:
     dependencies:
-      nanoid: 6.0.1
+      nanoid: 3.3.18
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
