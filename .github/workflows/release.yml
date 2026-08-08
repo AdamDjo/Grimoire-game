@@ -67,9 +67,17 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          gh release create "${VERSION}" \
-            --title "Release ${VERSION}" \
-            --generate-notes
+          # Idempotent: a re-push on the release branch must not fail the job.
+          # Without this, the "Open PR" step below is skipped and the release stalls.
+          if gh release view "${VERSION}" >/dev/null 2>&1; then
+            echo "Release ${VERSION} already exists, retargeting it to ${GITHUB_SHA}"
+            git tag -f "${VERSION}" "${GITHUB_SHA}"
+            git push --force origin "refs/tags/${VERSION}"
+          else
+            gh release create "${VERSION}" \
+              --title "Release ${VERSION}" \
+              --generate-notes
+          fi
 
       - name: Open PR release → main
         env:
@@ -85,14 +93,23 @@ jobs:
           - GitHub Release has been published
           - Merge this PR into \`main\` to complete the release
 
-          After merging, sync \`develop\`:
+          After merging, sync \`develop\` via a PR — a squash merge rewrites history,
+          so \`git merge origin/main\` into \`develop\` would raise add/add conflicts
+          on every file. Port only the release tooling files instead:
           \`\`\`bash
-          git checkout develop && git merge origin/main && git push origin develop
+          git checkout -b chore/sync-release-${VERSION} origin/develop
+          git checkout origin/main -- apps/*/package.json packages/*/package.json
           \`\`\`"
+
+          # Only skip when the PR genuinely exists — any other failure must fail the job.
+          if [ -n "$(gh pr list --base main --head "${BRANCH}" --state open --json number --jq '.[].number')" ]; then
+            echo "PR ${BRANCH} → main already open, nothing to do"
+            exit 0
+          fi
 
           gh pr create \
             --base main \
             --head "${BRANCH}" \
             --title "release: ${VERSION}" \
             --body "${PR_BODY}" \
-            --assignee "AdamDjo" || echo "PR already exists"
+            --assignee "AdamDjo"
