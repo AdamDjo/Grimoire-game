@@ -12,7 +12,7 @@ Pour chaque tâche, lire uniquement les fichiers nécessaires.
 | Tâche                        | Lire                                                                                                        |
 | ---------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | Comprendre le projet         | `docs/00-START-HERE.md` + `docs/public/current-state/PROJECT_STATUS.md`                                     |
-| Savoir quoi faire maintenant | `gh issue list --milestone "v0.2.1"` — l'avancement vit sur GitHub, pas dans les docs                       |
+| Savoir quoi faire maintenant | `gh issue list --milestone "v0.2.0 - Roguelike jouable"` — l'avancement vit sur GitHub, pas dans les docs   |
 | Préparer une release         | `docs/public/current-state/RELEASE_READINESS.md`                                                            |
 | Travailler sur le frontend   | `docs/public/current-state/FRONTEND.md`                                                                     |
 | Travailler sur le backend    | `docs/public/current-state/BACKEND.md`                                                                      |

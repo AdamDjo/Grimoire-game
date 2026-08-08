@@ -12,12 +12,12 @@ structurantes. Il ne porte **aucun avancement par ticket** : c'est GitHub qui le
 peut pas être périmé.
 
 ```bash
-gh issue list --milestone "v0.2.1" --state all
+gh issue list --milestone "v0.2.0 - Roguelike jouable" --state all
 ```
 
 ## Objectif actuel
 
-Livrer **v0.2.1 — Roguelike jouable** : refonder la couche de jeu par-dessus le socle existant, de
+Livrer **v0.2.0 — Roguelike jouable** : refonder la couche de jeu par-dessus le socle existant, de
 sorte qu'un run ait une **destination** (contrat), une **structure** (paliers), une **décision
 centrale** (le demi-tour) et un **enjeu** (le retour). Voir `docs/public/raw/23-RUN-STRUCTURE.md`.
 

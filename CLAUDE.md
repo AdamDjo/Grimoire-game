@@ -14,7 +14,7 @@ seul. Détail : `docs/public/current-state/PROJECT_STATUS.md` § Règle de tenue
 ## Sources
 
 - Statut : `docs/public/current-state/PROJECT_STATUS.md`
-- Avancement : `gh issue list --milestone "v0.2.1" --state all` (GitHub, jamais un `.md`)
+- Avancement : `gh issue list --milestone "v0.2.0 - Roguelike jouable" --state all` (GitHub, jamais un `.md`)
 - Frontend : `docs/public/current-state/FRONTEND.md`
 - Backend/shared/IA : `docs/public/current-state/BACKEND.md`
 - Release : `docs/public/current-state/RELEASE_READINESS.md` pour une tâche `phase: predeploy`

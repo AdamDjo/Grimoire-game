@@ -20,19 +20,19 @@
 
 ## Sources de vérité
 
-| Besoin                 | Source                                                         |
-| ---------------------- | -------------------------------------------------------------- |
-| Statut actuel          | `docs/public/current-state/PROJECT_STATUS.md`                  |
-| Release / go-no-go     | `docs/public/current-state/RELEASE_READINESS.md`               |
-| Avancement des tickets | `gh issue list --milestone "v0.2.1"` — GitHub, jamais un `.md` |
-| Décisions frontend     | `docs/public/current-state/FRONTEND.md`                        |
-| Décisions back/shared  | `docs/public/current-state/BACKEND.md`                         |
-| Architecture           | `docs/public/tech/ARCHITECTURE_RULES.md`                       |
-| Stack                  | `docs/public/tech/TECH_STACK.md`                               |
-| Design                 | `docs/public/design/GAME_DESIGN.md`                            |
-| Tokens UI              | `docs/public/design/DESIGN_TOKENS.md`                          |
-| Canon                  | `docs/public/nav/canon-index.md` → `docs/public/raw/*`         |
-| Politique privé/public | `docs/public/nav/PRIVATE_CANON_POLICY.md`                      |
+| Besoin                 | Source                                                                             |
+| ---------------------- | ---------------------------------------------------------------------------------- |
+| Statut actuel          | `docs/public/current-state/PROJECT_STATUS.md`                                      |
+| Release / go-no-go     | `docs/public/current-state/RELEASE_READINESS.md`                                   |
+| Avancement des tickets | `gh issue list --milestone "v0.2.0 - Roguelike jouable"` — GitHub, jamais un `.md` |
+| Décisions frontend     | `docs/public/current-state/FRONTEND.md`                                            |
+| Décisions back/shared  | `docs/public/current-state/BACKEND.md`                                             |
+| Architecture           | `docs/public/tech/ARCHITECTURE_RULES.md`                                           |
+| Stack                  | `docs/public/tech/TECH_STACK.md`                                                   |
+| Design                 | `docs/public/design/GAME_DESIGN.md`                                                |
+| Tokens UI              | `docs/public/design/DESIGN_TOKENS.md`                                              |
+| Canon                  | `docs/public/nav/canon-index.md` → `docs/public/raw/*`                             |
+| Politique privé/public | `docs/public/nav/PRIVATE_CANON_POLICY.md`                                          |
 
 ## Invariants
 

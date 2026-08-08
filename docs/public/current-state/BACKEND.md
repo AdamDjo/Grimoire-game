@@ -9,7 +9,7 @@ default_agent: claude
 
 # Backend — état et file d'attente
 
-> **Où en est le projet ?** → `gh issue list --milestone "v0.2.1"`. GitHub porte l'avancement.
+> **Où en est le projet ?** → `gh issue list --milestone "v0.2.0 - Roguelike jouable"`. GitHub porte l'avancement.
 > Ce fichier porte les **décisions d'architecture** prises en implémentant, celles qu'un ticket fermé
 > ne conserve pas.
 

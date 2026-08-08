@@ -63,7 +63,7 @@ L'avancement des 8 EPICs (#214 → #221) se lit sur GitHub, jamais ici — un ta
 devient faux au premier merge :
 
 ```bash
-gh issue list --milestone "v0.2.1" --state all
+gh issue list --milestone "v0.2.0 - Roguelike jouable" --state all
 ```
 
 Ordre de dépendance et rationale : [[PROJECT_STATUS]].

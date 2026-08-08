@@ -14,7 +14,7 @@ Feature to implement: $ARGUMENTS
 
 - Read `MEMORY.md`, `docs/public/current-state/PROJECT_STATUS.md`, then only the matching domain
   document: `FRONTEND.md` or `BACKEND.md`
-- Read ticket progress from GitHub, never from a `.md`: `gh issue list --milestone "v0.2.1" --state all`
+- Read ticket progress from GitHub, never from a `.md`: `gh issue list --milestone "v0.2.0 - Roguelike jouable" --state all`
 - Read the relevant tool entry and workspace instructions: `AGENTS.md` for Codex, `CLAUDE.md` for
   Claude
 - Read existing related code to understand patterns

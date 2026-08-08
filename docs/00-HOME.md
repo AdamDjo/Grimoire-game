@@ -20,7 +20,7 @@ Dashboard Obsidian humain. Pour les IA, commencer par [[00-START-HERE]].
 ## Chantiers
 
 - [[public/current-state/BACKEND]] · [[public/current-state/FRONTEND]]
-- Avancement des tickets : `gh issue list --milestone "v0.2.1" --state all`
+- Avancement des tickets : `gh issue list --milestone "v0.2.0 - Roguelike jouable" --state all`
 
 ## Entrées rapides
 

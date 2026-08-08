@@ -15,7 +15,7 @@ Read only the task-relevant memory, in this order:
 1. `MEMORY.md` — stable project-memory entrypoint
 2. `docs/00-START-HERE.md` — project router
 3. `docs/public/current-state/FRONTEND.md` — frontend decisions (progress lives on GitHub:
-   `gh issue list --milestone "v0.2.1" --state all`)
+   `gh issue list --milestone "v0.2.0 - Roguelike jouable" --state all`)
 4. `apps/frontend/CLAUDE.md` — frontend implementation rules
 5. `docs/public/nav/task-router.md` — targeted design and canon routing
 
