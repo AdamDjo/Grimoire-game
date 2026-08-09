@@ -19,7 +19,7 @@ export type SessionStatus = "active" | "ended";
  * "came home empty-handed", two endings that neither tell the same story nor
  * pay the same. Sessions that ended through the old voluntary end-of-run flow
  * are `abandon` — none of them ever had a contract to fulfil.
- * @see docs/public/raw/23-RUN-STRUCTURE.md §5
+ * @see docs/canon/23-RUN-STRUCTURE.md §5
  */
 export type SessionEndReason =
   | "death"

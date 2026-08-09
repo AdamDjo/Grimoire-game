@@ -8,8 +8,8 @@
  * invents a creature or a modifier produces something this file cannot
  * represent, so it cannot reach the engine.
  *
- * @see docs/public/raw/10-COMBAT.md
- * @see docs/public/raw/03-BESTIARY.md
+ * @see docs/canon/10-COMBAT.md
+ * @see docs/canon/03-BESTIARY.md
  */
 
 import type { ActiveCondition, Attributes } from "./character.types";
@@ -151,7 +151,7 @@ export type CreatureVariant =
  * A damage expression, as `NdM` plus a flat bonus. Kept as data rather than a
  * rolled number so the backend rolls it — the AI never states damage, it only
  * narrates the result the engine already decided.
- * @see docs/public/raw/08-DICE-RESOLUTION.md §7
+ * @see docs/canon/08-DICE-RESOLUTION.md §7
  */
 export interface DamageDice {
   /** Number of dice. */

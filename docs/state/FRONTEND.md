@@ -14,7 +14,7 @@ default_agent: codex
 > conserve pas.
 
 Priorité courante : refonte roguelike (décision du 2026-08-06, cf. [[PROJECT_STATUS]]).
-Canon de référence : `docs/public/raw/23-RUN-STRUCTURE.md`, `09-ACTION-LOOP.md` §2bis.
+Canon de référence : `docs/canon/23-RUN-STRUCTURE.md`, `09-ACTION-LOOP.md` §2bis.
 
 **Décision du grilling du 2026-08-08** : le problème n'est pas l'interface narrative commune, mais
 l'absence de règles qui mettent l'histoire sous pression. Auberge, voyage, quête, donjon et retour
@@ -61,7 +61,7 @@ ticket soit livré se lit sur GitHub.
   dans l'App Router aujourd'hui. La CSP autorise l'origine Supabase Storage en `img-src` (images de
   scène #207) et `connect-src` (auth/REST navigateur). Elle **dérive de
   `NEXT_PUBLIC_SUPABASE_URL`** et doit être revérifiée à #161 pour couvrir le domaine de production
-  final. Détail `docs/public/tech/SECURITY.md`. #162
+  final. Détail `docs/tech/SECURITY.md`. #162
 - **L'inventaire est structuré selon les quatre catégories canon**, pas selon une commodité
   d'affichage. #183 #186
 - **Les scènes utilisent une bibliothèque pré-générée de 45 à 60 images.** Deux ou trois variantes
@@ -71,7 +71,7 @@ ticket soit livré se lit sur GitHub.
 
 ## Dette et suivis connus
 
-- **#218 — les textes de lisibilité existent déjà** dans `docs/public/raw/04-ATTRIBUTES.md` et n'ont
+- **#218 — les textes de lisibilité existent déjà** dans `docs/canon/04-ATTRIBUTES.md` et n'ont
   **jamais** été câblés à l'UI (tooltips SANG/SOUFFLE/CENDRE, Calamine, jauges, conditions). C'est de
   la valeur joueur déjà écrite et non livrée.
 - **#217 — coût en Calamine et usages restants doivent être visibles _avant_ activation**, pas après.

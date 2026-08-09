@@ -1,11 +1,11 @@
 # Backend — Express + Game Master
 
 > Lire d'abord : `../../MEMORY.md`, puis `../../docs/00-START-HERE.md`.
-> Décisions du domaine : `../../docs/public/current-state/BACKEND.md`.
+> Décisions du domaine : `../../docs/state/BACKEND.md`.
 > Avancement : `gh issue list --milestone "v0.2.1 - Roguelike jouable" --state all` (GitHub, jamais un `.md`).
-> Architecture active : `../../docs/public/tech/ARCHITECTURE_RULES.md`.
-> Routeur : `../../docs/public/nav/task-router.md`.
-> Canon ciblé : `../../docs/public/nav/canon-index.md` → `../../docs/public/raw/*`.
+> Architecture active : `../../docs/tech/RULES.md`.
+> Routeur : `../../docs/task-router.md`.
+> Canon ciblé : `../../docs/task-router.md` → `../../docs/canon/*`.
 
 ## Scope
 
@@ -18,7 +18,7 @@ change un bloqueur `phase: predeploy`.
 
 ## Principe fondamental
 
-Suivre `../../docs/public/tech/ARCHITECTURE_RULES.md`.
+Suivre `../../docs/tech/RULES.md`.
 
 ## Architecture cible
 
@@ -35,7 +35,7 @@ src/
 
 ## Règles absolues
 
-- **Lire le canon `docs/public/raw/` AVANT de coder toute mécanique de jeu** (dés, DC, dégâts, survie, conditions, économie…). Jamais de constante « provisoire, à valider plus tard » : si le canon n'a pas été lu, la valeur n'est pas écrite. Voir `../../docs/public/nav/PRIVATE_CANON_POLICY.md`. Le canon est versionné → lisible directement dans tout worktree.
+- **Lire le canon `docs/canon/` AVANT de coder toute mécanique de jeu** (dés, DC, dégâts, survie, conditions, économie…). Jamais de constante « provisoire, à valider plus tard » : si le canon n'a pas été lu, la valeur n'est pas écrite. Le canon est versionné → lisible directement dans tout worktree.
 - Zod validation sur toutes les routes.
 - Réponses API : `{ success: boolean, data?: T, error?: string }`.
 - Types partagés dans `@grimoire/shared`, jamais dupliqués.
@@ -46,7 +46,7 @@ src/
 
 ## Canon à lire selon tâche
 
-Utiliser `../../docs/public/nav/task-router.md`.
+Utiliser `../../docs/task-router.md`.
 
 ## Tests
 

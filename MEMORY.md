@@ -14,12 +14,12 @@ produit.
 ## Lecture minimale
 
 1. `docs/00-START-HERE.md`
-2. `docs/public/current-state/PROJECT_STATUS.md`
+2. `docs/state/PROJECT_STATUS.md`
 3. **Avancement des tickets** : `gh issue list --milestone "v0.2.1 - Roguelike jouable" --state all` — jamais un `.md`
-4. Domaine concerné : `docs/public/current-state/BACKEND.md` ou `FRONTEND.md`
-5. `docs/public/current-state/RELEASE_READINESS.md` uniquement pour le pré-déploiement ou une release
-6. `docs/public/nav/task-router.md` pour charger le canon ciblé
-7. `docs/public/nav/AI_WORKFLOW.md` pour la politique de mémoire et des skills versionnés
+4. Domaine concerné : `docs/state/BACKEND.md` ou `FRONTEND.md`
+5. `docs/state/RELEASE_READINESS.md` uniquement pour le pré-déploiement ou une release
+6. `docs/task-router.md` pour charger le canon ciblé
+7. `docs/tech/AI_SETUP.md` pour la politique de mémoire et des skills versionnés
 
 ## Attribution des agents
 
@@ -30,5 +30,5 @@ produit.
   non évident. Une PR de routine ne modifie aucun document.
 - Ne jamais faire modifier les mêmes fichiers par deux agents en parallèle.
 
-`docs/public/raw/16-MEMORY.md` décrit la mémoire narrative du jeu, pas la mémoire de travail des
+`docs/canon/16-MEMORY.md` décrit la mémoire narrative du jeu, pas la mémoire de travail des
 agents. L'avancement vit sur GitHub ; les fichiers `current-state` portent les décisions.

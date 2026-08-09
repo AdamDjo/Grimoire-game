@@ -1,9 +1,9 @@
 # Shared Package Agent Instructions
 
 > Lire d'abord : `../../MEMORY.md`, puis `../../docs/00-START-HERE.md`.
-> Décisions du domaine : `../../docs/public/current-state/BACKEND.md`.
+> Décisions du domaine : `../../docs/state/BACKEND.md`.
 > Avancement : `gh issue list --milestone "v0.2.1 - Roguelike jouable" --state all` (GitHub, jamais un `.md`).
-> Contrats actifs : `../../docs/public/tech/ARCHITECTURE_RULES.md`.
+> Contrats actifs : `../../docs/tech/RULES.md`.
 
 ## Scope
 
@@ -52,7 +52,7 @@ src/
 - Before implementing a new feature in backend/frontend, define types here first
 - When a backend/frontend change requires a shared contract change
 - When adding new game constants (items, skills, etc.)
-- For Velkhar gameplay, read targeted canon through `../../docs/public/nav/task-router.md` before changing constants.
+- For Velkhar gameplay, read targeted canon through `../../docs/task-router.md` before changing constants.
 
 ## Testing
 

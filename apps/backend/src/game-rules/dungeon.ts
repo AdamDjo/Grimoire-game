@@ -11,7 +11,7 @@ import {
 /**
  * Rooms traversed per floor on the way down. Constant across depths: what grows
  * with depth is danger and reward, never length — the 2h30 ceiling is hard.
- * @see docs/public/raw/23-RUN-STRUCTURE.md §1, §2
+ * @see docs/canon/23-RUN-STRUCTURE.md §1, §2
  */
 export const ROOMS_PER_FLOOR = 3
 
@@ -31,7 +31,7 @@ export const RETURN_ROOMS_PER_FLOOR = 1
  * 3 rooms of return = 12 rooms for its ~45 min target. Deeper contracts then
  * land under their own targets (5 floors ≈ 75 min ≤ 90, 7 floors ≈ 105 ≤ 150),
  * which is what the table asks — those are ceilings, not quotas to fill.
- * @see docs/public/raw/23-RUN-STRUCTURE.md §1 "Barème de durée"
+ * @see docs/canon/23-RUN-STRUCTURE.md §1 "Barème de durée"
  */
 export const MINUTES_PER_ROOM = 3.75
 
@@ -50,7 +50,7 @@ const BOSS_FLOOR_THRESHOLD = 5
  * Out-of-range floors clamp rather than throw: this feeds an image cache, and
  * a bad picture must never be able to fail a turn.
  *
- * @see docs/public/raw/03-BESTIARY.md §6bis
+ * @see docs/canon/03-BESTIARY.md §6bis
  */
 export function depthBandOf(depth: number): DepthBand {
   if (!Number.isFinite(depth) || depth <= 0) return 'surface'

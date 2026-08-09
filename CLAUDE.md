@@ -9,21 +9,19 @@ deux domaines sans besoin transverse explicite.
 
 **GitHub porte l'avancement, les docs portent les décisions.** Une PR de routine ne modifie aucun
 document ; une PR qui a tranché un choix non évident l'inscrit dans le fichier de son domaine, un
-seul. Détail : `docs/public/current-state/PROJECT_STATUS.md` § Règle de tenue des docs.
+seul. Détail : `docs/state/PROJECT_STATUS.md` § Règle de tenue des docs.
 
 ## Sources
 
-- Statut : `docs/public/current-state/PROJECT_STATUS.md`
+- Statut : `docs/state/PROJECT_STATUS.md`
 - Avancement : `gh issue list --milestone "v0.2.1 - Roguelike jouable" --state all` (GitHub, jamais un `.md`)
-- Frontend : `docs/public/current-state/FRONTEND.md`
-- Backend/shared/IA : `docs/public/current-state/BACKEND.md`
-- Release : `docs/public/current-state/RELEASE_READINESS.md` pour une tâche `phase: predeploy`
-- Routeur : `docs/public/nav/task-router.md`
-- Architecture : `docs/public/tech/ARCHITECTURE_RULES.md`
-- Stack : `docs/public/tech/TECH_STACK.md`
-- Canon : `docs/public/nav/canon-index.md`
-- RAG : `docs/public/nav/RAG_RULES.md`
-- Skills globaux : `docs/public/nav/AI_WORKFLOW.md`
+- Décisions frontend : `docs/state/FRONTEND.md`
+- Décisions backend/shared/IA : `docs/state/BACKEND.md`
+- Release : `docs/state/RELEASE_READINESS.md` pour une tâche `phase: predeploy`
+- Routeur canon : `docs/task-router.md` → `docs/canon/*`
+- Règles d'architecture : `docs/tech/RULES.md`
+- Architecture frontend, tokens, UI Kit : `docs/tech/FRONTEND.md`
+- Setup outillage IA : `docs/tech/AI_SETUP.md`
 
 ## App Docs
 

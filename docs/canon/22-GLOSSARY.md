@@ -46,7 +46,7 @@ Objet narratif unique transmis du perso mort au prochain perso (héritage). Seul
 
 **Brume dorée** _🌍 Lore_
 Phénomène mystique du Makhzen : brume scintillante qui apparaît au crépuscule et porte les Souvenirs des morts. Associée au passage vers l'au-delà et à la magie de mémoire.
-→ [GAME_DESIGN §4](../docs/GAME_DESIGN.md), [14-META-WORLD](14-META-WORLD.md)
+→ `docs/canon/`, [14-META-WORLD](14-META-WORLD.md)
 ⚠️ Pas une mécanique de jeu directe — c'est un élément d'ambiance + de lore.
 
 ## C
@@ -58,7 +58,7 @@ Coût magique unifié de Velkhar. Chaque action magique consomme de la Calamine 
 
 **Calcinés (Les)** _🌍 Lore_
 Êtres tordus par un excès de Calamine — anciens mages, fanatiques, victimes de rituels ratés. Forme ennemie récurrente. Hybrides humain / cendre / pierre. Souvent muets, parfois prophétiques.
-→ [GAME_DESIGN §4](../docs/GAME_DESIGN.md), [10-COMBAT](10-COMBAT.md)
+→ `docs/canon/`, [10-COMBAT](10-COMBAT.md)
 ⚠️ Lore distinct des Calmes (peuple Cendreur) — phonétique proche, sens opposés.
 
 **Cendre** _⚙️ Mécanique_
@@ -68,11 +68,11 @@ Une des 3 stats du triptyque (🔥 CENDRE). Pilote : charisme, foi, commandement
 
 **Cendreurs** _🌍 Lore_
 Peuple mystique des hauts plateaux volcaniques. Voix elliptique, foi profonde dans la combustion sacrée, gardiens de rituels Calamine. Variante PNJ : voix mystique, métaphores.
-→ [GAME_DESIGN §5](../docs/GAME_DESIGN.md), [15-GAME-MASTER §1](15-GAME-MASTER.md)
+→ `docs/canon/`, [15-GAME-MASTER §1](15-GAME-MASTER.md)
 
 **Changepeau** _🌍 Lore_
 Peuple nomade aux racines animales (mythologie de la métamorphose). Voix elliptique, phrases courtes, métaphores du vivant.
-→ [GAME_DESIGN §5](../docs/GAME_DESIGN.md), [15-GAME-MASTER §1](15-GAME-MASTER.md)
+→ `docs/canon/`, [15-GAME-MASTER §1](15-GAME-MASTER.md)
 
 **Chronique (la Chronique)** _⚙️ Mécanique + 💼 Produit_
 Récit littéraire de 800-1200 mots généré par l'IA à la fin de chaque run (mort ou choix de fin). Inclut titre, corps en prose, illustration générée (FLUX schnell gratuit / FLUX dev Premium). **Asset d'acquisition viral** : URL publique partageable. Gratuite pour tous les tiers (le texte est identique).
@@ -150,7 +150,7 @@ Méthode d'authentification : email envoyé avec lien unique (pas de mot de pass
 
 **Makhzen** _🌍 Lore_
 Le continent désertique unique de Velkhar. Mot d'origine arabe = _"l'entrepôt"_, _"le réservoir caché"_. Désigne le territoire ET son rapport au secret enfoui.
-→ [GAME_DESIGN §1-§4](../docs/GAME_DESIGN.md)
+→ `docs/canon/`
 ⚠️ "Velkhar" = nom du monde / "Makhzen" = nom du continent.
 
 **Marcheur-du-Sel** _🌍 Lore + ⚙️ Mécanique_
@@ -238,7 +238,7 @@ _"Aucune décision design ne peut augmenter le coût IA moyen par run de plus de
 
 **Rivain** _🌍 Lore_
 Peuple des oasis fertiles, érudits et marchands. Voix PNJ lyrique, métaphores fleuves.
-→ [GAME_DESIGN §5](../docs/GAME_DESIGN.md), [15-GAME-MASTER §1](15-GAME-MASTER.md)
+→ `docs/canon/`, [15-GAME-MASTER §1](15-GAME-MASTER.md)
 
 **Run** _⚙️ Mécanique_
 Une session de jeu complète de 2h30 maximum. Elle commence à l'Auberge, devient mécaniquement active
@@ -251,7 +251,7 @@ Chronique.
 
 **Sahélin** _🌍 Lore_
 Peuple guerrier des bordures arides du Makhzen. Voix PNJ laconique, phrases courtes.
-→ [GAME_DESIGN §5](../docs/GAME_DESIGN.md), [15-GAME-MASTER §1](15-GAME-MASTER.md)
+→ `docs/canon/`, [15-GAME-MASTER §1](15-GAME-MASTER.md)
 
 **SANG** _⚙️ Mécanique_
 Une des 3 stats du triptyque (🩸 SANG). Pilote : combat, survie, force, intimidation. Mod −3 à +4. **PV = 10 + SANG.**
@@ -287,7 +287,7 @@ Pages hostées Stripe pour le paiement et la gestion d'abonnement. Aucune carte 
 
 **Thérien** _🌍 Lore_
 Peuple militariste des cités fortifiées. Voix PNJ militaire, ordres concis, métaphores du fer.
-→ [GAME_DESIGN §5](../docs/GAME_DESIGN.md), [15-GAME-MASTER §1](15-GAME-MASTER.md)
+→ `docs/canon/`, [15-GAME-MASTER §1](15-GAME-MASTER.md)
 
 **Tisse-Verbe** _🌍 Lore + ⚙️ Mécanique_
 Une des 4 vocations V1. **Seul à pouvoir éveiller les artefacts** (révéler leur pouvoir). Tisseur de parole et de sens caché. Stat pilote dominant : CENDRE.
@@ -309,8 +309,8 @@ Une des 4 vocations V1. Sentinelle mystique, lecteur de signes, gardien des seui
 → [06-VOCATIONS](06-VOCATIONS.md)
 
 **Velkhar** _🌍 Lore_
-Nom du **monde** unique de GRIMOIRE V1. Continent désertique = le **Makhzen**. Source de vérité produit canonique dans `docs/public/raw/`.
-→ [GAME_DESIGN](../../public/design/GAME_DESIGN.md), [AGENTS.md projet](../../../AGENTS.md)
+Nom du **monde** unique de GRIMOIRE V1. Continent désertique = le **Makhzen**. Source de vérité produit canonique dans `docs/canon/`.
+→ `docs/canon/`, [AGENTS.md projet](../../../AGENTS.md)
 ⚠️ "Velkhar" = monde / "Makhzen" = continent. Strict.
 
 **Voix (3 voix)** _🤖 IA / Tech_
@@ -351,7 +351,7 @@ Pour éviter la dérive sémantique avec les premières versions du GDD ou des i
 ## Références croisées globales
 
 - → [01-PILLARS](01-PILLARS.md) — vision produit
-- → [GAME_DESIGN.md](../docs/GAME_DESIGN.md) — design global Velkhar (régions, peuples, lore détaillé)
+- → `docs/canon/` — design global Velkhar (régions, peuples, lore détaillé)
 - → [CLAUDE.md](../../CLAUDE.md) — règles projet + sources de vérité
 - → [\_STATUS.md](_STATUS.md) — état Phase actuelle
 - → Tous les fichiers GDD numérotés (05 à 22)

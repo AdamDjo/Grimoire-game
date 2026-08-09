@@ -2,7 +2,7 @@ import type { CounterCatalogItem, CounterItemId } from "../types/counter.types";
 
 /**
  * The Comptoir's closed catalogue. Prices are canon
- * (`docs/public/raw/11-INVENTORY-ECONOMY.md` §2, "Dépenses") — never invented,
+ * (`docs/canon/11-INVENTORY-ECONOMY.md` §2, "Dépenses") — never invented,
  * never tuned without updating the canon table first.
  *
  * | Canon entry                                     | Cost  |

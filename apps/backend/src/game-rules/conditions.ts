@@ -12,7 +12,7 @@ const hasCondition = (conditions: ActiveCondition[], id: ConditionId): boolean =
 
 /**
  * [BACKEND] conditions applied automatically on threshold crossing, never proposed by the AI.
- * @see docs/public/raw/06-SURVIVAL.md §2 "Les deux familles de conditions"
+ * @see docs/canon/06-SURVIVAL.md §2 "Les deux familles de conditions"
  */
 export interface BackendConditionTriggerInput {
   survival: SurvivalStats
@@ -116,7 +116,7 @@ const CRITICAL_GAUGE_NAME: Record<'thirst' | 'hunger' | 'energy', Record<'fr' | 
  * player-facing transparency). Non-cumulative: multiple severe conditions and/or
  * multiple critical gauges still yield a single cause string — the player never
  * stacks Désavantage twice.
- * @see docs/public/raw/08-DICE-RESOLUTION.md §5, docs/public/raw/06-SURVIVAL.md §1
+ * @see docs/canon/08-DICE-RESOLUTION.md §5, docs/canon/06-SURVIVAL.md §1
  */
 export function computeDisadvantage(
   conditions: ActiveCondition[],
@@ -163,7 +163,7 @@ export function applyAiCondition(
   ]
 }
 
-/** Max Calamine gained from a single AI-proposed source in one turn. @see docs/public/raw/06-SURVIVAL.md §4 */
+/** Max Calamine gained from a single AI-proposed source in one turn. @see docs/canon/06-SURVIVAL.md §4 */
 export const CALAMINE_DELTA_CAP = 20
 
 /** Calamine tiers (06-SURVIVAL §4). `dead` is the 100 transformation threshold, not a narrative tier. */
@@ -186,7 +186,7 @@ export function calamineTier(calamine: number): CalamineTier {
  * or non-finite values. There is no passive drain and no canon source lowers
  * Calamine via `apply_condition` — only positive deltas from a validated
  * narrative source are meaningful here.
- * @see docs/public/raw/06-SURVIVAL.md §4
+ * @see docs/canon/06-SURVIVAL.md §4
  */
 export function clampCalamineDelta(delta: number): number {
   if (!Number.isFinite(delta) || delta <= 0) return 0

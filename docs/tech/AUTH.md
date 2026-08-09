@@ -114,5 +114,5 @@ jamais seulement `typeof === 'string'`.
 
 ## Sources liées
 
-- Règles d'architecture : [[ARCHITECTURE_RULES]]
-- Statut projet : [[../current-state/PROJECT_STATUS]]
+- Règles d'architecture : [[RULES]]
+- Statut projet : [[../state/PROJECT_STATUS]]

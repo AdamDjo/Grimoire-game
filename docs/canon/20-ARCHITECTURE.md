@@ -30,7 +30,7 @@
 - **Framework** : Next.js 15 (App Router)
 - **Runtime** : React 19
 - **Langage** : TypeScript strict
-- **Styling** : Tailwind CSS 4 (tokens désertiques cf. [GAME_DESIGN.md §7](../docs/GAME_DESIGN.md))
+- **Styling** : Tailwind CSS 4 (tokens désertiques cf. `docs/canon/`)
 - **State client** : Zustand (UI state) + React Query (data fetching)
 - **Polices** : Cinzel (titres) · EB Garamond (corps narratif) · Outfit (UI/data)
 - **Hébergement** : Vercel (free tier — 100 GB bandwidth/mois suffit V1)
@@ -641,7 +641,7 @@ EpisodeRPG-game/
 
 ### Source de vérité produit
 
-- **GDD canon Velkhar** : `docs/public/raw/` (25 fichiers Markdown, publics et versionnés)
+- **GDD canon Velkhar** : `docs/canon/` (25 fichiers Markdown, publics et versionnés)
 - Toute divergence avec le GDD → le GDD gagne (cf. CLAUDE.md racine)
 
 ---

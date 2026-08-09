@@ -17,10 +17,10 @@ export type SceneType =
   | "shop"
   | "rest";
 
-/** Canon biome, drives survival narration. @see docs/public/raw/06-SURVIVAL.md §5 */
+/** Canon biome, drives survival narration. @see docs/canon/06-SURVIVAL.md §5 */
 export type Biome = "tissan" | "doigts" | "rivage" | "marais_lekh" | "coeur";
 
-/** Canon dungeon archetype, or generic outdoor. @see docs/public/raw/03-BESTIARY.md §9 */
+/** Canon dungeon archetype, or generic outdoor. @see docs/canon/03-BESTIARY.md §9 */
 export type LieuType =
   | "plein_air"
   | "ruines_archontiques"
@@ -38,8 +38,8 @@ export type LieuType =
  * (03-BESTIARY §6bis), so the picture darkens on exactly the floors where the
  * fauna does.
  *
- * @see docs/public/raw/03-BESTIARY.md §6bis
- * @see docs/public/raw/23-RUN-STRUCTURE.md §2
+ * @see docs/canon/03-BESTIARY.md §6bis
+ * @see docs/canon/23-RUN-STRUCTURE.md §2
  */
 export type DepthBand =
   /** Floor 0 — the inn and the world above. The only band that is not a descent. */
@@ -89,7 +89,7 @@ export interface Scene {
   sessionId: string;
   turnNumber: number;
   narrative: string;
-  /** Resolved URL from the shared scene-image cache, if resolved for this chunk. @see docs/public/tech/DYNAMIC_SCENE_IMAGES.md */
+  /** Resolved URL from the shared scene-image cache, if resolved for this chunk. @see docs/tech/SCENE_IMAGES.md */
   imageUrl?: string;
   imagePrompt?: string;
   choices: Choice[];
@@ -123,14 +123,14 @@ export interface SceneResponse {
    * renders this as given and infers nothing: the depth, the mode, the cost of
    * getting home and whether descending is still allowed are all decided by
    * the backend.
-   * @see docs/public/raw/23-RUN-STRUCTURE.md §3
+   * @see docs/canon/23-RUN-STRUCTURE.md §3
    */
   run?: RunSnapshot;
   /**
    * The fight in progress, if any. Absent outside combat mode. Like `run`, the
    * client renders this as given: armour class, damage and the end of the
    * fight are all arbitrated by the backend, never recomputed here.
-   * @see docs/public/raw/10-COMBAT.md §3
+   * @see docs/canon/10-COMBAT.md §3
    */
   combat?: CombatSnapshot;
 }
@@ -138,7 +138,7 @@ export interface SceneResponse {
 /**
  * The run state projected to the client alongside every scene — everything the
  * turn-back panel needs to be drawn without computing a single rule.
- * @see docs/public/raw/23-RUN-STRUCTURE.md §3, §4.1
+ * @see docs/canon/23-RUN-STRUCTURE.md §3, §4.1
  */
 export interface RunSnapshot {
   contract: RunContract;
@@ -163,7 +163,7 @@ export interface RunSnapshot {
  * A condition the AI proposes to apply. Raw, unvalidated AI output — the
  * backend is the sole authority: it checks `id` against the canon whitelist
  * and narrative plausibility before applying anything.
- * @see docs/public/raw/15-GAME-MASTER.md §4.5, docs/public/raw/06-SURVIVAL.md §2
+ * @see docs/canon/15-GAME-MASTER.md §4.5, docs/canon/06-SURVIVAL.md §2
  */
 export interface ConditionProposal {
   /** Must be a canon condition id (06-SURVIVAL §2) — validated by the backend, not this type. */
@@ -183,7 +183,7 @@ export interface RestProposal {
  * Mechanical fields the AI may propose alongside its narration. The AI never
  * applies these itself — the backend validates and decides. Silent rejection
  * on validation failure: narration stays, the mechanical effect is dropped.
- * @see docs/public/raw/15-GAME-MASTER.md §4.5
+ * @see docs/canon/15-GAME-MASTER.md §4.5
  */
 export interface AiSceneProposal {
   applyCondition?: ConditionProposal;

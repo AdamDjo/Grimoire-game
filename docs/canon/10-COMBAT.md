@@ -317,7 +317,7 @@ L'IA décide du sort selon le contexte :
 > **⚖️ Correction du 2026-08-06 — le backend arbitre, l'IA habille.**
 >
 > Tel quel, ce tableau confie à l'IA une décision de vie ou de mort. C'est contraire à
-> `ARCHITECTURE_RULES` (« le backend possède toutes les règles ») **et** au principe 11
+> `docs/tech/RULES.md` (« le backend possède toutes les règles ») **et** au principe 11
 > (`01-PILLARS §9`) : une mort décidée par un modèle est par construction une mort que le joueur
 > n'a pas pu voir venir.
 >

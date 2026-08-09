@@ -31,7 +31,7 @@ const JWT_AUDIENCE = 'authenticated'
 // (= auth.users.id Supabase). DETTE ASSUMÉE V1 : vider les cookies sb-* crée un
 // nouvel id anonyme et réinitialise le quota — cap = friction pour pousser au
 // signup, pas un mur. À durcir (IP-cap / rate-limit coût) quand l'IA payante
-// remplacera le stub. Voir docs/public/tech/AUTH.md.
+// remplacera le stub. Voir docs/tech/AUTH.md.
 const ANONYMOUS_REQUEST_LIMIT = 30
 
 export async function requireAuth(req: Request, res: Response, next: NextFunction): Promise<void> {

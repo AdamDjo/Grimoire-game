@@ -26,7 +26,7 @@ L'archive V1 propose 3 types (faction, confiance individuelle, renommée publiqu
 
 ### 🏛️ Type 1 — Faction (intra-run)
 
-État du perso vis-à-vis des **4 factions majeures** (cf. [GAME_DESIGN](docs/GAME_DESIGN.md) — Culte / Guilde du Sel / Main d'Ombre / Éveilleurs) et **5 mineures** (Rénovateurs, Caravaniers Libres, Cendreurs Errants, Comptoir Thérien, Cercle des Voyants).
+État du perso vis-à-vis des **4 factions majeures** (cf. `docs/canon/` — Culte / Guilde du Sel / Main d'Ombre / Éveilleurs) et **5 mineures** (Rénovateurs, Caravaniers Libres, Cendreurs Errants, Comptoir Thérien, Cercle des Voyants).
 
 **Pas de score 0-100.** 3 paliers narratifs :
 
@@ -250,7 +250,7 @@ Repoussé V2+ :
 - → [15-GAME-MASTER §4](15-GAME-MASTER.md) — Backend valide, IA n'invente pas l'état formel
 - → [16-MEMORY §6](16-MEMORY.md) — Mécaniques Souvenirs nommés (cap 3/run)
 - → [17-RUN-CHRONICLE §3](17-RUN-CHRONICLE.md) — La Chronique mentionne actes de réputation marquants
-- → `docs/GAME_DESIGN.md` — 4 factions majeures + 5 mineures
+- → [03-FACTIONS](03-FACTIONS.md) — 4 factions majeures + 5 mineures
 - → [22-GLOSSARY](22-GLOSSARY.md) — Némésis, Souvenirs nommés, Faveurs
 
 ---

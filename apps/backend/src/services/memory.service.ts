@@ -13,7 +13,7 @@ import type { Character } from '@grimoire/shared'
 const COMPRESSION_TIMEOUT_MS = 8000
 
 /**
- * Builds the canon compression prompt (docs/public/raw/16-MEMORY.md §5).
+ * Builds the canon compression prompt (docs/canon/16-MEMORY.md §5).
  *
  * Internal memory is stored in a fixed English pivot, independent of the
  * player's narration locale (#168): summaries and facts must stay stable and

@@ -34,8 +34,8 @@ import type {
  * lean on. The AI is handed the resolved mechanical outcome and writes prose
  * for it; it never supplies a number, a hit, or a verdict.
  *
- * @see docs/public/raw/10-COMBAT.md
- * @see docs/public/raw/08-DICE-RESOLUTION.md §7
+ * @see docs/canon/10-COMBAT.md
+ * @see docs/canon/08-DICE-RESOLUTION.md §7
  */
 
 /** A d20 face. Kept separate from `rollCheck` because combat compares against

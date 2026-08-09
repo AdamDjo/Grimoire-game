@@ -2,7 +2,7 @@
  * Run structure contracts — the shape of a run: what the player sets out to do,
  * how deep they go, and how they get back.
  *
- * @see docs/public/raw/23-RUN-STRUCTURE.md
+ * @see docs/canon/23-RUN-STRUCTURE.md
  */
 
 /**

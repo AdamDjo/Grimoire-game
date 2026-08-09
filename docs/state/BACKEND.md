@@ -14,7 +14,7 @@ default_agent: claude
 > ne conserve pas.
 
 Priorité courante : refonte roguelike (décision du 2026-08-06, cf. [[PROJECT_STATUS]]).
-Canon de référence : `docs/public/raw/23-RUN-STRUCTURE.md`, `10-COMBAT.md`, `03-BESTIARY.md`.
+Canon de référence : `docs/canon/23-RUN-STRUCTURE.md`, `10-COMBAT.md`, `03-BESTIARY.md`.
 
 Ordre de dépendance produit : quête/run → combat → Auberge → artefacts → compagnons/exploits.
 Transverse à la boucle et aux exploits : la méta-progression de connaissance (`PlayerKnowledge`) persiste
@@ -121,7 +121,7 @@ calcined`. L'ancien `inn` confondait « rentré avec l'objectif » (payé) et «
   une famille et une variante connues ; il ne compose jamais une image depuis la prose IA.
 - **Fallback obligatoire.** Une clé absente retombe sur le décor de thème sans faire échouer le tour.
 - **L'image représente la scène actuelle et ne donne aucun indice sur la prochaine salle.**
-- Détail : `docs/public/tech/DYNAMIC_SCENE_IMAGES.md`.
+- Détail : `docs/tech/SCENE_IMAGES.md`.
 
 ### Sécurité et infrastructure — #162
 
@@ -140,7 +140,7 @@ calcined`. L'ancien `inn` confondait « rentré avec l'objectif » (payé) et «
 - **⚠️ Dockerfile corrigé mais non construit localement** (daemon indisponible) : `CMD` pointait sur
   `dist/index.js` alors que tsup émet `dist/index.mjs` — le conteneur aurait crashé au démarrage bien
   que l'image se construise. À confirmer au premier build Coolify. Détail
-  `docs/public/tech/SECURITY.md`.
+  `docs/tech/SECURITY.md`.
 
 ### Comptoir et préparation du départ — #249
 

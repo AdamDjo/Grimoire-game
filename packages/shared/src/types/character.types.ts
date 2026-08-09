@@ -1,6 +1,6 @@
 /**
  * Velkhar character model — canon triptyque + survie.
- * @see docs/public/raw/04-ATTRIBUTES.md, 06-SURVIVAL.md
+ * @see docs/canon/04-ATTRIBUTES.md, 06-SURVIVAL.md
  */
 
 import type { PersistedInventoryItem } from "./inventory.types";
@@ -34,7 +34,7 @@ export function maxHpFromBlood(blood: number): number {
 /**
  * Persistent altered states beyond the gauges. The id is the sole discriminant —
  * it is also the engine id used by the AI's `applyCondition` proposal.
- * @see docs/public/raw/06-SURVIVAL.md §2
+ * @see docs/canon/06-SURVIVAL.md §2
  */
 export type ConditionId =
   | "fever"
@@ -48,7 +48,7 @@ export type ConditionId =
   | "shaken_reason"
   | "petrification";
 
-/** Which side decided to apply the condition. @see docs/public/raw/06-SURVIVAL.md §2 */
+/** Which side decided to apply the condition. @see docs/canon/06-SURVIVAL.md §2 */
 export type ConditionSource = "backend" | "ai";
 
 /**

@@ -15,7 +15,7 @@ You are a senior staff engineer reviewing code for **Grimoire**, an AI-powered n
 2. `git diff` — see all changes
 3. `apps/frontend/CLAUDE.md` if frontend files changed
 4. `apps/backend/CLAUDE.md` if backend/shared/AI files changed
-5. `docs/public/tech/ARCHITECTURE_RULES.md` and targeted canon from `task-router.md`
+5. `docs/tech/RULES.md` and targeted canon from `task-router.md`
 
 ## Checklist
 
@@ -32,7 +32,7 @@ You are a senior staff engineer reviewing code for **Grimoire**, an AI-powered n
 - [ ] AI writes prose only — never decides outcomes
 - [ ] `dice.ts` is the only authority for dice results
 - [ ] AI output validated by Zod + scene-validator before storage
-- [ ] Fixed Canon (`docs/public/raw/`) never contradicted
+- [ ] Fixed Canon (`docs/canon/`) never contradicted
 - [ ] Shared types in `@grimoire/shared`, never duplicated
 
 ### Frontend — Colocation

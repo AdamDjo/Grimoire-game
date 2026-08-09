@@ -27,9 +27,9 @@ import type { CreatureId, CreatureStatBlock, CreatureVariant, DamageDice } from 
  * The two AC values the canon states outright are honoured exactly rather than
  * re-derived: crawling Calciné 12, Watcher 18.
  *
- * @see docs/public/raw/03-BESTIARY.md §2-§6ter
- * @see docs/public/raw/10-COMBAT.md §4
- * @see docs/public/raw/08-DICE-RESOLUTION.md §7
+ * @see docs/canon/03-BESTIARY.md §2-§6ter
+ * @see docs/canon/10-COMBAT.md §4
+ * @see docs/canon/08-DICE-RESOLUTION.md §7
  */
 const BESTIARY: Record<CreatureId, CreatureStatBlock> = {
   // ─── 💛 Calcinés (§2) ────────────────────────────────────────────────────

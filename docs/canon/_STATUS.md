@@ -122,7 +122,7 @@ Aucune n'est canonique. Le joueur choisit par ses actes.
 
 ## ÉTAT DU GDD
 
-### Chemin : `docs/public/raw/`
+### Chemin : `docs/canon/`
 
 ### Source importée : `/Users/adembenmessaoud/ZCodeProject/GDD/`
 
