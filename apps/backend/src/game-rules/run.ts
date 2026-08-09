@@ -3,6 +3,10 @@ import {
   CONTRACT_DURATION_MINUTES,
   MAX_CONTRACT_DEPTH,
   MIN_CONTRACT_DEPTH,
+  QUEST_DURATION_MINUTES,
+  type QuestDanger,
+  type QuestDuration,
+  type QuestFamily,
   type ReturnEstimate,
   type ReturnRisk,
   type RunContract,
@@ -48,21 +52,51 @@ export interface CarriedSupplies {
   food: number
 }
 
-/** Builds the run contract accepted at the inn. @see 23-RUN-STRUCTURE.md §1 */
+/**
+ * Builds the run contract accepted at the inn.
+ *
+ * A depth is accepted only for a dungeon: passing one with any other family is
+ * a caller bug, and silently keeping it would put floors on a contract the run
+ * loop never descends. The minutes are derived — from the depth when there is
+ * one, from the duration tag otherwise — so the two kinds of contract answer
+ * the duration question in the same unit without either inventing the other's.
+ * @see 23-RUN-STRUCTURE.md §1, §2
+ */
 export function createContract(params: {
   id: string
+  family: QuestFamily
   destination: string
-  targetDepth: ContractDepth
+  commissioner: string
+  danger: QuestDanger
+  duration: QuestDuration
+  targetDepth?: ContractDepth
   rewardGold: number
   objective: string
+  successCondition: string
+  failureConditions?: string[]
 }): RunContract {
+  if (params.family !== 'dungeon' && params.targetDepth !== undefined) {
+    throw new Error(`A ${params.family} contract has no floors: targetDepth is dungeon-only`)
+  }
+
+  const targetDepth = params.family === 'dungeon' ? params.targetDepth : undefined
+
   return {
     id: params.id,
+    family: params.family,
     destination: params.destination,
-    targetDepth: params.targetDepth,
-    targetDurationMinutes: CONTRACT_DURATION_MINUTES[params.targetDepth],
+    commissioner: params.commissioner,
+    danger: params.danger,
+    duration: params.duration,
+    ...(targetDepth === undefined ? {} : { targetDepth }),
+    targetDurationMinutes:
+      targetDepth === undefined
+        ? QUEST_DURATION_MINUTES[params.duration]
+        : CONTRACT_DURATION_MINUTES[targetDepth],
     rewardGold: params.rewardGold,
     objective: params.objective,
+    successCondition: params.successCondition,
+    failureConditions: params.failureConditions ?? [],
   }
 }
 
@@ -85,11 +119,17 @@ export function createRunState(contract: RunContract): RunState {
  * The 7-floor ceiling is enforced here as a rule, not only as a type: the
  * engine structurally cannot produce a run past `MAX_CONTRACT_DEPTH`, whatever
  * the contract asked for. Once the return is engaged, descending is over.
- * @see 23-RUN-STRUCTURE.md §1, §3
+ *
+ * A contract without floors can never descend — and the answer is `false`, not
+ * a fabricated depth: a quest that has no dungeon must not grow one because a
+ * rule needed a number (#260).
+ * @see 23-RUN-STRUCTURE.md §1, §2, §3
  */
 export function canDescend(state: RunState): boolean {
   if (state.returnEngaged) return false
-  return state.currentDepth < Math.min(state.contract.targetDepth, MAX_CONTRACT_DEPTH)
+  const targetDepth = state.contract.targetDepth
+  if (targetDepth === undefined) return false
+  return state.currentDepth < Math.min(targetDepth, MAX_CONTRACT_DEPTH)
 }
 
 /** Descends one floor, tracking the deepest point reached. No-op if forbidden. */
@@ -181,7 +221,16 @@ export function computeReturnEstimate(state: RunState, supplies: CarriedSupplies
  * @see 23-RUN-STRUCTURE.md §1
  */
 export function estimateRemainingMinutes(state: RunState): number {
-  const target = Math.min(state.contract.targetDepth, MAX_CONTRACT_DEPTH)
+  const targetDepth = state.contract.targetDepth
+
+  // No floors, no descent to price. The contract's own target is the only
+  // honest answer here — deriving one from rooms would mean inventing a
+  // dungeon under a quest that has none (#260).
+  if (targetDepth === undefined) {
+    return state.returnEngaged ? 0 : state.contract.targetDurationMinutes
+  }
+
+  const target = Math.min(targetDepth, MAX_CONTRACT_DEPTH)
   const floorsLeftToDescend = state.returnEngaged ? 0 : Math.max(0, target - state.currentDepth)
   const deepestPoint = state.returnEngaged ? state.currentDepth : target
 
