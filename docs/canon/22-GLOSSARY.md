@@ -63,7 +63,7 @@ Coût magique unifié de Velkhar. Chaque action magique consomme de la Calamine 
 
 **Cendre** _⚙️ Mécanique_
 Une des 3 stats du triptyque (🔥 CENDRE). Pilote : charisme, foi, commandement, résistance magique. Modificateur −3 à +4. Influence interactions sociales et résistance aux effets magiques.
-→ [05-STATS-AND-TRIPTYCH](05-STATS-AND-TRIPTYCH.md), [10-COMBAT](10-COMBAT.md)
+→ [04-ATTRIBUTES](04-ATTRIBUTES.md), [10-COMBAT](10-COMBAT.md)
 ⚠️ Ne pas confondre avec la **cendre** (matière physique du lore) ni avec les **Cendreurs** (peuple).
 
 **Cendreurs** _🌍 Lore_
@@ -136,7 +136,7 @@ destinations fictionnelles restent accessibles, Comptoir, L'Aveugle, Contrats et
 
 **Lame-Ombre** _🌍 Lore + ⚙️ Mécanique_
 Une des 4 vocations V1. Assassin furtif, lié aux Ombres. Stat pilote dominant : SOUFFLE.
-→ [06-VOCATIONS](06-VOCATIONS.md)
+→ [05-VOCATIONS](05-VOCATIONS.md)
 
 **Llama 3.3 70B** _🤖 IA / Tech_
 Modèle IA gratuit V1 (free tier OpenRouter), 2ᵉ de la cascade scènes.
@@ -155,7 +155,7 @@ Le continent désertique unique de Velkhar. Mot d'origine arabe = _"l'entrepôt"
 
 **Marcheur-du-Sel** _🌍 Lore + ⚙️ Mécanique_
 Une des 4 vocations V1. Nomade endurci des dunes salées, survivaliste. Stat pilote dominant : SANG.
-→ [06-VOCATIONS](06-VOCATIONS.md)
+→ [05-VOCATIONS](05-VOCATIONS.md)
 
 **Mémoire 3 niveaux** _🤖 IA / Tech_
 
@@ -255,7 +255,7 @@ Peuple guerrier des bordures arides du Makhzen. Voix PNJ laconique, phrases cour
 
 **SANG** _⚙️ Mécanique_
 Une des 3 stats du triptyque (🩸 SANG). Pilote : combat, survie, force, intimidation. Mod −3 à +4. **PV = 10 + SANG.**
-→ [05-STATS-AND-TRIPTYCH](05-STATS-AND-TRIPTYCH.md), [10-COMBAT](10-COMBAT.md)
+→ [04-ATTRIBUTES](04-ATTRIBUTES.md), [10-COMBAT](10-COMBAT.md)
 
 **Sonnet 4.6 (Claude)** _🤖 IA / Tech_
 Modèle Anthropic Premium envisagé **V2+** pour la Chronique (pas Premium-only — pour tous). Aussi envisagé pour Premium+ tier supérieur V2+.
@@ -267,7 +267,7 @@ Lancement fermé / restreint (cercle proche + early access) avant le lancement p
 
 **SOUFFLE** _⚙️ Mécanique_
 Une des 3 stats du triptyque (💨 SOUFFLE). Pilote : précision, furtivité, artisanat, éveil des artefacts. Mod −3 à +4.
-→ [05-STATS-AND-TRIPTYCH](05-STATS-AND-TRIPTYCH.md)
+→ [04-ATTRIBUTES](04-ATTRIBUTES.md)
 
 **Souvenirs (monnaie)** _⚙️ Mécanique_
 Monnaie méta utilisée chez L'Aveugle pour acheter du lore généré. Gagnés à raison de ~1-4 par run selon performance. Pas de cap de stockage (s'épuisent par usage).
@@ -291,11 +291,11 @@ Peuple militariste des cités fortifiées. Voix PNJ militaire, ordres concis, m�
 
 **Tisse-Verbe** _🌍 Lore + ⚙️ Mécanique_
 Une des 4 vocations V1. **Seul à pouvoir éveiller les artefacts** (révéler leur pouvoir). Tisseur de parole et de sens caché. Stat pilote dominant : CENDRE.
-→ [06-VOCATIONS](06-VOCATIONS.md), [11-INVENTORY-ECONOMY](11-INVENTORY-ECONOMY.md)
+→ [05-VOCATIONS](05-VOCATIONS.md), [11-INVENTORY-ECONOMY](11-INVENTORY-ECONOMY.md)
 
 **Triptyque** _⚙️ Mécanique_
 Le système de 3 stats : **🩸 SANG / 💨 SOUFFLE / 🔥 CENDRE**. Modificateurs −3 à +4. Pilote tous les jets de dés.
-→ [05-STATS-AND-TRIPTYCH](05-STATS-AND-TRIPTYCH.md)
+→ [04-ATTRIBUTES](04-ATTRIBUTES.md)
 
 ## V
 
@@ -306,11 +306,11 @@ Option future uniquement si Velkhar est saturé et si les métriques Premium le 
 
 **Veilleur** _🌍 Lore + ⚙️ Mécanique_
 Une des 4 vocations V1. Sentinelle mystique, lecteur de signes, gardien des seuils. Stat pilote dominant : SOUFFLE/CENDRE.
-→ [06-VOCATIONS](06-VOCATIONS.md)
+→ [05-VOCATIONS](05-VOCATIONS.md)
 
 **Velkhar** _🌍 Lore_
 Nom du **monde** unique de GRIMOIRE V1. Continent désertique = le **Makhzen**. Source de vérité produit canonique dans `docs/canon/`.
-→ `docs/canon/`, [AGENTS.md projet](../../../AGENTS.md)
+→ `docs/canon/`, [AGENTS.md projet](../../AGENTS.md)
 ⚠️ "Velkhar" = monde / "Makhzen" = continent. Strict.
 
 **Voix (3 voix)** _🤖 IA / Tech_
@@ -319,7 +319,7 @@ Les 3 styles d'écriture IA distincts : **Aveugle** (chaud ironique), **Narrateu
 
 **Vocation** _⚙️ Mécanique + 🌍 Lore_
 Le "rôle" du personnage. **4 vocations V1** : Marcheur-du-Sel, Lame-Ombre, Veilleur, Tisse-Verbe. Influence stats de départ, abilities, et perception PNJ.
-→ [06-VOCATIONS](06-VOCATIONS.md)
+→ [05-VOCATIONS](05-VOCATIONS.md)
 
 ## Z
 

@@ -38,7 +38,7 @@ interface ChronicleContext {
   souvenirs: { title: string; body: string }[]
 }
 
-/** Builds the exact canon Chronicle prompt (docs/private/raw/17-RUN-CHRONICLE.md §1-3). */
+/** Builds the exact canon Chronicle prompt (docs/canon/17-RUN-CHRONICLE.md §1-3). */
 function buildChroniclePrompt(context: ChronicleContext): string {
   const {
     characterName,

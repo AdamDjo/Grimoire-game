@@ -63,8 +63,8 @@ milestone dans `.github/workflows/pr.yml`.
 | Décisions backend/shared/IA          | [[BACKEND]]                 |
 | Décisions frontend                   | [[FRONTEND]]                |
 | Préparation de release               | [[RELEASE_READINESS]]       |
-| Chronologie des décisions            | [[../nav/log]]              |
-| Quel canon lire pour une tâche       | [[../nav/task-router]]      |
+| Chronologie des décisions            | [[../log]]                  |
+| Quel canon lire pour une tâche       | [[../task-router]]          |
 | Règles d'architecture                | [[../tech/RULES]]           |
 
 Attribution par défaut : Claude sur backend/shared/IA, Codex sur frontend. Une assignation explicite
@@ -103,7 +103,7 @@ ticket à la main, et dérivaient malgré tout.
 - **Pas de champ `updated:`** dans les docs d'état : il mentait
   (`FRONTEND_STATUS.md` annonçait 2026-07-26 pour un commit du 2026-08-03).
   `git log -1 --format=%cs -- <fichier>` est la seule date fiable.
-- Un pivot ou une décision structurante s'inscrit dans [[../nav/log]], qui est append-only et ne
+- Un pivot ou une décision structurante s'inscrit dans [[../log]], qui est append-only et ne
   périme donc jamais.
 
 ### Le statut apparaît dans chaque PR, sans éditer un fichier
