@@ -1,6 +1,7 @@
 import { type Request, type Response, Router } from 'express'
 
 import { prisma } from '../lib/prisma'
+import { COMBAT_STAKES, readCombatState } from '../services/combat.service'
 import {
   abandonSession,
   buildOpeningScene,
@@ -75,7 +76,16 @@ gameRouter.post('/action', async (req: Request, res: Response<ApiResponse<SceneR
     return
   }
 
-  const { sessionId, choiceId, chosenActionText, freeAction, engageReturn } = parsed.data
+  const {
+    sessionId,
+    choiceId,
+    chosenActionText,
+    freeAction,
+    engageReturn,
+    combatAction,
+    targetId,
+    fleeDirection,
+  } = parsed.data
   const userId = req.auth!.userId
 
   // Scope the session to the caller — a user can only act on their own session.
@@ -92,9 +102,21 @@ gameRouter.post('/action', async (req: Request, res: Response<ApiResponse<SceneR
     return
   }
 
+  // A turn spent in a fight takes its stakes from the fight itself, not from the
+  // choices of the scene that opened it: those choices no longer exist, so
+  // validating against them would reject every legitimate tactical action. The
+  // combat engine owns the dice from here — see resolveTurn's combat branch.
+  const inCombat = readCombatState(session) !== null
+
   // Resolve the risk from the persisted scene, never from the client. An unknown
   // choiceId is rejected outright — it must not silently degrade to a safe turn.
-  const choice = await resolveChosenChoice(sessionId, choiceId, chosenActionText, freeAction)
+  const choice = inCombat
+    ? {
+        id: choiceId ?? 'combat-action',
+        text: chosenActionText ?? freeAction ?? '',
+        ...COMBAT_STAKES,
+      }
+    : await resolveChosenChoice(sessionId, choiceId, chosenActionText, freeAction)
   if (choice === INVALID_CHOICE) {
     res.status(400).json({ success: false, error: 'Choice does not belong to the current scene' })
     return
@@ -107,6 +129,9 @@ gameRouter.post('/action', async (req: Request, res: Response<ApiResponse<SceneR
     chosenActionText,
     freeAction,
     engageReturn,
+    combatAction,
+    targetId,
+    fleeDirection,
   })
 
   res.json({ success: true, data: response })

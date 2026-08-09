@@ -146,6 +146,14 @@ model GameSession {
   /// `returned_empty` au retour.
   objectiveSecured  Boolean  @default(false)
 
+  // --- Combat par tours (#235) — @see docs/public/raw/10-COMBAT.md
+  /// État complet du combat en cours, sérialisé. Null hors combat — c'est ce
+  /// null qui dit « pas de combat », jamais un `gameMode` désynchronisé.
+  /// Persisté en entier (initiative, round, camp actif, PV et conditions de
+  /// chaque ennemi) pour qu'une reprise de session retrouve la rencontre
+  /// exactement dans l'état où elle a été quittée, sans rejouer un seul dé.
+  combatState       Json?
+
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 

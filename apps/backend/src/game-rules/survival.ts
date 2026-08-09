@@ -98,6 +98,44 @@ export function rollNeglectCalamine(
   return min + Math.floor(rng() * (max - min + 1))
 }
 
+export interface TurnUpkeepResult {
+  survival: SurvivalStats
+  /** Calamine added by prolonged neglect this turn, 0 when the streak is short. */
+  neglectCalamineDelta: number
+}
+
+/**
+ * The full per-turn survival upkeep: drain, neglect erosion, streak, and the
+ * Calamine that prolonged neglect corrodes.
+ *
+ * Extracted so that *every* kind of turn pays it, not just the exploration one.
+ * Canon says "-1 PV par tour" and "+3 à +5 Calamine par tour" without carving
+ * out an exception for fighting (§4, §59) — and a turn spent trading blows is
+ * still a turn. Leaving combat outside this cycle would have made starving free
+ * as long as the player kept swinging, which is the opposite of the pressure
+ * survival is meant to apply.
+ *
+ * Pure given `rng`, like every other rule in this folder.
+ * @see docs/public/raw/06-SURVIVAL.md §4
+ */
+export function applyTurnUpkeep(
+  stats: SurvivalStats,
+  rng: () => number = Math.random
+): TurnUpkeepResult {
+  const drained = applyTurnDrain(stats)
+  const eroded = applyNeglectErosion(drained)
+  const tracked = tickNeglectStreak(eroded)
+  const neglectCalamineDelta = rollNeglectCalamine(tracked.neglectStreak, rng)
+
+  return {
+    survival:
+      neglectCalamineDelta > 0
+        ? { ...tracked, calamine: clamp(tracked.calamine + neglectCalamineDelta, 0, 100) }
+        : tracked,
+    neglectCalamineDelta,
+  }
+}
+
 export interface DyingResolution {
   survival: SurvivalStats
   /** True once this hit is the SECOND consecutive 0-HP event — definitive death. */

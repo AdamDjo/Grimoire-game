@@ -125,13 +125,15 @@ describe('generateScene — N1 recent-turns loading', () => {
 
     await generateScene({ character, locale: 'en', sessionId: 's1' })
 
-    // A session with no run structure passes null — the prompt omits the section.
+    // A session with no run structure and no fight passes null for both — the
+    // prompt then omits those sections entirely.
     expect(buildSystemPrompt).toHaveBeenCalledWith(
       character,
       'en',
       [],
       recentTurns,
       souvenirs,
+      null,
       null
     )
   })
@@ -159,7 +161,8 @@ describe('generateScene — N1 recent-turns loading', () => {
       expect.anything(),
       expect.anything(),
       expect.anything(),
-      run
+      run,
+      null
     )
   })
 

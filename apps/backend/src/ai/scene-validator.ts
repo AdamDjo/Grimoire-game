@@ -109,6 +109,39 @@ export const aiRestRequestedSchema = z.object({
 
 export type AiRestRequested = z.infer<typeof aiRestRequestedSchema>
 
+/**
+ * Zod schema for the optional per-turn `combat_encounter` proposal (#235).
+ *
+ * Canon is explicit that a fight is "jamais activé par le joueur" — it is a
+ * narrative pivot the Game Master announces (`10-COMBAT §1`). That makes the AI
+ * the only thing that can *signal* an encounter, and it is precisely why this
+ * schema is the narrowest of the four proposals: the AI names creatures and
+ * says whether they ambushed. It supplies no HP, no AC, no damage and no
+ * initiative — those come from the bestiary, keyed by an id this schema forces
+ * to be a canon one.
+ *
+ * The count is capped at four because a camp acts as a block (§2): a larger
+ * group would not make the fight richer, only longer and more lethal without
+ * the player ever getting a decision in between.
+ *
+ * The backend re-validates every id against the *floor* the player is actually
+ * on (`creaturesForDepth`) before instantiating anything — a Watcher King
+ * proposed on floor 2 is refused, not obeyed.
+ * @see docs/public/raw/10-COMBAT.md §1, §2
+ * @see docs/public/raw/03-BESTIARY.md §6bis
+ */
+export const aiCombatEncounterSchema = z.object({
+  creatureIds: z.array(z.string().min(1)).min(1).max(4),
+  /**
+   * An ambush skips the disengagement options canon otherwise requires the AI
+   * to offer (§1). It is a fact about the fiction, not a difficulty knob.
+   */
+  ambush: z.boolean().optional(),
+  reason: z.string().min(1).max(280),
+})
+
+export type AiCombatEncounter = z.infer<typeof aiCombatEncounterSchema>
+
 export const sceneTypeSchema = z.enum(['exploration', 'combat', 'dialog', 'event', 'shop', 'rest'])
 
 export const aiSceneSchema = z.object({
@@ -130,6 +163,8 @@ export const aiSceneSchema = z.object({
   item_gained: aiItemGainedSchema.nullish().transform((v) => v ?? undefined),
   /** Optional rest proposal for this turn (#184). Some models emit `null` instead of omitting the field. */
   rest_requested: aiRestRequestedSchema.nullish().transform((v) => v ?? undefined),
+  /** Optional hostile-encounter signal for this turn (#235). Some models emit `null` instead of omitting the field. */
+  combat_encounter: aiCombatEncounterSchema.nullish().transform((v) => v ?? undefined),
 })
 
 export type AiScenePayload = z.infer<typeof aiSceneSchema>

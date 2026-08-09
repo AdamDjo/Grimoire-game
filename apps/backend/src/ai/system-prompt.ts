@@ -1,10 +1,19 @@
 import { CONDITIONS, getConditionDefinition, localeDisplayName } from '@grimoire/shared'
 
+import { creaturesForDepth, creaturesForReturn } from '../game-rules/bestiary'
 import { gaugeTier } from '../game-rules/survival'
 
 import type { ReturnWarning } from '../game-rules/run'
 import type { MemoryChunkModel, SouvenirModel } from '../generated/prisma/models'
-import type { Character, GameMode, Locale } from '@grimoire/shared'
+import type {
+  Character,
+  CombatAction,
+  CombatOutcome,
+  FleeDirection,
+  GameMode,
+  KnockoutVerdict,
+  Locale,
+} from '@grimoire/shared'
 
 /** Narrow projection of a `SceneLog` used for the N1 recent-turns window. */
 export interface RecentTurnSummary {
@@ -28,6 +37,28 @@ export interface RunPromptContext {
   returnEngaged: boolean
   /** Supply thresholds crossed this turn. Each one MUST surface in the prose. */
   warnings: ReturnWarning[]
+}
+
+/**
+ * The fight as the prompt needs to know it: a mechanical result, already
+ * resolved, handed to the AI to be given a voice.
+ *
+ * `events` are plain sentences derived from the combat log by the backend — the
+ * AI is never shown raw dice, DCs or hit points, because a model that reads a
+ * number tends to print it, and canon keeps the arithmetic off the page.
+ * @see docs/public/raw/10-COMBAT.md §3
+ */
+export interface CombatPromptContext {
+  /** The tactical action actually resolved (after any prose translation). */
+  action: CombatAction
+  round: number
+  /** What happened this turn, in order, already phrased for narration. */
+  events: string[]
+  /** Null while the fight is still running. */
+  outcome: CombatOutcome | null
+  /** How losing was arbitrated (§8), when the fight ended in defeat. */
+  knockoutVerdict?: KnockoutVerdict
+  fleeDirection?: FleeDirection
 }
 
 /**
@@ -383,6 +414,113 @@ function buildRunSection(run: RunPromptContext | null): string[] {
 }
 
 /**
+ * Tells the AI how — and only when — it may open a fight (#235).
+ *
+ * Canon puts the trigger squarely on this side: "Le combat n'est jamais activé
+ * par le joueur : c'est une bascule narrative annoncée par l'IA" (§1). So the
+ * prompt has to hand the AI a real lever, and the two rules that make that lever
+ * safe are split by nature:
+ *
+ * - **which creatures may appear** is a floor rule, and the backend enforces it
+ *   structurally in `openCombatFromEncounter`. It is still listed here because a
+ *   proposal the backend silently drops costs the player a turn where the prose
+ *   promised a fight and no fight came;
+ * - **offering a way out** is a *prose* rule (§1 "Éviter le combat"), and no
+ *   backend check can enforce it — a defusal option is a choice written one turn
+ *   earlier, so only the AI can honour it. Hence the emphasis: canon's line is
+ *   that the fight "doit être un choix — pas un funnel forcé".
+ *
+ * Omitted entirely when a fight is already running: the engine, not the
+ * narrator, decides when that one ends.
+ * @see docs/public/raw/10-COMBAT.md §1
+ * @see docs/public/raw/03-BESTIARY.md §6bis
+ */
+function buildEncounterSection(run: RunPromptContext | null, inCombat: boolean): string[] {
+  if (inCombat) return []
+
+  const available = run
+    ? run.returnEngaged
+      ? creaturesForReturn(run.maxDepthReached)
+      : creaturesForDepth(run.currentDepth)
+    : creaturesForDepth(1)
+
+  return [
+    '',
+    'Opening a fight (combat_encounter):',
+    '- A fight is never started by the player pressing a button — it is a narrative',
+    '  pivot YOU announce. Signal it with combat_encounter when the scene you just',
+    '  wrote turns hostile: an ambush, a challenge, a predator that spotted them, or',
+    '  a hostile meeting the player failed to defuse.',
+    '- Unless it is a pure ambush, the player must have been offered a way out on the',
+    '  PREVIOUS turn — fleeing, parleying, intimidating or hiding. A fight has to be',
+    '  the consequence of a choice, never a corridor with one exit. When you feel a',
+    '  fight coming, write that turn first and let them answer it.',
+    '- Set ambush: true only when the fiction genuinely gave them no such chance.',
+    '  It is not a difficulty setting: it decides who acts first, nothing else.',
+    '- Only these creatures exist here. Naming anything else cancels the fight and',
+    '  leaves your scene without the encounter it promised:',
+    ...available.map((creature) => `  - ${creature.id} — ${creature.name}`),
+    '- Name between 1 and 4 of them in creatureIds, repeating an id for a group of the',
+    '  same creature. Never state their HP, armour or damage — those are the backend’s,',
+    '  and it will contradict you. Describe what the player SEES.',
+  ]
+}
+
+/**
+ * Turns the fight the engine just resolved into prose orders.
+ *
+ * This section is the strictest in the prompt, and deliberately so: every line
+ * below is an outcome that has *already happened* in the persisted state. The
+ * AI is told what the dice said and asked to make it land — it never chooses
+ * who hit, who died, or how the fight ends. Reversing that order is the one
+ * failure mode combat cannot survive, since a narration that contradicts the
+ * state leaves the player fighting an enemy the engine has already buried.
+ * @see docs/public/raw/10-COMBAT.md §3
+ */
+function buildCombatSection(combat: CombatPromptContext | null): string[] {
+  if (!combat) return []
+
+  const lines = [
+    '',
+    'Combat resolved this turn (ALREADY DECIDED by the backend — narrate it, never re-decide it):',
+    `- The player's action: ${combat.action}. Round ${combat.round}.`,
+    ...combat.events.map((event) => `- ${event}`),
+  ]
+
+  if (combat.outcome === null) {
+    lines.push(
+      '- The fight CONTINUES. End the narration inside the fight, with the enemies still a threat.',
+      '  Do not resolve it, do not have them surrender, do not skip to the aftermath.'
+    )
+  } else if (combat.outcome === 'victory') {
+    lines.push('- The player WON. Narrate the last blow landing and the silence after it.')
+  } else if (combat.outcome === 'fled') {
+    lines.push(
+      combat.fleeDirection === 'backward'
+        ? '- The player ESCAPED and is now heading back the way they came. Narrate the retreat.'
+        : '- The player ESCAPED forward, deeper along their route. The quest continues, so does the risk.'
+    )
+  } else {
+    // §8: the backend already arbitrated what losing means. The AI narrates the
+    // verdict it is given — it never gets to decide that a downed player lives.
+    const verdict =
+      combat.knockoutVerdict === 'saved'
+        ? '- The player FELL but was PULLED OUT ALIVE by an ally. They live. Narrate the rescue.'
+        : combat.knockoutVerdict === 'captured'
+          ? '- The player FELL and was TAKEN PRISONER, not killed. Narrate the capture, not a death.'
+          : '- The player FELL and DIED. Narrate the death. Do not soften it, do not leave a way out.'
+    lines.push(verdict)
+  }
+
+  lines.push(
+    '- Never invent a hit, a wound, a death or an escape that is not listed above. Numbers stay',
+    '  out of the prose: write the blow, not the damage roll.'
+  )
+
+  return lines
+}
+
+/**
  * Builds the Game Master system prompt.
  * The AI writes narration and choice labels only; the backend owns all rules,
  * dice, stats, and canon consistency. Canon brand terms are NOT re-translated —
@@ -394,7 +532,8 @@ export function buildSystemPrompt(
   memoryChunks: MemoryChunkModel[] = [],
   recentTurns: RecentTurnSummary[] = [],
   souvenirs: SouvenirModel[] = [],
-  run: RunPromptContext | null = null
+  run: RunPromptContext | null = null,
+  combat: CombatPromptContext | null = null
 ): string {
   const languageName = localeDisplayName(locale)
 
@@ -421,6 +560,8 @@ export function buildSystemPrompt(
     ...buildRestSection(),
     ...buildDangerCrescendoSection(character),
     ...buildRunSection(run),
+    ...buildEncounterSection(run, combat !== null),
+    ...buildCombatSection(combat),
     '',
     'Respond with a single JSON object and nothing else, matching exactly:',
     '{',
@@ -432,6 +573,8 @@ export function buildSystemPrompt(
     '  "souvenir_candidate"?: { "title_suggestion": string, "body": string, "type": "npc-death"|"moral-choice"|"secret-discovery"|"boss-victory"|"strong-promise" }',
     '  "apply_condition"?: { "id": string, "reason": string, "calamineDelta"?: number }',
     '  "item_gained"?: { "name": string, "category": "equipment"|"bag"|"artifact"|"key", "slot"?: string, "effect"?: { "healAmount"?: number, "calamineReduction"?: number, "removesCondition"?: string, "damage"?: string }, "description"?: string }',
+    '  "rest_requested"?: { "type": "short"|"fire" }',
+    '  "combat_encounter"?: { "creatureIds": string[], "ambush"?: boolean, "reason": string }',
     '}',
     '',
     'turnSummary: a short factual sentence (max 200 characters) condensing what just',
@@ -454,5 +597,11 @@ export function buildSystemPrompt(
     'item_gained: OPTIONAL, omit on most turns. Only include it when the',
     'narrative you just wrote clearly has the player finding or receiving an',
     'item THIS turn. Never invent an item that was not part of the narrative.',
+    '',
+    'combat_encounter: OPTIONAL, omit on most turns. Only include it when the',
+    'scene you just wrote turns into an actual fight, under the rules above.',
+    'creatureIds must come from the list given above, 1 to 4 entries. reason:',
+    'one short sentence on what made it a fight (e.g. "the brigands were not',
+    'fooled and drew their blades").',
   ].join('\n')
 }

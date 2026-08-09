@@ -5,15 +5,7 @@ import {
   tickConditions,
 } from './conditions'
 import { rollCheck } from './dice'
-import {
-  applyNeglectErosion,
-  applyTurnDrain,
-  clearDyingOnHeal,
-  NEGLECT_STREAK_THRESHOLD,
-  resolveDying,
-  rollNeglectCalamine,
-  tickNeglectStreak,
-} from './survival'
+import { applyTurnUpkeep, clearDyingOnHeal, resolveDying } from './survival'
 
 import type {
   ActiveCondition,
@@ -117,23 +109,10 @@ export function resolveChoice({
 }: ResolveChoiceInput): ResolveChoiceResult {
   const risk: Difficulty = choice.riskLevel ?? 'safe'
 
-  const drained = applyTurnDrain(survival)
-  // -1 PV/turn while thirst or hunger sits at 0 (non-cumulative between the
-  // two), plus the consecutive-neglect counter that feeds the Calamine
-  // source below. #201.
-  const eroded = applyNeglectErosion(drained)
-  const neglectTracked = tickNeglectStreak(eroded)
-  const neglectCalamineDelta =
-    neglectTracked.neglectStreak >= NEGLECT_STREAK_THRESHOLD
-      ? rollNeglectCalamine(neglectTracked.neglectStreak, rng)
-      : 0
-  const withNeglectCalamine: SurvivalStats =
-    neglectCalamineDelta > 0
-      ? {
-          ...neglectTracked,
-          calamine: clamp(neglectTracked.calamine + neglectCalamineDelta, 0, 100),
-        }
-      : neglectTracked
+  // Drain, -1 PV/turn while thirst or hunger sits at 0 (non-cumulative between
+  // the two), the consecutive-neglect counter and the Calamine it corrodes.
+  // Shared with the combat path so a turn costs the same either way. #201, #235.
+  const { survival: withNeglectCalamine, neglectCalamineDelta } = applyTurnUpkeep(survival, rng)
 
   const consequences: ChoiceConsequence = {
     survivalChanges: {
