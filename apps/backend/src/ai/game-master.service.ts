@@ -9,7 +9,12 @@ import {
 import { callOpenRouter, type OpenRouterMessage, type OpenRouterUsage } from './openrouter.provider'
 import { buildStubScene } from './scene-stub'
 import { type AiScenePayload, validateAiScene } from './scene-validator'
-import { buildSystemPrompt, type RecentTurnSummary, type RunPromptContext } from './system-prompt'
+import {
+  buildSystemPrompt,
+  type CombatPromptContext,
+  type RecentTurnSummary,
+  type RunPromptContext,
+} from './system-prompt'
 
 import type { MemoryChunkModel, SouvenirModel } from '../generated/prisma/models'
 import type { Character, Locale } from '@grimoire/shared'
@@ -30,6 +35,13 @@ export interface GameMasterInput {
    * @see docs/public/raw/23-RUN-STRUCTURE.md §4.2
    */
   run?: RunPromptContext | null
+  /**
+   * The fight resolved this turn (#235), handed to the AI as an accomplished
+   * fact to narrate. Null outside combat. The direction of the dependency is
+   * the whole point: mechanics first, prose second — never the inverse.
+   * @see docs/public/raw/10-COMBAT.md §3
+   */
+  combat?: CombatPromptContext | null
 }
 
 /**
@@ -167,7 +179,8 @@ export async function generateScene(input: GameMasterInput): Promise<GameMasterR
         memoryChunks,
         recentTurns,
         souvenirs,
-        input.run ?? null
+        input.run ?? null,
+        input.combat ?? null
       ),
     },
     { role: 'user', content: buildUserPrompt(input) },

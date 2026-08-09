@@ -31,6 +31,26 @@ export const gameActionSchema = z.object({
    * @see docs/public/raw/23-RUN-STRUCTURE.md §4
    */
   engageReturn: z.boolean().optional(),
+  /**
+   * The tactical action, when this turn is spent in a fight (#235). Only ever a
+   * *declaration of intent*: which of the six canon actions the player pressed.
+   * Every die, DC and consequence behind it is rolled by the backend, so a
+   * forged request can pick a different action but never a better outcome.
+   *
+   * Ignored outside combat, and optional inside it — a turn taken in prose
+   * carries no `combatAction` at all and is translated server-side instead.
+   * @see docs/public/raw/10-COMBAT.md §3
+   */
+  combatAction: z
+    .enum(['attack', 'defend', 'flee', 'command', 'use_item', 'awaken_artefact'])
+    .optional(),
+  /** Which enemy the action is aimed at. The engine falls back to the first one standing. */
+  targetId: z.string().min(1).max(64).optional(),
+  /**
+   * Which way the player runs when fleeing. Backward engages the return trip;
+   * forward escapes the fight but carries on with the quest (10-COMBAT §7).
+   */
+  fleeDirection: z.enum(['forward', 'backward']).optional(),
 })
 
 export type GameActionRequest = z.infer<typeof gameActionSchema>

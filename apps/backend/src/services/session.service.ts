@@ -4,8 +4,11 @@ import {
   type ActiveCondition,
   type Attributes,
   type Choice,
+  type CombatAction,
+  type CombatState,
   type ContractDepth,
   type Difficulty,
+  type FleeDirection,
   type InventoryActionResponse,
   type InventoryItemRef,
   type Locale,
@@ -34,6 +37,15 @@ import { prisma } from '../lib/prisma'
 
 import { deriveAttributes } from './character.service'
 import { generateChronicle } from './chronicle.service'
+import {
+  openCombatFromEncounter,
+  projectCombatState,
+  readCombatState,
+  resolveCombatTurn,
+  toCombatPromptContext,
+  toCombatStatePersistence,
+  translateFreeAction,
+} from './combat.service'
 import { compressScene } from './memory.service'
 import {
   advanceRun,
@@ -447,6 +459,19 @@ export interface ResolveTurnInput {
    * @see docs/public/raw/23-RUN-STRUCTURE.md §3
    */
   engageReturn?: boolean
+  /**
+   * The tactical action pressed, when this turn is spent in a fight (#235).
+   * Absent for a turn taken in prose, which is translated server-side instead.
+   */
+  combatAction?: CombatAction
+  targetId?: string
+  fleeDirection?: FleeDirection
+  /**
+   * Dice source for the fight. Left unset in production, where the engine falls
+   * back to `Math.random`; tests pin it so a scenario asserts the wiring rather
+   * than the roll it happened to get.
+   */
+  combatRng?: () => number
 }
 
 /**
@@ -470,12 +495,167 @@ function advanceRunForTurn(
 }
 
 /**
+ * Resolves one turn spent inside a fight (#235).
+ *
+ * This is a separate path from `resolveTurn`'s d20, not a variant of it: combat
+ * carries its own dice, its own DCs and its own end conditions, all of them in
+ * `game-rules/combat.ts`. What the two paths share is the order of operations —
+ * the backend resolves everything first, and only then does the AI narrate what
+ * already happened.
+ *
+ * The tactical action comes from a button when there is one, and from prose
+ * otherwise: a free-form action is *translated* into one of the six canon
+ * actions rather than being resolved on its own terms, so the text box cannot
+ * be a cheaper way to fight than the buttons (#238 inside a fight).
+ *
+ * @see docs/public/raw/10-COMBAT.md §3, §7, §8, §9
+ */
+async function resolveCombatTurnForSession(
+  input: ResolveTurnInput,
+  state: CombatState
+): Promise<SceneResponse> {
+  const { session, character, chosenActionText, freeAction } = input
+  const { attributes, survival, activeConditions, inventory } = readCharacter(character)
+
+  // A button states its action outright; prose has to be read. Either way the
+  // resolution below is identical — same dice, same costs.
+  const translated = input.combatAction
+    ? { action: input.combatAction, fleeDirection: input.fleeDirection }
+    : translateFreeAction(freeAction ?? chosenActionText ?? '')
+
+  const turn = resolveCombatTurn({
+    state,
+    survival,
+    action: translated.action,
+    targetId: input.targetId,
+    fleeDirection: input.fleeDirection ?? translated.fleeDirection,
+    allyKind: 'human',
+    rng: input.combatRng,
+  })
+
+  // Running backward is the same pivot as the "faire demi-tour" button: it
+  // engages the return trip, irreversibly. Running forward escapes the fight
+  // and carries on with the quest, which the ordinary per-turn advance already
+  // does — so only the backward case needs an extra move here (§7).
+  const fledBackward = turn.result?.outcome === 'fled' && turn.state.fleeDirection === 'backward'
+  const run = advanceRunForTurn(session, input.engageReturn === true || fledBackward)
+
+  const gm = await generateScene({
+    character: toGmCharacter(character, attributes, turn.survival, activeConditions, inventory),
+    locale: session.locale,
+    sessionId: session.id,
+    chosenActionText,
+    freeAction,
+    run: run
+      ? {
+          destination: run.next.contract.destination,
+          objective: run.next.contract.objective,
+          targetDepth: run.next.contract.targetDepth,
+          currentDepth: run.next.currentDepth,
+          maxDepthReached: run.next.maxDepthReached,
+          mode: run.next.mode,
+          returnEngaged: run.next.returnEngaged,
+          warnings: [],
+        }
+      : null,
+    combat: toCombatPromptContext(turn.state, translated.action, turn.entriesThisTurn),
+  })
+
+  const nextTurn = session.turnNumber + 1
+  const ironGained = turn.result?.ironGained ?? 0
+
+  const scene = assembleScene({
+    payload: gm.scene,
+    sessionId: session.id,
+    turnNumber: nextTurn,
+    imageUrl: session.currentImageUrl,
+  })
+
+  // Only a definitive death ends the session. A first drop to 0 HP is the one
+  // turn of reprieve canon grants (06-SURVIVAL §7), and being captured or
+  // pulled out by an ally (§8) leaves the character alive to keep playing —
+  // the backend already arbitrated which of the three happened.
+  const endReason: SessionEndReason | null = turn.definitiveDeath ? 'death' : null
+
+  await prisma.$transaction([
+    prisma.sceneLog.create({
+      data: {
+        sessionId: session.id,
+        turnNumber: nextTurn,
+        sceneType: scene.sceneType,
+        location: scene.location,
+        narrative: scene.narrative,
+        turnSummary: gm.scene.turnSummary,
+        choices: scene.choices as unknown as object,
+        chosenChoice: input.choice.text ? (input.choice as unknown as object) : undefined,
+        source: gm.source,
+      },
+    }),
+    prisma.character.update({
+      where: { id: character.id },
+      data: {
+        hp: turn.survival.hp,
+        isDying: turn.survival.isDying,
+        // Iron is paid on the same write that clears the fight, so a reload can
+        // never bank the same corpses twice.
+        ...(ironGained > 0 ? { iron: { increment: ironGained } } : {}),
+      },
+    }),
+    prisma.gameSession.update({
+      where: { id: session.id },
+      data: {
+        turnNumber: nextTurn,
+        location: scene.location,
+        ...(run ? toRunStatePersistence(run.next) : {}),
+        // The fight's own persistence decides the mode: a finished fight clears
+        // the column and returns to exploration on this very write.
+        ...toCombatStatePersistence(turn.state),
+        ...(endReason ? { status: 'ended', endReason } : {}),
+      },
+    }),
+  ])
+
+  if (endReason) {
+    void (async () => {
+      try {
+        await generateChronicle(session.id)
+      } catch (err) {
+        console.warn(`[Chronicle] failed to generate for session ${session.id}:`, err)
+      }
+    })()
+  }
+
+  return {
+    activeConditions,
+    ...(endReason ? { endReason } : {}),
+    iron: character.iron + ironGained,
+    scene,
+    survival: turn.survival,
+    updatedStats: toStatsRecord(turn.survival),
+    updatedInventory: toInventoryRefs(inventory),
+    notifications: [],
+    source: gm.source,
+    combat: projectCombatState(turn.state, turn.result),
+    ...(run ? { run: projectRun(run.next, countCarriedSupplies(inventory)) } : {}),
+  }
+}
+
+/**
  * Resolves one turn against the persisted world-state. The backend owns every
  * mechanic: it rolls the d20 (via `resolveChoice`), applies survival + HP,
  * persists the outcome, and — on death (`hp<=0`) — ends the session with
  * `endReason='death'`. The AI only narrates. Returns the enriched `SceneResponse`.
+ *
+ * A turn taken while a fight is in progress is routed to the combat engine
+ * instead (#235): the persisted `combatState` is the sole authority on whether
+ * that is the case, never a `gameMode` string that could drift out of sync.
  */
 export async function resolveTurn(input: ResolveTurnInput): Promise<SceneResponse> {
+  const combat = readCombatState(input.session)
+  if (combat) {
+    return resolveCombatTurnForSession(input, combat)
+  }
+
   const { session, character, choice, chosenActionText, freeAction } = input
   const { attributes, survival, activeConditions, inventory } = readCharacter(character)
 
@@ -592,6 +772,28 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
   // who dies on the last climb did not come home. @see 23-RUN-STRUCTURE.md §5
   const returnEnding = run && !gameOver ? resolveReturnEnding(run.next) : null
 
+  // The AI may signal that what it just narrated turned hostile (#235). Canon
+  // makes the fight a narrative pivot the Game Master announces, never a button
+  // the player presses (10-COMBAT §1) — so the signal has to come from the AI,
+  // and the arbitration has to stay here: `openCombatFromEncounter` re-checks
+  // the creatures against the floor before anything is instantiated.
+  //
+  // A turn that already ended the run opens nothing. Persisting a fight onto a
+  // session the same write is closing would leave a session that is `ended` and
+  // in `combat` at once — and on death it would drop a reload into a fight the
+  // character did not survive to see.
+  const openedCombat =
+    !gameOver && !returnEnding && gm.scene.combat_encounter
+      ? openCombatFromEncounter({
+          encounter: gm.scene.combat_encounter,
+          run: run?.next ?? null,
+          attributes,
+          survival: restedSurvival,
+          conditions: finalConditions,
+          rng: input.combatRng,
+        })
+      : null
+
   const endReason: SessionEndReason | null = resolution.gameOver
     ? 'death'
     : calcined
@@ -636,6 +838,11 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
         turnNumber: nextTurn,
         location: scene.location,
         ...(run ? toRunStatePersistence(run.next) : {}),
+        // Switches the session into combat mode when the turn just opened a
+        // fight. `openedCombat` is null on every other turn, which this same
+        // call writes back as exploration — this path is only ever reached with
+        // no fight in progress, so clearing is a no-op rather than a risk.
+        ...toCombatStatePersistence(openedCombat),
         ...(runOver ? { status: 'ended', endReason } : {}),
       },
     }),
@@ -700,6 +907,9 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
     notifications: [],
     diceRoll: resolution.diceRoll,
     source: gm.source,
+    // The client learns it is now in a fight from the same response that
+    // narrated the pivot — it never has to poll or infer it from the prose.
+    ...(openedCombat ? { combat: projectCombatState(openedCombat) } : {}),
     // Projected from the inventory as it stands *after* the turn, so the panel
     // the player reads before deciding to descend reflects what they actually
     // carry now.

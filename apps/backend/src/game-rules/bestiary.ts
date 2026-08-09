@@ -39,6 +39,7 @@ const BESTIARY: Record<CreatureId, CreatureStatBlock> = {
     id: 'calcined_nascent',
     name: 'Calciné naissant',
     tier: 'calcined',
+    species: 'calcined',
     habitat: 'anywhere',
     behaviour: 'tragic',
     engagement: 'fight',
@@ -55,6 +56,7 @@ const BESTIARY: Record<CreatureId, CreatureStatBlock> = {
     id: 'calcined_common',
     name: 'Calciné courant',
     tier: 'calcined',
+    species: 'calcined',
     habitat: 'anywhere',
     behaviour: 'predatory',
     engagement: 'fight',
@@ -70,6 +72,7 @@ const BESTIARY: Record<CreatureId, CreatureStatBlock> = {
     id: 'calcined_ancient',
     name: 'Calciné ancien',
     tier: 'calcined',
+    species: 'calcined',
     habitat: 'anywhere',
     behaviour: 'territorial',
     engagement: 'fight',
@@ -86,6 +89,7 @@ const BESTIARY: Record<CreatureId, CreatureStatBlock> = {
     id: 'calcined_major',
     name: 'Calciné majeur',
     tier: 'calcined',
+    species: 'calcined',
     habitat: 'anywhere',
     behaviour: 'predatory',
     engagement: 'fight',
@@ -106,6 +110,7 @@ const BESTIARY: Record<CreatureId, CreatureStatBlock> = {
     id: 'ash_scorpion',
     name: 'Scorpion-à-Cendre',
     tier: 'common',
+    species: 'beast',
     habitat: 'tissan',
     behaviour: 'defensive',
     engagement: 'fight',
@@ -122,6 +127,7 @@ const BESTIARY: Record<CreatureId, CreatureStatBlock> = {
     id: 'sand_dog',
     name: 'Chien des Sables',
     tier: 'common',
+    species: 'beast',
     habitat: 'tissan',
     behaviour: 'opportunistic',
     engagement: 'fight',
@@ -136,6 +142,7 @@ const BESTIARY: Record<CreatureId, CreatureStatBlock> = {
     id: 'road_serpent',
     name: 'Serpent des Routes',
     tier: 'common',
+    species: 'beast',
     habitat: 'tissan',
     behaviour: 'opportunistic',
     engagement: 'fight',
@@ -152,6 +159,7 @@ const BESTIARY: Record<CreatureId, CreatureStatBlock> = {
     id: 'ruin_rat',
     name: 'Rat des Ruines',
     tier: 'common',
+    species: 'beast',
     habitat: 'doigts',
     behaviour: 'opportunistic',
     engagement: 'fight',
@@ -167,6 +175,7 @@ const BESTIARY: Record<CreatureId, CreatureStatBlock> = {
     id: 'stone_bat',
     name: 'Chauve-souris de Pierre',
     tier: 'common',
+    species: 'beast',
     habitat: 'doigts',
     behaviour: 'opportunistic',
     engagement: 'fight',
@@ -182,6 +191,7 @@ const BESTIARY: Record<CreatureId, CreatureStatBlock> = {
     id: 'blade_crab',
     name: 'Crabe-Lame',
     tier: 'common',
+    species: 'beast',
     habitat: 'rivage',
     behaviour: 'defensive',
     engagement: 'fight',
@@ -204,6 +214,7 @@ const BESTIARY: Record<CreatureId, CreatureStatBlock> = {
     id: 'sand_weaver',
     name: 'Tisseur de Sable',
     tier: 'rare',
+    species: 'beast',
     habitat: 'tissan',
     behaviour: 'predatory',
     engagement: 'fight',
@@ -223,6 +234,7 @@ const BESTIARY: Record<CreatureId, CreatureStatBlock> = {
     id: 'grey_wind',
     name: 'Vent-Gris',
     tier: 'rare',
+    species: 'archontic',
     habitat: 'tissan',
     behaviour: 'evental',
     engagement: 'hazard',
@@ -241,6 +253,7 @@ const BESTIARY: Record<CreatureId, CreatureStatBlock> = {
     id: 'watcher',
     name: 'Veilleur',
     tier: 'rare',
+    species: 'archontic',
     habitat: 'doigts',
     behaviour: 'territorial',
     engagement: 'fight',
@@ -258,6 +271,7 @@ const BESTIARY: Record<CreatureId, CreatureStatBlock> = {
     id: 'memory_eater',
     name: 'Mangeur de Souvenir',
     tier: 'rare',
+    species: 'beast',
     habitat: 'marais',
     behaviour: 'predatory',
     engagement: 'drain',
@@ -274,6 +288,7 @@ const BESTIARY: Record<CreatureId, CreatureStatBlock> = {
     id: 'revenant',
     name: 'Revenant',
     tier: 'rare',
+    species: 'archontic',
     habitat: 'anywhere',
     behaviour: 'tragic',
     engagement: 'fight',
@@ -292,6 +307,7 @@ const BESTIARY: Record<CreatureId, CreatureStatBlock> = {
     id: 'shore_beast',
     name: 'Bête de Rivage',
     tier: 'rare',
+    species: 'beast',
     habitat: 'rivage',
     behaviour: 'predatory',
     engagement: 'fight',
@@ -313,6 +329,7 @@ const BESTIARY: Record<CreatureId, CreatureStatBlock> = {
     id: 'heart_of_sand',
     name: 'Le Cœur de Sable',
     tier: 'legendary',
+    species: 'archontic',
     habitat: 'tissan',
     behaviour: 'territorial',
     engagement: 'fight',
@@ -329,6 +346,7 @@ const BESTIARY: Record<CreatureId, CreatureStatBlock> = {
     id: 'watcher_king',
     name: 'Le Veilleur-Roi',
     tier: 'legendary',
+    species: 'archontic',
     habitat: 'doigts',
     behaviour: 'territorial',
     engagement: 'fight',
@@ -339,6 +357,103 @@ const BESTIARY: Record<CreatureId, CreatureStatBlock> = {
     damage: { count: 2, faces: 6, bonus: 4 },
     loot: ['major_artefact', 'rare_metals'],
     minDepth: 7,
+    maxDepth: 7,
+  },
+
+  // ─── 🧍 Humans (10-COMBAT §4, §8) ────────────────────────────────────────
+  // These four are the only enemies whose AC the canon states outright, so
+  // unlike everything above, their AC is quoted rather than derived — they are
+  // the anchors the rest of the table was calibrated against.
+  //
+  // Their `tier` is the one field with no canon backing: `03-BESTIARY` never
+  // ranks humans, because they belong to the world rather than to the
+  // bestiary's danger ladder. It is set from the danger they actually pose to a
+  // starting character, which is what `tier` is used for elsewhere.
+  //
+  // `habitat: 'anywhere'` is literal, not a shrug: people are met on roads, in
+  // ruins and in towns alike. What keeps them off the deep floors is
+  // `maxDepth` — an Inquisitor patrolling floor 7 alongside a Watcher-King
+  // would be a scene the world does not support.
+  civilian: {
+    id: 'civilian',
+    name: 'Civil',
+    tier: 'common',
+    species: 'human',
+    habitat: 'anywhere',
+    // Fights only when cornered, and badly. Canon AC 8 — the floor of the
+    // whole scale, and the only enemy a starting character outclasses outright.
+    behaviour: 'defensive',
+    engagement: 'fight',
+    maxHp: 5,
+    armourClass: 8,
+    damage: { count: 1, faces: 4, bonus: 0 },
+    loot: ['basic_materials'],
+    minDepth: 1,
+    maxDepth: 2,
+  },
+  brigand: {
+    id: 'brigand',
+    name: 'Brigand',
+    tier: 'common',
+    species: 'human',
+    habitat: 'anywhere',
+    // Canon puts brigands in ambushes (§2) and in dungeon fights
+    // (11-INVENTORY §507); they pick their moment and rob rather than hunt.
+    behaviour: 'opportunistic',
+    engagement: 'fight',
+    // Canon AC 11. ~10 HP is two-to-three player turns: a fair fight, which is
+    // exactly what a road robbery should be.
+    //
+    // 1d6 with no bonus is deliberate: a brigand is met from floor 1, and the
+    // « je gère » band forbids anything that can drop an intact character in
+    // under four turns. A flat +1 would break that by itself.
+    maxHp: 10,
+    armourClass: 11,
+    damage: { count: 1, faces: 6, bonus: 0 },
+    loot: ['basic_materials', 'rare_metals'],
+    // Floor 3 up, not floor 1: an armed man who chose to rob you kills a fresh
+    // character in ~3 turns, which is the « ça coûte » band, not « je gère ».
+    minDepth: 3,
+    maxDepth: 5,
+  },
+  soldier: {
+    id: 'soldier',
+    name: 'Soldat équipé',
+    tier: 'common',
+    species: 'human',
+    habitat: 'anywhere',
+    behaviour: 'territorial',
+    engagement: 'fight',
+    // Canon AC 14. Trained and armoured: the point where a starting character
+    // stops winning by trading blows and has to use the tactical actions.
+    // 1d8 flat kills in ~2.4 turns, which is the deep end of « ça coûte »
+    // without crossing into the two-turn band reserved for floors 5+.
+    maxHp: 16,
+    armourClass: 14,
+    damage: { count: 1, faces: 8, bonus: 0 },
+    loot: ['basic_materials', 'rare_metals'],
+    minDepth: 4,
+    maxDepth: 6,
+  },
+  inquisitor: {
+    id: 'inquisitor',
+    name: 'Inquisiteur',
+    tier: 'rare',
+    species: 'human',
+    habitat: 'anywhere',
+    // Hunts undeclared Tisse-Verbe (12-NPCS §90): he comes looking for you.
+    behaviour: 'predatory',
+    engagement: 'fight',
+    // Canon AC 16 — above a Watcher's peer and second only to it. Canon also
+    // prices his purse at 50 🪙 (11-INVENTORY §120), the richest human loot.
+    maxHp: 26,
+    armourClass: 16,
+    damage: { count: 1, faces: 10, bonus: 3 },
+    loot: ['rare_metals', 'magic_components', 'minor_artefact'],
+    // Floors 5+, with the things that kill in two turns. Canon rates him the
+    // second-hardest AC in the game and a « Légendaire » DC 25 even to talk
+    // down (08-DICE §32) — meeting him early would be the unseeable death.
+    minDepth: 5,
     maxDepth: 7,
   },
 }

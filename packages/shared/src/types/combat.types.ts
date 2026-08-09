@@ -37,7 +37,7 @@ export type CreatureHabitat =
   | "anywhere";
 
 /**
- * The bestiary, closed. These 18 are *the* list — the AI draws from it and
+ * The bestiary, closed. These 22 are *the* list — the AI draws from it and
  * never adds to it.
  *
  * Not a style rule: a creature invented on the fly has no AC, no HP, no
@@ -45,7 +45,15 @@ export type CreatureHabitat =
  * cannot learn to fight it. Knowledge meta-progression only has value if the
  * creature met on run 8 is the same one met on run 3.
  *
+ * The four human entries are not decoration. `10-COMBAT §8` makes the outcome
+ * of a knockout depend on *who* was standing over the body — human captors
+ * take prisoners, beasts finish the job — so a fight with no way to express
+ * "these are people" cannot arbitrate its own death table. They also carry the
+ * canon AC figures the whole scale is anchored on (§4) and are the only
+ * enemies Intimidation reliably works on (§5).
+ *
  * @see 03-BESTIARY.md §6
+ * @see 10-COMBAT.md §4, §5, §8
  */
 export type CreatureId =
   // 💛 Calcinés — the four stages (§2)
@@ -69,7 +77,32 @@ export type CreatureId =
   | "shore_beast"
   // 🔴 Legendary bosses (§5)
   | "heart_of_sand"
-  | "watcher_king";
+  | "watcher_king"
+  // 🧍 Humans — the AC anchors of `10-COMBAT §4` and the only enemies that
+  // take prisoners rather than finishing a downed player (§8).
+  | "civilian"
+  | "brigand"
+  | "soldier"
+  | "inquisitor";
+
+/**
+ * What an enemy *is*, as a rule rather than as flavour.
+ *
+ * This exists for one reason: `10-COMBAT §8` decides a downed player's fate
+ * from who is standing over them — human enemies take a prisoner, savage ones
+ * finish the kill. Reading that off `tier` or a name would be guesswork, so the
+ * distinction is declared.
+ *
+ * `calcined` is its own species and not a kind of human on purpose. Canon calls
+ * them former humans who lost their reason (`02-WORLD-BIBLE §5`), and §8 lists
+ * them on the *savage* side of the table — they do not take prisoners. Keeping
+ * them separate also lets Intimidation apply to weak Calcinés (§5) without
+ * making them human anywhere else.
+ *
+ * @see 10-COMBAT.md §5, §8
+ * @see 02-WORLD-BIBLE.md §5
+ */
+export type CreatureSpecies = "human" | "beast" | "calcined" | "archontic";
 
 /**
  * How a creature acts, which is what the AI narrates. Behaviour is data, not
@@ -165,6 +198,7 @@ export interface CreatureStatBlock {
   /** Canon display name, in the game's French copy. */
   name: string;
   tier: CreatureTier;
+  species: CreatureSpecies;
   habitat: CreatureHabitat;
   behaviour: CreatureBehaviour;
   engagement: CreatureEngagement;
@@ -237,6 +271,43 @@ export type InitiativeSide = "player" | "enemy";
 export type CombatOutcome = "victory" | "defeat" | "fled";
 
 /**
+ * What becomes of a player dropped to 0 HP in a fight.
+ *
+ * Canon printed this as a table of what "the AI decides"; the correction of
+ * 2026-08-06 revoked that outright — a death chosen by a model is by
+ * construction a death the player could not see coming (`01-PILLARS §9`). The
+ * table stays as the **truth table**, but the backend evaluates it and the AI
+ * only writes the scene for the verdict it is handed.
+ *
+ * - `saved` — a living ally drags the body clear; the run continues, at a cost.
+ * - `captured` — human enemies take a prisoner; the player wakes in chains and
+ *   the run continues in a new scene.
+ * - `dead` — savage enemies or a hostile environment finish it; the run ends.
+ *
+ * @see 10-COMBAT.md §8
+ */
+export type KnockoutVerdict = "saved" | "captured" | "dead";
+
+/**
+ * The state the death table is evaluated against. Kept as an explicit input so
+ * the verdict is a pure function of the fight rather than of ambient context —
+ * which is what makes it testable, and what stops the AI from influencing it.
+ * @see 10-COMBAT.md §8
+ */
+export interface KnockoutContext {
+  /** Whether an ally is still standing to pull the player out. */
+  hasLivingAlly: boolean;
+  /** The enemies still alive when the player went down. */
+  survivingEnemies: CombatEnemy[];
+  /**
+   * Whether the fight is in a place that kills the helpless on its own
+   * (Ventre-Gris, marshes). Overrides captivity: nobody takes a prisoner
+   * somewhere the prisoner cannot survive.
+   */
+  isHostileEnvironment: boolean;
+}
+
+/**
  * A creature as it stands in a fight. `variant` is present from the first
  * turn, never revealed mid-fight.
  */
@@ -247,6 +318,8 @@ export interface CombatEnemy {
   /** Display name, already localised for the client. */
   name: string;
   tier: CreatureTier;
+  /** Carried onto the instance because the death table (§8) reads it. */
+  species: CreatureSpecies;
   behaviour: CreatureBehaviour;
   /** The single variant applied, if any. Never more than one. */
   variant: CreatureVariant | null;
@@ -258,6 +331,13 @@ export interface CombatEnemy {
   combatConditions: CombatConditionId[];
   /** False once dropped — kept in the list so the log stays readable. */
   isAlive: boolean;
+  /**
+   * True when this enemy broke and ran rather than died — canon has a shaken
+   * enemy under AC 11 flee outright (§5). It is out of the fight like a corpse,
+   * but it is not one: it leaves nothing behind to loot (§9).
+   * @see 10-COMBAT.md §5, §9
+   */
+  hasRouted?: boolean;
 }
 
 /** The player's side of the fight. */
@@ -313,6 +393,32 @@ export interface CombatState {
   log: CombatLogEntry[];
   /** Null while the fight is still running. */
   outcome: CombatOutcome | null;
+  /**
+   * Which way the player ran, set alongside `outcome: "fled"`. Held on the state
+   * and not only on the result because the direction decides what the *run*
+   * does next — forward continues the contract, backward starts the climb home
+   * — and a session resumed mid-escape must still know which.
+   * @see 10-COMBAT.md §7
+   */
+  fleeDirection?: FleeDirection;
+  /**
+   * Set only when the player was dropped, alongside `outcome: "defeat"`. The
+   * backend computes it from the death table; the AI narrates it.
+   * @see 10-COMBAT.md §8
+   */
+  knockoutVerdict?: KnockoutVerdict;
+  /** Whether this fight happens somewhere that kills the helpless (§8). */
+  isHostileEnvironment: boolean;
+  /** Whether an ally fights alongside the player — read by the death table. */
+  hasLivingAlly: boolean;
+  /**
+   * Set for exactly one enemy turn after a botched Intimidation: canon has the
+   * camp galvanised and attacking with the upper hand. Optional because an
+   * ordinary fight never sets it, and a resumed session must read its absence
+   * as "not galvanised" rather than as missing data.
+   * @see 10-COMBAT.md §5
+   */
+  galvanised?: boolean;
 }
 
 /** How a fight concluded, with what it cost and what it paid. */
@@ -322,6 +428,12 @@ export interface CombatResult {
   ironGained: number;
   /** Set when the fight ended by fleeing — the run needs to know which way. */
   fleeDirection?: FleeDirection;
+  /**
+   * Set on defeat. Only `dead` ends the run: `saved` and `captured` hand the
+   * story back to the session with the player still alive.
+   * @see 10-COMBAT.md §8
+   */
+  knockoutVerdict?: KnockoutVerdict;
 }
 
 /**

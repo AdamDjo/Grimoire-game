@@ -28,8 +28,9 @@ function turnsToKillPlayer(creature: CreatureStatBlock): number {
 }
 
 describe('bestiary coverage', () => {
-  it('holds exactly the 18 canon creatures', () => {
-    expect(listCreatures()).toHaveLength(18)
+  it('holds exactly the 22 canon entries: 18 creatures and 4 humans', () => {
+    expect(listCreatures()).toHaveLength(22)
+    expect(listCreatures().filter((c) => c.species === 'human')).toHaveLength(4)
   })
 
   it('keys every entry by its own id', () => {
@@ -59,10 +60,15 @@ describe('bestiary coverage', () => {
 })
 
 describe('canon figures taken verbatim', () => {
-  // These two are printed in the canon enemy AC table; they are not ours to tune.
+  // These are printed in the canon enemy AC table; they are not ours to tune.
+  // The four humans are the table's own anchors, so every one of them is locked.
   it('keeps the AC values the canon states outright', () => {
     expect(getCreature('calcined_common').armourClass).toBe(12)
     expect(getCreature('watcher').armourClass).toBe(18)
+    expect(getCreature('civilian').armourClass).toBe(8)
+    expect(getCreature('brigand').armourClass).toBe(11)
+    expect(getCreature('soldier').armourClass).toBe(14)
+    expect(getCreature('inquisitor').armourClass).toBe(16)
   })
 
   it('keeps AC inside the canon 8-18 bracket for everything fightable', () => {
