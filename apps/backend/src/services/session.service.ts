@@ -32,7 +32,7 @@ import { resolveChoice } from '../game-rules/consequences'
 import { acquireItem, equipItem, unequipItem, useItem } from '../game-rules/inventory'
 import { applyRest } from '../game-rules/rest'
 import { createContract, createRunState, engageReturn } from '../game-rules/run'
-import { clearDyingOnHeal } from '../game-rules/survival'
+import { applyTurnUpkeep, clearDyingOnHeal } from '../game-rules/survival'
 import { prisma } from '../lib/prisma'
 
 import { deriveAttributes } from './character.service'
@@ -523,9 +523,19 @@ async function resolveCombatTurnForSession(
     ? { action: input.combatAction, fleeDirection: input.fleeDirection }
     : translateFreeAction(freeAction ?? chosenActionText ?? '')
 
+  // A round of fighting is a turn like any other, and canon prices it the same:
+  // the drain, the -1 PV of an empty gauge and the Calamine of prolonged neglect
+  // all apply (06-SURVIVAL §4). Without this, starving would cost nothing for as
+  // long as the player kept swinging.
+  //
+  // Paid BEFORE the blows are traded, so a character the thirst finishes off
+  // drops to 0 on the upkeep and lets `resolveCombatTurn` arbitrate the dying
+  // rule on the real HP — rather than dying twice over in the same turn.
+  const upkeep = applyTurnUpkeep(survival, input.combatRng)
+
   const turn = resolveCombatTurn({
     state,
-    survival,
+    survival: upkeep.survival,
     action: translated.action,
     targetId: input.targetId,
     fleeDirection: input.fleeDirection ?? translated.fleeDirection,
@@ -594,8 +604,16 @@ async function resolveCombatTurnForSession(
     prisma.character.update({
       where: { id: character.id },
       data: {
+        // The whole survival sheet, not just HP: the upkeep above moved the
+        // gauges, and persisting only the damage would let a fight rewind the
+        // thirst it just cost.
         hp: turn.survival.hp,
+        thirst: turn.survival.thirst,
+        hunger: turn.survival.hunger,
+        energy: turn.survival.energy,
+        calamine: turn.survival.calamine,
         isDying: turn.survival.isDying,
+        neglectStreak: turn.survival.neglectStreak,
         // Iron is paid on the same write that clears the fight, so a reload can
         // never bank the same corpses twice.
         ...(ironGained > 0 ? { iron: { increment: ironGained } } : {}),

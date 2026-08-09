@@ -304,12 +304,16 @@ describe('persisting the fight', () => {
 
   // Leaving a decided fight in the column would let a reload pay it out twice.
   it('clears the column with DbNull once the fight is decided', async () => {
-    // A lone frail enemy against a good roll settles it in one exchange.
+    // A lone frail enemy against a pinned high roll settles it in one exchange.
+    // The rng is injected rather than left to Math.random: the turn now draws
+    // for the survival upkeep before the blows, so an ambient random would make
+    // "the rat dies this round" a coin flip instead of a fact.
     await resolveTurn({
       session: session(combatState({ enemies: [enemy('ruin_rat', { hp: 1, armourClass: 1 })] })),
       character,
       choice,
       combatAction: 'attack',
+      combatRng: () => 0.95,
     })
 
     const data = lastSessionUpdate()
@@ -323,6 +327,8 @@ describe('persisting the fight', () => {
       character,
       choice,
       combatAction: 'attack',
+      // Pinned so the rat reliably falls this round — see the DbNull test above.
+      combatRng: () => 0.95,
     })
 
     // The exact figure is rolled (`rollIron`), so asserting it would be testing
@@ -570,5 +576,66 @@ describe('opening a fight from the scene the AI just wrote (§1)', () => {
     await resolveTurn({ session: sessionOnARun(null), character, choice: walkOn })
 
     expect(sceneLogCreate).toHaveBeenCalledTimes(1)
+  })
+})
+
+/**
+ * Canon prices a turn the same whether it is spent walking or fighting: the
+ * drain, the -1 PV of an empty gauge and the Calamine of prolonged neglect all
+ * apply (06-SURVIVAL §4). Without this the fight would be a shelter from
+ * survival — starving costs nothing for as long as the player keeps swinging.
+ */
+describe('paying the survival upkeep inside a fight (§4)', () => {
+  /** The fighter, with whichever gauges the scenario needs emptied. */
+  function fighter(overrides: Partial<DbCharacter>): DbCharacter {
+    return { ...character, ...overrides } as unknown as DbCharacter
+  }
+
+  /** One round of defending — the action that takes no swing of its own. */
+  async function fightOneRound(who: DbCharacter): Promise<void> {
+    await resolveTurn({
+      session: session(combatState()),
+      character: who,
+      choice,
+      combatAction: 'defend',
+      combatRng: () => 0.5,
+    })
+  }
+
+  it('drains the gauges on a turn spent fighting', async () => {
+    await fightOneRound(character)
+
+    // TURN_DRAIN: thirst -4, hunger -3, energy -4 from the fixture's 100.
+    expect(lastCharacterUpdate()).toMatchObject({ thirst: 96, hunger: 97, energy: 96 })
+  })
+
+  // The erosion is what a starving fighter would otherwise dodge entirely: the
+  // engine only ever touches HP through blows, so nothing else would take it.
+  it('erodes a point of HP while a gauge sits at zero', async () => {
+    await fightOneRound(fighter({ thirst: 0 }))
+
+    expect(lastCharacterUpdate().thirst).toBe(0)
+    expect(lastCharacterUpdate().neglectStreak).toBe(1)
+    // Whatever the jackal did this round, one extra point came off the top.
+    expect(lastCharacterUpdate().hp).toBeLessThanOrEqual(19)
+  })
+
+  // Past the streak threshold, neglect starts corroding Calamine — the one
+  // Calamine source that is backend-triggered rather than AI-proposed.
+  it('corrodes Calamine once neglect has run past the threshold', async () => {
+    await fightOneRound(fighter({ hunger: 0, neglectStreak: 5 }))
+
+    // 0.5 lands mid-range in NEGLECT_CALAMINE_RANGE (3..5) → +4 on the fixture's 30.
+    expect(lastCharacterUpdate().calamine).toBe(34)
+    expect(lastCharacterUpdate().neglectStreak).toBe(6)
+  })
+
+  // A fed fighter pays the drain and nothing more: the streak stays reset and
+  // the Calamine untouched, since it never rises on its own (§174).
+  it('leaves a fed fighter alone beyond the ordinary drain', async () => {
+    await fightOneRound(character)
+
+    expect(lastCharacterUpdate().neglectStreak).toBe(0)
+    expect(lastCharacterUpdate().calamine).toBe(30)
   })
 })
