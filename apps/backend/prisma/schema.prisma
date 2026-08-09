@@ -157,12 +157,29 @@ model GameSession {
   /// Contrat accepté. Null tant que le joueur n'est pas parti — et sur toutes
   /// les sessions antérieures à #228, qui restent jouables sans structure de run.
   contractId        String?
+  /// Famille de quête (dungeon | escort | investigation | hunt | recovery |
+  /// negotiation | dilemma). Seule `dungeon` descend : c'est elle qui décide si
+  /// `contractTargetDepth` a un sens (#260).
+  contractFamily      String?
   contractDestination String?
+  /// Commanditaire : qui a posé le contrat, et qui paie au retour.
+  contractCommissioner String?
+  /// Tag de danger affiché sur le tableau (easy | medium | hard). Le chiffrage
+  /// qui le produit reste interne et n'est jamais envoyé au client.
+  contractDanger      String?
+  /// Tag de durée affiché (short | long | major). Les minutes restent internes.
+  contractDuration    String?
   /// Profondeur visée (3 | 5 | 7). Plafonnée à 7 par le moteur, jamais par la DB.
+  /// Null pour toute quête non-donjon — une escorte n'a pas de paliers, et
+  /// aucune règle n'a le droit de lui en inventer.
   contractTargetDepth Int?
   /// Fer payé par le commanditaire au retour, si le joueur revient.
   contractRewardGold  Int?
   contractObjective   String?
+  /// Ce que le backend vérifie pour déclarer le contrat rempli.
+  contractSuccessCondition String?
+  /// Toutes les façons de perdre le contrat. Vide = seule la mort le fait échouer.
+  contractFailureConditions String[] @default([])
   /// Palier courant. 0 = en surface (auberge ou sorti du donjon).
   currentDepth      Int      @default(0)
   /// Palier le plus profond atteint ce run. Ne redescend jamais — c'est lui qui

@@ -51,10 +51,38 @@ function contractedSession(overrides: Partial<GameSession> = {}): GameSession {
   return session({
     gameMode: 'exploration',
     contractId: 'contract-1',
+    contractFamily: 'dungeon',
     contractDestination: 'Les Salines Basses',
+    contractCommissioner: 'La guilde du sel',
+    contractDanger: 'medium',
+    contractDuration: 'long',
     contractTargetDepth: 5,
     contractRewardGold: 120,
     contractObjective: 'Rapporter le sceau du contremaître',
+    contractSuccessCondition: 'Le sceau est dans le sac au retour',
+    contractFailureConditions: [],
+    ...overrides,
+  })
+}
+
+/**
+ * A row as #228 wrote it: a dungeon, with none of the #260 columns. These
+ * sessions are live in the database and must keep reading back.
+ */
+function legacySession(overrides: Partial<GameSession> = {}): GameSession {
+  return session({
+    gameMode: 'exploration',
+    contractId: 'contract-1',
+    contractFamily: null,
+    contractDestination: 'Les Salines Basses',
+    contractCommissioner: null,
+    contractDanger: null,
+    contractDuration: null,
+    contractTargetDepth: 5,
+    contractRewardGold: 120,
+    contractObjective: 'Rapporter le sceau du contremaître',
+    contractSuccessCondition: null,
+    contractFailureConditions: [],
     ...overrides,
   })
 }
@@ -73,10 +101,15 @@ function runState(targetDepth: ContractDepth = 5): RunState {
   return createRunState(
     createContract({
       id: 'contract-1',
+      family: 'dungeon',
       destination: 'Les Salines Basses',
+      commissioner: 'La guilde du sel',
+      danger: 'medium',
+      duration: 'long',
       targetDepth,
       rewardGold: 120,
       objective: 'Rapporter le sceau du contremaître',
+      successCondition: 'Le sceau est dans le sac au retour',
     })
   )
 }
@@ -223,11 +256,64 @@ describe('readRunState', () => {
 
     expect(toContractPersistence(state.contract)).toEqual({
       contractId: source.contractId,
+      contractFamily: source.contractFamily,
       contractDestination: source.contractDestination,
+      contractCommissioner: source.contractCommissioner,
+      contractDanger: source.contractDanger,
+      contractDuration: source.contractDuration,
       contractTargetDepth: source.contractTargetDepth,
       contractRewardGold: source.contractRewardGold,
       contractObjective: source.contractObjective,
+      contractSuccessCondition: source.contractSuccessCondition,
+      contractFailureConditions: source.contractFailureConditions,
     })
+  })
+})
+
+describe('readContract — quest families (#260)', () => {
+  it('reads a floorless contract back with no depth at all', () => {
+    const contract = readContract(
+      contractedSession({ contractFamily: 'escort', contractTargetDepth: null })
+    )
+
+    expect(contract).not.toBeNull()
+    expect(contract!.family).toBe('escort')
+    expect(contract!.targetDepth).toBeUndefined()
+    // Derived from the duration tag, since there are no floors to derive from.
+    expect(contract!.targetDurationMinutes).toBe(90)
+  })
+
+  it('rejects a dungeon whose depth went missing', () => {
+    // Reading it back as a floorless run would hand the player a dungeon they
+    // can never descend — better no contract than a silently broken one.
+    expect(readContract(contractedSession({ contractTargetDepth: null }))).toBeNull()
+  })
+
+  it('rejects a floorless family that somehow carries a depth', () => {
+    expect(readContract(contractedSession({ contractFamily: 'negotiation' }))).toBeNull()
+  })
+
+  it('reads a pre-#260 row as the dungeon it was, with neutral tags', () => {
+    const contract = readContract(legacySession())
+
+    expect(contract).not.toBeNull()
+    expect(contract!.family).toBe('dungeon')
+    expect(contract!.targetDepth).toBe(5)
+    // Nothing was recorded, so the tags land mid-scale rather than underselling.
+    expect(contract!.danger).toBe('medium')
+    expect(contract!.duration).toBe('long')
+    expect(contract!.commissioner).toBe('Commanditaire inconnu')
+    // The objective is the only success condition such a row ever had.
+    expect(contract!.successCondition).toBe('Rapporter le sceau du contremaître')
+  })
+
+  it('falls back to mid-scale tags when a stored value is unreadable', () => {
+    const contract = readContract(
+      contractedSession({ contractDanger: 'catastrophique', contractDuration: 'éternelle' })
+    )
+
+    expect(contract!.danger).toBe('medium')
+    expect(contract!.duration).toBe('long')
   })
 })
 

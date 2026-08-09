@@ -30,7 +30,12 @@ export interface RecentTurnSummary {
 export interface RunPromptContext {
   destination: string
   objective: string
-  targetDepth: number
+  /**
+   * Floors the contract targets. Undefined for every non-dungeon family, which
+   * has none — the section then simply omits the depth rather than naming a
+   * number the run does not have (#260).
+   */
+  targetDepth?: number
   currentDepth: number
   maxDepthReached: number
   mode: GameMode
@@ -372,7 +377,10 @@ function buildRunSection(run: RunPromptContext | null): string[] {
   const lines = [
     '',
     'Run structure (the backend owns every value below — never contradict it):',
-    `- Contract: "${run.objective}" at ${run.destination}. Target depth: ${run.targetDepth} floors.`,
+    run.targetDepth === undefined
+      ? `- Contract: "${run.objective}" at ${run.destination}. This contract has no floors —` +
+        ' never speak of descending, of paliers, or of a bottom to reach.'
+      : `- Contract: "${run.objective}" at ${run.destination}. Target depth: ${run.targetDepth} floors.`,
     `- The character stands on floor ${run.currentDepth}, deepest reached ${run.maxDepthReached}.`,
     `- Current mode: ${run.mode}.`,
   ]

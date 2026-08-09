@@ -17,6 +17,9 @@ import type { Character as DbCharacter, GameSession } from '../generated/prisma/
 import type {
   ContractDepth,
   GameMode,
+  QuestDanger,
+  QuestDuration,
+  QuestFamily,
   ReturnEstimate,
   RunContract,
   RunState,
@@ -85,6 +88,32 @@ export function hasProvisionsInBag(inventory: PersistedInventoryItem[]): boolean
 }
 
 /**
+ * Commissioner recorded for contracts written before #260, which had no such
+ * column. The board needs someone to name; an honest "unknown" beats inventing
+ * a patron the player never met.
+ */
+const UNKNOWN_COMMISSIONER = 'Commanditaire inconnu'
+
+const QUEST_DANGERS: readonly QuestDanger[] = ['easy', 'medium', 'hard']
+const QUEST_DURATIONS: readonly QuestDuration[] = ['short', 'long', 'major']
+
+/**
+ * Reads a persisted danger tag, defaulting to the middle of the scale.
+ *
+ * Pre-#260 rows have none, and an unreadable value is treated the same way: a
+ * tag the board cannot parse must not silently read as `easy`, which would
+ * undersell a run the player is about to accept.
+ */
+function readDanger(value: string | null): QuestDanger {
+  return QUEST_DANGERS.includes(value as QuestDanger) ? (value as QuestDanger) : 'medium'
+}
+
+/** Reads a persisted duration tag. Same defaulting rule as `readDanger`. */
+function readDuration(value: string | null): QuestDuration {
+  return QUEST_DURATIONS.includes(value as QuestDuration) ? (value as QuestDuration) : 'long'
+}
+
+/**
  * True when the session carries an accepted contract. Sessions created before
  * #228 — and any session still at the inn — have none, and must keep working:
  * the run structure degrades to "no structure", never to a crash.
@@ -93,7 +122,6 @@ export function hasContract(session: GameSession): boolean {
   return (
     session.contractId !== null &&
     session.contractDestination !== null &&
-    session.contractTargetDepth !== null &&
     session.contractRewardGold !== null &&
     session.contractObjective !== null
   )
@@ -101,21 +129,39 @@ export function hasContract(session: GameSession): boolean {
 
 /**
  * Reads the persisted contract back into its shared shape. Returns null when
- * the session has no contract, or when the stored depth is not a canon depth —
- * a corrupted row must not be able to fabricate an 11-floor run.
+ * the session has no contract, or when a dungeon's stored depth is not a canon
+ * depth — a corrupted row must not be able to fabricate an 11-floor run.
+ *
+ * A null depth is not corruption on its own: every family but `dungeon` is
+ * meant to have none. It is only rejected when the family says there should be
+ * floors — a dungeon that lost its depth would otherwise read back as a run
+ * the player can never descend (#260).
  */
 export function readContract(session: GameSession): RunContract | null {
   if (!hasContract(session)) return null
 
+  // Sessions written before #260 carry no family and were all dungeons.
+  const family = (session.contractFamily ?? 'dungeon') as QuestFamily
   const depth = session.contractTargetDepth
-  if (depth === null || !isValidContractDepth(depth)) return null
+
+  if (family === 'dungeon') {
+    if (depth === null || !isValidContractDepth(depth)) return null
+  } else if (depth !== null) {
+    return null
+  }
 
   return createContract({
     id: session.contractId!,
+    family,
     destination: session.contractDestination!,
-    targetDepth: depth,
+    commissioner: session.contractCommissioner ?? UNKNOWN_COMMISSIONER,
+    danger: readDanger(session.contractDanger),
+    duration: readDuration(session.contractDuration),
+    ...(depth === null ? {} : { targetDepth: depth }),
     rewardGold: session.contractRewardGold!,
     objective: session.contractObjective!,
+    successCondition: session.contractSuccessCondition ?? session.contractObjective!,
+    failureConditions: session.contractFailureConditions,
   })
 }
 
@@ -164,20 +210,33 @@ export function toRunStatePersistence(state: RunState): RunStatePersistence {
 /** The contract columns, for the moment a run is started from the inn. */
 export interface ContractPersistence {
   contractId: string
+  contractFamily: QuestFamily
   contractDestination: string
-  contractTargetDepth: ContractDepth
+  contractCommissioner: string
+  contractDanger: QuestDanger
+  contractDuration: QuestDuration
+  /** Null for every family but `dungeon` — see `RunContract.targetDepth`. */
+  contractTargetDepth: ContractDepth | null
   contractRewardGold: number
   contractObjective: string
+  contractSuccessCondition: string
+  contractFailureConditions: string[]
 }
 
 /** Flattens a contract into the session columns it owns. */
 export function toContractPersistence(contract: RunContract): ContractPersistence {
   return {
     contractId: contract.id,
+    contractFamily: contract.family,
     contractDestination: contract.destination,
-    contractTargetDepth: contract.targetDepth,
+    contractCommissioner: contract.commissioner,
+    contractDanger: contract.danger,
+    contractDuration: contract.duration,
+    contractTargetDepth: contract.targetDepth ?? null,
     contractRewardGold: contract.rewardGold,
     contractObjective: contract.objective,
+    contractSuccessCondition: contract.successCondition,
+    contractFailureConditions: contract.failureConditions,
   }
 }
 

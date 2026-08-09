@@ -13,11 +13,51 @@
 export type GameMode = "inn" | "exploration" | "combat" | "return";
 
 /**
+ * The kinds of work a commissioner puts on the board.
+ *
+ * Closed on purpose: the engine branches on this, so a family nobody wrote
+ * rules for must not typecheck. `dungeon` is the only one that descends —
+ * every other family resolves without floors, which is exactly why
+ * `RunContract.targetDepth` is optional (#260).
+ * @see 23-RUN-STRUCTURE.md §2
+ */
+export type QuestFamily =
+  | "dungeon"
+  | "escort"
+  | "investigation"
+  | "hunt"
+  | "recovery"
+  | "negotiation"
+  | "dilemma";
+
+/**
  * Contract depth in floors. The 7-floor ceiling is hard: no contract may
  * exceed it, because run length is capped at 2h30 (01-PILLARS §2).
+ * Only meaningful for `family: "dungeon"`.
  * @see 23-RUN-STRUCTURE.md §1
  */
 export type ContractDepth = 3 | 5 | 7;
+
+/**
+ * Danger tag shown on the contract board.
+ *
+ * Deliberately neutral game vocabulary rather than in-world phrasing: the
+ * player must be able to read the arbitrage at a glance, and a fictional label
+ * ("routine", "funeste") reads as flavour, not as a warning. The numeric
+ * weighting behind it stays backend-side and is never sent to the client.
+ * @see 23-RUN-STRUCTURE.md §2
+ */
+export type QuestDanger = "easy" | "medium" | "hard";
+
+/**
+ * Duration tag shown on the contract board — an evening's shape, not a clock.
+ *
+ * Qualitative on purpose: minutes are an engine estimate that drifts with how
+ * the player actually plays, so publishing them would turn an honest hint into
+ * a promise the engine cannot keep. `targetDurationMinutes` stays internal.
+ * @see 23-RUN-STRUCTURE.md §1, §2
+ */
+export type QuestDuration = "short" | "long" | "major";
 
 /** Hard ceiling on generated floors. The engine cannot produce more. */
 export const MAX_CONTRACT_DEPTH = 7;
@@ -37,22 +77,60 @@ export const CONTRACT_DURATION_MINUTES: Record<ContractDepth, number> = {
 };
 
 /**
- * What the player accepts at the inn before setting out. A run is never
- * "an adventure" — it has a destination, a depth, and a payout owed only on
- * return.
+ * Minutes a non-dungeon contract is expected to run, by duration tag.
+ *
+ * A dungeon derives its minutes from its depth; the other families have no
+ * floors to derive from, so the tag *is* the source. The values line up with
+ * `CONTRACT_DURATION_MINUTES` so both kinds of contract answer the same
+ * question in the same units.
  * @see 23-RUN-STRUCTURE.md §1
+ */
+export const QUEST_DURATION_MINUTES: Record<QuestDuration, number> = {
+  short: 45,
+  long: 90,
+  major: 150,
+};
+
+/**
+ * What the player accepts at the inn before setting out. A run is never
+ * "an adventure" — it has a commissioner, a destination, a payout owed only on
+ * return, and conditions under which it fails.
+ *
+ * `targetDepth` is optional because the board is not a list of dungeons: an
+ * escort or a negotiation has no floors, and forcing a depth on it would make
+ * the engine lie about what the player accepted (#260).
+ * @see 23-RUN-STRUCTURE.md §1, §2
  */
 export interface RunContract {
   id: string;
+  /** What kind of work this is. Decides which rules the run runs under. */
+  family: QuestFamily;
   /** Location archetype the contract sends the player to. @see 03-BESTIARY.md */
   destination: string;
-  targetDepth: ContractDepth;
-  /** Target duration in minutes, derived from `targetDepth`. */
+  /** Who put the contract on the board, and who pays on return. */
+  commissioner: string;
+  /** Danger tag shown on the board. The weighting behind it stays internal. */
+  danger: QuestDanger;
+  /** Duration tag shown on the board. Minutes stay internal. */
+  duration: QuestDuration;
+  /**
+   * Floors to descend. Present only for `family: "dungeon"` — no other family
+   * has floors, and no rule may invent a depth for one that lacks it.
+   */
+  targetDepth?: ContractDepth;
+  /**
+   * Target duration in minutes: derived from `targetDepth` for a dungeon, from
+   * `duration` otherwise. Internal — never shown as a number to the player.
+   */
   targetDurationMinutes: number;
   /** What the commissioner pays on a successful return, in gold. */
   rewardGold: number;
   /** Player-facing description of what must be brought back. */
   objective: string;
+  /** What the backend checks to call the contract fulfilled. */
+  successCondition: string;
+  /** Every way the contract can be lost. Empty means death is the only failure. */
+  failureConditions: string[];
 }
 
 /** What a room holds. @see 23-RUN-STRUCTURE.md §2 */

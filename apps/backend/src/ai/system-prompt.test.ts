@@ -359,6 +359,20 @@ describe('run section', () => {
     expect(prompt).toContain('the backend owns every value below')
   })
 
+  it('names the target depth of a dungeon contract', () => {
+    // Kept deliberately: the narrator is trusted with the floor count so the
+    // descent can be written with a sense of how far down it goes (#260).
+    expect(promptWithRun(run())).toContain('Target depth: 5 floors')
+  })
+
+  it('omits the depth entirely for a contract that has no floors', () => {
+    // An escort has no paliers, and a narrator handed a number invents one.
+    const prompt = promptWithRun(run({ targetDepth: undefined }))
+
+    expect(prompt).not.toContain('Target depth')
+    expect(prompt).toContain('This contract has no floors')
+  })
+
   it('forbids a climactic set-piece on the way home', () => {
     // §4 — the return may kill, but never by ambush.
     const prompt = promptWithRun(run({ returnEngaged: true, mode: 'return' }))

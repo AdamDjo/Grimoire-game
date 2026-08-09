@@ -7,6 +7,9 @@ import {
   type CombatAction,
   type CombatState,
   type ContractDepth,
+  type QuestDanger,
+  type QuestDuration,
+  type QuestFamily,
   type Difficulty,
   type FleeDirection,
   type InventoryActionResponse,
@@ -1046,20 +1049,28 @@ async function endSession(
 /**
  * Starts a run: the player accepts a contract at the inn and sets out.
  *
- * The contract is built by the backend from a validated depth — the client
- * never supplies a duration or a room count, both of which are derived. Only an
- * active session still at the inn may leave; a session already underground
- * cannot silently swap contracts mid-run.
- * @see docs/public/raw/23-RUN-STRUCTURE.md §1
+ * The contract is built by the backend from validated input — the client never
+ * supplies a duration in minutes or a room count, both of which are derived.
+ * A depth arrives only with a `dungeon` family, the schema having already
+ * rejected any other pairing (#260). Only an active session still at the inn
+ * may leave; a session already underground cannot silently swap contracts
+ * mid-run.
+ * @see docs/public/raw/23-RUN-STRUCTURE.md §1, §2
  */
 export async function startRun(
   sessionId: string,
   userId: string,
   contract: {
+    family: QuestFamily
     destination: string
-    targetDepth: ContractDepth
+    commissioner: string
+    danger: QuestDanger
+    duration: QuestDuration
+    targetDepth?: ContractDepth
     rewardGold: number
     objective: string
+    successCondition: string
+    failureConditions: string[]
   }
 ): Promise<SceneResponse | null> {
   const session = await prisma.gameSession.findFirst({
@@ -1070,7 +1081,18 @@ export async function startRun(
     return null
   }
 
-  const state = createRunState(createContract({ id: randomUUID(), ...contract }))
+  // `targetDepth` is spread only when present, so a non-dungeon contract is
+  // built without the key at all rather than with an explicit `undefined`. Both
+  // read the same to `createContract`'s guard today; keeping the key out means
+  // that stays true if the guard ever tightens to a `in`-style check.
+  const { targetDepth, ...rest } = contract
+  const state = createRunState(
+    createContract({
+      id: randomUUID(),
+      ...rest,
+      ...(targetDepth === undefined ? {} : { targetDepth }),
+    })
+  )
 
   const updated = await prisma.gameSession.update({
     where: { id: session.id },

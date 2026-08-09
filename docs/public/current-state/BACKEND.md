@@ -187,6 +187,33 @@ calcined`. L'ancien `inn` confondait « rentré avec l'objectif » (payé) et «
 - **Le tenancier du Comptoir n'est pas L'Aveugle.** Le Comptoir est purement transactionnel en
   v0.2.1 (aucun appel IA) ; si un dialogue lui est ajouté, il devra recevoir son propre constructeur
   de prompt — `buildAveugleTalkPrompt` est réservé à la voix de L'Aveugle.
+- **`RunContract.targetDepth` est optionnel, pas défaillant** (#260). Le canon §2 dit que « le
+  système ne suppose jamais que toute quête est un donjon », mais le type imposait `3 | 5 | 7` à
+  tous : une escorte devait mentir en se déclarant profonde de 3 paliers. La profondeur n'existe
+  désormais que pour `family: 'dungeon'`, et **aucune règle n'invente de valeur par défaut** —
+  `canDescend` répond `false` sur un contrat sans paliers, `estimateRemainingMinutes` renvoie la
+  durée cible du contrat. Un défaut aurait été pire que l'absence : il aurait fait pousser un donjon
+  sous une quête qui n'en a pas, silencieusement.
+- **Les tags sont qualitatifs côté client, chiffrés côté serveur.** `danger` (`easy | medium | hard`)
+  et `duration` (`short | long | major`) sont ce que le joueur lit ; `targetDurationMinutes` reste
+  interne. Publier les minutes transformerait une estimation qui dérive avec la façon de jouer en
+  une promesse que le moteur ne peut pas tenir. Le vocabulaire de danger est **neutre** (Facile /
+  Moyen / Difficile) et non fictionnel : un label in-world se lit comme de la saveur, pas comme un
+  avertissement — décision produit du 2026-08-09.
+- **Le narrateur garde la profondeur visée** (décision produit du 2026-08-09, prise contre ma
+  recommandation et assumée comme telle). Le prompt continue d'émettre `Target depth: N floors` pour
+  un donjon, afin que la descente s'écrive avec un sens de la distance. Le canon §4 a été **adapté**
+  plutôt que contredit : son interdiction porte sur l'**interface**, et la règle opposable à l'IA
+  devient « ne jamais l'écrire dans la prose ». Risque connu et inscrit au canon : un modèle à qui
+  l'on donne un nombre tend à l'imprimer ; si la prose annonce « il reste quatre paliers », c'est la
+  transmission qu'il faudra retirer, pas la consigne qu'il faudra durcir. Un contrat sans paliers ne
+  reçoit aucun chiffre et se voit interdire explicitement le vocabulaire de descente.
+- **Les colonnes #260 sont toutes nullables, et une famille absente se lit `dungeon`.** Les sessions
+  écrites avant la migration portent un contrat accepté qui doit rester jouable ; `readContract`
+  comble commanditaire et tags par des valeurs **milieu d'échelle** (`medium` / `long`), jamais
+  `easy`, pour ne pas sous-vendre un run que le joueur s'apprête à accepter. En revanche un donjon
+  dont la profondeur a disparu renvoie `null` : mieux vaut pas de contrat qu'un donjon que le joueur
+  ne pourra jamais descendre.
 
 ### Contrats et mémoire
 

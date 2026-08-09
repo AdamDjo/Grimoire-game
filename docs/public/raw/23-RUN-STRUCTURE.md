@@ -70,6 +70,22 @@ très dangereux, mais le système ne suppose jamais que toute quête est un donj
 Le backend choisit et valide cette structure. L'IA lui donne sa prose, ses personnages et ses
 scènes ; elle ne peut ni inventer la condition de victoire ni déclarer seule la quête terminée.
 
+La **famille** de quête est fermée : `dungeon`, `escort`, `investigation`, `hunt`, `recovery`,
+`negotiation`, `dilemma`. Seule `dungeon` descend, et elle seule porte une profondeur visée — les
+autres n'en ont aucune, et aucune règle du moteur n'a le droit de leur en inventer une pour combler
+un champ manquant (#260).
+
+Les deux tags sont **qualitatifs côté joueur, chiffrés côté moteur** :
+
+| Tag    | Valeurs affichées          | Ce qui reste interne                               |
+| ------ | -------------------------- | -------------------------------------------------- |
+| Danger | Facile / Moyen / Difficile | Le chiffrage qui pilote génération et équilibrage  |
+| Durée  | Court / Long / Majeur      | Les minutes cibles (45 / 90 / 150), et les paliers |
+
+Le vocabulaire de danger est volontairement **neutre et ludique**, pas fictionnel : le joueur doit
+lire l'arbitrage d'un coup d'œil, et un label in-world (« routine », « funeste ») se lit comme de la
+saveur, pas comme un avertissement.
+
 ### Le panneau
 
 - présente **trois contrats ordinaires** simultanément ;
@@ -131,6 +147,17 @@ Pour la v0.2.1, l'interface ne révèle jamais :
 - le numéro du palier ou la profondeur maximale ;
 - la carte ou les connexions du donjon ;
 - une estimation chiffrée ou qualitative du retour.
+
+**Le narrateur, lui, connaît la profondeur visée** (#260). Elle lui est transmise dans son contexte
+pour qu'il sache écrire une descente qui va quelque part — le ton d'un troisième palier sur sept
+n'est pas celui d'un dernier. Cette interdiction porte donc sur l'**interface**, pas sur le prompt :
+l'IA reçoit le chiffre, et la règle qui lui reste opposable est de ne jamais l'**écrire** dans sa
+prose, ni de le transformer en compte à rebours. Un contrat sans paliers ne reçoit aucun chiffre du
+tout, et le prompt lui interdit alors explicitement de parler de descente ou de profondeur.
+
+Le risque assumé est connu : un modèle à qui l'on donne un nombre a tendance à l'imprimer. Si la
+prose se met à annoncer « il reste quatre paliers », c'est cette transmission qu'il faudra retirer,
+pas la consigne qu'il faudra durcir.
 
 L'image montre le **lieu présent**, jamais la prochaine conséquence. La narration décrit ce que le
 personnage voit maintenant ; les choix restent des actions fictionnelles, pas des cartes de salles.
