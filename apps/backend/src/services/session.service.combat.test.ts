@@ -47,7 +47,7 @@ const character = {
   ash: 10,
   hp: 20,
   maxHp: 20,
-  iron: 40,
+  gold: 40,
   thirst: 100,
   hunger: 100,
   energy: 100,
@@ -121,7 +121,7 @@ function sessionOnARun(state: CombatState | null): GameSession {
     contractId: 'ct1',
     contractDestination: 'Les Salines Basses',
     contractTargetDepth: 3,
-    contractRewardIron: 40,
+    contractRewardGold: 40,
     contractObjective: 'Rapporter le sceau du contremaître',
     currentDepth: 2,
     maxDepthReached: 2,
@@ -321,7 +321,7 @@ describe('persisting the fight', () => {
     expect(data.gameMode).toBe('exploration')
   })
 
-  it('banks the iron reward on the same write that clears the fight', async () => {
+  it('banks the gold reward on the same write that clears the fight', async () => {
     await resolveTurn({
       session: session(combatState({ enemies: [enemy('ruin_rat', { hp: 1, armourClass: 1 })] })),
       character,
@@ -331,15 +331,15 @@ describe('persisting the fight', () => {
       combatRng: () => 0.95,
     })
 
-    // The exact figure is rolled (`rollIron`), so asserting it would be testing
+    // The exact figure is rolled (`rollGold`), so asserting it would be testing
     // the dice. What must hold is that it is paid, and paid on the very write
     // that clears the fight — otherwise a reload could bank the same corpses twice.
-    const iron = lastCharacterUpdate().iron as { increment: number } | undefined
-    expect(iron?.increment).toBeGreaterThan(0)
+    const gold = lastCharacterUpdate().gold as { increment: number } | undefined
+    expect(gold?.increment).toBeGreaterThan(0)
     expect(lastSessionUpdate().combatState).toBe(Prisma.DbNull)
   })
 
-  it('pays no iron while the fight is still running', async () => {
+  it('pays no gold while the fight is still running', async () => {
     await resolveTurn({
       session: session(combatState({ enemies: [enemy('heart_of_sand')] })),
       character,
@@ -347,7 +347,7 @@ describe('persisting the fight', () => {
       combatAction: 'defend',
     })
 
-    expect(lastCharacterUpdate().iron).toBeUndefined()
+    expect(lastCharacterUpdate().gold).toBeUndefined()
   })
 })
 

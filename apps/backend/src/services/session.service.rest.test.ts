@@ -73,6 +73,15 @@ const choice = {
   riskLevel: 'safe' as const,
 }
 
+/** A bag entry the backend recognises as provisions — the Comptoir's `supply` marker (#249). */
+const PROVISIONS = {
+  id: 'r1',
+  name: 'Rations de route',
+  category: 'bag',
+  quantity: 2,
+  supply: 'food',
+}
+
 /** Reads the `data` payload passed to the mocked `gameSession.update` call. */
 function lastGameSessionUpdateData(): { status?: string; endReason?: string | null } {
   const call = gameSessionUpdate.mock.calls.at(-1) as
@@ -175,12 +184,51 @@ describe('resolveTurn — rest_requested (#184)', () => {
       source: 'ai',
     })
 
-    await resolveTurn({ session: session(3), character, choice })
+    // The +60 hunger/thirst is gated on carrying provisions (#249), so the
+    // character must actually have some for the full canon rate to apply.
+    await resolveTurn({
+      session: session(3),
+      character: { ...character, inventory: [PROVISIONS] },
+      choice,
+    })
 
     const data = lastCharacterUpdateData()
     expect(data.energy).toBe(80)
     expect(data.hunger).toBe(80)
     expect(data.thirst).toBe(80)
+    expect(data.calamine).toBe(20)
+  })
+
+  it('recovers energy but no hunger/thirst at the fire with an empty bag', async () => {
+    // Canon 06-SURVIVAL §3: "« +60 faim/soif » ne s'applique que si le perso a
+    // des provisions". Without this gate a player could skip the Comptoir
+    // entirely and still eat at every fire (#249).
+    resolveChoice.mockReturnValue({
+      updatedSurvival: {
+        hp: 20,
+        maxHp: 20,
+        thirst: 20,
+        hunger: 20,
+        energy: 20,
+        calamine: 30,
+        isDying: false,
+        neglectStreak: 0,
+      },
+      updatedConditions: [],
+      consequences: {},
+      gameOver: false,
+    })
+    generateScene.mockResolvedValue({
+      scene: { rest_requested: { type: 'fire' } },
+      source: 'ai',
+    })
+
+    await resolveTurn({ session: session(3), character: { ...character, inventory: [] }, choice })
+
+    const data = lastCharacterUpdateData()
+    expect(data.energy).toBe(80)
+    expect(data.hunger).toBe(20)
+    expect(data.thirst).toBe(20)
     expect(data.calamine).toBe(20)
   })
 
@@ -205,7 +253,11 @@ describe('resolveTurn — rest_requested (#184)', () => {
       source: 'ai',
     })
 
-    await resolveTurn({ session: session(3), character, choice })
+    await resolveTurn({
+      session: session(3),
+      character: { ...character, inventory: [PROVISIONS] },
+      choice,
+    })
 
     const data = lastCharacterUpdateData()
     expect(data.energy).toBe(100)

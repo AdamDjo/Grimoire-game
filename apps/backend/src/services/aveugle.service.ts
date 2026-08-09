@@ -110,7 +110,7 @@ async function resolvePlayerLocale(userId: string): Promise<Locale> {
 }
 
 /**
- * Pure-Prisma read of the Aveugle hub screen state (topics seen, fer, named
+ * Pure-Prisma read of the Aveugle hub screen state (topics seen, gold, named
  * Souvenirs, spendable Souvenir count). No AI call involved.
  */
 export async function getAveugleHubState(userId: string): Promise<AveugleHubState> {
@@ -123,7 +123,7 @@ export async function getAveugleHubState(userId: string): Promise<AveugleHubStat
   const spendableSouvenirCount = souvenirs.filter((s) => s.anonymous && !s.sharedWithAveugle).length
 
   return {
-    iron: character?.iron ?? 0,
+    gold: character?.gold ?? 0,
     spendableSouvenirCount,
     namedSouvenirs: namedSouvenirRows.map((s) => ({
       id: s.id,
@@ -162,7 +162,16 @@ export async function markTopicSeen(userId: string, topicId: string): Promise<vo
   })
 }
 
-/** Builds the free-talk prompt in L'Aveugle's canon voice (15-GAME-MASTER.md §1.1). */
+/**
+ * Builds the free-talk prompt in L'Aveugle's canon voice (15-GAME-MASTER.md §1.1).
+ *
+ * This voice belongs to L'Aveugle alone. The Comptoir (#249) is a *different*
+ * Inn destination with a different NPC, the keeper — he sells, he does not
+ * prophesy. Should the Comptoir ever gain dialogue, it must get its own prompt
+ * builder rather than reuse this one: the two must never blur into one
+ * innkeeper who both takes your gold and reads your fate.
+ * @see docs/public/raw/23-RUN-STRUCTURE.md §1
+ */
 function buildAveugleTalkPrompt(params: {
   characterName: string
   peopleLabel: string

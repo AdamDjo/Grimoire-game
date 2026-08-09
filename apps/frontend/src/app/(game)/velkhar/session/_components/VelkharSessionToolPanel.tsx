@@ -15,7 +15,7 @@ interface VelkharSessionToolPanelProps {
   character: Character
   conditions: ActiveCondition[]
   ending: boolean
-  iron: number | null
+  gold: number | null
   inventory: InventoryItemRef[]
   openTool: VelkharSessionTool | null
   onAbandon: () => Promise<void>
@@ -29,7 +29,7 @@ export function VelkharSessionToolPanel({
   character,
   conditions,
   ending,
-  iron,
+  gold,
   inventory,
   onAbandon,
   onClose,
@@ -66,7 +66,7 @@ export function VelkharSessionToolPanel({
       }
     >
       {openTool === 'inventory' ? (
-        <VelkharInventoryPanel iron={iron} items={inventory} onAction={onInventoryAction} />
+        <VelkharInventoryPanel gold={gold} items={inventory} onAction={onInventoryAction} />
       ) : null}
 
       {openTool === 'character' ? (

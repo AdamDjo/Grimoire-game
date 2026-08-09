@@ -53,7 +53,7 @@ export function createContract(params: {
   id: string
   destination: string
   targetDepth: ContractDepth
-  rewardIron: number
+  rewardGold: number
   objective: string
 }): RunContract {
   return {
@@ -61,7 +61,7 @@ export function createContract(params: {
     destination: params.destination,
     targetDepth: params.targetDepth,
     targetDurationMinutes: CONTRACT_DURATION_MINUTES[params.targetDepth],
-    rewardIron: params.rewardIron,
+    rewardGold: params.rewardGold,
     objective: params.objective,
   }
 }

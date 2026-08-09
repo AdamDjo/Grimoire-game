@@ -86,9 +86,9 @@ model Character {
   /// @see docs/public/raw/11-INVENTORY-ECONOMY.md §1
   inventory Json @default("[]")
 
-  /// Fer (🪙), monnaie in-game de Velkhar. Aucune mécanique de gain/dépense
-  /// n'est encore branchée ailleurs dans le backend — champ persistant seul.
-  iron Int @default(0)
+  /// Or (🪙), monnaie in-game de Velkhar. Gagné au combat (butin des corps,
+  /// `goldGained`) et dépensé au Comptoir (#249).
+  gold Int @default(0)
 
   /// Ids des topics du catalogue statique de L'Aveugle déjà vus par ce joueur
   /// (le contenu des topics reste statique côté frontend, seul l'état "vu" persiste).
@@ -96,10 +96,40 @@ model Character {
 
   createdAt DateTime @default(now())
   sessions  GameSession[]
+  counterPurchases CounterPurchase[]
 
   /// One character per user for now (no multi-character roster yet) — also
   /// closes the createCharacter() findFirst/create race condition.
   @@unique([userId])
+}
+
+/// Une transaction du Comptoir (#249), persistée pour la rendre idempotente et
+/// rejouable. La ligne n'existe que si l'achat a été *accepté* : un refus ne
+/// consomme pas le `purchaseId`, pour que le joueur puisse corriger son panier
+/// et réessayer avec le même id.
+/// @see docs/public/raw/11-INVENTORY-ECONOMY.md §2
+model CounterPurchase {
+  id          String    @id @default(uuid())
+  characterId String
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  /// Id fourni par le client. Unique *par personnage* : deux joueurs peuvent
+  /// générer le même uuid sans se bloquer mutuellement, et c'est cette
+  /// contrainte que la transaction concurrente heurte (P2002) pour garantir
+  /// qu'un double envoi ne débite le fer qu'une fois.
+  purchaseId String
+
+  /// Lignes achetées (CounterPurchaseLine[] JSON), voir @grimoire/shared.
+  lines Json
+
+  /// Fer débité et solde restant au moment de l'achat — la réponse rejouée est
+  /// reconstruite depuis ces valeurs, jamais recalculée sur l'état courant.
+  totalGold  Int
+  goldAfter  Int
+
+  createdAt DateTime @default(now())
+
+  @@unique([characterId, purchaseId])
 }
 
 model GameSession {
@@ -131,7 +161,7 @@ model GameSession {
   /// Profondeur visée (3 | 5 | 7). Plafonnée à 7 par le moteur, jamais par la DB.
   contractTargetDepth Int?
   /// Fer payé par le commanditaire au retour, si le joueur revient.
-  contractRewardIron  Int?
+  contractRewardGold  Int?
   contractObjective   String?
   /// Palier courant. 0 = en surface (auberge ou sorti du donjon).
   currentDepth      Int      @default(0)

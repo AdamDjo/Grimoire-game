@@ -52,7 +52,7 @@ export interface GameSessionResponse {
   activeConditions: ActiveCondition[]
   diceRoll?: GameSessionDiceRoll
   endReason?: SessionEndReason
-  iron: number
+  gold: number
   notifications: GameSessionNotification[]
   scene: GameSessionScene
   source?: 'ai' | 'stub'
@@ -68,7 +68,7 @@ export interface GameSessionEndResponse {
 
 export interface GameSessionInventoryActionResponse {
   activeConditions: ActiveCondition[]
-  iron: number
+  gold: number
   survival: SurvivalStats
   updatedStats: Record<string, number>
   updatedInventory: GameSessionInventoryItem[]
@@ -106,7 +106,7 @@ export interface GameSessionState<
   ending: boolean
   gameOver: boolean
   inventory: GameSessionInventoryItem[]
-  iron: number
+  gold: number
   limitReached: boolean
   loading: boolean
   online: boolean

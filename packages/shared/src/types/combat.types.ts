@@ -425,7 +425,7 @@ export interface CombatState {
 export interface CombatResult {
   outcome: CombatOutcome;
   loot: CombatLoot[];
-  ironGained: number;
+  goldGained: number;
   /** Set when the fight ended by fleeing — the run needs to know which way. */
   fleeDirection?: FleeDirection;
   /**

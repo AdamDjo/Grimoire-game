@@ -142,12 +142,58 @@ calcined`. L'ancien `inn` confondait « rentré avec l'objectif » (payé) et «
   que l'image se construise. À confirmer au premier build Coolify. Détail
   `docs/public/tech/SECURITY.md`.
 
+### Comptoir et préparation du départ — #249
+
+- **Prix fixes, contre le canon `11-INVENTORY-ECONOMY.md` §7** (« Pas de prix fixes », négociation
+  `d20 + CENDRE + Persuasion`). Le Comptoir vend des consommables de survie : le levier de jeu est
+  l'arbitrage or/place, pas le marchandage. Un jet sur le prix de l'eau ajoute de la variance sans
+  ajouter une décision, et rend l'instantané de préparation non déterministe donc intestable. La
+  négociation §7 vise le **marché** et les marchands de faction, dont les modificateurs de
+  réputation n'ont aucun modèle persisté. Négociation et prix par faction restent ouverts pour un
+  futur ticket marché.
+- **Stock illimité sur le catalogue fermé.** Les contraintes réelles sont l'or et les 12 slots du
+  sac (§1) ; un compteur de stock ajouterait de la comptabilité sans arbitrage.
+- **Un slot de sac par unité, pas par pile** — `bagSlotsUsed` compte les quantités. C'est la
+  **définition unique** du sac plein : `game-rules/inventory.ts#acquireItem` (butin IA, #183)
+  l'appelle aussi. Avant le Comptoir chaque entrée valait 1, donc compter les entrées ou les unités
+  revenait au même ; acheter une pile de 12 rations a rompu cette égalité, et un comptage par
+  entrées aurait laissé le joueur continuer à ramasser du butin sur un sac que le Comptoir refuse
+  déjà de remplir — le « sac délibérément trop petit » du canon §1 aurait été vidé de sa substance.
+- **Une catégorie de ravitaillement structurelle** — `PersistedInventoryItem.supply` est posée par
+  le Comptoir ; `countCarriedSupplies` la lit **avant** de retomber sur ses regex de noms, qui ne
+  servent plus que pour le butin nommé par l'IA (#183). Renommer un libellé d'affichage ne peut
+  donc plus changer l'estimation du retour.
+- **Le repos au feu lit le sac, il ne suppose plus.** `applyRest(..., { hasProvisions })` recevait
+  `true` en dur depuis #183, faute de moyen de reconnaître une provision ; le marqueur `supply` du
+  Comptoir le rend enfin possible, donc le site d'appel passe `hasProvisionsInBag(inventory)`. Sans
+  ce branchement un joueur n'achetant rien récupérait quand même +60 faim/soif à chaque feu — le
+  seul chemin qui restaure ces jauges, `ItemGainedEffect` n'ayant aucun champ faim/soif — ce qui
+  annulait l'arbitrage que #249 existe pour créer. **Eau _ou_ nourriture suffit** : le canon §3 dit
+  « des provisions » sans distinguer, et le feu restaure les deux jauges d'un même geste ; exiger
+  les deux inventerait une règle plus dure que le canon.
+- **Idempotence par `(characterId, purchaseId)` unique**, et non par verrou applicatif : deux
+  requêtes concurrentes se disputent l'index, la perdante reçoit P2002 et **rejoue** le résultat de
+  la gagnante. Un **refus n'écrit rien**, donc ne consomme pas le `purchaseId` — le joueur corrige
+  son panier et réessaie avec le même identifiant.
+- **Un refus est un HTTP 200**, pas un 4xx : « or insuffisant » ou « sac plein » est une réponse de
+  jeu légitime que le client affiche, pas une requête malformée.
+- **La monnaie s'appelle l'or, plus le fer** (décision produit du 2026-08-09, prise pendant #249).
+  Le canon `11-INVENTORY-ECONOMY.md` §2 interdisait explicitement le mot « or » ; cette interdiction
+  a été **levée** et le canon réécrit — ne pas la rétablir. Persistée sous `Character.gold`,
+  `CounterPurchase.totalGold` / `goldAfter`, `GameSession.contractRewardGold`. La migration
+  `20260809140000_rename_iron_to_gold` utilise `ALTER TABLE … RENAME COLUMN` et non un drop/create :
+  les colonnes portent de l'or gagné en combat. Le fer reste un **matériau** du monde (armes,
+  armures, « odeur de fer chaud ») — seule la monnaie change de nom.
+- **Le tenancier du Comptoir n'est pas L'Aveugle.** Le Comptoir est purement transactionnel en
+  v0.2.1 (aucun appel IA) ; si un dialogue lui est ajouté, il devra recevoir son propre constructeur
+  de prompt — `buildAveugleTalkPrompt` est réservé à la voix de L'Aveugle.
+
 ### Contrats et mémoire
 
 - **La mémoire interne est en pivot anglais fixe**, indépendante de la locale de narration : un
   changement de langue en cours de run ne doit jamais traduire ni corrompre le canon. #168
 - **Le client n'infère aucune règle** — `SceneResponse` et `InventoryActionResponse` portent
-  l'instantané de survie, les conditions actives, le fer persistant, l'objectif joueur, le
+  l'instantané de survie, les conditions actives, l'or persistant, l'objectif joueur, le
   `CombatSnapshot` et le `endReason` autoritaire. La structure cachée du run (`canDescend`, paliers,
   estimation) ne doit pas devenir une information affichable par accident.
 - **`POST /api/character/resolve-vocation` est stateless** (aucune écriture Prisma, toujours HTTP 200) : l'IA propose une des 4 vocations canon, le serveur reste souverain sur l'identifiant retenu

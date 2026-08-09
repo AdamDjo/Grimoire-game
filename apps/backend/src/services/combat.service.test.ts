@@ -223,7 +223,7 @@ describe('resolving a full exchange', () => {
       action: 'attack',
       rng: () => 0.95,
     })
-    expect(output.result?.ironGained).toBeGreaterThan(0)
+    expect(output.result?.goldGained).toBeGreaterThan(0)
     expect(toCombatStatePersistence(output.state).combatState).toBe(Prisma.DbNull)
   })
 
@@ -273,7 +273,7 @@ describe('opening a fight from what the AI narrated (§1)', () => {
         destination: 'Les Salines Basses',
         objective: 'Rapporter le sceau du contremaître',
         targetDepth: 5,
-        rewardIron: 40,
+        rewardGold: 40,
       },
       mode: 'descent',
       currentDepth: 4,

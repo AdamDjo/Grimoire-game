@@ -164,7 +164,7 @@ La magie n'est jamais gratuite (voir `02-WORLD-BIBLE.md`). **Tout usage d'artefa
 ### Comment réduire la Cendre
 
 - 🟢 **Repos long** : -10 Cendre
-- 🟢 **Sœurs du Silence** (rituel au Culte) : -30 Cendre, mais coût (fer, quête, secret)
+- 🟢 **Sœurs du Silence** (rituel au Culte) : -30 Cendre, mais coût (or, quête, secret)
 - 🟢 **Artefact purificateur** (rare) : -50 Cendre une fois
 
 🟢 _Tout aventurier qui touche aux artefacts gère un compte à rebours. Le Tisse-Verbe vit ce dilemme à chaque scène (éveiller = puissance immédiate, Calamine plus proche), les autres vocations ne le rencontrent qu'aux moments où elles décident d'activer un artefact trouvé._

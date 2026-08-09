@@ -44,7 +44,7 @@ source_of_truth: true
 | `docs/public/raw/08-DICE-RESOLUTION.md`    | d20 aux pivots                              |
 | `docs/public/raw/09-ACTION-LOOP.md`        | Boucle de tour, modes de jeu, fins de run   |
 | `docs/public/raw/10-COMBAT.md`             | Combat (spec complète, **non implémentée**) |
-| `docs/public/raw/11-INVENTORY-ECONOMY.md`  | Inventaire, fer, usure, artefacts           |
+| `docs/public/raw/11-INVENTORY-ECONOMY.md`  | Inventaire, or, usure, artefacts            |
 | `docs/public/raw/23-RUN-STRUCTURE.md`      | Contrat, paliers, demi-tour, retour         |
 
 ## Social, IA, méta

@@ -79,7 +79,7 @@ export const startRunSchema = z.object({
   sessionId: z.string().min(1),
   destination: z.string().min(1).max(120),
   targetDepth: z.union([z.literal(3), z.literal(5), z.literal(7)]),
-  rewardIron: z.number().int().min(0).max(10_000),
+  rewardGold: z.number().int().min(0).max(10_000),
   objective: z.string().min(1).max(280),
 })
 

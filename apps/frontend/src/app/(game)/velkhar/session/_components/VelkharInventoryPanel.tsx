@@ -12,7 +12,7 @@ import { buildVelkharInventoryView, VELKHAR_BAG_CAPACITY } from '../_lib/velkhar
 import type { InventoryItemRef } from '@grimoire/shared'
 
 interface VelkharInventoryPanelProps {
-  iron: number | null
+  gold: number | null
   items: InventoryItemRef[]
   onAction: (item: InventoryItemRef, action: 'use' | 'equip' | 'unequip') => void
 }
@@ -63,7 +63,7 @@ function ItemSlot({ fallbackIcon, item, label, onSelect, selectedId }: ItemSlotP
   )
 }
 
-export function VelkharInventoryPanel({ iron, items, onAction }: VelkharInventoryPanelProps) {
+export function VelkharInventoryPanel({ gold, items, onAction }: VelkharInventoryPanelProps) {
   const t = useTranslations('Session')
   const inventory = useMemo(() => buildVelkharInventoryView(items), [items])
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -93,7 +93,7 @@ export function VelkharInventoryPanel({ iron, items, onAction }: VelkharInventor
     <div className="velkhar-inventory">
       <div className="velkhar-inventory__summary" aria-label={t('inventorySummary')}>
         <span>
-          <GameIcon decorative name="coin" size={24} /> {t('iron')} <strong>{iron ?? '—'}</strong>
+          <GameIcon decorative name="coin" size={24} /> {t('gold')} <strong>{gold ?? '—'}</strong>
         </span>
         <span>
           <GameIcon decorative name="chest" size={24} /> {t('bag')}{' '}

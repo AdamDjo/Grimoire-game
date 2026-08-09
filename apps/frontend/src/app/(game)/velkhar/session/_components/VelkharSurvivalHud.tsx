@@ -9,7 +9,7 @@ import type { ActiveCondition, InventoryItemRef, SurvivalStats } from '@grimoire
 
 interface VelkharSurvivalHudProps {
   conditions: ActiveCondition[]
-  iron: number
+  gold: number
   inventory: InventoryItemRef[]
   onOpenCharacter: () => void
   onOpenInventory: () => void
@@ -20,7 +20,7 @@ interface VelkharSurvivalHudProps {
 /** Persistent combat and survival readout, tuned for glanceability during play. */
 export function VelkharSurvivalHud({
   conditions,
-  iron,
+  gold,
   inventory,
   onOpenCharacter,
   onOpenInventory,
@@ -35,8 +35,8 @@ export function VelkharSurvivalHud({
       label={t('hudLabel')}
       resource={{
         icon: <GameIcon decorative name="coin" size={32} />,
-        label: t('iron'),
-        value: iron,
+        label: t('gold'),
+        value: gold,
       }}
       statusBars={[
         {

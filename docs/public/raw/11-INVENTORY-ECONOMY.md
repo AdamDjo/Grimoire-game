@@ -10,7 +10,7 @@
 > - ✅ **Acquisition** d'objets (l'IA signale un objet trouvé via `itemGained`, cf. `15-GAME-MASTER §4.5` → le backend le persiste dans les 4 catégories §1).
 > - ✅ **Usage / consommation** (appliquer un `ItemEffect` : soin, réduction de Calamine, retrait de condition).
 > - ✅ **Équipement** dans les 8 slots §1.
-> - ⏳ **Différé** (hors périmètre v2) : fer in-game (§2), marché/négociation (§7), banque de L'Aveugle (§6), artisanat (§8), tiers de rareté économiques (§4), dégradation d'héritage (§5).
+> - ⏳ **Différé** (hors périmètre v2) : or in-game (§2), marché/négociation (§7), banque de L'Aveugle (§6), artisanat (§8), tiers de rareté économiques (§4), dégradation d'héritage (§5).
 >
 > Autrement dit : v2 branche la **possession et l'usage** des objets, **pas** l'économie monétaire.
 
@@ -21,9 +21,14 @@
 > - **§4bis — usure en 3 paliers** (intact / usé / brisé), réparable à la forge de l'auberge
 > - **§5 — les artefacts deviennent des pouvoirs activables** payés en Calamine, et non des objets à effet passif
 >
-> ⚠️ **Nom de la monnaie** : la monnaie de Velkhar est le **fer**, pas l'or. Le moteur la persiste
-> sous `Inventory.iron` depuis Survie v2. Les mentions historiques de « Or 🪙 » dans ce fichier sont
-> corrigées ci-dessous ; le pictogramme 🪙 est conservé pour la lisibilité des tableaux.
+> ⚠️ **Nom de la monnaie (décision du 2026-08-09)** : la monnaie de Velkhar est l'**or**. Le moteur
+> la persiste sous `Character.gold` (#249). Le pictogramme 🪙 est conservé pour la lisibilité des
+> tableaux.
+>
+> _Historique_ : la monnaie s'est appelée « fer » entre Survie v2 et le 2026-08-09, et ce fichier
+> a un temps interdit explicitement le mot « or ». Cette interdiction est **levée** : ne pas la
+> rétablir. Le fer reste un **matériau** du monde (armes, armures, « odeur de fer chaud ») — seule
+> la monnaie change de nom.
 
 ---
 
@@ -33,7 +38,7 @@ GRIMOIRE a une économie à **deux niveaux** — l'un meurt avec le perso, l'aut
 
 | Niveau      | Monnaie      | Persistance         | Usage                                              |
 | ----------- | ------------ | ------------------- | -------------------------------------------------- |
-| **In-game** | 🪙 Fer       | Perdu à la mort     | Achat équipement, repos, services                  |
+| **In-game** | 🪙 Or        | Perdu à la mort     | Achat équipement, repos, services                  |
 | **Méta**    | 📖 Souvenirs | Persistent à jamais | Lore + identification d'artefacts (chez L'Aveugle) |
 
 > _La mort fait mal — mais elle ne ramène jamais à zéro. C'est ce qui te fait revenir._
@@ -106,11 +111,11 @@ préparation à l'auberge n'est qu'un clic, et la décision de continuer perd so
 
 ---
 
-## 2. Le fer in-game (🪙)
+## 2. L'or in-game (🪙)
 
 La monnaie courante de Velkhar. Simple, sale, **mortelle**.
 
-> **Nom canon : le fer.** Persisté par le moteur sous `Inventory.iron`. Ne jamais l'appeler « or »
+> **Nom canon : l'or.** Persisté par le moteur sous `Character.gold`. Ne jamais l'appeler « fer »
 > dans l'UI ni dans les prompts IA.
 
 ### Sources
@@ -143,14 +148,14 @@ La monnaie courante de Velkhar. Simple, sale, **mortelle**.
 ```
 🩸 MORT DU PERSONNAGE
    ↓
-🪙 Fer porté = PERDU À 100%
+🪙 Or porté = PERDU À 100%
    ↓
 Sauf si déposé chez L'Aveugle (voir §6)
 ```
 
-🟢 _Le fer est **précaire**. Le joueur doit décider : tout dépenser maintenant ? mettre en banque ? prendre le risque ?_
+🟢 _L'or est **précaire**. Le joueur doit décider : tout dépenser maintenant ? mettre en banque ? prendre le risque ?_
 
-> **Fonction dans la boucle roguelike** : le fer ramené d'un run **finance le suivant** — équipement,
+> **Fonction dans la boucle roguelike** : l'or ramené d'un run **finance le suivant** — équipement,
 > réparations à la forge, contrats plus ambitieux. C'est ce qui relie deux runs sans donner de
 > puissance permanente (`01-PILLARS §2`, pilier 5). Rentrer bredouille n'est pas neutre : c'est un
 > run suivant plus pauvre, donc plus court.
@@ -292,7 +297,7 @@ laquelle le joueur peut décider de faire demi-tour.
 > _« Je répare maintenant, ou je pars comme ça et je risque la casse en profondeur ? »_
 
 Le coût croissant entre **usé** et **brisé** rend l'attentisme punitif sans le rendre fatal. Repartir
-avec une arme usée est un choix légitime quand le fer manque — c'est exactement le genre de pari
+avec une arme usée est un choix légitime quand l'or manque — c'est exactement le genre de pari
 que le jeu doit permettre.
 
 Voir `23-RUN-STRUCTURE §1` (préparation) et §8 ci-dessous (stations d'artisanat).
@@ -438,7 +443,7 @@ degradation_a_l_heritage: 3
 
 ## 6. La banque de L'Aveugle (optionnel)
 
-Le joueur peut **déposer** du fer à l'auberge **avant** de partir en run.
+Le joueur peut **déposer** de l'or à l'auberge **avant** de partir en run.
 
 ```
 🏠 L'Aveugle accepte des dépôts.
@@ -451,7 +456,7 @@ Le joueur peut **déposer** du fer à l'auberge **avant** de partir en run.
 
 ### Pourquoi pas garantir 100% à la mort ?
 
-Parce que le pilier #3 (mort = tout perdu sauf héritage) est intouchable. La banque permet juste de ne pas **gaspiller** le fer au lieu de l'emmener, sans casser la tension.
+Parce que le pilier #3 (mort = tout perdu sauf héritage) est intouchable. La banque permet juste de ne pas **gaspiller** l'or au lieu de l'emmener, sans casser la tension.
 
 ---
 
@@ -540,7 +545,7 @@ Deux conséquences directes sur les règles ci-dessus :
 | Règle §9                                     | Lecture dans la boucle de run                                                                       |
 | -------------------------------------------- | --------------------------------------------------------------------------------------------------- |
 | « Le joueur ne sort jamais les mains vides » | Vrai pour un donjon complété. Un run interrompu peut finir à vide si le joueur rentre sans objectif |
-| Loot garanti (artefact / fer / Tier 2)       | Garanti à la résolution du lieu, mais acquis seulement si le joueur rentre vivant à l'Auberge       |
+| Loot garanti (artefact / or / Tier 2)        | Garanti à la résolution du lieu, mais acquis seulement si le joueur rentre vivant à l'Auberge       |
 | Salle boss « optionnelle »                   | Peut porter l'objectif d'un contrat de donjon sans que sa présence soit annoncée à l'avance         |
 
 C'est la nuance qui rend la boucle tendue : **continuer est récompensé, rentrer est ce qui compte.**
@@ -569,7 +574,7 @@ Le butin n'est jamais compté au moment où on le ramasse, seulement au moment o
 ║                    ÉCONOMIE DE GRIMOIRE                            ║
 ╠════════════════════════════════════════════════════════════════════╣
 ║                                                                    ║
-║  IN-GAME  🪙 FER                         MÉTA   📖 SOUVENIRS       ║
+║  IN-GAME  🪙 OR                         MÉTA   📖 SOUVENIRS       ║
 ║  ─────────────────────────              ──────────────────────     ║
 ║  Source : pillage, contrats,            Source : prologue (1)      ║
 ║   vente, quêtes                          + actes mémorables        ║

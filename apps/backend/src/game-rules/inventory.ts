@@ -1,5 +1,7 @@
 import { INVENTORY_BAG_CAPACITY, INVENTORY_EQUIPMENT_SLOTS } from '@grimoire/shared'
 
+import { bagSlotsUsed } from './counter'
+
 import type {
   ActiveCondition,
   ConditionId,
@@ -16,10 +18,14 @@ export function isValidEquipmentSlot(slot: string): slot is InventoryEquipmentSl
   return (INVENTORY_EQUIPMENT_SLOTS as readonly string[]).includes(slot)
 }
 
-/** Bag items only — equipment, artifact and key items never count toward the 12-slot cap (11-INVENTORY-ECONOMY.md §1). */
-function bagCount(items: PersistedInventoryItem[]): number {
-  return items.filter((item) => item.category === 'bag').length
-}
+/**
+ * Bag occupancy is counted by `bagSlotsUsed` (counter.ts) so that AI loot and
+ * Comptoir purchases share one definition of "full". It counts units, not
+ * entries: since #249 a bag entry can hold a stack of 12 rations, and counting
+ * entries here would let the player keep looting on top of a bag the Comptoir
+ * already refuses to sell into.
+ * Equipment, artifact and key items never count toward the cap (11-INVENTORY-ECONOMY.md §1).
+ */
 
 export interface AcquireItemResult {
   items: PersistedInventoryItem[]
@@ -48,7 +54,7 @@ export function acquireItem(
     return { items, accepted: false }
   }
 
-  if (proposal.category === 'bag' && bagCount(items) >= INVENTORY_BAG_CAPACITY) {
+  if (proposal.category === 'bag' && bagSlotsUsed(items) >= INVENTORY_BAG_CAPACITY) {
     return { items, accepted: false }
   }
 

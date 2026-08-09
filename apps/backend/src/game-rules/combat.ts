@@ -730,7 +730,7 @@ export function resolveEnemyTurn(input: EnemyTurnInput): EnemyTurnResult {
 // ─── Ending a fight (§9) ────────────────────────────────────────────────────
 
 /**
- * Iron looted from a corpse, per enemy. Canon prints the two ends of the scale
+ * Gold looted from a corpse, per enemy. Canon prints the two ends of the scale
  * outright — 1-10 for a brigand, 20-50 for an Inquisitor — and the tiers in
  * between are interpolated on that line rather than invented from nothing.
  * @see 10-COMBAT.md §9
@@ -742,8 +742,8 @@ const IRON_BY_TIER: Record<CreatureTier, { min: number; max: number }> = {
   legendary: { min: 50, max: 120 },
 }
 
-/** Rolls the iron one corpse yields. */
-function rollIron(tier: CreatureTier, rng: () => number): number {
+/** Rolls the gold one corpse yields. */
+function rollGold(tier: CreatureTier, rng: () => number): number {
   const { min, max } = IRON_BY_TIER[tier]
   return min + Math.floor(rng() * (max - min + 1))
 }
@@ -769,7 +769,7 @@ export interface EndCombatInput {
  * Settles a finished fight into its payoff.
  *
  * Canon is explicit that there is no XP bar and no level: the reward for
- * winning is iron off the corpses, the equipment the enemy was carrying, and
+ * winning is gold off the corpses, the equipment the enemy was carrying, and
  * the story moving. Defeat and flight pay nothing — but neither of them is
  * automatically the end of the run, which is what `knockoutVerdict` carries.
  *
@@ -785,19 +785,19 @@ export function endCombat(input: EndCombatInput): CombatResult {
     return {
       outcome,
       loot: [],
-      ironGained: 0,
+      goldGained: 0,
       ...(fleeDirection ? { fleeDirection } : {}),
       ...(state.knockoutVerdict ? { knockoutVerdict: state.knockoutVerdict } : {}),
     }
   }
 
   const loot: CombatLoot[] = []
-  let ironGained = 0
+  let goldGained = 0
 
   for (const enemy of state.enemies) {
     // Only the dead are looted. An enemy that ran took its gear with it.
     if (enemy.hasRouted) continue
-    ironGained += rollIron(enemy.tier, rng)
+    goldGained += rollGold(enemy.tier, rng)
 
     // Loot quality is the enemy's own quality — canon states it plainly, which
     // is what makes a hard fight worth picking.
@@ -811,7 +811,7 @@ export function endCombat(input: EndCombatInput): CombatResult {
     }
   }
 
-  return { outcome, loot, ironGained }
+  return { outcome, loot, goldGained }
 }
 
 // ─── Projection to the client (§3) ──────────────────────────────────────────

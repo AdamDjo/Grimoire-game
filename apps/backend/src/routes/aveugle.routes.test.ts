@@ -66,7 +66,7 @@ beforeEach(() => {
 describe('GET /hub', () => {
   it('returns the hub state scoped to the caller', async () => {
     getAveugleHubState.mockResolvedValue({
-      iron: 5,
+      gold: 5,
       spendableSouvenirCount: 2,
       namedSouvenirs: [],
       seenTopicIds: [],
@@ -75,9 +75,9 @@ describe('GET /hub', () => {
     await withServer(AUTH, async (baseUrl) => {
       const res = await fetch(`${baseUrl}/api/aveugle/hub`)
       expect(res.status).toBe(200)
-      const body = (await res.json()) as { success: boolean; data: { iron: number } }
+      const body = (await res.json()) as { success: boolean; data: { gold: number } }
       expect(body.success).toBe(true)
-      expect(body.data.iron).toBe(5)
+      expect(body.data.gold).toBe(5)
       expect(getAveugleHubState).toHaveBeenCalledWith('user1')
     })
   })

@@ -99,7 +99,7 @@ describe('AveugleHub', () => {
     talkToAveugle.mockReset()
     ensureAnonymousSession.mockResolvedValue(undefined)
     getAveugleHub.mockResolvedValue({
-      iron: 17,
+      gold: 17,
       spendableSouvenirCount: 1,
       namedSouvenirs: [NAMED_MEMORY],
       seenTopicIds: [],
@@ -246,7 +246,7 @@ describe('AveugleHub', () => {
 
   it('rend les états vides explicites sans charger la liste secondaire', async () => {
     getAveugleHub.mockResolvedValueOnce({
-      iron: 0,
+      gold: 0,
       spendableSouvenirCount: 0,
       namedSouvenirs: [],
       seenTopicIds: [],

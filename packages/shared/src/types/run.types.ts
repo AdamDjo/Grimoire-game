@@ -49,8 +49,8 @@ export interface RunContract {
   targetDepth: ContractDepth;
   /** Target duration in minutes, derived from `targetDepth`. */
   targetDurationMinutes: number;
-  /** What the commissioner pays on a successful return, in iron (fer). */
-  rewardIron: number;
+  /** What the commissioner pays on a successful return, in gold. */
+  rewardGold: number;
   /** Player-facing description of what must be brought back. */
   objective: string;
 }
