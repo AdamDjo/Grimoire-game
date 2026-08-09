@@ -27,7 +27,7 @@ function character(overrides: Partial<DbCharacter> = {}): DbCharacter {
     neglectStreak: 0,
     activeConditions: [],
     inventory: [{ id: 'item1', name: 'Waterskin', category: 'bag', quantity: 1 }],
-    iron: 23,
+    gold: 23,
     ...overrides,
   } as unknown as DbCharacter
 }
@@ -87,7 +87,7 @@ describe('performInventoryAction (#183)', () => {
 
     expect(result).toEqual({
       activeConditions: [],
-      iron: 23,
+      gold: 23,
       survival: {
         hp: 17,
         maxHp: 20,
@@ -115,7 +115,7 @@ describe('performInventoryAction (#183)', () => {
 
     expect(result).toEqual({
       activeConditions: [],
-      iron: 23,
+      gold: 23,
       survival: {
         hp: 12,
         maxHp: 20,

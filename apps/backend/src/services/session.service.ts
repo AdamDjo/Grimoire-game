@@ -52,6 +52,7 @@ import {
   countCarriedSupplies,
   detectThresholdCrossings,
   hasContract,
+  hasProvisionsInBag,
   projectRun,
   readRunState,
   resolveReturnEnding,
@@ -291,7 +292,7 @@ async function resumeLatestScene({
 
   return {
     activeConditions,
-    iron: character.iron,
+    gold: character.gold,
     scene,
     survival,
     updatedStats: toStatsRecord(survival),
@@ -348,7 +349,7 @@ export async function buildOpeningScene(context: SessionContext): Promise<SceneR
 
   return {
     activeConditions,
-    iron: character.iron,
+    gold: character.gold,
     scene,
     survival,
     updatedStats: toStatsRecord(survival),
@@ -572,7 +573,7 @@ async function resolveCombatTurnForSession(
   })
 
   const nextTurn = session.turnNumber + 1
-  const ironGained = turn.result?.ironGained ?? 0
+  const goldGained = turn.result?.goldGained ?? 0
 
   const scene = assembleScene({
     payload: gm.scene,
@@ -614,9 +615,9 @@ async function resolveCombatTurnForSession(
         calamine: turn.survival.calamine,
         isDying: turn.survival.isDying,
         neglectStreak: turn.survival.neglectStreak,
-        // Iron is paid on the same write that clears the fight, so a reload can
+        // Gold is paid on the same write that clears the fight, so a reload can
         // never bank the same corpses twice.
-        ...(ironGained > 0 ? { iron: { increment: ironGained } } : {}),
+        ...(goldGained > 0 ? { gold: { increment: goldGained } } : {}),
       },
     }),
     prisma.gameSession.update({
@@ -646,7 +647,7 @@ async function resolveCombatTurnForSession(
   return {
     activeConditions,
     ...(endReason ? { endReason } : {}),
-    iron: character.iron + ironGained,
+    gold: character.gold + goldGained,
     scene,
     survival: turn.survival,
     updatedStats: toStatsRecord(turn.survival),
@@ -772,7 +773,11 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
     !gameOver && restProposal && (restProposal.type === 'short' || restProposal.type === 'fire')
       ? clearDyingOnHeal(
           applyRest(restProposal.type, finalSurvival, finalInventory, attributes.blood, {
-            hasProvisions: true,
+            // Read from the bag, never assumed (#249): a character who carries
+            // no water and no food recovers no hunger/thirst at the fire. The
+            // stock is the one the Comptoir sells into, so leaving without
+            // supplies now actually costs something (canon 06-SURVIVAL §3).
+            hasProvisions: hasProvisionsInBag(finalInventory),
           }).survival
         )
       : finalSurvival
@@ -917,7 +922,7 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
   return {
     activeConditions: finalConditions,
     ...(endReason ? { endReason } : {}),
-    iron: character.iron,
+    gold: character.gold,
     scene,
     survival: restedSurvival,
     updatedStats: toStatsRecord(restedSurvival),
@@ -967,7 +972,7 @@ export async function performInventoryAction(
   if (!result.applied) {
     return {
       activeConditions,
-      iron: character.iron,
+      gold: character.gold,
       survival,
       updatedStats: toStatsRecord(survival),
       updatedInventory: toInventoryRefs(inventory),
@@ -996,7 +1001,7 @@ export async function performInventoryAction(
 
   return {
     activeConditions: result.conditions,
-    iron: character.iron,
+    gold: character.gold,
     survival: finalSurvival,
     updatedStats: toStatsRecord(finalSurvival),
     updatedInventory: toInventoryRefs(result.items),
@@ -1053,7 +1058,7 @@ export async function startRun(
   contract: {
     destination: string
     targetDepth: ContractDepth
-    rewardIron: number
+    rewardGold: number
     objective: string
   }
 ): Promise<SceneResponse | null> {

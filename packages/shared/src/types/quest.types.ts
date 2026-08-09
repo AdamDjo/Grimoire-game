@@ -23,8 +23,8 @@ export interface Quest {
 }
 
 export interface QuestReward {
-  /** Iron (fer). */
-  iron?: number;
+  /** Gold. */
+  gold?: number;
   items?: string[];
   attributeBonus?: Partial<Record<Attribute, number>>;
   unlocks?: string;

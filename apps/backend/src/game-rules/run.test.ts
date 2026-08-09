@@ -24,7 +24,7 @@ function contract(targetDepth: ContractDepth = 5) {
     id: 'contract-1',
     destination: 'Les Salines Basses',
     targetDepth,
-    rewardIron: 120,
+    rewardGold: 120,
     objective: 'Rapporter le sceau du contremaître',
   })
 }
@@ -47,7 +47,7 @@ describe('createContract', () => {
         id: 'c',
         destination: 'd',
         targetDepth: depth as ContractDepth,
-        rewardIron: 10,
+        rewardGold: 10,
         objective: 'o',
       }).targetDurationMinutes
     ).toBe(minutes)

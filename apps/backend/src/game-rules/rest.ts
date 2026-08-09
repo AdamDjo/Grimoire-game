@@ -42,12 +42,11 @@ export interface RestOptions {
   /**
    * Whether the character has provisions (food/water) for the "fire" rest's
    * hunger/thirst recovery (canon: "« +60 faim/soif » ne s'applique que si
-   * le perso a des provisions"). NOTE: the shared inventory contract has no
-   * structural flag for a food/water item (unlike healing, which maps to
-   * `effect.healAmount`) — #183's V2 scope never implemented a depletable
-   * provisions stock. Callers must supply this explicitly; `session.service.ts`
-   * currently defaults it to `true` until a real provisions mechanic exists
-   * (tracked as a follow-up, not invented here).
+   * le perso a des provisions"). Since #249 this is a real reading of the bag
+   * (`countCarriedSupplies`, via `hasProvisionsInBag`) and no longer a hardcoded
+   * `true`: the Comptoir gives supplies a structural `supply` marker, so a
+   * character who bought nothing must not recover +60 out of thin air — that
+   * would make buying rations optional and void canon §1's arbitrage.
    */
   hasProvisions: boolean
   rng?: () => number

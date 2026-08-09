@@ -683,21 +683,21 @@ describe('ending a fight (§9)', () => {
     expect(checkCombatEnd(makeState())).toBeNull()
   })
 
-  it('pays iron and loot on victory', () => {
+  it('pays gold and loot on victory', () => {
     const dead = { ...instantiateEnemy('brigand', 'e1'), isAlive: false, hp: 0 }
     const result = endCombat({ state: makeState({ enemies: [dead] }), rng: () => 0.5 })
     expect(result.outcome).toBe('victory')
-    expect(result.ironGained).toBeGreaterThan(0)
+    expect(result.goldGained).toBeGreaterThan(0)
     expect(result.loot.length).toBeGreaterThan(0)
   })
 
   // Canon is explicit that an Inquisitor is worth far more than a brigand.
-  it('pays a rare enemy more iron than a common one', () => {
+  it('pays a rare enemy more gold than a common one', () => {
     const brigand = { ...instantiateEnemy('brigand', 'e1'), isAlive: false, hp: 0 }
     const inquisitor = { ...instantiateEnemy('inquisitor', 'e2'), isAlive: false, hp: 0 }
     const common = endCombat({ state: makeState({ enemies: [brigand] }), rng: () => 0.99 })
     const rare = endCombat({ state: makeState({ enemies: [inquisitor] }), rng: () => 0 })
-    expect(rare.ironGained).toBeGreaterThan(common.ironGained)
+    expect(rare.goldGained).toBeGreaterThan(common.goldGained)
   })
 
   // An enemy that ran took its purse with it.
@@ -708,14 +708,14 @@ describe('ending a fight (§9)', () => {
       hasRouted: true,
     }
     const result = endCombat({ state: makeState({ enemies: [routed] }), rng: () => 0.5 })
-    expect(result.ironGained).toBe(0)
+    expect(result.goldGained).toBe(0)
     expect(result.loot).toHaveLength(0)
   })
 
   it('pays nothing on a defeat and carries the verdict through', () => {
     const state = makeState({ outcome: 'defeat', knockoutVerdict: 'captured' })
     const result = endCombat({ state, rng: () => 0.5 })
-    expect(result.ironGained).toBe(0)
+    expect(result.goldGained).toBe(0)
     expect(result.knockoutVerdict).toBe('captured')
   })
 

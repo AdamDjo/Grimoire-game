@@ -259,7 +259,7 @@ export function AveugleHub({
 
   const resources = hubState
     ? [
-        { icon: 'coin' as const, label: t('ironResource'), value: hubState.iron },
+        { icon: 'coin' as const, label: t('goldResource'), value: hubState.gold },
         {
           icon: 'memory' as const,
           label: t('memoriesResource'),

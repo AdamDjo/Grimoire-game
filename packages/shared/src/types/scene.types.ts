@@ -75,7 +75,7 @@ export interface ChoiceConsequence {
   >;
   itemsGained?: string[];
   itemsLost?: string[];
-  ironGained?: number;
+  goldGained?: number;
   factionReputation?: Record<string, number>;
   questProgress?: Record<string, string>;
   triggeredEvent?: string;
@@ -106,7 +106,7 @@ export interface SceneResponse {
   /** Present when this scene definitively ended the run. */
   endReason?: SessionEndReason;
   /** Current in-run currency, projected from the persisted character. */
-  iron: number;
+  gold: number;
   scene: Scene;
   /** Complete survival snapshot. Prefer this over the legacy flattened record. */
   survival: SurvivalStats;
@@ -226,7 +226,7 @@ export interface InventoryActionResponse {
   /** Exact backend-owned condition state after the item action. */
   activeConditions: ActiveCondition[];
   /** Current in-run currency, unchanged by v2 inventory actions. */
-  iron: number;
+  gold: number;
   /** Complete survival snapshot after the item action. */
   survival: SurvivalStats;
   updatedStats: Record<string, number>;

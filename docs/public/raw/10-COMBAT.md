@@ -345,7 +345,7 @@ Pas de niveau, pas d'XP cumulatif. Les récompenses sont **immédiates et narrat
 
 | Récompense                | Source                                                                        |
 | ------------------------- | ----------------------------------------------------------------------------- |
-| 🪙 **Fer**                | Pillage des cadavres (montant selon ennemi : 1-10 brigand, 20-50 Inquisiteur) |
+| 🪙 **Or**                 | Pillage des cadavres (montant selon ennemi : 1-10 brigand, 20-50 Inquisiteur) |
 | ⚔️ **Équipement**         | Arme/armure d'un ennemi vaincu (qualité = celle de l'ennemi)                  |
 | 🔮 **Artefact** (rare)    | Loot de boss ou Veilleur archontique                                          |
 | 📖 **Souvenir nommé**     | Si combat marquant (boss vaincu, victoire impossible, choix moral fort)       |
@@ -364,7 +364,7 @@ Pas de niveau, pas d'XP cumulatif. Les récompenses sont **immédiates et narrat
 | **Combat trash systématique**                  | Les ennemis ne sont jamais "pour XP". Chaque combat = enjeu narratif (lettre, contrat, témoin)                    |
 | **CENDRE inutile**                             | Le rôle Leader est core, pas optionnel. Les builds CENDRE doivent briller en combat                               |
 | **Tisse-Verbe OP**                             | Coût Cendre élevé (10/éveil), risque Calamine (cf. `06-SURVIVAL §4`), max 1-2 éveils par combat avant danger      |
-| **Fuite abusée**                               | Coût en dégâts + perte de fer potentielle + désavantage si échec                                                  |
+| **Fuite abusée**                               | Coût en dégâts + perte d'or potentielle + désavantage si échec                                                    |
 | **Joueur ne comprend pas pourquoi il a perdu** | Transparence dés (cf. `08-DICE §4`) + narration IA des dégâts (_"Le sabre traverse ton cuir, tu chancelles"_)     |
 
 ---

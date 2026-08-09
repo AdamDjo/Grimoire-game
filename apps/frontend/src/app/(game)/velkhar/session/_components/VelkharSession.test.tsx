@@ -59,7 +59,7 @@ const OPENING_RESPONSE: SceneResponse = {
       expiresRule: { type: 'until_cured' },
     },
   ],
-  iron: 37,
+  gold: 37,
   scene: {
     id: 'scene-1',
     sessionId: 'session-1',
@@ -187,7 +187,7 @@ describe('VelkharSession', () => {
     expect(screen.queryByRole('progressbar', { name: 'Blood' })).not.toBeInTheDocument()
     expect(screen.queryByRole('progressbar', { name: 'Breath' })).not.toBeInTheDocument()
     expect(screen.getByRole('progressbar', { name: 'Calamine' })).toBeInTheDocument()
-    expect(screen.getByLabelText('Iron : 37')).toBeInTheDocument()
+    expect(screen.getByLabelText('Gold : 37')).toBeInTheDocument()
     expect(screen.getByText('Wound')).toBeInTheDocument()
   })
 

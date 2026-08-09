@@ -16,7 +16,7 @@ export interface Item {
   type: ItemType;
   rarity: ItemRarity;
   effects?: ItemEffect;
-  /** Value in iron (fer). */
+  /** Value in gold. */
   value: number;
   stackable: boolean;
   maxStack?: number;
@@ -39,8 +39,8 @@ export interface InventoryItem {
 
 export interface Inventory {
   items: InventoryItem[];
-  /** Iron (fer), the Velkhar currency. */
-  iron: number;
+  /** Gold, the Velkhar currency. */
+  gold: number;
   maxSlots: number;
 }
 
@@ -88,6 +88,21 @@ export interface PersistedInventoryItem {
   slot?: string;
   effect?: ItemGainedEffect;
   description?: string;
+  /**
+   * Which survival stock this item feeds, when it is one. Set structurally by
+   * the Comptoir (#249) so the return estimate never has to guess from the
+   * name. Absent on AI-granted loot (#183), which stays name-matched by
+   * `countCarriedSupplies` — that fallback is why this field is optional and
+   * not required.
+   * @see docs/public/raw/11-INVENTORY-ECONOMY.md §2
+   */
+  supply?: "water" | "food";
+  /**
+   * Catalogue id when this item came from the Comptoir's closed catalogue.
+   * Absent on AI-granted loot. Lets identical purchased units stack instead of
+   * filling one bag slot each.
+   */
+  counterItemId?: string;
 }
 
 /** Canon bag capacity (11-INVENTORY-ECONOMY.md §1) — v2 has no bag extension. */

@@ -51,7 +51,7 @@ const gameLimiter = rateLimit({
 
 /**
  * GET /api/aveugle/hub
- * Read-only state for the Aveugle hub screen (fer, spendable Souvenir count,
+ * Read-only state for the Aveugle hub screen (gold, spendable Souvenir count,
  * named Souvenirs, topics already seen). No AI call.
  */
 aveugleRouter.get(

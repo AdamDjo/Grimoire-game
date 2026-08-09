@@ -6,6 +6,7 @@ import {
   advanceRun,
   countCarriedSupplies,
   hasContract,
+  hasProvisionsInBag,
   projectRun,
   readContract,
   readRunState,
@@ -32,7 +33,7 @@ function session(overrides: Partial<GameSession> = {}): GameSession {
     contractId: null,
     contractDestination: null,
     contractTargetDepth: null,
-    contractRewardIron: null,
+    contractRewardGold: null,
     contractObjective: null,
     currentDepth: 0,
     maxDepthReached: 0,
@@ -52,7 +53,7 @@ function contractedSession(overrides: Partial<GameSession> = {}): GameSession {
     contractId: 'contract-1',
     contractDestination: 'Les Salines Basses',
     contractTargetDepth: 5,
-    contractRewardIron: 120,
+    contractRewardGold: 120,
     contractObjective: 'Rapporter le sceau du contremaître',
     ...overrides,
   })
@@ -74,7 +75,7 @@ function runState(targetDepth: ContractDepth = 5): RunState {
       id: 'contract-1',
       destination: 'Les Salines Basses',
       targetDepth,
-      rewardIron: 120,
+      rewardGold: 120,
       objective: 'Rapporter le sceau du contremaître',
     })
   )
@@ -124,6 +125,31 @@ describe('countCarriedSupplies', () => {
 
   it('returns nothing for an empty inventory', () => {
     expect(countCarriedSupplies([])).toEqual({ water: 0, food: 0 })
+  })
+})
+
+describe('hasProvisionsInBag', () => {
+  it('is false for an empty bag — nothing to eat means no fire recovery', () => {
+    expect(hasProvisionsInBag([])).toBe(false)
+  })
+
+  it('is true with water alone', () => {
+    expect(hasProvisionsInBag([item({ id: 'a', name: 'Outre d’eau', quantity: 1 })])).toBe(true)
+  })
+
+  it('is true with food alone', () => {
+    expect(hasProvisionsInBag([item({ id: 'a', name: 'Vivres de route', quantity: 1 })])).toBe(true)
+  })
+
+  it('is true for a Comptoir purchase, recognised by its supply marker', () => {
+    // No name pattern would match "Flacon trouble" — `supply` is what counts.
+    expect(
+      hasProvisionsInBag([item({ id: 'a', name: 'Flacon trouble', quantity: 1, supply: 'water' })])
+    ).toBe(true)
+  })
+
+  it('is false when the bag holds only non-supplies', () => {
+    expect(hasProvisionsInBag([item({ id: 'a', name: 'Lame ébréchée', quantity: 1 })])).toBe(false)
   })
 })
 
@@ -199,7 +225,7 @@ describe('readRunState', () => {
       contractId: source.contractId,
       contractDestination: source.contractDestination,
       contractTargetDepth: source.contractTargetDepth,
-      contractRewardIron: source.contractRewardIron,
+      contractRewardGold: source.contractRewardGold,
       contractObjective: source.contractObjective,
     })
   })

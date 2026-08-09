@@ -41,9 +41,18 @@ const FOOD_ITEM_PATTERN = /\b(ration|food|vivres|nourriture|dried|viande|pain)\b
 
 /**
  * Counts the rations the character actually carries, from the persisted
- * inventory. Matching is by name because items are AI-named at acquisition
- * (#183) and carry no canonical supply category — the backend still decides,
- * it just has to recognise what it is looking at.
+ * inventory.
+ *
+ * Two sources, in order of trust:
+ * 1. `item.supply`, set structurally when the item came from the Comptoir's
+ *    closed catalogue (#249). Authoritative — no guessing.
+ * 2. The name patterns above, for AI-named loot (#183), which carries no
+ *    canonical supply category. The backend still decides; it just has to
+ *    recognise what it is looking at.
+ *
+ * The structural field is checked first so that renaming a catalogue label
+ * (display copy) can never silently change how many days of water the return
+ * estimate thinks the player has.
  */
 export function countCarriedSupplies(inventory: PersistedInventoryItem[]): CarriedSupplies {
   let water = 0
@@ -51,11 +60,28 @@ export function countCarriedSupplies(inventory: PersistedInventoryItem[]): Carri
 
   for (const item of inventory) {
     if (item.category !== 'bag') continue
-    if (WATER_ITEM_PATTERN.test(item.name)) water += item.quantity
+
+    if (item.supply === 'water') water += item.quantity
+    else if (item.supply === 'food') food += item.quantity
+    else if (WATER_ITEM_PATTERN.test(item.name)) water += item.quantity
     else if (FOOD_ITEM_PATTERN.test(item.name)) food += item.quantity
   }
 
   return { water, food }
+}
+
+/**
+ * True when the character carries anything to eat or drink — the gate on the
+ * fire rest's "+60 faim/soif" (canon 06-SURVIVAL §3: « ne s'applique que si le
+ * perso a des provisions »).
+ *
+ * Water *or* food is enough, deliberately: the canon says "des provisions"
+ * without splitting the two, and the fire rest restores both gauges as one
+ * beat. Requiring both would silently invent a stricter rule than the canon's.
+ */
+export function hasProvisionsInBag(inventory: PersistedInventoryItem[]): boolean {
+  const { water, food } = countCarriedSupplies(inventory)
+  return water > 0 || food > 0
 }
 
 /**
@@ -68,7 +94,7 @@ export function hasContract(session: GameSession): boolean {
     session.contractId !== null &&
     session.contractDestination !== null &&
     session.contractTargetDepth !== null &&
-    session.contractRewardIron !== null &&
+    session.contractRewardGold !== null &&
     session.contractObjective !== null
   )
 }
@@ -88,7 +114,7 @@ export function readContract(session: GameSession): RunContract | null {
     id: session.contractId!,
     destination: session.contractDestination!,
     targetDepth: depth,
-    rewardIron: session.contractRewardIron!,
+    rewardGold: session.contractRewardGold!,
     objective: session.contractObjective!,
   })
 }
@@ -140,7 +166,7 @@ export interface ContractPersistence {
   contractId: string
   contractDestination: string
   contractTargetDepth: ContractDepth
-  contractRewardIron: number
+  contractRewardGold: number
   contractObjective: string
 }
 
@@ -150,7 +176,7 @@ export function toContractPersistence(contract: RunContract): ContractPersistenc
     contractId: contract.id,
     contractDestination: contract.destination,
     contractTargetDepth: contract.targetDepth,
-    contractRewardIron: contract.rewardIron,
+    contractRewardGold: contract.rewardGold,
     contractObjective: contract.objective,
   }
 }

@@ -66,7 +66,7 @@ function formatChange(value: number): string {
 
 interface ConsequenceCopy {
   found: (item: string) => string
-  iron: (value: string) => string
+  gold: (value: string) => string
   lost: (item: string) => string
   stat: (stat: string, value: string) => string
 }
@@ -86,7 +86,7 @@ function consequenceMessages(response: SceneResponse | null, copy: ConsequenceCo
   }
   for (const item of consequences.itemsGained ?? []) messages.push(copy.found(item))
   for (const item of consequences.itemsLost ?? []) messages.push(copy.lost(item))
-  if (consequences.ironGained) messages.push(copy.iron(formatChange(consequences.ironGained)))
+  if (consequences.goldGained) messages.push(copy.gold(formatChange(consequences.goldGained)))
 
   return messages
 }
@@ -132,7 +132,7 @@ export function VelkharSession({ initialCharacter, locale }: VelkharSessionProps
     }
     return consequenceMessages(session.response, {
       found: (item) => t('found', { item }),
-      iron: (value) => t('ironChange', { value }),
+      gold: (value) => t('goldChange', { value }),
       lost: (item) => t('lost', { item }),
       stat: (stat, value) => `${statLabels[stat] ?? stat}: ${value}`,
     })
@@ -280,7 +280,7 @@ export function VelkharSession({ initialCharacter, locale }: VelkharSessionProps
         bottom={
           <VelkharSurvivalHud
             conditions={session.conditions}
-            iron={session.iron}
+            gold={session.gold}
             inventory={session.inventory}
             survival={session.worldState}
             onOpenCharacter={() => setOpenTool('character')}
@@ -293,7 +293,7 @@ export function VelkharSession({ initialCharacter, locale }: VelkharSessionProps
         character={initialCharacter}
         ending={session.ending}
         conditions={session.conditions}
-        iron={session.iron}
+        gold={session.gold}
         inventory={session.inventory}
         openTool={openTool}
         source={session.source}
