@@ -31,4 +31,4 @@ produit.
 - Ne jamais faire modifier les mêmes fichiers par deux agents en parallèle.
 
 `docs/canon/16-MEMORY.md` décrit la mémoire narrative du jeu, pas la mémoire de travail des
-agents. L'avancement vit sur GitHub ; les fichiers `current-state` portent les décisions.
+agents. L'avancement vit sur GitHub ; les fichiers `docs/state/` portent les décisions.
