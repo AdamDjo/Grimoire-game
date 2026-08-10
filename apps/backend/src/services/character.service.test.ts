@@ -27,19 +27,19 @@ function uniqueConstraintError(): InstanceType<typeof Prisma.PrismaClientKnownRe
 
 describe('deriveAttributes', () => {
   it('sums the vocation base attributes with the people bonus (canon triptyque)', () => {
-    // salt-walker: blood 14 / breath 10 / ash 10 — sahelin: +1 blood.
+    // salt-walker: blood 14 / breath 10 / will 10 — sahelin: +1 blood.
     const { attributes, maxHp } = deriveAttributes('sahelin', 'salt-walker')
 
-    expect(attributes).toEqual({ blood: 15, breath: 10, ash: 10 })
+    expect(attributes).toEqual({ blood: 15, breath: 10, will: 10 })
     // maxHp = 10 + modifier(15) = 10 + 2.
     expect(maxHp).toBe(12)
   })
 
-  it('applies a negative people bonus (changepeau: +1 breath, -1 ash)', () => {
+  it('applies a negative people bonus (changepeau: +1 breath, -1 will)', () => {
     const { attributes } = deriveAttributes('changepeau', 'word-weaver')
 
-    // word-weaver: blood 9 / breath 11 / ash 14.
-    expect(attributes).toEqual({ blood: 9, breath: 12, ash: 13 })
+    // word-weaver: blood 9 / breath 11 / will 14.
+    expect(attributes).toEqual({ blood: 9, breath: 12, will: 13 })
   })
 
   it('throws InvalidCharacterInputError for an unknown people id', () => {
@@ -81,10 +81,10 @@ describe('createCharacter', () => {
         customVocationName: null,
         narrativeTrait: null,
         shiftedSkills: [],
-        // shadow-blade: blood 10 / breath 14 / ash 10 — rivain: +1 ash.
+        // shadow-blade: blood 10 / breath 14 / will 10 — rivain: +1 will.
         blood: 10,
         breath: 14,
-        ash: 11,
+        will: 11,
         hp: 10,
         maxHp: 10,
         thirst: 100,

@@ -106,7 +106,7 @@ function readCharacter(character: DbCharacter): {
   inventory: PersistedInventoryItem[]
 } {
   return {
-    attributes: { blood: character.blood, breath: character.breath, ash: character.ash },
+    attributes: { blood: character.blood, breath: character.breath, will: character.will },
     survival: {
       hp: character.hp,
       maxHp: character.maxHp,
@@ -226,7 +226,7 @@ export async function getOrCreateSession(
         vocation: seed.vocation,
         blood: seed.attributes.blood,
         breath: seed.attributes.breath,
-        ash: seed.attributes.ash,
+        will: seed.attributes.will,
         hp: seed.maxHp,
         maxHp: seed.maxHp,
         thirst: 100,

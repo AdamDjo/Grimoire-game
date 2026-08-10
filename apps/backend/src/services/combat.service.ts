@@ -77,7 +77,7 @@ const persistedEnemySchema = z.strictObject({
   attributes: z.object({
     blood: z.number().int(),
     breath: z.number().int(),
-    ash: z.number().int(),
+    will: z.number().int(),
   }),
   combatConditions: z.array(z.enum(['engaged', 'flanked', 'disarmed', 'frightened', 'dazed'])),
   isAlive: z.boolean(),
@@ -93,7 +93,7 @@ const persistedCombatSchema = z.strictObject({
     attributes: z.object({
       blood: z.number().int(),
       breath: z.number().int(),
-      ash: z.number().int(),
+      will: z.number().int(),
     }),
     // Survival conditions cross into the fight as the full `ActiveCondition`
     // records the character sheet carries, not as bare ids: the expiry rule and

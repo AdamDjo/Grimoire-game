@@ -52,7 +52,7 @@ Les deux chemins coexistent. Les vocations guident les hésitants ; le concept l
 ```
 SANG     14  (+2)   ← endurant, caravanière
 SOUFFLE  10  ( 0)   ← moyen
-CENDRE   10  ( 0)   ← moyen, mais bonne sociabilité
+VOLONTÉ   10  ( 0)   ← moyen, mais bonne sociabilité
 ```
 
 ### Lentille narrative
@@ -76,9 +76,9 @@ CENDRE   10  ( 0)   ← moyen, mais bonne sociabilité
 ### Forces (compétences de départ)
 
 - **Survie (SANG)** — trouver eau/nourriture/abri dans le désert
-- **Marchandage (CENDRE)** — négocier prix, dettes, faveurs
+- **Marchandage (VOLONTÉ)** — négocier prix, dettes, faveurs
 - **Navigation (SOUFFLE)** — lire le sable, le vent, s'orienter
-- **Hospitalité (CENDRE)** — créer un lien de confiance rapide
+- **Hospitalité (VOLONTÉ)** — créer un lien de confiance rapide
 
 ### Tabous
 
@@ -117,7 +117,7 @@ CENDRE   10  ( 0)   ← moyen, mais bonne sociabilité
 ```
 SANG     10  ( 0)
 SOUFFLE  14  (+2)   ← précis, furtif
-CENDRE   10  ( 0)
+VOLONTÉ   10  ( 0)
 ```
 
 ### Lentille narrative
@@ -142,7 +142,7 @@ CENDRE   10  ( 0)
 - **Furtivité (SOUFFLE)** — se cacher, se déplacer en silence
 - **Tir / précision (SOUFFLE)** — arc, dague de jet, arbalète
 - **Poison (SOUFFLE)** — préparer, appliquer, identifier
-- **Renseignement (CENDRE)** — interroger, corrompre, chantonner
+- **Renseignement (VOLONTÉ)** — interroger, corrompre, chantonner
 
 ### Tabous
 
@@ -182,7 +182,7 @@ CENDRE   10  ( 0)
 ```
 SANG     10  ( 0)
 SOUFFLE  14  (+2)   ← érudit, manipule les artefacts
-CENDRE   10  ( 0)
+VOLONTÉ   10  ( 0)
 ```
 
 ### Lentille narrative
@@ -247,7 +247,7 @@ CENDRE   10  ( 0)
 ```
 SANG      8  (−1)
 SOUFFLE  14  (+2)   ← éveille les artefacts archontiques
-CENDRE   12  (+1)   ← la volonté de manier la Cendre
+VOLONTÉ   12  (+1)   ← la volonté de manier la Cendre
 ```
 
 ### Lentille narrative
@@ -273,7 +273,7 @@ CENDRE   12  (+1)   ← la volonté de manier la Cendre
 - **Éveil (SOUFFLE)** — réveiller et pousser un artéfact archontique
 - **Érudition (SOUFFLE)** — lire les langues anciennes, identifier les artefacts
 - **Discrétion (SOUFFLE)** — cacher sa nature d'éveilleur
-- **Résistance à la Cendre (CENDRE)** — retarder la Calamine (un peu)
+- **Résistance à la Cendre (VOLONTÉ)** — retarder la Calamine (un peu)
 
 ### Tabous
 
@@ -306,12 +306,12 @@ CENDRE   12  (+1)   ← la volonté de manier la Cendre
 
 ## 6. Tableau récapitulatif
 
-| Vocation           | SANG   | SOUFFLE | CENDRE | Angle                                | Faction       | Danger principal                  |
-| ------------------ | ------ | ------- | ------ | ------------------------------------ | ------------- | --------------------------------- |
-| 🐫 Marcheur-du-Sel | **+2** | 0       | 0      | Commerce / survie / désert           | Guilde du Sel | Bandits, désert                   |
-| 🗡️ Lame-Ombre      | 0      | **+2**  | 0      | Contrats / secrets / ombres          | Main d'Ombre  | Réputation, cibles survivantes    |
-| 🏛️ Veilleur        | 0      | **+2**  | 0      | Ruines / artefacts / savoir          | Éveilleurs    | Inquisition, Veilleurs mécaniques |
-| 🔥 Tisse-Verbe     | −1     | **+2**  | +1     | Éveil d'artéfacts / pouvoir / Cendre | Rénovateurs   | Calamine, Inquisition             |
+| Vocation           | SANG   | SOUFFLE | VOLONTÉ | Angle                                | Faction       | Danger principal                  |
+| ------------------ | ------ | ------- | ------- | ------------------------------------ | ------------- | --------------------------------- |
+| 🐫 Marcheur-du-Sel | **+2** | 0       | 0       | Commerce / survie / désert           | Guilde du Sel | Bandits, désert                   |
+| 🗡️ Lame-Ombre      | 0      | **+2**  | 0       | Contrats / secrets / ombres          | Main d'Ombre  | Réputation, cibles survivantes    |
+| 🏛️ Veilleur        | 0      | **+2**  | 0       | Ruines / artefacts / savoir          | Éveilleurs    | Inquisition, Veilleurs mécaniques |
+| 🔥 Tisse-Verbe     | −1     | **+2**  | +1      | Éveil d'artéfacts / pouvoir / Cendre | Rénovateurs   | Calamine, Inquisition             |
 
 ---
 
@@ -321,7 +321,7 @@ CENDRE   12  (+1)   ← la volonté de manier la Cendre
 
 Espion, infiltration, faux-semblants, secrets. Capable (dit-on) de modifier légèrement son apparence. Peuple persécuté, survie dans la marge.
 
-- Attributs : SOUFFLE +2 / CENDRE −1 (le Changepeau est méprisé)
+- Attributs : SOUFFLE +2 / VOLONTÉ −1 (le Changepeau est méprisé)
 - Angle : espionnage, déguisement, manipulation
 - Faction : Changepeaux / Changeurs
 
@@ -337,7 +337,7 @@ Le "sorceleur" de Velkhar. Traque les créatures surnaturelles (Revenants, Calci
 
 Marchand noir, réseau, dette et faveurs. Fait passer de la Cendre, des artefacts, des esclaves. Riche, corrompu, pragmatique.
 
-- Attributs : CENDRE +2 / SOUFFLE +1
+- Attributs : VOLONTÉ +2 / SOUFFLE +1
 - Angle : marché noir, réseau, contrebande, manipulation économique
 - Faction : Guilde du Rivage / Changeurs
 
@@ -367,7 +367,7 @@ Si un joueur fait plusieurs runs avec la **même vocation** :
 Si le joueur ne choisit pas de vocation mais écrit son propre concept, le système :
 
 1. **Analyse le texte** du concept
-2. **Déduit** une répartition d'attributs (SANG/SOUFFLE/CENDRE)
+2. **Déduit** une répartition d'attributs (SANG/SOUFFLE/VOLONTÉ)
 3. **Génère** une fiche de contraintes personnalisée (lentille, forces, tabous, peur)
 4. Propose au joueur pour **validation** avant le début du run
 
@@ -381,7 +381,7 @@ Si le joueur ne choisit pas de vocation mais écrit son propre concept, le syst�
 concept: "prêtre déchu en quête de vengeance"
 SANG: 10
 SOUFFLE: 12   ← connaissance des rituels
-CENDRE: 12    ← ancien prêtre, charisme, foi brisée
+VOLONTÉ: 12    ← ancien prêtre, charisme, foi brisée
 forces: [rituel, érudition, tromperie (feindre la foi)]
 peur: "le hérétique innocent qu'il a brûlé le hante"
 arc_type: "vengeance contre le Grand Archiviste"

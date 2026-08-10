@@ -489,7 +489,7 @@
   box-shadow: inset 3px 0 color-mix(in srgb, var(--soul) 72%, transparent);
 }
 
-.velkhar-session-window__attributes > div[data-attribute='ash'] {
+.velkhar-session-window__attributes > div[data-attribute='will'] {
   box-shadow: inset 3px 0 color-mix(in srgb, var(--cendre) 72%, transparent);
 }
 

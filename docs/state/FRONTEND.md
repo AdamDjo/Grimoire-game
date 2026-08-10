@@ -72,7 +72,7 @@ ticket soit livré se lit sur GitHub.
 ## Dette et suivis connus
 
 - **#218 — les textes de lisibilité existent déjà** dans `docs/canon/04-ATTRIBUTES.md` et n'ont
-  **jamais** été câblés à l'UI (tooltips SANG/SOUFFLE/CENDRE, Calamine, jauges, conditions). C'est de
+  **jamais** été câblés à l'UI (tooltips SANG/SOUFFLE/VOLONTÉ, Calamine, jauges, conditions). C'est de
   la valeur joueur déjà écrite et non livrée.
 - **#217 — coût en Calamine et usages restants doivent être visibles _avant_ activation**, pas après.
 - L'arbitrage vivres/butin doit rester lisible dans l'inventaire sans transformer l'Auberge en

@@ -99,7 +99,7 @@ Le joueur voit **toujours** le dé quand il est lancé :
 ┌───────────────────────────────────────┐
 │  Tu tentes de persuader le garde...    │
 │                                        │
-│  [ Persuasion ]  CENDRE +2  vs  DC 13  │
+│  [ Persuasion ]  VOLONTÉ +2  vs  DC 13  │
 │                                        │
 │         🎲 d20 = 14                    │
 │         14 + 2 = 16                    │
@@ -165,7 +165,7 @@ Chaque jet associe un **attribut** à une **compétence**. Le bonus de compéten
 - Investigation (fouiller, décrypter, repérer pièges)
 - Éveil (réveiller et pousser un artefact — Tisse-Verbe seul au démarrage)
 
-#### CENDRE
+#### VOLONTÉ
 
 - Persuasion (convaincre, marchander, séduire)
 - Tromperie (mentir, bluffer, déguiser)

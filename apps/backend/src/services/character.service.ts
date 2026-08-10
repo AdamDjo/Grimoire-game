@@ -27,7 +27,7 @@ export interface CreateCharacterServiceInput {
   shiftedSkills?: ShiftedSkill[]
 }
 
-/** Derives blood/breath/ash + maxHp from a people + vocation pair (canon triptyque). */
+/** Derives blood/breath/will + maxHp from a people + vocation pair (canon triptyque). */
 export function deriveAttributes(
   peopleId: string,
   vocationId: string
@@ -41,7 +41,7 @@ export function deriveAttributes(
   const attributes: Attributes = {
     blood: vocation.baseAttributes.blood + (people.attributeBonus.blood ?? 0),
     breath: vocation.baseAttributes.breath + (people.attributeBonus.breath ?? 0),
-    ash: vocation.baseAttributes.ash + (people.attributeBonus.ash ?? 0),
+    will: vocation.baseAttributes.will + (people.attributeBonus.will ?? 0),
   }
 
   return { attributes, maxHp: maxHpFromBlood(attributes.blood) }
@@ -78,7 +78,7 @@ export async function createCharacter(
         shiftedSkills: (input.shiftedSkills ?? []) as unknown as Prisma.InputJsonValue,
         blood: attributes.blood,
         breath: attributes.breath,
-        ash: attributes.ash,
+        will: attributes.will,
         hp: maxHp,
         maxHp,
         thirst: 100,

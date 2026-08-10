@@ -54,7 +54,7 @@ const BASE_CHARACTER = {
   avatarUrl: null as string | null,
   blood: 10,
   breath: 14,
-  ash: 10,
+  will: 10,
   hp: 10,
   maxHp: 10,
   thirst: 100,

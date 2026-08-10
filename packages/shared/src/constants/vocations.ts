@@ -22,7 +22,7 @@ export const VOCATIONS: VocationDefinition[] = [
       en: "Caravan survivor, trader, and desert guide of the Makhzen.",
       fr: "Survivant des caravanes, marchand et guide du Makhzen.",
     },
-    baseAttributes: { blood: 14, breath: 10, ash: 10 },
+    baseAttributes: { blood: 14, breath: 10, will: 10 },
     startingSkills: [
       { en: "Desert Trade", fr: "Commerce du sel" },
       { en: "Endurance", fr: "Endurance" },
@@ -35,7 +35,7 @@ export const VOCATIONS: VocationDefinition[] = [
       en: "Contract killer and keeper of secrets tied to the Shadow Hand.",
       fr: "Tueur de contrats et gardien de secrets lié à la Main d’Ombre.",
     },
-    baseAttributes: { blood: 10, breath: 14, ash: 10 },
+    baseAttributes: { blood: 10, breath: 14, will: 10 },
     startingSkills: [
       { en: "Silent Approach", fr: "Approche silencieuse" },
       { en: "Contract Sense", fr: "Sens du contrat" },
@@ -48,7 +48,7 @@ export const VOCATIONS: VocationDefinition[] = [
       en: "Careful scholar of Archon ruins and dormant artefacts.",
       fr: "Érudit prudent des ruines archontes et des artefacts endormis.",
     },
-    baseAttributes: { blood: 10, breath: 14, ash: 10 },
+    baseAttributes: { blood: 10, breath: 14, will: 10 },
     startingSkills: [
       { en: "Ruin Reading", fr: "Lecture des ruines" },
       { en: "Artefact Caution", fr: "Prudence d’artefact" },
@@ -61,7 +61,7 @@ export const VOCATIONS: VocationDefinition[] = [
       en: "The only vocation able to awaken artefacts, at the cost of Calamine.",
       fr: "La seule vocation capable d’éveiller les artefacts, au prix de la Calamine.",
     },
-    baseAttributes: { blood: 9, breath: 11, ash: 14 },
+    baseAttributes: { blood: 9, breath: 11, will: 14 },
     startingSkills: [
       { en: "Awaken Artefact", fr: "Éveil d’artefact" },
       { en: "Calamine Sense", fr: "Sens de la Calamine" },

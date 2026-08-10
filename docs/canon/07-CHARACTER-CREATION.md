@@ -142,13 +142,13 @@ L'Aveugle pose une dernière question :
 
 → **Choix entre 5 peuples** (boutons rapides) :
 
-| Peuple        | Bonus stat            | Saveur                                      |
-| ------------- | --------------------- | ------------------------------------------- |
-| 🌅 Sahélin    | +1 SANG               | Peuple du Sud, des oasis et caravanes       |
-| 🌊 Rivain     | +1 CENDRE             | Peuple des Côtes, marchands et négociateurs |
-| 🪨 Thérien    | +1 SANG               | Peuple des Doigts, durs comme la pierre     |
-| 🔥 Cendreur   | +1 SOUFFLE            | Né dans le désert, oreille fine, œil exercé |
-| 🌀 Changepeau | +1 SOUFFLE, −1 CENDRE | Marqué par la Cendre dès l'enfance          |
+| Peuple        | Bonus stat             | Saveur                                      |
+| ------------- | ---------------------- | ------------------------------------------- |
+| 🌅 Sahélin    | +1 SANG                | Peuple du Sud, des oasis et caravanes       |
+| 🌊 Rivain     | +1 VOLONTÉ             | Peuple des Côtes, marchands et négociateurs |
+| 🪨 Thérien    | +1 SANG                | Peuple des Doigts, durs comme la pierre     |
+| 🔥 Cendreur   | +1 SOUFFLE             | Né dans le désert, oreille fine, œil exercé |
+| 🌀 Changepeau | +1 SOUFFLE, −1 VOLONTÉ | Marqué par la Cendre dès l'enfance          |
 
 🟢 _L'IA peut **suggérer** un peuple cohérent avec le nom donné, mais le joueur a le dernier mot._
 
@@ -165,7 +165,7 @@ Après les 5 étapes, l'IA **compile la fiche** et l'affiche brièvement (le tem
 │                                              │
 │  🩸 SANG     +1                             │
 │  💨 SOUFFLE  +2                             │
-│  🔥 CENDRE   +1   (bonus peuple Rivain)     │
+│  🔥 VOLONTÉ   +1   (bonus peuple Rivain)     │
 │                                              │
 │  PV : 11 / 11                               │
 │                                              │

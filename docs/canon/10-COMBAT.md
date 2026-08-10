@@ -44,7 +44,7 @@ Le combat dans GRIMOIRE utilise les mêmes attributs et le même dé que le rest
 
 - 🟢 **Court** : 3 à 7 tours max. L'IA force la conclusion si ça traîne
 - 🟢 **Lisible** : le joueur sait toujours ce qu'il peut faire et pourquoi
-- 🟢 **Triptyque** : SANG ≠ seul attribut utile. SOUFFLE (précision) et **CENDRE (leader)** ont leur rôle
+- 🟢 **Triptyque** : SANG ≠ seul attribut utile. SOUFFLE (précision) et **VOLONTÉ (leader)** ont leur rôle
 
 ---
 
@@ -83,8 +83,8 @@ L'IA bascule explicitement en mode combat avec un encart :
 Avant l'engagement, l'IA propose **toujours** une option de désamorçage (sauf embuscade pure) :
 
 - Fuir (jet SOUFFLE)
-- Parlementer (jet CENDRE)
-- Intimider (jet CENDRE)
+- Parlementer (jet VOLONTÉ)
+- Intimider (jet VOLONTÉ)
 - Se cacher (jet SOUFFLE + Furtivité)
 
 Le combat **doit être un choix** — pas un funnel forcé.
@@ -135,7 +135,7 @@ Le joueur sacrifie son action pour :
 
 🟢 _Action "passe" intelligente : utile quand le joueur attend un meilleur moment, soigne, ou couvre un allié._
 
-#### 🗣️ Commandement (CENDRE — le rôle clé)
+#### 🗣️ Commandement (VOLONTÉ — le rôle clé)
 
 Voir §5. Le joueur **utilise sa voix** pour modifier le champ de bataille.
 
@@ -155,7 +155,7 @@ Le joueur active un artefact (toute vocation, 1×/scène, voir `11-INVENTORY-ECO
 **Choix proposés par l'IA** :
 
 1. ⚔️ Frapper le Calciné en face (Mêlée — SANG +1) _[option offensive]_
-2. 🗣️ Crier pour faire reculer les autres (Intimidation — CENDRE +2) _[option leader]_
+2. 🗣️ Crier pour faire reculer les autres (Intimidation — VOLONTÉ +2) _[option leader]_
 3. 🛡️ Reculer et bander ta blessure (Défense + soin 1d4) _[option défense]_
 4. ✍️ _Autre action_
 
@@ -196,16 +196,16 @@ CA = 10 + mod SOUFFLE + bonus armure
 
 ---
 
-## 5. Le rôle de CENDRE — "Leader"
+## 5. Le rôle de VOLONTÉ — "Leader"
 
-C'est **la décision design clé** de GRIMOIRE-combat. CENDRE n'est pas qu'un attribut social — c'est un **rôle de soutien tactique** au combat.
+C'est **la décision design clé** de GRIMOIRE-combat. VOLONTÉ n'est pas qu'un attribut social — c'est un **rôle de soutien tactique** au combat.
 
 ### Les 3 compétences de Leader
 
-#### 🗣️ Intimidation (CENDRE — vs CENDRE ennemi)
+#### 🗣️ Intimidation (VOLONTÉ — vs VOLONTÉ ennemi)
 
 ```
-d20 + CENDRE + Intimidation  vs  d20 + CENDRE adverse
+d20 + VOLONTÉ + Intimidation  vs  d20 + VOLONTÉ adverse
 ```
 
 → **Succès** : 1 ennemi recule, hésite, **passe son tour suivant** OU fuit (si CA < 11)
@@ -214,31 +214,31 @@ d20 + CENDRE + Intimidation  vs  d20 + CENDRE adverse
 
 🟢 _Usable sur ennemis humains et Calcinés faibles. Inefficace sur Veilleurs archontiques (sans peur) ou Calcinés à un stade avancé._
 
-#### 🛡️ Commandement (CENDRE — vs DC fixé)
+#### 🛡️ Commandement (VOLONTÉ — vs DC fixé)
 
 ```
-d20 + CENDRE + Leadership  vs  DC 12 (allié humain) ou 14 (allié bête / mercenaire)
+d20 + VOLONTÉ + Leadership  vs  DC 12 (allié humain) ou 14 (allié bête / mercenaire)
 ```
 
 → **Succès** : 1 allié IA agit **immédiatement** avec **avantage**
 → **Succès remarquable** : 2 alliés
 → **Échec** : pas d'effet (l'allié hésite ou ignore)
 
-🟢 _Le Commandement transforme un combat en groupe. Sans CENDRE, les alliés agissent selon la logique IA. Avec, le joueur dirige._
+🟢 _Le Commandement transforme un combat en groupe. Sans VOLONTÉ, les alliés agissent selon la logique IA. Avec, le joueur dirige._
 
 #### 👁️ Présence (passive)
 
-Si le joueur a **CENDRE ≥ +2** : les ennemis basiques (Calcinés rampants, brigands, animaux) **hésitent** avant le 1ᵉʳ tour — l'IA leur applique **désavantage** sur leur première attaque.
+Si le joueur a **VOLONTÉ ≥ +2** : les ennemis basiques (Calcinés rampants, brigands, animaux) **hésitent** avant le 1ᵉʳ tour — l'IA leur applique **désavantage** sur leur première attaque.
 
-🟢 _Récompense pour les builds CENDRE-pures (Tisse-Verbe, concept "leader", peuple Rivain)._
+🟢 _Récompense pour les builds VOLONTÉ-pures (Tisse-Verbe, concept "leader", peuple Rivain)._
 
 ### Bonus Tisse-Verbe au combat
 
-Le Tisse-Verbe (CENDRE +1, SOUFFLE +2) a une **synergie unique** : son éveil d'artefact est **amplifié par CENDRE**.
+Le Tisse-Verbe (VOLONTÉ +1, SOUFFLE +2) a une **synergie unique** : son éveil d'artefact est **amplifié par VOLONTÉ**.
 
 ```
 Éveil normal :     d20 + SOUFFLE + Éveil  vs  DC artefact
-Éveil amplifié :   d20 + SOUFFLE + CENDRE + Éveil  vs  DC artefact
+Éveil amplifié :   d20 + SOUFFLE + VOLONTÉ + Éveil  vs  DC artefact
 ```
 
 → Le Tisse-Verbe **commande l'artefact par la voix**. C'est lui le seul à activer ce bonus.
@@ -362,7 +362,7 @@ Pas de niveau, pas d'XP cumulatif. Les récompenses sont **immédiates et narrat
 | **Combat qui traîne**                          | Max 5-7 tours. L'IA accélère le climax (les ennemis se replient, un événement extérieur intervient) si ça dépasse |
 | **TPK frustrant**                              | À 0 PV → inconscience d'abord, l'IA décide. Captivité = nouvelle scène, pas game over                             |
 | **Combat trash systématique**                  | Les ennemis ne sont jamais "pour XP". Chaque combat = enjeu narratif (lettre, contrat, témoin)                    |
-| **CENDRE inutile**                             | Le rôle Leader est core, pas optionnel. Les builds CENDRE doivent briller en combat                               |
+| **VOLONTÉ inutile**                            | Le rôle Leader est core, pas optionnel. Les builds VOLONTÉ doivent briller en combat                              |
 | **Tisse-Verbe OP**                             | Coût Cendre élevé (10/éveil), risque Calamine (cf. `06-SURVIVAL §4`), max 1-2 éveils par combat avant danger      |
 | **Fuite abusée**                               | Coût en dégâts + perte d'or potentielle + désavantage si échec                                                    |
 | **Joueur ne comprend pas pourquoi il a perdu** | Transparence dés (cf. `08-DICE §4`) + narration IA des dégâts (_"Le sabre traverse ton cuir, tu chancelles"_)     |
@@ -402,7 +402,7 @@ FIN
 ---
 
 _La **résolution des dés** (jets, DC, critiques) est détaillée dans `08-DICE-RESOLUTION.md`._
-_Le **triptyque** SANG/SOUFFLE/CENDRE est détaillé dans `04-ATTRIBUTES.md`._
+_Le **triptyque** SANG/SOUFFLE/VOLONTÉ est détaillé dans `04-ATTRIBUTES.md`._
 _Les **conditions** (fièvre, poison, blessure, Calamine) sont détaillées dans `06-SURVIVAL.md` §2._
 _L'**équipement** (armes, armures, artefacts) est détaillé dans `11-INVENTORY-ECONOMY.md`._
 _La **boucle d'action** générale qui englobe le combat est détaillée dans `09-ACTION-LOOP.md`._

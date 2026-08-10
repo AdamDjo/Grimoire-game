@@ -57,10 +57,10 @@ model Character {
   /// (ShiftedSkill[] JSON), voir @grimoire/shared.
   shiftedSkills      Json?   @default("[]")
 
-  // Triptyque canon SANG/SOUFFLE/CENDRE (3-18).
+  // Triptyque canon SANG/SOUFFLE/VOLONTÉ (3-18).
   blood  Int
   breath Int
-  ash    Int
+  will   Int
 
   // Jauges de survie (0-100), voir SurvivalStats.
   hp       Int

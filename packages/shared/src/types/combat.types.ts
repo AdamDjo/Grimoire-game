@@ -223,7 +223,7 @@ export interface CreatureStatBlock {
 
 /**
  * The four action categories a player picks from on their turn. Commanding is
- * the design keystone: ash is not merely a social attribute, it is a tactical
+ * the design keystone: will is not merely a social attribute, it is a tactical
  * support role.
  * @see 10-COMBAT.md §3, §5
  */

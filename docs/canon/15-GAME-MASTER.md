@@ -10,7 +10,7 @@
 
 **L'IA est une voix, pas un cerveau.**
 
-Le **backend** est Game Master au sens strict : il connaît l'état du monde (stats SANG/SOUFFLE/CENDRE, PV, inventaire, faction, lore Velkhar canon, dés roulés, conséquences). L'IA reçoit cet état et l'**habille en prose**. Elle ne décide jamais.
+Le **backend** est Game Master au sens strict : il connaît l'état du monde (stats SANG/SOUFFLE/VOLONTÉ, PV, inventaire, faction, lore Velkhar canon, dés roulés, conséquences). L'IA reçoit cet état et l'**habille en prose**. Elle ne décide jamais.
 
 Si l'IA tente de décider (« le marchand baisse son prix de 30% », « tu trouves un artefact dans le coffre », « le coup porte 8 dégâts »), le backend **rejette son output** et la reprompte avec un rappel explicite : _« Tu narres ce que le moteur t'indique. Tu n'inventes ni stat ni conséquence. »_
 
@@ -155,7 +155,7 @@ Liste dure dans le prompt système. L'IA reçoit ces interdits explicitement. Le
 | **Adverbes émotionnels**            | _« Tu te sens étrangement attiré... »_                  | Casse le show-don't-tell. Le joueur ressent par lui-même.                                        |
 | **"Soudain !"**                     | _« Soudain, un cri ! »_                                 | Tic narratif paresseux. Préférer : _« Un cri. Court. Suivi d'un silence pire. »_                 |
 | **Questions rhétoriques au joueur** | _« Que vas-tu faire ? »_                                | Le rôle des **choix** UI, pas de la prose.                                                       |
-| **Emojis dans la prose**            | _« Le marchand sourit 😏. »_                            | Réservés à l'UI (🩸 PV, 💨 SOUFFLE, 🔥 CENDRE, 🪙 or, 📖 souvenir).                              |
+| **Emojis dans la prose**            | _« Le marchand sourit 😏. »_                            | Réservés à l'UI (🩸 PV, 💨 SOUFFLE, 🔥 VOLONTÉ, 🪙 or, 📖 souvenir).                             |
 | **Méta-commentaire**                | _« En tant que MJ, je dirais que... »_                  | Brise l'immersion. L'IA est invisible.                                                           |
 | **Happy ending forcé**              | _« Heureusement, tu trouves de l'eau juste à temps ! »_ | Velkhar est rude. La mort, la défaite, la trahison sont **autorisées et nécessaires**.           |
 | **Lore inventé hors canon**         | _« Le grand Empire de Velkhar fondé en l'an 200... »_   | Le lore est dans [02-WORLD-BIBLE](02-WORLD-BIBLE.md). L'IA n'invente jamais d'histoire mondiale. |

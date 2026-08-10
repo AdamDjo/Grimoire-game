@@ -17,7 +17,7 @@ if (!VOCATION || !PEOPLE) {
 
 const blood = VOCATION.baseAttributes.blood + (PEOPLE.attributeBonus.blood ?? 0)
 const breath = VOCATION.baseAttributes.breath + (PEOPLE.attributeBonus.breath ?? 0)
-const ash = VOCATION.baseAttributes.ash + (PEOPLE.attributeBonus.ash ?? 0)
+const will = VOCATION.baseAttributes.will + (PEOPLE.attributeBonus.will ?? 0)
 
 const maxHp = maxHpFromBlood(blood)
 
@@ -28,7 +28,7 @@ export const MOCK_CHARACTER: Character = {
   people: PEOPLE.id,
   vocation: VOCATION.id,
   stats: {
-    attributes: { blood, breath, ash },
+    attributes: { blood, breath, will },
     survival: {
       hp: maxHp,
       maxHp,
