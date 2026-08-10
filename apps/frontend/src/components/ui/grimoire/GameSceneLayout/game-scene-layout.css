@@ -1,24 +1,138 @@
 .game-scene-layout {
+  background: var(--ink-black);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  height: 100dvh;
   isolation: isolate;
   min-height: 100svh;
   overflow: hidden;
   position: relative;
 }
-.game-scene-layout__background { inset: 0; position: absolute; z-index: -2; }
-.game-scene-layout__background > img,
-.game-scene-layout__background > video { height: 100%; object-fit: cover; width: 100%; }
-.game-scene-layout::after { background: linear-gradient(180deg, rgba(5, 4, 3, 0.08), rgba(5, 4, 3, 0.86)); content: ''; inset: 0; pointer-events: none; position: absolute; z-index: -1; }
-.game-scene-layout__top,
-.game-scene-layout__bottom { position: relative; z-index: 3; }
-.game-scene-layout__bottom { margin-top: auto; }
-.game-scene-layout__body { display: grid; min-height: calc(100svh - 144px); position: relative; z-index: 1; }
-.game-scene-layout--centered .game-scene-layout__body { place-items: center; }
-.game-scene-layout--sidebar .game-scene-layout__body { gap: 1.5rem; grid-template-columns: minmax(0, 1fr) minmax(20rem, 30rem); padding: 1.5rem; }
-.game-scene-layout--immersive .game-scene-layout__body { align-items: end; padding: clamp(2rem, 5vw, 5rem); }
-.game-scene-layout__main,
-.game-scene-layout__sidebar { min-width: 0; }
 
-@media (max-width: 900px) {
-  .game-scene-layout { overflow: auto; }
-  .game-scene-layout--sidebar .game-scene-layout__body { grid-template-columns: 1fr; }
+.game-scene-layout__background {
+  inset: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -2;
+}
+
+.game-scene-layout__background > img,
+.game-scene-layout__background > video {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.game-scene-layout__top,
+.game-scene-layout__bottom {
+  position: relative;
+  z-index: 3;
+}
+
+.game-scene-layout__body {
+  display: grid;
+  grid-template-columns: minmax(0, 58fr) minmax(25rem, 42fr);
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.game-scene-layout__scene,
+.game-scene-layout__reader {
+  min-height: 0;
+  min-width: 0;
+}
+
+.game-scene-layout__scene {
+  isolation: isolate;
+  overflow: hidden;
+  position: relative;
+}
+
+.game-scene-layout__scene::after {
+  background: linear-gradient(180deg, transparent 58%, rgba(5, 4, 3, 0.52));
+  content: '';
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: -1;
+}
+
+.game-scene-layout__scene-content {
+  height: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.game-scene-layout__reader {
+  background:
+    radial-gradient(circle at 80% 12%, rgba(189, 123, 38, 0.05), transparent 18rem),
+    var(--ink-black);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  position: relative;
+  scrollbar-color: var(--material-gold-dim) var(--ink-black);
+  scrollbar-width: thin;
+  scrollbar-gutter: stable;
+}
+
+.game-scene-layout__reader::-webkit-scrollbar {
+  width: 11px;
+}
+
+.game-scene-layout__reader::-webkit-scrollbar-track {
+  background: var(--ink-black);
+  border-inline: 1px solid color-mix(in srgb, var(--material-gold) 42%, transparent);
+}
+
+.game-scene-layout__reader::-webkit-scrollbar-thumb {
+  background: var(--material-gold-dim);
+  border: 3px solid var(--ink-black);
+  min-height: 3rem;
+}
+
+.game-scene-layout__reader::before {
+  background: url('/encre-de-sel/chrome/reader-separator.webp') center / 100% 100% no-repeat;
+  bottom: 0;
+  content: '';
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  width: 12px;
+  z-index: 2;
+}
+
+@media (max-width: 1120px) {
+  .game-scene-layout {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+
+  .game-scene-layout__body {
+    display: block;
+    overflow: visible;
+  }
+
+  .game-scene-layout__scene {
+    height: clamp(15rem, 34dvh, 23rem);
+  }
+
+  .game-scene-layout__reader {
+    background:
+      radial-gradient(circle at 80% 12%, rgba(189, 123, 38, 0.05), transparent 18rem),
+      var(--ink-black);
+    overflow: visible;
+  }
+
+  .game-scene-layout__reader::before {
+    background-image: url('/encre-de-sel/chrome/footer-separator.webp');
+    bottom: auto;
+    height: 12px;
+    right: 0;
+    width: auto;
+  }
 }

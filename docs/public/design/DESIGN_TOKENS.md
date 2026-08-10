@@ -1,4 +1,4 @@
-# Design Tokens — Grimoire (or/parchemin)
+# Design Tokens — Grimoire (Encre de Sel)
 
 > Extrait condensé de [`GAME_DESIGN.md`](GAME_DESIGN.md) §7. Pour le détail complet (justifications, exemples étendus, références visuelles), lire le fichier source.
 > **Règle absolue** : ne jamais hard-coder couleur ou police. Toujours utiliser ces tokens (CSS vars ou Tailwind).
@@ -11,36 +11,27 @@ Implémentée dans `apps/frontend/src/app/globals.css` :
 
 ```css
 :root {
-  --void: #0a0806; /* DS "Encre" — fond principal */
-  --parchment: #e8dcc0; /* DS "Parchemin" — texte primaire */
-  --gold: #d9a441; /* DS "Or" — accent principal, CTA */
-  --gold-light: #f0d48a; /* DS "Or clair" — hover, lueur */
-  --gold-hover: #f0d48a; /* Alias de --gold-light */
-  --gold-dark: rgba(
-    217,
-    164,
-    65,
-    0.55
-  ); /* dérivé DS (or atténué) — bordures, bronze ancien */
-  --blood: #c0392b; /* DS "Sang" — stat combat */
-  --soul: #35c4ac; /* DS "Souffle" — stat magie/soul */
-  --cendre: #e3b341; /* DS "Cendre" — stat ressource */
-  --border-gold: rgba(217, 164, 65, 0.34);
-  --ink-manuscript: #2a2118; /* DS "Encre manuscrite" — texte sur insert parchemin (cards) */
-  --ink: var(--parchment);
-  --ink-2: rgba(
-    232,
-    220,
-    192,
-    0.75
-  ); /* dérivé DS (parchemin atténué) — texte secondaire */
-  --focus-ring: 0 0 0 3px rgba(217, 164, 65, 0.3);
+  --ink-black: #050403;
+  --ink-raised: #0c0a08;
+  --salt-white: #e9dfc9;
+  --salt-muted: #b9aa8e;
+  --material-gold: #bd7b26;
+  --material-gold-bright: #e0a143;
+  --material-gold-dim: #765021;
+  --dried-blood: #6d211b;
+  --fresh-blood: #bd3024;
+  --breath-aqua: #43aaa3;
+  --hunger-ochre: #d19428;
+  --thirst-salt: #d8d0c0;
+  --calamine: #c2872d;
+  --ink-on-paper: #241a12;
 }
 ```
 
-**Règle** : toute couleur nommée du DS (Encre, Or, Or clair, Parchemin, Sang, Souffle, Cendre, Encre manuscrite) est reprise en hex strictement identique. `--gold-dark` (sans équivalent nommé dans le DS) est dérivé d'une opacité de `rgba(217,164,65,*)` déjà présente dans le bundle DS (bordures, bronze ancien) plutôt que d'un hex inventé — aucune couleur du site ne doit provenir d'une valeur hors DS.
-
-> **Nettoyage 2026-07** : `--ash`, `--parchment-dim`, `--muted`, `--shadow-gold` retirés de `globals.css` (0 usage réel dans `apps/frontend/src`). Si un besoin futur de fond secondaire ou de texte muted apparaît, les réintroduire à ce moment plutôt que de les garder morts.
+Les noms décrivent une matière ou un état diégétique. Les anciens alias (`--void`,
+`--parchment`, `--gold`, `--blood`, `--soul`, `--cendre`) restent uniquement comme
+pont de compatibilité pendant la migration des écrans hors jeu ; aucun nouveau
+composant ne doit les introduire.
 
 Exposées comme utilities Tailwind via `@theme inline` : `bg-void`, `text-gold`, `text-gold-soft`, `text-parchment`, `text-blood`, `text-soul`, `text-cendre` (et leurs équivalents `bg-*`/`border-*`).
 
@@ -50,17 +41,19 @@ Exposées comme utilities Tailwind via `@theme inline` : `bg-void`, `text-gold`,
 
 Chargées dans `app/layout.tsx` via `next/font/google` :
 
-| Variable CSS        | Font                                    | Usage                                                                                                                         |
-| ------------------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `--font-display`    | **Cinzel** 500/600/700                  | Titres, chapitres, logo                                                                                                       |
-| `--font-serif`      | **EB Garamond** 400/500/600 + italic    | Narration MJ, prose, dialogue                                                                                                 |
-| `--font-accent`     | **Cormorant Garamond** 400-700 + italic | Accents éditoriaux, citations                                                                                                 |
-| `--font-ui`         | **Alegreya Sans** 300/400/500/700       | UI chrome (boutons, stats, nav, labels)                                                                                       |
-| `--font-manuscript` | **Caveat** 400/500                      | Notes manuscrites — var CSS brute, consommée via `var(--font-manuscript)` (ex. `card.css`), pas exposée comme classe Tailwind |
+| Variable CSS        | Font                                  | Usage                                     |
+| ------------------- | ------------------------------------- | ----------------------------------------- |
+| `--font-display`    | **IM Fell French Canon SC** 400       | Titres gravés, lieux, chapitres           |
+| `--font-serif`      | **Alegreya** 400/500/600/700 + italic | Narration, dialogue et texte éditorial    |
+| `--font-accent`     | **Alegreya** 400/500/600/700 + italic | Accents, citations et boutons             |
+| `--font-ui`         | **Alegreya** 400/500/600/700 + italic | Navigation, champs, labels et HUD         |
+| `--font-manuscript` | **Alegreya** italic                   | Notes et textes courts sur matière claire |
 
 Exposées en Tailwind (`@theme inline`) : `font-display`, `font-serif`, `font-accent`, `font-ui`.
 
-> **Nettoyage 2026-07** : `--font-hero` (TC Brookleigh) retiré. La police locale a été entièrement supprimée du projet (chargement `localFont` dans `layout.tsx`, fichier `apps/frontend/src/app/_fonts/tc-brookleigh-rough.ttf`) — 0 usage réel, résidu de l'ancien design system. L'asset source reste archivé dans `docs/private/assets/font/` si une réintégration future est décidée.
+Cinzel, Cormorant Garamond, EB Garamond, Alegreya Sans et Caveat ne font plus
+partie du runtime. Deux familles suffisent à maintenir l'identité et à réduire le
+coût de chargement.
 
 ---
 

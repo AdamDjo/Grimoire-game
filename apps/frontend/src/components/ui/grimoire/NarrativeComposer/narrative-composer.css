@@ -1,24 +1,115 @@
 .narrative-composer {
+  align-items: center;
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   isolation: isolate;
+  min-height: 92px;
+  padding: 1rem 1rem 1rem 1.25rem;
   position: relative;
   width: 100%;
 }
 
-.narrative-composer__icon {
-  left: 1.1rem;
+.narrative-composer::before {
+  border: 28px solid transparent;
+  border-image: url('/encre-de-sel/frames/action-input-gore.webp') 72 190 72 190 fill / 28px 76px;
+  content: '';
+  inset: 0;
+  pointer-events: none;
   position: absolute;
-  top: 1.1rem;
+  z-index: -1;
+}
+
+.narrative-composer__icon {
+  align-items: center;
+  color: var(--salt-white);
+  display: flex;
+  justify-content: center;
+  width: 2.75rem;
   z-index: 2;
+}
+
+.narrative-composer__icon img {
+  height: auto;
+  max-height: 4.25rem;
+  object-fit: contain;
+  width: 100%;
+}
+
+.narrative-composer__body {
+  align-self: center;
+  min-width: 0;
+  padding-block: 0.1rem;
+}
+
+.narrative-composer__heading {
+  color: var(--material-gold-bright);
+  display: block;
+  font-family: var(--font-game-display);
+  font-size: 0.92rem;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
 }
 
 .narrative-composer .narrative-composer__control {
-  padding-left: 4.25rem;
-  padding-right: 5rem;
+  field-sizing: content;
+  max-height: 7.5rem;
+  min-height: 1.65rem;
+  overflow-y: auto;
+  padding: 0;
+  resize: none;
 }
 
-.narrative-composer__action {
-  position: absolute;
-  right: 0.75rem;
-  top: 0.75rem;
+.narrative-composer .narrative-composer__action {
+  align-self: center;
+  border: 0;
+  flex: 0 0 auto;
+  height: clamp(3.6rem, 4.5vw, 4.8rem);
+  min-height: 0;
+  min-width: clamp(3.6rem, 4.5vw, 4.8rem);
+  padding: 0;
+  position: relative;
+  width: clamp(3.6rem, 4.5vw, 4.8rem);
   z-index: 2;
+}
+
+.narrative-composer__action .game-button__label {
+  inset: 0;
+  position: absolute;
+}
+
+.narrative-composer__action::before {
+  display: none;
+}
+
+.narrative-composer__action img {
+  object-fit: fill;
+}
+
+@media (max-width: 720px) {
+  .narrative-composer {
+    gap: 0.55rem;
+    min-height: 84px;
+    padding: 0.8rem 0.8rem 0.8rem 1rem;
+  }
+
+  .narrative-composer::before {
+    border-image-width: 24px 58px;
+  }
+
+  .narrative-composer__icon {
+    width: 2rem;
+  }
+
+  .narrative-composer .narrative-composer__action {
+    height: 3.4rem;
+    min-width: 3.4rem;
+    width: 3.4rem;
+  }
+
+  .narrative-composer__heading {
+    font-size: 0.78rem;
+  }
 }

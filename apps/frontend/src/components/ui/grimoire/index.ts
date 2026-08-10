@@ -90,9 +90,6 @@ export type { GameTopBarProps } from './GameTopBar/GameTopBar'
 export { GameStepDock } from './GameStepDock/GameStepDock'
 export type { GameStepDockProps } from './GameStepDock/GameStepDock'
 export { GameSceneLayout } from './GameSceneLayout/GameSceneLayout'
-export type {
-  GameSceneLayoutProps,
-  GameSceneLayoutVariant,
-} from './GameSceneLayout/GameSceneLayout'
+export type { GameSceneLayoutProps } from './GameSceneLayout/GameSceneLayout'
 export { GameWindow } from './GameWindow/GameWindow'
 export type { GameWindowProps } from './GameWindow/GameWindow'

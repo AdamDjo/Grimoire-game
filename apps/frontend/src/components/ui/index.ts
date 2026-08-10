@@ -20,7 +20,6 @@ export {
 } from './grimoire'
 export type {
   GameSceneLayoutProps,
-  GameSceneLayoutVariant,
   GameStepDockProps,
   GameTopBarProps,
   LocationIdentityProps,

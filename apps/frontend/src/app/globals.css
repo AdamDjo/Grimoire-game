@@ -1,33 +1,52 @@
 @import 'tailwindcss';
 
 :root {
-  --void: #0a0806;
-  --parchment: #e8dcc0;
-  --gold: #d9a441;
-  --gold-light: #f0d48a;
-  --gold-hover: #f0d48a;
-  --gold-dark: rgba(217, 164, 65, 0.55);
-  --blood: #c0392b;
-  --soul: #35c4ac;
-  --cendre: #e3b341;
-  --border-gold: rgba(217, 164, 65, 0.34);
-  --ink-manuscript: #2a2118;
-  --font-display: var(--next-font-disp), Georgia, serif;
-  --font-serif: var(--next-font-serif), Georgia, serif;
-  --font-accent: var(--next-font-accent), Georgia, serif;
-  --font-ui: var(--next-font-ui), Arial, sans-serif;
-  --font-manuscript: var(--next-font-manuscript), cursive;
+  /* Encre de Sel — matières, pas de couleurs SaaS génériques. */
+  --ink-black: #050403;
+  --ink-raised: #0c0a08;
+  --salt-white: #e9dfc9;
+  --salt-muted: #b9aa8e;
+  --material-gold: #bd7b26;
+  --material-gold-bright: #e0a143;
+  --material-gold-dim: #765021;
+  --dried-blood: #6d211b;
+  --fresh-blood: #bd3024;
+  --breath-aqua: #43aaa3;
+  --hunger-ochre: #d19428;
+  --thirst-salt: #d8d0c0;
+  --calamine: #c2872d;
+  --line-gold: color-mix(in srgb, var(--material-gold) 72%, transparent);
+  --ink-on-paper: #241a12;
+
+  /* Alias transitoires : l'ensemble de l'application adopte immédiatement la palette. */
+  --void: var(--ink-black);
+  --parchment: var(--salt-white);
+  --gold: var(--material-gold);
+  --gold-light: var(--material-gold-bright);
+  --gold-hover: var(--material-gold-bright);
+  --gold-dark: color-mix(in srgb, var(--material-gold) 52%, transparent);
+  --blood: var(--fresh-blood);
+  --soul: var(--breath-aqua);
+  --cendre: var(--hunger-ochre);
+  --border-gold: color-mix(in srgb, var(--material-gold) 34%, transparent);
+  --ink-manuscript: var(--ink-on-paper);
+
+  --font-display: var(--next-font-display), Georgia, serif;
+  --font-serif: var(--next-font-text), Georgia, serif;
+  --font-accent: var(--next-font-text), Georgia, serif;
+  --font-ui: var(--next-font-text), Georgia, serif;
+  --font-manuscript: var(--next-font-text), Georgia, serif;
   --font-game-display: var(--font-display);
   --font-game-heading: var(--font-accent);
   --font-game-body: var(--font-serif);
   --font-game-ui: var(--font-ui);
-  --text-game-title: clamp(2.15rem, 1.8vw + 1.55rem, 3.75rem);
-  --text-game-heading: clamp(1.625rem, 0.9vw + 1.25rem, 2.375rem);
+  --text-game-title: clamp(2rem, 1.6vw + 1.4rem, 3.35rem);
+  --text-game-heading: clamp(1.55rem, 0.8vw + 1.2rem, 2.2rem);
   --text-game-lead: clamp(1.125rem, 0.35vw + 1.02rem, 1.375rem);
   --text-game-quote: clamp(1.2rem, 0.5vw + 1.05rem, 1.5rem);
-  --text-game-body: clamp(1.125rem, 0.28vw + 1.04rem, 1.3125rem);
-  --text-game-body-sm: clamp(1.025rem, 0.2vw + 0.96rem, 1.125rem);
-  --text-game-label: clamp(1.05rem, 0.18vw + 0.98rem, 1.16rem);
+  --text-game-body: clamp(1.08rem, 0.24vw + 1rem, 1.28rem);
+  --text-game-body-sm: clamp(1rem, 0.18vw + 0.94rem, 1.12rem);
+  --text-game-label: clamp(0.96rem, 0.16vw + 0.92rem, 1.08rem);
   --text-game-button-sm: clamp(1.3rem, 0.32vw + 1.18rem, 1.5rem);
   --text-game-button: clamp(1.3rem, 0.45vw + 1.15rem, 1.625rem);
   --motion-fast: 160ms;
@@ -39,6 +58,10 @@
   --ink: var(--parchment);
   --ink-2: rgba(232, 220, 192, 0.75);
   --focus-ring: 0 0 0 3px rgba(217, 164, 65, 0.3);
+}
+
+body {
+  font-synthesis: none;
 }
 
 @theme inline {

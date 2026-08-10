@@ -13,8 +13,6 @@ export type GamePanelVariant =
   | 'compact'
   | 'header'
   | 'footer'
-  | 'form-frame-legacy'
-  | 'aside-frame-legacy'
   | 'form-frame'
   | 'aside-frame'
   | 'dialogue-frame'

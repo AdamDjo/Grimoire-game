@@ -6,17 +6,16 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { GameLink } from '@/components/ui/game-link'
 import { GameButton } from '@/components/ui/grimoire/GameButton/GameButton'
+import { GameHudDock } from '@/components/ui/grimoire/GameHudDock/GameHudDock'
 import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
 import { GameSceneLayout } from '@/components/ui/grimoire/GameSceneLayout/GameSceneLayout'
-import { LocationIdentity } from '@/components/ui/grimoire/LocationIdentity/LocationIdentity'
-import { PlayerIdentity } from '@/components/ui/grimoire/PlayerIdentity/PlayerIdentity'
+import { GameTopBar } from '@/components/ui/grimoire/GameTopBar/GameTopBar'
 import { ResourceCounter } from '@/components/ui/grimoire/ResourceCounter/ResourceCounter'
 import { ACTIVE_GAME_SESSION_COOKIE, hasActiveGameSession } from '@/lib/active-game-session'
 import { gsap, useGSAP } from '@/lib/gsap-init'
 import { getAuthHref } from '@/lib/internal-navigation'
 import { ensureAnonymousSession } from '@/lib/supabase/ensure-session'
 
-import { VocationEmblem } from '../../../_components/VocationEmblem/VocationEmblem'
 import { VELKHAR_WORLD } from '../../../_config/velkhar-world'
 import {
   CHARACTER_RESULT_STORAGE_KEY,
@@ -269,37 +268,34 @@ export function AveugleHub({
     : []
 
   const topBar = snapshot.character ? (
-    <div className="aveugle-hub__player-bar" data-velkhar-enter>
-      <PlayerIdentity
-        avatar={
-          <VocationEmblem
-            decorative
-            name={
-              snapshot.character.vocationId === 'shadow-blade'
-                ? 'lame-ombre'
-                : snapshot.character.vocationId === 'word-weaver'
-                  ? 'tisse-verbe'
-                  : snapshot.character.vocationId === 'watcher'
-                    ? 'veilleur'
-                    : 'marcheur-du-sel'
-            }
-            size="sm"
-          />
-        }
-        label={t('characterIdentity', { name: snapshot.character.name })}
-        name={snapshot.character.name}
-        resources={resources.map((resource) => (
-          <ResourceCounter
-            key={resource.label}
-            compact
-            icon={<GameIcon decorative name={resource.icon} size={24} />}
-            label={resource.label}
-            value={resource.value}
-          />
-        ))}
-        subtitle={`${snapshot.character.people}, ${snapshot.character.vocation}`}
-      />
-    </div>
+    <GameTopBar
+      className="aveugle-hub__topbar"
+      data-velkhar-enter
+      start={
+        <div className="game-top-bar__nav">
+          <span>{VELKHAR_WORLD.name}</span>
+          <span aria-hidden="true">|</span>
+          <span>{t('innName')}</span>
+        </div>
+      }
+      center={
+        <strong
+          aria-label={t('characterIdentity', { name: snapshot.character.name })}
+          className="game-top-bar__title"
+        >
+          {t('innName')}
+        </strong>
+      }
+      end={
+        <div className="game-top-bar__nav">
+          <span>{sessionT('navMap')}</span>
+          <span aria-hidden="true">|</span>
+          <span>{sessionT('navJournal')}</span>
+          <span aria-hidden="true">|</span>
+          <span>{sessionT('navOptions')}</span>
+        </div>
+      }
+    />
   ) : null
 
   if (!hydrated || (snapshot.character && (!hubUnlocked || (hubLoading && !hubState)))) {
@@ -367,30 +363,39 @@ export function AveugleHub({
           </>
         }
         bottom={
-          <div ref={departureRef} className="aveugle-hub__departure" data-velkhar-enter>
-            <GameLink
-              href={snapshot.primaryHref}
-              trailingIcon={<GameIcon decorative name="arrow" size={24} />}
-              variant="radiant"
-            >
-              {snapshot.primaryLabel}
-            </GameLink>
-          </div>
+          <GameHudDock className="aveugle-hub__footer" label={t('innName')}>
+            <div className="aveugle-hub__footer-resources">
+              {resources.map((resource) => (
+                <ResourceCounter
+                  key={resource.label}
+                  compact
+                  icon={<GameIcon decorative name={resource.icon} size={32} />}
+                  label={resource.label}
+                  value={resource.value}
+                />
+              ))}
+            </div>
+            <div ref={departureRef} className="aveugle-hub__departure" data-velkhar-enter>
+              <GameLink
+                href={snapshot.primaryHref}
+                trailingIcon={<GameIcon decorative name="arrow" size={24} />}
+                variant="radiant"
+              >
+                {snapshot.primaryLabel}
+              </GameLink>
+            </div>
+          </GameHudDock>
         }
         className="aveugle-hub__layout"
-        main={
+        scene={
           <div className="aveugle-hub__stage" data-velkhar-enter>
-            <LocationIdentity
-              icon={<GameIcon decorative name="fire" size={32} />}
-              place={t('innName')}
-              world="Velkhar"
-            />
+            <span className="aveugle-hub__scene-location">{t('innName')}</span>
             <div className="aveugle-hub__scene-caption">
               <p>{t('sceneCaption')}</p>
             </div>
           </div>
         }
-        sidebar={
+        reader={
           <div className="aveugle-hub__sidebar" data-velkhar-frame>
             <AubergeDock
               activePanel={activePanel}
@@ -404,7 +409,6 @@ export function AveugleHub({
           </div>
         }
         top={topBar}
-        variant="sidebar"
       />
     </VelkharMotionShell>
   )

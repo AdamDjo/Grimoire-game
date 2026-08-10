@@ -463,7 +463,6 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                         maxLength={30}
                         onChange={(event) => updateDraft({ name: event.target.value })}
                         placeholder={t('namePlaceholder')}
-                        variant="framed-v2"
                         value={draft.name}
                       />
                     </GameField>

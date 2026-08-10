@@ -12,7 +12,7 @@
   cursor: pointer;
   display: inline-flex;
   font-family: var(--font-game-heading);
-  font-weight: 500;
+  font-weight: 400;
   gap: 0.7em;
   isolation: isolate;
   justify-content: center;
@@ -29,10 +29,11 @@
 }
 
 .game-button::before {
-  border: 12px solid transparent;
-  border-image-source: url('/ui-kit/controls/button-dark-frame-v2.webp');
-  border-image-slice: 52 72 fill;
-  border-image-width: 12px;
+  background: var(--ink-raised);
+  border: 1px solid color-mix(in srgb, var(--game-button-accent) 76%, transparent);
+  box-shadow:
+    inset 0 0 0 3px var(--ink-black),
+    inset 0 0 0 4px color-mix(in srgb, var(--game-button-accent) 34%, transparent);
   content: '';
   filter: brightness(1) saturate(1);
   inset: 0;
@@ -107,17 +108,19 @@
 
 .game-button--primary::before,
 .game-button--radiant::before {
-  border-image-source: url('/ui-kit/controls/cta-gold-frame.webp');
-  border-image-slice: 48 62 fill;
+  background: linear-gradient(135deg, #c48a3c, #e0b765 48%, #ae6e28);
+  border-color: #efd596;
+  box-shadow:
+    inset 0 0 0 3px color-mix(in srgb, #6e421c 72%, transparent),
+    inset 0 0 0 4px color-mix(in srgb, #fff0c4 52%, transparent);
 }
 
 .game-button--secondary::before,
 .game-button--cinematic::before {
-  border-image-source: url('/ui-kit/controls/button-dark-frame-v2.webp');
+  background: var(--ink-raised);
 }
 
 .game-button--ghost::before {
-  border-image-source: url('/ui-kit/controls/button-dark-frame-v2.webp');
   filter: brightness(0.78) saturate(0.72);
   opacity: 0.78;
 }
@@ -236,9 +239,10 @@
 }
 
 .game-button--icon::before {
-  background: url('/ui-kit/controls/button-icon-frame.webp') center / contain no-repeat;
-  border: 0;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--material-gold) 72%, transparent);
   border-image: none;
+  box-shadow: inset 0 0 0 3px var(--ink-black);
 }
 
 .game-button--gold {

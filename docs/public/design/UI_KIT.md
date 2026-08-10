@@ -76,10 +76,9 @@ sont exclusivement pilotés en CSS.
 
 ## Typographie et interactions
 
-- Titres : `--font-display` (Cinzel).
-- Prose : `--font-serif` (EB Garamond).
-- Accents éditoriaux et boutons : `--font-accent` (Cormorant Garamond).
-- Labels, champs, aides et HUD : `--font-ui` (Alegreya Sans).
+- Titres : `--font-display` (IM Fell French Canon SC).
+- Prose, accents, boutons, labels et HUD : `--font-serif`, `--font-accent` et
+  `--font-ui` (Alegreya).
 
 Échelle appliquée aux composants :
 
@@ -113,40 +112,54 @@ Les routes `login`, `signup` et récupération d'accès ne possèdent pas de cop
 locale des primitives. Elles composent le UI Kit global dans le groupe de routes
 `app/(auth)`, avec un layout visuel commun et des formulaires accessibles.
 
-## Assets
+## Assets Encre de Sel
 
-Les assets runtime sont servis depuis `public/ui-kit/`. Les masters, prompts et
-planches de contrôle restent privés dans `docs/private/`. Les WebP runtime sont
-transparents et dimensionnés pour leur usage réel, avec une définition Retina
-pour les icônes.
+Les nouveaux cadrans runtime sont servis depuis `public/encre-de-sel/`. Les
+icônes encore actives restent dans `public/ui-kit/icons/`. Les masters, prompts
+et planches de contrôle restent privés dans `docs/private/`.
 
 Organisation :
 
 ```txt
-public/ui-kit/
-  avatars/
-  brand/
-  controls/
-  dividers/
+public/encre-de-sel/
+  chrome/
+    header-separator.webp
+    reader-separator.webp
+    footer-separator.webp
+    hud-stat-separator.webp
+    hud-bar-mask.webp
+  frames/
+    choice-frame-gore.webp
+    choice-number-plate.webp
+    action-input-gore.webp
   icons/
-  panels/
-  stepper/
-  surfaces/
-  vocations/
+    blood.webp
+    breath.webp
+    hunger.webp
+    thirst.webp
+    calamine.webp
+    inventory-tile.webp
+    journal-tile.webp
+    character-tile.webp
+    action-quill.webp
+    action-submit-tile.webp
 ```
 
-Les cadres actuels des boutons sont `button-dark-frame-v2.webp`,
-`cta-gold-frame.webp` et `button-icon-frame.webp`. Le panel, la narration et les
-zones de structure réemploient `structural-frame-v2.webp`. Ce cadre 9-slice ne
-contient ni flèche, ni diamant, ni séparateur interne. Il habille les panels
-sombres, la narration, la barre haute, le dock d'étapes et le footer HUD avec un
-langage unique. Le parchemin, les boutons et les champs conservent leurs cadres
-dédiés pour respecter leurs proportions.
+`choice-frame-gore.webp` et `action-input-gore.webp` sont rendus en 9-slice :
+les angles, les gouttes et l'empreinte restent fixes, tandis que le centre peut
+s'étendre sur une ou plusieurs lignes. Les chiffres, textes, labels et icônes
+restent du HTML accessible. Les contrôles carrés génériques restent dessinés en
+CSS ; seuls les trois outils permanents du footer utilisent leurs tuiles validées.
 
-Le cadre des champs utilise `game-input-frame-v2.webp`. Il est rendu en 9-slice
-avec `border-image` afin de préserver les angles gravés lorsque la largeur du
-champ varie. Les textes et icônes restent des éléments HTML indépendants ;
-aucun contenu n'est incrusté dans le master.
+Les séparateurs, le rail, les pictogrammes de ressources et les trois tuiles du
+footer sont extraits du master GameSession validé. Les tuiles gardent leur cadre
+et leur icône dans un seul bitmap afin de conserver exactement le trait original.
+
+Les surfaces, panels et boutons génériques utilisent les tokens de matière. Le
+header, la séparation lecture/image et le footer emploient les assets `chrome/`
+issus du master. Les anciens masters `structural-frame-v2`,
+`button-dark-frame-v2`, `cta-gold-frame` et `game-input-frame-v2` sont retirés du
+runtime.
 
 Les éléments consolidés depuis la landing sont copiés et optimisés dans cette
 arborescence. Les chemins historiques de la landing ne sont ni déplacés ni
@@ -159,12 +172,11 @@ trois compositions de référence : création de personnage, hub narratif et
 session de jeu. Les ancres `#proof-form`, `#proof-hub` et `#proof-session`
 isolent chaque composition pour la QA.
 
-Le Hub et la Session utilisent des scènes propres dans `public/scenes/`. Ces
-images ne contiennent aucun texte ni élément d'interface : le rail de dialogue,
-les souvenirs, la narration, les actions et le HUD restent des composants HTML
-réels. La géométrie desktop suit les mockups de référence (Hub en grille 69/31,
-Session en superposition cinématique avec HUD bas) tandis que la déclinaison
-mobile privilégie la lisibilité et l'absence de chevauchement.
+Le Hub et la Session utilisent le même `GameSceneLayout`. Sur desktop : header
+persistant, scène 58 %, reader 42 % avec scroll indépendant, footer sur toute la
+largeur. Sur mobile : header compact, scène entre 32 et 38 dVh, reader en flux
+naturel puis footer. Il n'existe plus de variantes `sidebar`, `immersive` ou
+`centered`.
 
 La route retourne une 404 en production. Aucun dossier `storybook-static` ne
 doit être versionné ; Storybook pourra être ajouté plus tard comme dépendance de

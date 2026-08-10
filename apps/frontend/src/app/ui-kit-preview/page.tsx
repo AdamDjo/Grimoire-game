@@ -147,11 +147,7 @@ export default function UiKitPreviewPage() {
       <section className="ui-kit-preview__section">
         <h2>Variantes · Création de personnage</h2>
         <div className="ui-kit-preview__character-kit">
-          <GamePanel
-            className="ui-kit-preview__form-frame-legacy"
-            padding="none"
-            variant="form-frame-legacy"
-          >
+          <GamePanel padding="none" variant="form-frame">
             <div className="ui-kit-preview__character-stepper">
               <GameStepper
                 ariaLabel="Variante de progression"
@@ -167,17 +163,12 @@ export default function UiKitPreviewPage() {
                 title="Identité"
               />
               <GameField label="Nom du personnage">
-                <GameInput placeholder="Entrez votre nom…" variant="framed" />
+                <GameInput placeholder="Entrez votre nom…" />
               </GameField>
             </div>
           </GamePanel>
 
-          <GamePanel
-            as="aside"
-            className="ui-kit-preview__aside-frame-legacy"
-            padding="none"
-            variant="aside-frame-legacy"
-          >
+          <GamePanel as="aside" padding="none" variant="aside-frame">
             <span className="ui-kit-preview__character-medallion">
               <GameIcon decorative name="book" size={32} />
             </span>
@@ -194,11 +185,7 @@ export default function UiKitPreviewPage() {
           disponibles au-dessus.
         </p>
         <div className="ui-kit-preview__character-kit ui-kit-preview__character-kit--v2">
-          <GamePanel
-            className="ui-kit-preview__form-frame-legacy ui-kit-preview__form-frame-legacy--v2"
-            padding="none"
-            variant="form-frame"
-          >
+          <GamePanel padding="none" variant="form-frame">
             <div className="ui-kit-preview__character-stepper ui-kit-preview__character-stepper--v2">
               <GameStepper
                 ariaLabel="Progression premium"
@@ -214,17 +201,12 @@ export default function UiKitPreviewPage() {
                 title="Identité"
               />
               <GameField label="Nom du personnage">
-                <GameInput placeholder="Entre ton nom…" variant="framed-v2" />
+                <GameInput placeholder="Entre ton nom…" />
               </GameField>
             </div>
           </GamePanel>
 
-          <GamePanel
-            as="aside"
-            className="ui-kit-preview__aside-frame-legacy ui-kit-preview__aside-frame-legacy--v2"
-            padding="none"
-            variant="aside-frame"
-          >
+          <GamePanel as="aside" padding="none" variant="aside-frame">
             <span className="ui-kit-preview__character-medallion">
               <GameIcon decorative name="book" size={32} />
             </span>
@@ -308,7 +290,6 @@ export default function UiKitPreviewPage() {
         />
         <GameSceneLayout
           className="ui-kit-preview__scene"
-          variant="sidebar"
           top={
             <GameTopBar
               start={
@@ -335,14 +316,14 @@ export default function UiKitPreviewPage() {
               }
             />
           }
-          main={
+          scene={
             <GameSurface padding="md" variant="card">
               <NarrativePassage dropCap>
                 <p>Le refuge bruisse de voix étouffées tandis que la nuit descend sur Tissan.</p>
               </NarrativePassage>
             </GameSurface>
           }
-          sidebar={
+          reader={
             <GameSurface padding="sm" variant="card">
               <h3>Souvenirs</h3>
               <div className="ui-kit-preview__memories">

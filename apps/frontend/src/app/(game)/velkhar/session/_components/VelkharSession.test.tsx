@@ -178,17 +178,43 @@ describe('VelkharSession', () => {
     })
   })
 
-  it('ouvre une session et rend la fiction, les choix et le HUD compact', async () => {
+  it('ouvre une session et rend la fiction, les choix et le HUD Encre de Sel', async () => {
     render(<VelkharSession initialCharacter={MOCK_CHARACTER} />)
 
     expect(await screen.findByText('Salt moves across the road.')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Approach the stranger/ })).toBeInTheDocument()
-    expect(screen.getByRole('progressbar', { name: 'Health points (HP)' })).toBeInTheDocument()
-    expect(screen.queryByRole('progressbar', { name: 'Blood' })).not.toBeInTheDocument()
-    expect(screen.queryByRole('progressbar', { name: 'Breath' })).not.toBeInTheDocument()
+    expect(screen.getByRole('progressbar', { name: 'Blood' })).toBeInTheDocument()
+    expect(screen.getByRole('progressbar', { name: 'Breath' })).toBeInTheDocument()
+    expect(screen.getByRole('progressbar', { name: 'Hunger' })).toBeInTheDocument()
+    expect(screen.getByRole('progressbar', { name: 'Thirst' })).toBeInTheDocument()
     expect(screen.getByRole('progressbar', { name: 'Calamine' })).toBeInTheDocument()
-    expect(screen.getByLabelText('Gold : 37')).toBeInTheDocument()
-    expect(screen.getByText('Wound')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Open inventory, 6 items' })).toBeInTheDocument()
+  })
+
+  it('dimensionne chaque barre du HUD selon le pourcentage réel', async () => {
+    createSessionMock.mockResolvedValueOnce({
+      ...OPENING_RESPONSE,
+      survival: {
+        ...OPENING_RESPONSE.survival,
+        calamine: 27,
+        energy: 42,
+        hp: 5,
+        hunger: 64,
+        maxHp: 10,
+        thirst: 18,
+      },
+    })
+
+    render(<VelkharSession initialCharacter={MOCK_CHARACTER} />)
+
+    expect(await screen.findByText('Salt moves across the road.')).toBeInTheDocument()
+    expect(screen.getByRole('progressbar', { name: 'Blood' })).toHaveStyle('--hud-stat-value: 50%')
+    expect(screen.getByRole('progressbar', { name: 'Breath' })).toHaveStyle('--hud-stat-value: 42%')
+    expect(screen.getByRole('progressbar', { name: 'Hunger' })).toHaveStyle('--hud-stat-value: 64%')
+    expect(screen.getByRole('progressbar', { name: 'Thirst' })).toHaveStyle('--hud-stat-value: 18%')
+    expect(screen.getByRole('progressbar', { name: 'Calamine' })).toHaveStyle(
+      '--hud-stat-value: 27%'
+    )
   })
 
   it('envoie un choix une seule fois et affiche la scène suivante', async () => {
