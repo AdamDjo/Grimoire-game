@@ -352,46 +352,36 @@ body:has(.aveugle-hub) {
 }
 
 .aveugle-hub--loading {
-  min-height: 100dvh;
-  overflow: hidden;
-  padding: 8rem 2rem 2rem;
-}
-
-.aveugle-hub--loading .aveugle-hub__scene {
-  inset: 0;
-  position: absolute;
-}
-
-.aveugle-hub--loading::after {
-  background: rgba(5, 4, 3, 0.64);
-  content: '';
-  inset: 0;
-  position: absolute;
+  height: 100dvh;
 }
 
 .aveugle-hub__skeleton {
   animation: aveugle-hub-pulse 1.8s ease-in-out infinite;
   background: rgba(240, 212, 138, 0.09);
   border: 1px solid rgba(217, 164, 65, 0.24);
-  position: relative;
-  z-index: 1;
 }
 
 .aveugle-hub__skeleton--scene {
   height: 4.75rem;
-  width: min(42rem, 60vw);
+  margin: clamp(1rem, 2vw, 2rem);
+  width: min(42rem, calc(100% - clamp(2rem, 4vw, 4rem)));
 }
 
 .aveugle-hub__skeleton--panel {
-  height: min(36rem, 72vh);
-  margin: 1rem 0 0 auto;
-  width: min(29rem, 34vw);
+  height: calc(100% - clamp(2rem, 4vw, 4rem));
+  margin: clamp(1rem, 2vw, 2rem);
+  width: calc(100% - clamp(2rem, 4vw, 4rem));
 }
 
-.aveugle-hub--error {
+.aveugle-hub--error .game-scene-layout__reader {
   align-items: center;
   display: grid;
   justify-items: center;
+}
+
+.aveugle-hub__error-scene {
+  height: 100%;
+  width: 100%;
 }
 
 .aveugle-hub__load-error {
@@ -403,9 +393,8 @@ body:has(.aveugle-hub) {
   justify-items: center;
   max-width: 34rem;
   padding: clamp(2rem, 5vw, 3.5rem);
-  position: relative;
   text-align: center;
-  z-index: 1;
+  width: calc(100% - clamp(2rem, 4vw, 4rem));
 }
 
 .aveugle-hub__load-error h1 {

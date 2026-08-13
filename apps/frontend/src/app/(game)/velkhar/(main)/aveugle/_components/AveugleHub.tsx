@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
@@ -9,14 +8,16 @@ import { GameButton } from '@/components/ui/grimoire/GameButton/GameButton'
 import { GameHudDock } from '@/components/ui/grimoire/GameHudDock/GameHudDock'
 import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
 import { GameSceneLayout } from '@/components/ui/grimoire/GameSceneLayout/GameSceneLayout'
-import { GameTopBar } from '@/components/ui/grimoire/GameTopBar/GameTopBar'
 import { ResourceCounter } from '@/components/ui/grimoire/ResourceCounter/ResourceCounter'
 import { ACTIVE_GAME_SESSION_COOKIE, hasActiveGameSession } from '@/lib/active-game-session'
 import { gsap, useGSAP } from '@/lib/gsap-init'
 import { getAuthHref } from '@/lib/internal-navigation'
 import { ensureAnonymousSession } from '@/lib/supabase/ensure-session'
 
-import { VELKHAR_WORLD } from '../../../_config/velkhar-world'
+import {
+  VelkharDormantHud,
+  VelkharFlowTopBar,
+} from '../../../_components/VelkharFlowChrome/VelkharFlowChrome'
 import {
   CHARACTER_RESULT_STORAGE_KEY,
   parseStoredCharacterResult,
@@ -40,8 +41,6 @@ interface AveugleHubProps {
   previewIntro?: boolean
   transitionFromHome?: boolean
 }
-
-export const AUBERGE_HUB_UNLOCK_STORAGE_KEY = 'grimoire:velkhar:auberge-unlocked'
 
 function readActiveSessionCookie(): boolean {
   const cookie = document.cookie
@@ -68,11 +67,6 @@ function readCharacter(): CharacterCreateDraft | null {
   return null
 }
 
-function getFirstRunHref(campaignId?: string): string {
-  const path = `${VELKHAR_WORLD.routes.session}/new`
-  return campaignId ? `${path}?campaign=${encodeURIComponent(campaignId)}` : path
-}
-
 export function AveugleHub({
   campaignId,
   isRunReturn = false,
@@ -80,13 +74,11 @@ export function AveugleHub({
   transitionFromHome = false,
 }: AveugleHubProps) {
   const locale = useLocale()
-  const router = useRouter()
   const t = useTranslations('Auberge')
   const sessionT = useTranslations('Session')
   const [hydrated, setHydrated] = useState(false)
   const [character, setCharacter] = useState<CharacterCreateDraft | null>(null)
   const [hasActiveSessionState, setHasActiveSessionState] = useState(false)
-  const [hubUnlocked, setHubUnlocked] = useState(false)
   const [showIntro, setShowIntro] = useState(false)
   const [activePanel, setActivePanel] = useState<AubergePanel>('dialogue')
   const [hubState, setHubState] = useState<AveugleHubState | null>(null)
@@ -106,20 +98,8 @@ export function AveugleHub({
   useEffect(() => {
     const nextCharacter = readCharacter()
     const nextHasActiveSession = readActiveSessionCookie()
-    const nextHubUnlocked = Boolean(
-      nextCharacter &&
-      (isRunReturn ||
-        nextHasActiveSession ||
-        window.localStorage.getItem(AUBERGE_HUB_UNLOCK_STORAGE_KEY) === 'true')
-    )
-
-    if (nextHubUnlocked) {
-      window.localStorage.setItem(AUBERGE_HUB_UNLOCK_STORAGE_KEY, 'true')
-    }
-
     setCharacter(nextCharacter)
     setHasActiveSessionState(nextHasActiveSession)
-    setHubUnlocked(nextHubUnlocked)
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     setShowIntro(previewIntro || (!reduceMotion && !hasSeenAubergeIntro()))
     setHydrated(true)
@@ -145,9 +125,9 @@ export function AveugleHub({
   }, [])
 
   useEffect(() => {
-    if (!hydrated || !character || !hubUnlocked) return
+    if (!hydrated || !character) return
     void loadHub()
-  }, [character, hubUnlocked, hydrated, loadHub])
+  }, [character, hydrated, loadHub])
 
   const snapshot = useMemo(
     () =>
@@ -169,11 +149,6 @@ export function AveugleHub({
     [campaignId, character, hasActiveSessionState, isRunReturn, locale, t]
   )
   const openingLine = stageCopy[snapshot.stage]
-
-  useEffect(() => {
-    if (!hydrated || !character || hubUnlocked) return
-    router.replace(getFirstRunHref(campaignId))
-  }, [campaignId, character, hubUnlocked, hydrated, router])
 
   useGSAP(
     () => {
@@ -267,43 +242,30 @@ export function AveugleHub({
       ]
     : []
 
-  const topBar = snapshot.character ? (
-    <GameTopBar
+  const topBar = (
+    <VelkharFlowTopBar
       className="aveugle-hub__topbar"
-      data-velkhar-enter
-      start={
-        <div className="game-top-bar__nav">
-          <span>{VELKHAR_WORLD.name}</span>
-          <span aria-hidden="true">|</span>
-          <span>{t('innName')}</span>
-        </div>
-      }
-      center={
-        <strong
-          aria-label={t('characterIdentity', { name: snapshot.character.name })}
-          className="game-top-bar__title"
-        >
-          {t('innName')}
-        </strong>
-      }
-      end={
-        <div className="game-top-bar__nav">
-          <span>{sessionT('navMap')}</span>
-          <span aria-hidden="true">|</span>
-          <span>{sessionT('navJournal')}</span>
-          <span aria-hidden="true">|</span>
-          <span>{sessionT('navOptions')}</span>
-        </div>
+      location={t('innName')}
+      region={sessionT('regionLabel')}
+      titleAriaLabel={
+        hubState && snapshot.character
+          ? t('characterIdentity', { name: snapshot.character.name })
+          : undefined
       }
     />
-  ) : null
+  )
 
-  if (!hydrated || (snapshot.character && (!hubUnlocked || (hubLoading && !hubState)))) {
+  if (!hydrated || (snapshot.character && !hubState && !hubError)) {
     return (
       <main className="aveugle-hub aveugle-hub--loading" aria-busy="true">
-        <div className="aveugle-hub__scene" aria-hidden="true" />
-        <div className="aveugle-hub__skeleton aveugle-hub__skeleton--scene" />
-        <div className="aveugle-hub__skeleton aveugle-hub__skeleton--panel" />
+        <GameSceneLayout
+          background={<div className="aveugle-hub__scene" aria-hidden="true" />}
+          bottom={<VelkharDormantHud />}
+          className="aveugle-hub__layout"
+          reader={<div className="aveugle-hub__skeleton aveugle-hub__skeleton--panel" />}
+          scene={<div className="aveugle-hub__skeleton aveugle-hub__skeleton--scene" />}
+          top={topBar}
+        />
       </main>
     )
   }
@@ -326,22 +288,30 @@ export function AveugleHub({
       : '/velkhar/aveugle?transition=home'
 
     return (
-      <main className="aveugle-hub aveugle-hub--loading aveugle-hub--error">
-        <div className="aveugle-hub__scene" aria-hidden="true" />
-        <section className="aveugle-hub__load-error" role="alert">
-          <GameIcon decorative name={showAccountPrompt ? 'lock' : 'warning'} size={48} />
-          <h1>{showAccountPrompt ? sessionT('chronicleWaiting') : t('hubErrorTitle')}</h1>
-          <p>{showAccountPrompt ? sessionT('limitBody') : t('hubErrorBody')}</p>
-          {showAccountPrompt ? (
-            <GameLink href={getAuthHref('/signup', accountReturnPath)} variant="radiant">
-              {sessionT('createAccount')}
-            </GameLink>
-          ) : (
-            <GameButton loading={hubLoading} onClick={() => void loadHub()} variant="radiant">
-              {t('retry')}
-            </GameButton>
-          )}
-        </section>
+      <main className="aveugle-hub aveugle-hub--error">
+        <GameSceneLayout
+          background={<div className="aveugle-hub__scene" aria-hidden="true" />}
+          bottom={<VelkharDormantHud />}
+          className="aveugle-hub__layout"
+          reader={
+            <section className="aveugle-hub__load-error" role="alert">
+              <GameIcon decorative name={showAccountPrompt ? 'lock' : 'warning'} size={48} />
+              <h1>{showAccountPrompt ? sessionT('chronicleWaiting') : t('hubErrorTitle')}</h1>
+              <p>{showAccountPrompt ? sessionT('limitBody') : t('hubErrorBody')}</p>
+              {showAccountPrompt ? (
+                <GameLink href={getAuthHref('/signup', accountReturnPath)} variant="radiant">
+                  {sessionT('createAccount')}
+                </GameLink>
+              ) : (
+                <GameButton loading={hubLoading} onClick={() => void loadHub()} variant="radiant">
+                  {t('retry')}
+                </GameButton>
+              )}
+            </section>
+          }
+          scene={<div className="aveugle-hub__error-scene" aria-hidden="true" />}
+          top={topBar}
+        />
       </main>
     )
   }
