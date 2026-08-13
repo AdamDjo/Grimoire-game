@@ -44,6 +44,7 @@ merge. La checklist opérationnelle détaillée vit dans l'issue #163.
 | Calamine et fin Calciné        | Livré | #182 / PR #199 |
 | Inventaire réel                | Livré | #183           |
 | Action de repos                | Livré | #184           |
+| Game Session universelle       | Prête | #272 / PR #277 |
 
 ## Phase 1 — pré-déploiement
 
