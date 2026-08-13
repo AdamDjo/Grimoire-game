@@ -41,14 +41,14 @@
 }
 
 .game-scene-layout__body::after {
-  background: url('/encre-de-sel/chrome/reader-separator-v2.webp') center / 100% 100% no-repeat;
+  background: url('/encre-de-sel/chrome/reader-separator.webp') center / 6px 100% no-repeat;
   bottom: 0;
   content: '';
-  left: calc(var(--game-scene-reader-start) - 6px);
+  left: calc(var(--game-scene-reader-start) - 3px);
   pointer-events: none;
   position: absolute;
   top: 0;
-  width: 12px;
+  width: 6px;
   z-index: 3;
 }
 

@@ -432,10 +432,6 @@
   text-underline-offset: 0.35rem;
 }
 
-.velkhar-session__calamine-ring {
-  filter: drop-shadow(0 4px 9px color-mix(in srgb, var(--fresh-blood) 24%, transparent));
-}
-
 .velkhar-survival-hud {
   align-items: center;
   background: var(--ink-black);
@@ -618,19 +614,6 @@
   z-index: 1;
 }
 
-.game-session-source {
-  color: var(--salt-muted);
-  font-family: var(--font-game-ui);
-  font-size: var(--text-game-micro);
-  letter-spacing: 0.08em;
-  padding: 0.22rem 0.48rem;
-  text-transform: uppercase;
-}
-
-.game-session-source[data-source='ai'] {
-  color: var(--breath-aqua);
-}
-
 .velkhar-session-window {
   --font-game-heading: var(--font-game-display);
   --game-window-backdrop: rgba(0, 0, 0, 0.72);
@@ -686,8 +669,7 @@
     .velkhar-inventory__summary > span,
     .velkhar-inventory-slot > span,
     .velkhar-inventory__specials p,
-    .velkhar-inventory__empty-keyring,
-    .velkhar-session-menu__status
+    .velkhar-inventory__empty-keyring
   ) {
   color: color-mix(in srgb, var(--salt-white) 88%, var(--material-gold));
 }
@@ -1186,13 +1168,6 @@
   margin: 0;
 }
 
-.velkhar-inventory__permissions {
-  color: var(--breath-aqua) !important;
-  font-family: var(--font-game-ui) !important;
-  font-size: var(--text-game-caption) !important;
-  text-transform: capitalize;
-}
-
 .velkhar-inventory__actions {
   display: flex;
   flex-wrap: wrap;
@@ -1246,10 +1221,6 @@
 }
 
 @media (max-width: 1120px) {
-  .game-session-source {
-    display: none;
-  }
-
   .velkhar-session {
     height: auto;
     min-height: 100dvh;
@@ -1341,10 +1312,6 @@
 
   .velkhar-session__topbar .game-top-bar__center {
     display: none;
-  }
-
-  .velkhar-session__topbar-end > a {
-    font-size: var(--text-game-caption);
   }
 
   .velkhar-survival-hud {
@@ -1545,9 +1512,5 @@
   .velkhar-session-window .game-window,
   .game-session-narrative__loading::after {
     animation: none;
-  }
-
-  .velkhar-session__topbar-end > a::after {
-    transition: none;
   }
 }
