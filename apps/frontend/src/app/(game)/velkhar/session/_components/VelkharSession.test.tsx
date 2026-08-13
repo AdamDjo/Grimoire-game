@@ -189,6 +189,13 @@ describe('VelkharSession', () => {
     expect(screen.getByRole('progressbar', { name: 'Thirst' })).toBeInTheDocument()
     expect(screen.getByRole('progressbar', { name: 'Calamine' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Open inventory, 6 items' })).toBeInTheDocument()
+    expect(screen.getByText('GM connected')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Sign in' })).toHaveAttribute(
+      'href',
+      '/login?next=%2Fvelkhar%2Fsession%2Fresume'
+    )
+    expect(screen.queryByRole('button', { name: 'Map' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Journal' })).not.toBeInTheDocument()
   })
 
   it('dimensionne chaque barre du HUD selon le pourcentage réel', async () => {

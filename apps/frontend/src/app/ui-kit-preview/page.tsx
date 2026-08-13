@@ -63,8 +63,8 @@ export default function UiKitPreviewPage() {
     <main className="ui-kit-preview">
       <header className="ui-kit-preview__hero">
         <GameBrand decorative size="md" />
-        <p>UI KIT · BIBLIOTHÈQUE GLOBALE</p>
-        <h1>Atlas des composants</h1>
+        <p>ENCRE DE SEL · NOUVEAU KIT</p>
+        <h1>Atlas du voyage</h1>
         <GameDivider variant="celestial" size="lg" />
       </header>
 
@@ -181,8 +181,7 @@ export default function UiKitPreviewPage() {
       <section className="ui-kit-preview__section">
         <h2>Variantes V2 · Création premium</h2>
         <p className="ui-kit-preview__intro">
-          Nouveaux masters opaques et variantes responsive. Les composants historiques restent
-          disponibles au-dessus.
+          Primitives du nouveau langage visuel, opaques, lisibles et adaptatives.
         </p>
         <div className="ui-kit-preview__character-kit ui-kit-preview__character-kit--v2">
           <GamePanel padding="none" variant="form-frame">
@@ -267,10 +266,25 @@ export default function UiKitPreviewPage() {
       <section className="ui-kit-preview__section">
         <h2>Avatars et progression</h2>
         <div className="ui-kit-preview__row">
-          <GameAvatar src="/ui-kit/icons/stranger.webp" alt="Étranger" size="lg" />
-          <GameAvatar src="/ui-kit/icons/mage.webp" alt="Mage" size="lg" state="active" />
-          <GameAvatar src="/ui-kit/icons/helmet.webp" alt="Guerrier" size="lg" state="selected" />
-          <GameAvatar src="/ui-kit/icons/crown.webp" alt="Prestige" size="lg" state="prestige" />
+          <GameAvatar src="/encre-de-sel/icons/character-tile.webp" alt="Étranger" size="lg" />
+          <GameAvatar
+            src="/encre-de-sel/icons/journal-tile.webp"
+            alt="Chronique"
+            size="lg"
+            state="active"
+          />
+          <GameAvatar
+            src="/encre-de-sel/icons/inventory-tile.webp"
+            alt="Équipement"
+            size="lg"
+            state="selected"
+          />
+          <GameAvatar
+            src="/encre-de-sel/icons/character-tile.webp"
+            alt="Prestige"
+            size="lg"
+            state="prestige"
+          />
         </div>
         <GameStepper
           items={steps}
@@ -301,7 +315,13 @@ export default function UiKitPreviewPage() {
               }
               center={
                 <PlayerIdentity
-                  avatar={<GameAvatar alt="Aerion" size="sm" src="/ui-kit/icons/stranger.webp" />}
+                  avatar={
+                    <GameAvatar
+                      alt="Aerion"
+                      size="sm"
+                      src="/encre-de-sel/icons/character-tile.webp"
+                    />
+                  }
                   name="Aerion"
                   subtitle="Tisse-Verbe"
                 />
@@ -329,11 +349,23 @@ export default function UiKitPreviewPage() {
               <div className="ui-kit-preview__memories">
                 <MemoryBadge
                   title="Le serment du Sel"
-                  visual={<GameAvatar alt="Souvenir" size="lg" src="/ui-kit/icons/memory.webp" />}
+                  visual={
+                    <GameAvatar
+                      alt="Souvenir"
+                      size="lg"
+                      src="/encre-de-sel/icons/journal-tile.webp"
+                    />
+                  }
                 />
                 <MemoryBadge
                   title="Le rêve archonique"
-                  visual={<GameAvatar alt="Rêve" size="lg" src="/ui-kit/icons/moon.webp" />}
+                  visual={
+                    <GameAvatar
+                      alt="Rêve"
+                      size="lg"
+                      src="/encre-de-sel/icons/character-tile.webp"
+                    />
+                  }
                 />
               </div>
             </GameSurface>

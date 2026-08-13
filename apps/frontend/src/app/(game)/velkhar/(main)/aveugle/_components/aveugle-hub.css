@@ -7,7 +7,7 @@ body:has(.aveugle-hub) {
 }
 
 .aveugle-hub {
-  background: var(--void);
+  background: var(--ink-black);
   height: 100dvh;
   min-height: 0;
   overflow: hidden;
@@ -81,7 +81,7 @@ body:has(.aveugle-hub) {
 .aveugle-hub__scene-location {
   color: var(--salt-white);
   font-family: var(--font-game-display);
-  font-size: clamp(1.1rem, 1.45vw, 1.35rem);
+  font-size: var(--text-game-section);
   letter-spacing: 0.08em;
   text-shadow: 0 0.3rem 0.8rem rgba(0, 0, 0, 0.8);
   text-transform: uppercase;
@@ -96,7 +96,7 @@ body:has(.aveugle-hub) {
 }
 
 .aveugle-hub__scene-caption::before {
-  background: var(--gold-dark);
+  background: var(--material-gold-dim);
   content: '';
   inset: 0 auto 0 0;
   position: absolute;
@@ -104,9 +104,9 @@ body:has(.aveugle-hub) {
 }
 
 .aveugle-hub__scene-caption p {
-  color: var(--parchment);
-  font-family: var(--font-game-heading);
-  font-size: clamp(1.1rem, 1.35vw, 1.3rem);
+  color: var(--salt-white);
+  font-family: var(--font-game-body);
+  font-size: var(--text-game-lead);
   font-style: italic;
   line-height: 1.5;
   margin: 0;
@@ -131,7 +131,7 @@ body:has(.aveugle-hub) {
 .aveugle-hub__dock-nav {
   backdrop-filter: blur(8px);
   background: rgba(7, 6, 4, 0.78);
-  border-block: 1px solid rgba(217, 164, 65, 0.26);
+  border-block: 1px solid color-mix(in srgb, var(--material-gold) 26%, transparent);
   display: grid;
   gap: 0.25rem;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -139,7 +139,7 @@ body:has(.aveugle-hub) {
 }
 
 .aveugle-hub__dock-nav .game-button {
-  font-size: 0.95rem;
+  font-size: var(--text-game-label);
   min-height: 44px;
   min-width: 0;
   padding-inline: 0.45rem;
@@ -147,9 +147,9 @@ body:has(.aveugle-hub) {
 }
 
 .aveugle-hub__dock-nav .game-button[aria-pressed='true'] {
-  background: rgba(217, 164, 65, 0.12);
-  box-shadow: inset 0 -1px var(--gold-dark);
-  color: var(--gold-light);
+  background: color-mix(in srgb, var(--material-gold) 12%, transparent);
+  box-shadow: inset 0 -1px var(--material-gold-dim);
+  color: var(--material-gold-bright);
 }
 
 .aveugle-hub__dialogue.game-panel {
@@ -172,7 +172,7 @@ body:has(.aveugle-hub) {
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: clamp(1.75rem, 3vh, 2.7rem) clamp(1.5rem, 2.5vw, 2.5rem);
-  scrollbar-color: rgba(217, 164, 65, 0.55) transparent;
+  scrollbar-color: color-mix(in srgb, var(--material-gold) 55%, transparent) transparent;
   scrollbar-width: thin;
 }
 
@@ -195,10 +195,10 @@ body:has(.aveugle-hub) {
 }
 
 .aveugle-hub__dialogue-content h1 {
-  color: var(--gold-light);
-  font-family: var(--font-game-heading);
-  font-size: clamp(1.5rem, 2vw, 1.9rem);
-  font-weight: 500;
+  color: var(--material-gold-bright);
+  font-family: var(--font-game-display);
+  font-size: var(--text-game-heading);
+  font-weight: 400;
   letter-spacing: 0.1em;
   line-height: 1.15;
   margin: 0;
@@ -221,19 +221,19 @@ body:has(.aveugle-hub) {
 }
 
 .aveugle-hub__choice-copy small {
-  color: var(--gold-light);
-  font-family: var(--font-game-body);
-  font-size: 0.78rem;
+  color: var(--material-gold-bright);
+  font-family: var(--font-game-ui);
+  font-size: var(--text-game-micro);
   font-style: normal;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .aveugle-hub__dialogue-content blockquote {
-  border-left: 1px solid var(--gold-dark);
-  color: var(--parchment);
-  font-family: var(--font-game-heading);
-  font-size: clamp(1.35rem, 1.8vw, 1.7rem);
+  border-left: 1px solid var(--material-gold-dim);
+  color: var(--salt-white);
+  font-family: var(--font-game-body);
+  font-size: var(--text-game-quote);
   font-style: italic;
   line-height: 1.5;
   margin: 0;
@@ -243,7 +243,7 @@ body:has(.aveugle-hub) {
 }
 
 .aveugle-hub__dialogue-content .dialogue-choice {
-  font-size: clamp(1.08rem, 1.35vw, 1.22rem);
+  font-size: var(--text-game-body-sm);
   min-height: 56px;
   padding-block: 0.75rem;
 }
@@ -254,7 +254,7 @@ body:has(.aveugle-hub) {
 }
 
 .aveugle-hub__dialogue-content .narrative-composer__control {
-  font-size: clamp(1.05rem, 1.25vw, 1.18rem);
+  font-size: var(--text-game-body-sm);
   min-height: 7rem;
 }
 
@@ -281,39 +281,39 @@ body:has(.aveugle-hub) {
 .aveugle-hub__response-actions .game-button,
 .aveugle-hub__other-question,
 .aveugle-hub__composer > .game-button {
-  font-size: 1.05rem;
+  font-size: var(--text-game-label);
 }
 
 .aveugle-hub__empty,
 .aveugle-hub__exchange > p,
 .aveugle-hub__interaction-error p,
 .aveugle-hub__conversation-stage > [role='status'] {
-  color: var(--ink-2);
+  color: var(--salt-muted);
   font-family: var(--font-game-body);
-  font-size: 1rem;
-  line-height: 1.5;
+  font-size: var(--text-game-body-sm);
+  line-height: 1.6;
   margin: 0;
 }
 
 .aveugle-hub__exchange {
-  border-top: 1px solid var(--border-gold);
+  border-top: 1px solid var(--line-gold);
   display: grid;
   gap: 1rem;
   padding-top: 1.25rem;
 }
 
 .aveugle-hub__exchange h2 {
-  color: var(--gold-light);
-  font-family: var(--font-game-heading);
-  font-size: 1.05rem;
-  font-weight: 500;
+  color: var(--material-gold-bright);
+  font-family: var(--font-game-display);
+  font-size: var(--text-game-section);
+  font-weight: 400;
   letter-spacing: 0.08em;
   margin: 0;
   text-transform: uppercase;
 }
 
 .aveugle-hub__interaction-error {
-  border-left: 1px solid var(--blood);
+  border-left: 1px solid var(--fresh-blood);
   display: grid;
   gap: 0.8rem;
   padding-left: 1rem;
@@ -357,8 +357,8 @@ body:has(.aveugle-hub) {
 
 .aveugle-hub__skeleton {
   animation: aveugle-hub-pulse 1.8s ease-in-out infinite;
-  background: rgba(240, 212, 138, 0.09);
-  border: 1px solid rgba(217, 164, 65, 0.24);
+  background: color-mix(in srgb, var(--salt-white) 9%, transparent);
+  border: 1px solid color-mix(in srgb, var(--material-gold) 24%, transparent);
 }
 
 .aveugle-hub__skeleton--scene {
@@ -387,7 +387,9 @@ body:has(.aveugle-hub) {
 .aveugle-hub__load-error {
   backdrop-filter: blur(10px);
   background: rgba(7, 6, 4, 0.88);
-  border: 1px solid var(--border-gold);
+  box-shadow:
+    inset 0 0 0 4px var(--ink-black),
+    inset 0 0 0 5px color-mix(in srgb, var(--material-gold) 22%, transparent);
   display: grid;
   gap: 1rem;
   justify-items: center;
@@ -397,18 +399,43 @@ body:has(.aveugle-hub) {
   width: calc(100% - clamp(2rem, 4vw, 4rem));
 }
 
+.aveugle-hub__load-error::before {
+  background:
+    var(--frame-reader-separator) left center / 10px 100% no-repeat,
+    linear-gradient(var(--material-gold-bright), var(--material-gold-bright)) left 7px top 7px /
+      14px 1px no-repeat,
+    linear-gradient(var(--material-gold-bright), var(--material-gold-bright)) left 7px top 7px / 1px
+      14px no-repeat,
+    linear-gradient(var(--material-gold-bright), var(--material-gold-bright)) left 7px bottom 7px /
+      14px 1px no-repeat,
+    linear-gradient(var(--material-gold-bright), var(--material-gold-bright)) left 7px bottom 7px /
+      1px 14px no-repeat,
+    linear-gradient(var(--material-gold-bright), var(--material-gold-bright)) right 7px top 7px /
+      14px 1px no-repeat,
+    linear-gradient(var(--material-gold-bright), var(--material-gold-bright)) right 7px top 7px /
+      1px 14px no-repeat,
+    linear-gradient(var(--material-gold-bright), var(--material-gold-bright)) right 7px bottom 7px /
+      14px 1px no-repeat,
+    linear-gradient(var(--material-gold-bright), var(--material-gold-bright)) right 7px bottom 7px /
+      1px 14px no-repeat;
+  content: '';
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
 .aveugle-hub__load-error h1 {
-  color: var(--gold-light);
-  font-family: var(--font-game-heading);
-  font-size: clamp(1.5rem, 3vw, 2rem);
+  color: var(--material-gold-bright);
+  font-family: var(--font-game-display);
+  font-size: var(--text-game-heading);
   margin: 0;
 }
 
 .aveugle-hub__load-error p {
-  color: var(--ink-2);
+  color: var(--salt-muted);
   font-family: var(--font-game-body);
-  font-size: 1.1rem;
-  line-height: 1.5;
+  font-size: var(--text-game-body);
+  line-height: 1.6;
   margin: 0;
 }
 
@@ -435,7 +462,7 @@ body:has(.aveugle-hub) {
   }
 
   .aveugle-hub__dialogue-content blockquote {
-    font-size: 1.35rem;
+    font-size: var(--text-game-quote);
     min-height: 0;
   }
 }
@@ -520,7 +547,7 @@ body:has(.aveugle-hub) {
   }
 
   .aveugle-hub__dialogue-content blockquote {
-    font-size: clamp(1.2rem, 3vw, 1.45rem);
+    font-size: var(--text-game-quote);
     min-height: 0;
   }
 
@@ -546,7 +573,7 @@ body:has(.aveugle-hub) {
   }
 
   .aveugle-hub__stage .location-identity {
-    font-size: 1rem;
+    font-size: var(--text-game-label);
   }
 
   .aveugle-hub__scene-caption {
@@ -559,7 +586,7 @@ body:has(.aveugle-hub) {
   }
 
   .aveugle-hub__dock-nav .game-button {
-    font-size: 0.82rem;
+    font-size: var(--text-game-caption);
   }
 
   .aveugle-hub__dock-nav .game-icon {
@@ -572,16 +599,16 @@ body:has(.aveugle-hub) {
   }
 
   .aveugle-hub__dialogue-content h1 {
-    font-size: 1.35rem;
+    font-size: var(--text-game-section);
   }
 
   .aveugle-hub__dialogue-content blockquote {
-    font-size: 1.16rem;
+    font-size: var(--text-game-lead);
     min-height: 0;
   }
 
   .aveugle-hub__dialogue-content .dialogue-choice {
-    font-size: 1rem;
+    font-size: var(--text-game-body-sm);
     min-height: 50px;
     padding-block: 0.6rem;
   }

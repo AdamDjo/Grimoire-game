@@ -58,7 +58,7 @@
   align-items: baseline;
   color: var(--stat-color, var(--parchment));
   font-family: var(--font-game-heading);
-  font-size: clamp(0.76rem, 1.1vw, 1rem);
+  font-size: var(--text-game-stat-label);
   gap: 0.5rem;
   grid-template-columns: minmax(0, 1fr) auto;
   letter-spacing: 0.06em;
@@ -158,7 +158,7 @@
   }
   .velkhar-flow-hud__stat-heading {
     display: flex;
-    font-size: 0.6rem;
+    font-size: var(--text-game-micro);
     gap: 0.15rem;
     justify-content: center;
   }

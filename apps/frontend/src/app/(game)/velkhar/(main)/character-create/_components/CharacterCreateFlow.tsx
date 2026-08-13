@@ -18,10 +18,7 @@ import { GameStepper } from '@/components/ui/grimoire/GameStepper/GameStepper'
 import { GameTextarea } from '@/components/ui/grimoire/GameTextarea/GameTextarea'
 import { ensureAnonymousSession } from '@/lib/supabase/ensure-session'
 
-import {
-  VelkharDormantHud,
-  VelkharFlowTopBar,
-} from '../../../_components/VelkharFlowChrome/VelkharFlowChrome'
+import { VelkharFlowTopBar } from '../../../_components/VelkharFlowChrome/VelkharFlowChrome'
 import { VELKHAR_WORLD } from '../../../_config/velkhar-world'
 import {
   getCharacterHistoryOptions,
@@ -385,7 +382,6 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
               <div className="character-create__veil" aria-hidden="true" />
             </>
           }
-          bottom={<VelkharDormantHud />}
           className="character-create__layout"
           reader={
             <div className="character-create__loading">
@@ -410,7 +406,6 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
             <div className="character-create__veil" aria-hidden="true" />
           </>
         }
-        bottom={<VelkharDormantHud />}
         className="character-create__layout"
         scene={
           <div className="character-create__scene-content">

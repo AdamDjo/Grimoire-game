@@ -5,8 +5,8 @@ import { useEffect, useRef } from 'react'
 import { gsap } from '@/lib/gsap-init'
 
 // Couche de braises ambiantes : ~24 particules dorées qui montent lentement en
-// fond, indépendantes du curseur (distinct de CustomCursor qui, lui, émet des
-// braises AU curseur). Canvas fixe plein écran, piloté par gsap.ticker (un seul
+// fond, indépendantes du pointeur et de toute interaction utilisateur. Canvas
+// fixe plein écran, piloté par gsap.ticker (un seul
 // RAF partagé avec ScrollTrigger). Désactivée sur mobile/coarse et en
 // reduced-motion. Aucun Math.random rendu côté serveur : tout est généré dans
 // l'effet client (règle SSR hydration).

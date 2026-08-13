@@ -1,8 +1,11 @@
 .game-button {
-  --game-button-accent: var(--gold, #d9a441);
-  --game-button-accent-light: var(--gold-light, #f0d48a);
-  --game-button-text: var(--game-button-accent-light);
-  --game-button-text-hover: var(--game-button-accent-light);
+  --game-button-accent: var(--material-gold);
+  --game-button-accent-light: var(--material-gold-bright);
+  --game-button-frame: none;
+  --game-button-frame-slice: 44 110 44 110 fill;
+  --game-button-frame-width: 18px 44px;
+  --game-button-text: var(--material-gold-bright);
+  --game-button-text-hover: var(--salt-white);
 
   align-items: center;
   appearance: none;
@@ -23,58 +26,69 @@
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.82);
   transform: translateY(0) scale(1);
   transition:
-    transform 180ms cubic-bezier(0.2, 0, 0, 1),
+    transform 220ms cubic-bezier(0.2, 0, 0, 1),
     color 180ms ease,
     opacity 180ms ease;
 }
 
 .game-button::before {
-  background: var(--ink-raised);
-  border: 1px solid color-mix(in srgb, var(--game-button-accent) 76%, transparent);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--material-gold) 8%, transparent), transparent 36%),
+    var(--ink-raised);
+  border: 1px solid color-mix(in srgb, var(--material-gold) 68%, transparent);
   box-shadow:
-    inset 0 0 0 3px var(--ink-black),
-    inset 0 0 0 4px color-mix(in srgb, var(--game-button-accent) 34%, transparent);
+    inset 0 0 0 4px var(--ink-black),
+    inset 0 0 0 5px color-mix(in srgb, var(--material-gold) 24%, transparent);
   content: '';
   filter: brightness(1) saturate(1);
   inset: 0;
   pointer-events: none;
   position: absolute;
   transition:
-    filter 180ms ease,
-    opacity 180ms ease;
+    filter 220ms ease,
+    opacity 180ms ease,
+    transform 220ms cubic-bezier(0.2, 0, 0, 1);
+  transform: translate3d(0, 0, 0);
+  transform-origin: center;
   z-index: -1;
 }
 
 .game-button::after {
-  border-radius: 2px;
-  box-shadow:
-    0 12px 28px rgba(0, 0, 0, 0.42),
-    0 0 0 rgba(217, 164, 65, 0);
+  background:
+    linear-gradient(var(--material-gold-bright), var(--material-gold-bright)) left top / 15px 1px no-repeat,
+    linear-gradient(var(--material-gold-bright), var(--material-gold-bright)) left top / 1px 15px no-repeat,
+    linear-gradient(var(--material-gold-bright), var(--material-gold-bright)) right bottom / 15px 1px no-repeat,
+    linear-gradient(var(--material-gold-bright), var(--material-gold-bright)) right bottom / 1px 15px no-repeat;
+  box-shadow: none;
   content: '';
-  inset: 14% 4%;
+  inset: 7px;
   pointer-events: none;
   position: absolute;
-  transition: box-shadow 180ms ease;
+  transition:
+    box-shadow 220ms ease,
+    transform 220ms cubic-bezier(0.2, 0, 0, 1);
   z-index: -2;
 }
 
 .game-button:hover:not(:disabled):not([aria-disabled='true'])::before {
-  filter: brightness(1.16) saturate(1.14);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--material-gold) 14%, transparent), transparent 48%),
+    color-mix(in srgb, var(--ink-raised) 92%, var(--material-gold));
+  filter: brightness(1.05);
+  transform: translate3d(0, 0, 0);
 }
 
 .game-button:hover:not(:disabled):not([aria-disabled='true'])::after {
-  box-shadow:
-    0 16px 34px rgba(0, 0, 0, 0.48),
-    0 0 24px color-mix(in srgb, var(--game-button-accent) 30%, transparent);
+  transform: scale(1.015);
 }
 
 .game-button:hover:not(:disabled):not([aria-disabled='true']) {
   color: var(--game-button-text-hover);
-  transform: translateY(-2px) scale(1);
+  transform: translate3d(0, -2px, 0) rotate(-0.12deg) scale(1.012);
 }
 
 .game-button:active:not(:disabled):not([aria-disabled='true']):not(.game-button--static) {
-  transform: translateY(1px) scale(0.96);
+  transform: translate3d(2px, 3px, 0) rotate(0deg) scale(0.96);
 }
 
 .game-button:active:not(:disabled):not([aria-disabled='true'])::before {
@@ -100,34 +114,92 @@
 
 .game-button--primary,
 .game-button--radiant {
+  --game-button-frame: url('/encre-de-sel/frames/button-primary-gore.webp');
+  --game-button-frame-slice: 44 110 44 110 fill;
   --game-button-text: var(--ink-manuscript, #2a2118);
   --game-button-text-hover: var(--ink-manuscript, #2a2118);
 
-  text-shadow: 0 1px 0 rgba(255, 244, 200, 0.34);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.28);
 }
 
 .game-button--primary::before,
 .game-button--radiant::before {
-  background: linear-gradient(135deg, #c48a3c, #e0b765 48%, #ae6e28);
-  border-color: #efd596;
-  box-shadow:
-    inset 0 0 0 3px color-mix(in srgb, #6e421c 72%, transparent),
-    inset 0 0 0 4px color-mix(in srgb, #fff0c4 52%, transparent);
+  background: var(--game-button-frame) center / 100% 100% no-repeat;
+  border: 0;
+  box-shadow: none;
+}
+
+.game-button--primary:hover:not(:disabled):not([aria-disabled='true'])::before,
+.game-button--radiant:hover:not(:disabled):not([aria-disabled='true'])::before {
+  background: var(--game-button-frame) center / 100% 100% no-repeat;
+  filter: brightness(1.06) saturate(0.96);
+}
+
+.game-button--primary::after,
+.game-button--radiant::after {
+  background: rgba(0, 0, 0, 0.18);
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.28);
+  inset: 14% 5%;
+}
+
+.game-button--secondary,
+.game-button--cinematic {
+  --game-button-frame: url('/encre-de-sel/frames/button-secondary-ochre.webp');
+  --game-button-text: var(--salt-white, #e9dfc9);
+  --game-button-text-hover: #fff7e6;
+
+  text-shadow:
+    0 1px 1px rgba(24, 14, 7, 0.96),
+    0 2px 6px rgba(24, 14, 7, 0.82);
 }
 
 .game-button--secondary::before,
 .game-button--cinematic::before {
-  background: var(--ink-raised);
+  background: var(--game-button-frame) center / 100% 100% no-repeat;
+  border: 0;
+  box-shadow: none;
+}
+
+.game-button--secondary::after,
+.game-button--cinematic::after {
+  background: rgba(27, 18, 10, 0.12);
+  box-shadow: 0 9px 16px rgba(0, 0, 0, 0.25);
+  inset: 14% 4%;
+}
+
+.game-button--secondary:hover:not(:disabled):not([aria-disabled='true'])::before,
+.game-button--cinematic:hover:not(:disabled):not([aria-disabled='true'])::before {
+  background: var(--game-button-frame) center / 100% 100% no-repeat;
+  filter: brightness(1.09) saturate(0.94);
+}
+
+.game-button--ghost {
+  --game-button-text: var(--material-gold-bright);
+  --game-button-text-hover: var(--salt-white);
+
+  text-shadow: 0 1px 2px var(--ink-black);
 }
 
 .game-button--ghost::before {
-  filter: brightness(0.78) saturate(0.72);
+  background: transparent;
+  border-color: color-mix(in srgb, var(--material-gold) 42%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--material-gold) 10%, transparent);
   opacity: 0.78;
 }
 
 .game-button--ghost:hover:not(:disabled):not([aria-disabled='true'])::before {
-  filter: brightness(1) saturate(0.92);
+  filter: brightness(1.04) saturate(0.96);
   opacity: 1;
+}
+
+.game-button--secondary.game-button--danger,
+.game-button--cinematic.game-button--danger {
+  --game-button-text: #fff0e5;
+  --game-button-text-hover: #ffffff;
+
+  text-shadow:
+    0 1px 1px rgba(58, 7, 5, 0.96),
+    0 2px 7px rgba(58, 7, 5, 0.9);
 }
 
 .game-button.game-button--landing,
@@ -169,8 +241,8 @@
 }
 
 .game-button.game-button--landing-gameplay {
-  --game-button-text: var(--gold-light);
-  --game-button-text-hover: var(--gold-light);
+  --game-button-text: var(--material-gold-bright);
+  --game-button-text-hover: var(--material-gold-bright);
 
   font-size: var(--text-btn-secondary);
   min-height: 88px;
@@ -188,7 +260,7 @@
 
 .game-button.game-button--landing-ghost {
   --game-button-text: rgba(239, 225, 194, 0.92);
-  --game-button-text-hover: var(--gold-light);
+  --game-button-text-hover: var(--material-gold-bright);
 
   font-family: var(--font-game-ui);
   font-size: 1rem;
@@ -233,60 +305,99 @@
 }
 
 .game-button--icon {
+  --game-button-text: var(--salt-white);
+  --game-button-text-hover: color-mix(in srgb, var(--fresh-blood) 52%, var(--salt-white));
+
   aspect-ratio: 1;
   min-width: 0;
   padding: 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
 }
 
-.game-button--icon::before {
-  background: transparent;
-  border: 1px solid color-mix(in srgb, var(--material-gold) 72%, transparent);
-  border-image: none;
-  box-shadow: inset 0 0 0 3px var(--ink-black);
+.game-button--icon::before,
+.game-button--icon::after {
+  display: none;
+}
+
+.game-button--icon:focus-visible {
+  color: color-mix(in srgb, var(--fresh-blood) 58%, var(--salt-white));
+  outline: 0;
+  text-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.92),
+    0 0 14px color-mix(in srgb, var(--fresh-blood) 58%, transparent);
+}
+
+.game-button--primary.game-button--danger,
+.game-button--radiant.game-button--danger {
+  --game-button-frame: none;
+  --game-button-text: color-mix(in srgb, var(--fresh-blood) 64%, var(--salt-white));
+  --game-button-text-hover: var(--salt-white);
+
+  text-shadow: 0 1px 2px var(--ink-black);
+}
+
+.game-button--primary.game-button--danger::before,
+.game-button--radiant.game-button--danger::before {
+  background: color-mix(in srgb, var(--ink-raised) 94%, var(--fresh-blood));
+  border: 1px solid color-mix(in srgb, var(--fresh-blood) 58%, var(--material-gold));
+  box-shadow:
+    inset 0 0 0 4px var(--ink-black),
+    inset 0 0 0 5px color-mix(in srgb, var(--fresh-blood) 18%, transparent);
+}
+
+.game-button--primary.game-button--danger::after,
+.game-button--radiant.game-button--danger::after {
+  background:
+    linear-gradient(var(--fresh-blood), var(--fresh-blood)) left top / 15px 1px no-repeat,
+    linear-gradient(var(--fresh-blood), var(--fresh-blood)) left top / 1px 15px no-repeat,
+    linear-gradient(var(--fresh-blood), var(--fresh-blood)) right bottom / 15px 1px no-repeat,
+    linear-gradient(var(--fresh-blood), var(--fresh-blood)) right bottom / 1px 15px no-repeat;
+  box-shadow: none;
+  inset: 7px;
 }
 
 .game-button--gold {
-  --game-button-accent: var(--gold, #d9a441);
-  --game-button-accent-light: var(--gold-light, #f0d48a);
+  --game-button-accent: var(--material-gold);
+  --game-button-accent-light: var(--material-gold-bright);
 }
 
 .game-button--danger {
-  --game-button-accent: var(--blood, #c0392b);
+  --game-button-accent: var(--fresh-blood);
   --game-button-accent-light: color-mix(
     in srgb,
-    var(--blood, #c0392b) 68%,
-    var(--parchment, #e8dcc0)
+    var(--fresh-blood) 68%,
+    var(--salt-white)
   );
 }
 
 .game-button--aqua {
-  --game-button-accent: var(--soul, #35c4ac);
+  --game-button-accent: var(--breath-aqua);
   --game-button-accent-light: color-mix(
     in srgb,
-    var(--soul, #35c4ac) 68%,
-    var(--parchment, #e8dcc0)
+    var(--breath-aqua) 68%,
+    var(--salt-white)
   );
 }
 
 .game-button--ember {
-  --game-button-accent: var(--cendre, #e3b341);
+  --game-button-accent: var(--calamine);
   --game-button-accent-light: color-mix(
     in srgb,
-    var(--cendre, #e3b341) 72%,
-    var(--parchment, #e8dcc0)
+    var(--calamine) 72%,
+    var(--salt-white)
   );
 }
 
 .game-button--sm {
   font-size: var(--text-game-button-sm);
-  min-height: 48px;
-  min-width: 190px;
-  padding: 0 34px;
+  min-height: 64px;
+  min-width: 240px;
+  padding: 0 46px;
 }
 
 .game-button--md {
   font-size: var(--text-game-button);
-  min-height: 64px;
+  min-height: 68px;
   min-width: 250px;
   padding: 0 46px;
 }
@@ -320,7 +431,20 @@
 .game-button__icon,
 .game-button__spinner {
   position: relative;
+  transition: transform 220ms cubic-bezier(0.2, 0, 0, 1);
   z-index: 1;
+}
+
+.game-button__label {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.game-button:hover:not(:disabled):not([aria-disabled='true']) .game-button__label,
+.game-button:hover:not(:disabled):not([aria-disabled='true']) .game-button__icon {
+  transform: translate3d(0, -1px, 0);
 }
 
 .game-button--icon .game-button__label {
@@ -368,6 +492,21 @@
 }
 
 @media (max-width: 720px) {
+  .game-button--sm {
+    min-height: 62px;
+    padding-inline: 38px;
+  }
+
+  .game-button--md {
+    min-height: 66px;
+    padding-inline: 40px;
+  }
+
+  .game-button--lg {
+    min-height: 78px;
+    padding-inline: 46px;
+  }
+
   .game-button--landing,
   .game-button--landing-gameplay {
     min-width: 0;

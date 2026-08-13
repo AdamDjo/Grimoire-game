@@ -9,11 +9,11 @@
   position: relative;
   width: 100%;
 }
-.game-top-bar::before {
-  background: url('/encre-de-sel/chrome/header-separator.webp') center / 100% 100% no-repeat;
-  bottom: -6px;
+.game-top-bar::after {
+  background: url('/encre-de-sel/chrome/header-separator.webp') center top / 100% 12px no-repeat;
+  bottom: 0;
   content: '';
-  height: 12px;
+  height: 6px;
   left: 0;
   pointer-events: none;
   position: absolute;
@@ -46,7 +46,7 @@
   color: var(--salt-white);
   display: flex;
   font-family: var(--font-game-display);
-  font-size: clamp(0.9rem, 1.3vw, 1.3rem);
+  font-size: var(--text-game-label);
   gap: clamp(0.75rem, 1.7vw, 1.8rem);
   letter-spacing: 0.045em;
   text-transform: uppercase;
@@ -81,7 +81,7 @@
 .game-top-bar__title {
   color: var(--salt-white);
   font-family: var(--font-game-display);
-  font-size: clamp(1.25rem, 1.8vw, 1.85rem);
+  font-size: var(--text-game-section);
   font-weight: 400;
   letter-spacing: 0.035em;
   line-height: 1;
@@ -101,7 +101,7 @@
   }
 
   .game-top-bar__nav {
-    font-size: 0.78rem;
+    font-size: var(--text-game-caption);
     gap: 0.55rem;
   }
 }

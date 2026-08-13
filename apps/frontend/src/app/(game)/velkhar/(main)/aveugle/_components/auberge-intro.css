@@ -1,6 +1,6 @@
 .auberge-intro {
   background: #050403;
-  color: var(--parchment);
+  color: var(--salt-white);
   inset: 0;
   opacity: 1;
   overflow: hidden;
@@ -43,9 +43,9 @@
 }
 
 .auberge-intro__location span {
-  color: var(--gold-light);
+  color: var(--material-gold-bright);
   font-family: var(--font-game-ui);
-  font-size: clamp(0.78rem, 1vw, 0.95rem);
+  font-size: var(--text-game-kicker);
   letter-spacing: 0.24em;
   text-transform: uppercase;
 }
@@ -75,10 +75,10 @@
   backdrop-filter: blur(8px);
   background: rgba(5, 4, 3, 0.72);
   border: 1px solid rgba(217, 164, 65, 0.44);
-  color: var(--parchment);
+  color: var(--salt-white);
   cursor: pointer;
   font-family: var(--font-game-ui);
-  font-size: 0.92rem;
+  font-size: var(--text-game-label);
   letter-spacing: 0.07em;
   min-height: 44px;
   padding: 0.65rem 1rem;
@@ -142,7 +142,7 @@
   }
 
   .auberge-intro__control {
-    font-size: 0.82rem;
+    font-size: var(--text-game-caption);
     min-width: 0;
   }
 }

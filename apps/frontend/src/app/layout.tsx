@@ -1,4 +1,4 @@
-import { IM_Fell_English, IM_Fell_English_SC } from 'next/font/google'
+import { Alegreya, IM_Fell_French_Canon_SC } from 'next/font/google'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getTranslations } from 'next-intl/server'
 
@@ -7,17 +7,17 @@ import { GlobalExperience } from '@/components/ui/global-experience'
 import type { Metadata } from 'next'
 import './globals.css'
 
-const fellEnglishDisplay = IM_Fell_English_SC({
+const fellFrenchDisplay = IM_Fell_French_Canon_SC({
   variable: '--next-font-display',
   subsets: ['latin'],
   weight: '400',
   display: 'swap',
 })
 
-const fellEnglishText = IM_Fell_English({
+const alegreyaText = Alegreya({
   variable: '--next-font-text',
   subsets: ['latin'],
-  weight: '400',
+  weight: ['400', '500', '600', '700'],
   style: ['normal', 'italic'],
   display: 'swap',
 })
@@ -37,7 +37,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const locale = await getLocale()
 
   return (
-    <html lang={locale} className={`${fellEnglishDisplay.variable} ${fellEnglishText.variable}`}>
+    <html lang={locale} className={`${fellFrenchDisplay.variable} ${alegreyaText.variable}`}>
       <body>
         <NextIntlClientProvider>
           <GlobalExperience />

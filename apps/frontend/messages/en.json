@@ -390,6 +390,8 @@
     "gameMasterStatus": "The Game Master is {status}.",
     "gameMasterAlive": "alive and listening",
     "gameMasterFallback": "using its fallback tale",
+    "gameMasterConnected": "GM connected",
+    "gameMasterFallbackShort": "GM on fallback",
     "resumeJourney": "Resume the journey",
     "settingsSoon": "Settings — coming soon",
     "abandonRun": "Abandon this run",

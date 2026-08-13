@@ -390,6 +390,8 @@
     "gameMasterStatus": "Le Maître du Jeu est {status}.",
     "gameMasterAlive": "actif et à l’écoute",
     "gameMasterFallback": "sur son récit de secours",
+    "gameMasterConnected": "MJ connecté",
+    "gameMasterFallbackShort": "MJ en secours",
     "resumeJourney": "Reprendre le voyage",
     "settingsSoon": "Paramètres — bientôt disponibles",
     "abandonRun": "Abandonner ce run",

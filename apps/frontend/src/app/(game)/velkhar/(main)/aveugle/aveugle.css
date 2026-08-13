@@ -54,7 +54,7 @@ body:has(.aveugle-threshold) {
 }
 
 .aveugle-threshold__location {
-  color: var(--parchment);
+  color: var(--salt-white);
   font-family: var(--font-game-display);
   font-size: clamp(1rem, 1.4vw, 1.3rem);
   letter-spacing: 0.08em;
@@ -86,7 +86,7 @@ body:has(.aveugle-threshold) {
 }
 
 .aveugle-threshold__speaker h1 {
-  color: var(--gold-light);
+  color: var(--material-gold-bright);
   font-family: var(--font-game-heading);
   font-size: clamp(1.85rem, 3vw, 3rem);
   font-weight: 500;
@@ -96,7 +96,7 @@ body:has(.aveugle-threshold) {
 }
 
 .aveugle-threshold blockquote {
-  color: var(--parchment);
+  color: var(--salt-white);
   font-family: var(--font-game-body);
   font-size: clamp(1.35rem, 2vw, 2rem);
   line-height: 1.58;
