@@ -394,7 +394,7 @@ const CALM_STAKES: InheritedStakes = { type: 'action', riskLevel: 'safe' }
  *
  * Choices with no `riskLevel` count as `safe`; a scene with no choices at all (or
  * unparsable ones) yields calm stakes.
- * @see docs/public/raw/08-DICE-RESOLUTION.md §9, docs/public/raw/06-SURVIVAL.md §6
+ * @see docs/canon/08-DICE-RESOLUTION.md §9, docs/canon/06-SURVIVAL.md §6
  */
 function inheritedSceneStakes(choices: readonly InheritedStakes[]): InheritedStakes {
   return choices.reduce<InheritedStakes>((worst, choice) => {
@@ -460,7 +460,7 @@ export interface ResolveTurnInput {
   /**
    * Set when the player took the "faire demi-tour" pivot offered at the end of
    * a floor. Irreversible — from here the run only climbs (#228).
-   * @see docs/public/raw/23-RUN-STRUCTURE.md §3
+   * @see docs/canon/23-RUN-STRUCTURE.md §3
    */
   engageReturn?: boolean
   /**
@@ -485,7 +485,7 @@ export interface ResolveTurnInput {
  * left open for an hour advances exactly as far as one that ran without a
  * pause. The minute figures the run carries are an honest estimate shown to the
  * player, not a clock the engine reads back.
- * @see docs/public/raw/23-RUN-STRUCTURE.md §1, §3
+ * @see docs/canon/23-RUN-STRUCTURE.md §1, §3
  */
 function advanceRunForTurn(
   session: GameSession,
@@ -512,7 +512,7 @@ function advanceRunForTurn(
  * actions rather than being resolved on its own terms, so the text box cannot
  * be a cheaper way to fight than the buttons (#238 inside a fight).
  *
- * @see docs/public/raw/10-COMBAT.md §3, §7, §8, §9
+ * @see docs/canon/10-COMBAT.md §3, §7, §8, §9
  */
 async function resolveCombatTurnForSession(
   input: ResolveTurnInput,
@@ -1055,7 +1055,7 @@ async function endSession(
  * rejected any other pairing (#260). Only an active session still at the inn
  * may leave; a session already underground cannot silently swap contracts
  * mid-run.
- * @see docs/public/raw/23-RUN-STRUCTURE.md §1, §2
+ * @see docs/canon/23-RUN-STRUCTURE.md §1, §2
  */
 export async function startRun(
   sessionId: string,
@@ -1115,7 +1115,7 @@ export async function startRun(
  * own initiative, without an objective to fulfil. The contract-aware endings
  * (`extracted` / `returned_empty`) belong to the return trip and are resolved
  * in `resolveTurn` when the character climbs back to the surface.
- * @see docs/public/raw/23-RUN-STRUCTURE.md §5
+ * @see docs/canon/23-RUN-STRUCTURE.md §5
  */
 export async function endSessionAtInn(
   sessionId: string,

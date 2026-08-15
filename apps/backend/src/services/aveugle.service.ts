@@ -170,7 +170,7 @@ export async function markTopicSeen(userId: string, topicId: string): Promise<vo
  * prophesy. Should the Comptoir ever gain dialogue, it must get its own prompt
  * builder rather than reuse this one: the two must never blur into one
  * innkeeper who both takes your gold and reads your fate.
- * @see docs/public/raw/23-RUN-STRUCTURE.md §1
+ * @see docs/canon/23-RUN-STRUCTURE.md §1
  */
 function buildAveugleTalkPrompt(params: {
   characterName: string

@@ -32,14 +32,14 @@ export interface GameMasterInput {
    * Where the character stands in the run, and any supply threshold crossed
    * this turn that the narration owes the player (#228). Null for a session
    * with no run structure — the prompt then simply omits the section.
-   * @see docs/public/raw/23-RUN-STRUCTURE.md §4.2
+   * @see docs/canon/23-RUN-STRUCTURE.md §4.2
    */
   run?: RunPromptContext | null
   /**
    * The fight resolved this turn (#235), handed to the AI as an accomplished
    * fact to narrate. Null outside combat. The direction of the dependency is
    * the whole point: mechanics first, prose second — never the inverse.
-   * @see docs/public/raw/10-COMBAT.md §3
+   * @see docs/canon/10-COMBAT.md §3
    */
   combat?: CombatPromptContext | null
 }

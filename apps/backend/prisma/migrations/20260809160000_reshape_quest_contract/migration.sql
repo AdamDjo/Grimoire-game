@@ -1,5 +1,5 @@
 -- Reshape the run contract so the board is not a list of dungeons (#260).
--- @see docs/public/raw/23-RUN-STRUCTURE.md §1, §2
+-- @see docs/canon/23-RUN-STRUCTURE.md §1, §2
 --
 -- Every column is added nullable: existing rows carry an accepted contract that
 -- must keep reading back, and `readContract` treats a missing family as the

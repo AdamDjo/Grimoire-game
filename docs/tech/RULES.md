@@ -22,7 +22,7 @@ source_of_truth: true
 - Les composants spécifiques à un monde restent colocalisés sous sa route.
 - Les routes publiques des mondes sont centralisées dans `config/worlds.ts`.
 - Direction des imports : `app → features/world components → components/ui`.
-- Détail : [`FRONTEND_ARCHITECTURE.md`](FRONTEND_ARCHITECTURE.md).
+- Détail : [`FRONTEND.md`](FRONTEND.md).
 
 ## API
 
@@ -34,7 +34,7 @@ source_of_truth: true
 
 ## Canon et mémoire
 
-- Fixed Canon : `docs/public/raw/`, structuré ensuite côté backend.
+- Fixed Canon : `docs/canon/`, structuré ensuite côté backend.
 - Emergent Canon : faits de run persistés par le backend.
 - Retrieval : pgvector pour retrouver les faits utiles sans charger toute l'histoire.
 - Le contexte IA est reconstruit par le backend à chaque tour.

@@ -5,8 +5,8 @@ import type { PersistedInventoryItem } from "./inventory.types";
  * The Comptoir — the Inn's supply counter (#249).
  *
  * Canon references:
- * - `docs/public/raw/11-INVENTORY-ECONOMY.md` §2 (gold prices), §1 (bag capacity)
- * - `docs/public/raw/23-RUN-STRUCTURE.md` §1 (the Comptoir as one of the four
+ * - `docs/canon/11-INVENTORY-ECONOMY.md` §2 (gold prices), §1 (bag capacity)
+ * - `docs/canon/23-RUN-STRUCTURE.md` §1 (the Comptoir as one of the four
  *   Inn destinations)
  *
  * Two deliberate departures from canon §7 ("Pas de prix fixes", negotiation by
@@ -110,7 +110,7 @@ export interface CounterPurchaseResult {
  * Everything the player needs to decide whether they are ready to leave the
  * Inn. Backend-owned and complete: the client renders it as given and computes
  * nothing — not the free slots, not the affordability of a line.
- * @see docs/public/raw/23-RUN-STRUCTURE.md §1
+ * @see docs/canon/23-RUN-STRUCTURE.md §1
  */
 export interface PreparationSnapshot {
   /** Current gold, from the persisted character. */

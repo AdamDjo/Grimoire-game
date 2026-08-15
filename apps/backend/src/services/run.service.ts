@@ -33,7 +33,7 @@ import type {
  * `GameSession` row into a `RunState`, and writes a `RunState` back into the
  * columns. The arbitration stays in `game-rules/`, which knows nothing about
  * Prisma.
- * @see docs/public/raw/23-RUN-STRUCTURE.md
+ * @see docs/canon/23-RUN-STRUCTURE.md
  */
 
 /** Item ids that count as drinkable water when estimating the trip home. */

@@ -95,7 +95,7 @@ export interface ResolveChoiceResult {
  * rolls a d20 (with Désavantage when a severe condition is active) for risky choices, and
  * subtracts HP on failure. The backend is the sole source of truth here — the AI only
  * narrates the outcome.
- * @see docs/public/raw/06-SURVIVAL.md §2, docs/public/raw/08-DICE-RESOLUTION.md §5
+ * @see docs/canon/06-SURVIVAL.md §2, docs/canon/08-DICE-RESOLUTION.md §5
  */
 export function resolveChoice({
   attributes,

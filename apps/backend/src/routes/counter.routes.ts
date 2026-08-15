@@ -15,7 +15,7 @@ export const counterRouter: Router = Router()
 /**
  * The Comptoir (#249) — the Inn's supply counter. Thin controller: validation
  * and HTTP status only, every rule lives in `game-rules/counter.ts`.
- * @see docs/public/raw/23-RUN-STRUCTURE.md §1
+ * @see docs/canon/23-RUN-STRUCTURE.md §1
  */
 
 /**

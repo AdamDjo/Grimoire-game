@@ -381,7 +381,7 @@ type ArtifactPower = {
 };
 ```
 
-Trois règles d'implémentation, toutes déjà impliquées par `ARCHITECTURE_RULES` :
+Trois règles d'implémentation, toutes déjà impliquées par `docs/tech/RULES.md` :
 
 1. **Le backend résout, l'IA narre.** Le coût en Calamine, le jet, les dégâts et les conditions sont
    calculés côté moteur ; l'IA reçoit le **résultat** et l'habille.

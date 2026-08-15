@@ -20,7 +20,7 @@ export interface RollCheckOptions {
 /**
  * Rolls 1d20 (or 2d20 keep best/worst under advantage/disadvantage), adds the attribute
  * modifier, and compares to the difficulty target.
- * @see docs/public/raw/08-DICE-RESOLUTION.md §5 (Avantage et Désavantage)
+ * @see docs/canon/08-DICE-RESOLUTION.md §5 (Avantage et Désavantage)
  */
 export function rollCheck(
   attributes: Attributes,

@@ -10,7 +10,7 @@ const clamp = (value: number, min: number, max: number): number =>
  * session-ending flow (`endSessionAtInn` in `session.service.ts`, canon
  * 09-ACTION-LOOP §7) and is deliberately out of scope for this ticket (#184,
  * issue title: "Action de repos — court / feu").
- * @see docs/public/raw/06-SURVIVAL.md §3
+ * @see docs/canon/06-SURVIVAL.md §3
  */
 export type RestType = 'short' | 'fire'
 

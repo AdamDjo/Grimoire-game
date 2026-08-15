@@ -19,7 +19,7 @@ import { countReturnRooms, MINUTES_PER_ROOM, ROOMS_PER_FLOOR } from './dungeon'
  * Water rations consumed per room on the way back. Water leads the survival
  * pressure in this setting (desert, salt roads), so it is the gauge that
  * usually crosses its threshold first.
- * @see docs/public/raw/06-SURVIVAL.md §1, 23-RUN-STRUCTURE.md §4
+ * @see docs/canon/06-SURVIVAL.md §1, 23-RUN-STRUCTURE.md §4
  */
 export const WATER_PER_RETURN_ROOM = 1
 

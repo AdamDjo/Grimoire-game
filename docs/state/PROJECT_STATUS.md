@@ -20,7 +20,7 @@ gh issue list --milestone "v0.2.1 - Roguelike jouable" --state all
 Livrer **v0.2.1 — Roguelike jouable** : refonder la couche de jeu par-dessus le socle existant, de
 sorte qu'un run soit une **quête narrative dirigée** par un contrat, mise sous pression par des
 règles roguelike cachées, des ressources, des combats et un retour joué. Voir
-`docs/public/raw/23-RUN-STRUCTURE.md`.
+`docs/canon/23-RUN-STRUCTURE.md`.
 
 > **🎲 Refonte roguelike du 2026-08-06.** Le playtest a rendu un verdict net : _« après une partie je
 > m'ennuie, il n'y a aucune raison de recommencer »_. Le diagnostic est que le projet a un
@@ -57,15 +57,15 @@ milestone dans `.github/workflows/pr.yml`.
 
 ## Sources par domaine
 
-| Besoin                               | Source                         |
-| ------------------------------------ | ------------------------------ |
-| Avancement, priorités, qui fait quoi | GitHub issues et milestones    |
-| Décisions backend/shared/IA          | [[BACKEND]]                    |
-| Décisions frontend                   | [[FRONTEND]]                   |
-| Préparation de release               | [[RELEASE_READINESS]]          |
-| Chronologie des décisions            | [[../nav/log]]                 |
-| Quel canon lire pour une tâche       | [[../nav/task-router]]         |
-| Règles d'architecture                | [[../tech/ARCHITECTURE_RULES]] |
+| Besoin                               | Source                      |
+| ------------------------------------ | --------------------------- |
+| Avancement, priorités, qui fait quoi | GitHub issues et milestones |
+| Décisions backend/shared/IA          | [[BACKEND]]                 |
+| Décisions frontend                   | [[FRONTEND]]                |
+| Préparation de release               | [[RELEASE_READINESS]]       |
+| Chronologie des décisions            | [[../log]]                  |
+| Quel canon lire pour une tâche       | [[../task-router]]          |
+| Règles d'architecture                | [[../tech/RULES]]           |
 
 Attribution par défaut : Claude sur backend/shared/IA, Codex sur frontend. Une assignation explicite
 peut inverser ce choix sans changer les règles du domaine.
@@ -82,7 +82,7 @@ Ce socle est **conservé** (décision 18) : la refonte roguelike s'écrit par-de
 pas. Trois évolutions structurantes sont autorisées :
 
 - `SessionEndReason` : `inn` est scindé en `extracted` / `returned_empty`
-  (`docs/public/raw/09-ACTION-LOOP.md` §7) — breaking change des contrats shared ;
+  (`docs/canon/09-ACTION-LOOP.md` §7) — breaking change des contrats shared ;
 - la session porte un état serveur explicite et une structure de progression cachée ; ils arbitrent
   le jeu sans imposer quatre interfaces au frontend ;
 - le contrat devient une quête générique structurée, pas seulement une destination de donjon.
@@ -103,7 +103,7 @@ ticket à la main, et dérivaient malgré tout.
 - **Pas de champ `updated:`** dans les docs d'état : il mentait
   (`FRONTEND_STATUS.md` annonçait 2026-07-26 pour un commit du 2026-08-03).
   `git log -1 --format=%cs -- <fichier>` est la seule date fiable.
-- Un pivot ou une décision structurante s'inscrit dans [[../nav/log]], qui est append-only et ne
+- Un pivot ou une décision structurante s'inscrit dans [[../log]], qui est append-only et ne
   périme donc jamais.
 
 ### Le statut apparaît dans chaque PR, sans éditer un fichier

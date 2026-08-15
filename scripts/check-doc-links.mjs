@@ -12,10 +12,16 @@ import { fileURLToPath } from "node:url";
 
 const PROJECT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const DOCS_ROOT = join(PROJECT_ROOT, "docs");
-const PUBLIC_ROOT = join(DOCS_ROOT, "public");
+
+/**
+ * Dossiers du vault non versionnés : leurs liens ne sont pas auditables en CI,
+ * où le dossier n'existe simplement pas.
+ */
+const UNTRACKED_DIRECTORIES = new Set(["private"]);
 
 function markdownFiles(directory) {
   return readdirSync(directory).flatMap((entry) => {
+    if (UNTRACKED_DIRECTORIES.has(entry)) return [];
     const path = join(directory, entry);
     return statSync(path).isDirectory()
       ? markdownFiles(path)
@@ -38,7 +44,6 @@ function candidatePaths(source, target) {
   return [
     resolve(dirname(source), withExtension),
     resolve(DOCS_ROOT, withExtension),
-    resolve(PUBLIC_ROOT, withExtension),
   ].map(normalize);
 }
 
@@ -76,11 +81,7 @@ export function unresolvedWikiLinks(files) {
 }
 
 function run() {
-  const files = [
-    join(DOCS_ROOT, "00-HOME.md"),
-    join(DOCS_ROOT, "00-START-HERE.md"),
-    ...markdownFiles(PUBLIC_ROOT),
-  ];
+  const files = markdownFiles(DOCS_ROOT);
   const unresolved = unresolvedWikiLinks(files);
 
   if (unresolved.length > 0) {

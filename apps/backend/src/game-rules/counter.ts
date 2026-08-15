@@ -14,8 +14,8 @@ import type {
  * Prisma, no randomness, no AI. `counter.service.ts` is the only place that
  * persists what this module decides.
  *
- * @see docs/public/raw/11-INVENTORY-ECONOMY.md §1 (bag), §2 (prices)
- * @see docs/public/raw/23-RUN-STRUCTURE.md §1 (the Comptoir)
+ * @see docs/canon/11-INVENTORY-ECONOMY.md §1 (bag), §2 (prices)
+ * @see docs/canon/23-RUN-STRUCTURE.md §1 (the Comptoir)
  */
 
 /**

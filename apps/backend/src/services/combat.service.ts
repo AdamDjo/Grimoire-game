@@ -39,7 +39,7 @@ import type {
  * a `CombatState`, hands it to the engine, and writes the result back. Every
  * die, every threshold and every verdict stays in `game-rules/`, which knows
  * nothing about Prisma.
- * @see docs/public/raw/10-COMBAT.md
+ * @see docs/canon/10-COMBAT.md
  */
 
 // ─── Persistence ────────────────────────────────────────────────────────────
@@ -254,8 +254,8 @@ export interface OpenCombatInput {
  *
  * Returns null when nothing survives the filter, which reads as "no fight this
  * turn": the scene the AI wrote still stands, it simply stays a scene.
- * @see docs/public/raw/10-COMBAT.md §1, §2
- * @see docs/public/raw/03-BESTIARY.md §6bis
+ * @see docs/canon/10-COMBAT.md §1, §2
+ * @see docs/canon/03-BESTIARY.md §6bis
  */
 export function openCombatFromEncounter(input: OpenCombatInput): CombatState | null {
   const { encounter, run, attributes, survival, conditions } = input
@@ -314,7 +314,7 @@ const BACKWARD_PATTERN = /\b(arrière|arriere|retour|remonte|demi-tour|back)/i
 /**
  * Translates a free-form action into the tactical action that will actually be
  * resolved. Returns the attack default when nothing matches.
- * @see docs/public/raw/10-COMBAT.md §3
+ * @see docs/canon/10-COMBAT.md §3
  */
 export function translateFreeAction(text: string): {
   action: CombatAction

@@ -2,7 +2,7 @@ import type { Attribute } from "../types/character.types";
 import type { LocalizedString } from "./localized";
 
 /**
- * Velkhar vocations. @see docs/private/raw/04-ATTRIBUTES.md, 05-VOCATIONS.md
+ * Velkhar vocations. @see docs/canon/04-ATTRIBUTES.md, 05-VOCATIONS.md
  * A fifth "free concept" path lets the player describe a custom vocation.
  */
 export interface VocationDefinition {

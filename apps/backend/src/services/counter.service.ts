@@ -19,7 +19,7 @@ import type {
  * only reads the character row, hands the state to the pure rules, and writes
  * the outcome back inside a transaction.
  *
- * @see docs/public/raw/23-RUN-STRUCTURE.md §1
+ * @see docs/canon/23-RUN-STRUCTURE.md §1
  */
 
 /** Prisma's unique-constraint violation — the concurrency signal we rely on. */

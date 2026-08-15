@@ -3,7 +3,7 @@ import type { LocalizedString } from "./localized";
 
 /**
  * Velkhar peoples. Each grants a small attribute bonus.
- * @see docs/private/raw/04-ATTRIBUTES.md, 06-SURVIVAL.md
+ * @see docs/canon/04-ATTRIBUTES.md, 06-SURVIVAL.md
  */
 export interface PeopleDefinition {
   id: string;

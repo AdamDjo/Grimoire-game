@@ -2,16 +2,16 @@
 
 > Fichier projet lu par les outils IA.
 > Lire d'abord : `MEMORY.md`, puis `docs/00-START-HERE.md`.
-> État vivant : `docs/public/current-state/PROJECT_STATUS.md`, puis statut du domaine.
-> Routeur : `docs/public/nav/task-router.md`.
+> État vivant : `docs/state/PROJECT_STATUS.md`, puis statut du domaine.
+> Routeur : `docs/task-router.md`.
 
 ## Mémoire et attribution
 
 - `MEMORY.md` est l'unique nœud d'entrée générique. Ne pas chercher ou créer un autre fichier
   mémoire opérationnel.
 - Les skills globaux attendus et leurs commandes de restauration sont documentés dans
-  `docs/public/nav/AI_WORKFLOW.md`.
-- `docs/public/raw/16-MEMORY.md` concerne la mémoire narrative du jeu, pas celle des agents.
+  `docs/tech/AI_SETUP.md`.
+- `docs/canon/16-MEMORY.md` concerne la mémoire narrative du jeu, pas celle des agents.
 - Attribution par défaut : Claude sur backend/shared/IA, Codex sur frontend.
 - Ce défaut n'est pas une restriction : si l'utilisateur assigne Codex au backend ou Claude au
   frontend, suivre les règles et le document du domaine demandé.
@@ -22,21 +22,18 @@
 
 | Besoin                 | Source                                                                             |
 | ---------------------- | ---------------------------------------------------------------------------------- |
-| Statut actuel          | `docs/public/current-state/PROJECT_STATUS.md`                                      |
-| Release / go-no-go     | `docs/public/current-state/RELEASE_READINESS.md`                                   |
+| Statut actuel          | `docs/state/PROJECT_STATUS.md`                                                     |
+| Release / go-no-go     | `docs/state/RELEASE_READINESS.md`                                                  |
 | Avancement des tickets | `gh issue list --milestone "v0.2.1 - Roguelike jouable"` — GitHub, jamais un `.md` |
-| Décisions frontend     | `docs/public/current-state/FRONTEND.md`                                            |
-| Décisions back/shared  | `docs/public/current-state/BACKEND.md`                                             |
-| Architecture           | `docs/public/tech/ARCHITECTURE_RULES.md`                                           |
-| Stack                  | `docs/public/tech/TECH_STACK.md`                                                   |
-| Design                 | `docs/public/design/GAME_DESIGN.md`                                                |
-| Tokens UI              | `docs/public/design/DESIGN_TOKENS.md`                                              |
-| Canon                  | `docs/public/nav/canon-index.md` → `docs/public/raw/*`                             |
-| Politique privé/public | `docs/public/nav/PRIVATE_CANON_POLICY.md`                                          |
+| Décisions frontend     | `docs/state/FRONTEND.md`                                                           |
+| Décisions back/shared  | `docs/state/BACKEND.md`                                                            |
+| Architecture           | `docs/tech/RULES.md`                                                               |
+| Frontend, tokens, UI   | `docs/tech/FRONTEND.md`                                                            |
+| Canon (règles de jeu)  | `docs/task-router.md` → `docs/canon/*`                                             |
 
 ## Invariants
 
-Voir `docs/public/tech/ARCHITECTURE_RULES.md`.
+Voir `docs/tech/RULES.md`.
 
 ## Propriété des docs d'état
 
@@ -45,7 +42,7 @@ Voir `docs/public/tech/ARCHITECTURE_RULES.md`.
 - **Par défaut, une PR ne modifie aucun document.** Elle ferme son issue, c'est suffisant.
 - Une PR touche `BACKEND.md` ou `FRONTEND.md` — **un seul**, celui de son domaine — uniquement si elle
   a tranché un choix non évident : pourquoi telle valeur, telle fermeture de type, tel garde-fou.
-- Un pivot ou une décision structurante va dans `docs/public/nav/log.md` (append-only).
+- Un pivot ou une décision structurante va dans `docs/log.md` (append-only).
 - Une PR qui change un bloqueur `phase: predeploy` met à jour `RELEASE_READINESS.md`.
 - Ne jamais écrire d'avancement par ticket dans un `.md` : il devient faux au premier merge.
 - Pas de champ `updated:` dans les docs d'état — `git log -1 --format=%cs -- <fichier>` est la seule

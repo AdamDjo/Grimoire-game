@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 // ---------------------------------------------------------------------------
-// Vision domaine complète (voir docs/public/raw/*.md) — NON migrée ici :
+// Vision domaine complète (voir docs/canon/*.md) — NON migrée ici :
 // Peuples, Vocations (catalogues statiques, pas de table), Factions/réputation,
 // Quêtes, Inventaire/Items complet, Traces, World Events. Ces modèles
 // arriveront avec les écrans qui en ont besoin (World Map, inventaire complet).
@@ -49,7 +49,7 @@ model Character {
   avatarUrl   String?
 
   /// Nom de vocation personnalisé par L'Aveugle quand `vocation` a été
-  /// résolue depuis un concept libre. @see docs/public/raw/07-CHARACTER-CREATION.md §2
+  /// résolue depuis un concept libre. @see docs/canon/07-CHARACTER-CREATION.md §2
   customVocationName String?
   /// Trait narratif attribué par L'Aveugle lors de la résolution du concept libre.
   narrativeTrait     String?
@@ -71,7 +71,7 @@ model Character {
   calamine Int
 
   /// True after the first 0-HP hit: one telegraphed turn of reprieve before a
-  /// second 0-HP hit is definitive death. @see docs/public/raw/06-SURVIVAL.md §7
+  /// second 0-HP hit is definitive death. @see docs/canon/06-SURVIVAL.md §7
   isDying Boolean @default(false)
 
   /// Consecutive turns thirst or hunger has been at 0 — drives the prolonged
@@ -79,11 +79,11 @@ model Character {
   neglectStreak Int @default(0)
 
   /// États altérés persistants (ActiveCondition[] JSON), voir @grimoire/shared.
-  /// @see docs/public/raw/06-SURVIVAL.md §2
+  /// @see docs/canon/06-SURVIVAL.md §2
   activeConditions Json @default("[]")
 
   /// Inventaire réel (PersistedInventoryItem[] JSON), voir @grimoire/shared.
-  /// @see docs/public/raw/11-INVENTORY-ECONOMY.md §1
+  /// @see docs/canon/11-INVENTORY-ECONOMY.md §1
   inventory Json @default("[]")
 
   /// Or (🪙), monnaie in-game de Velkhar. Gagné au combat (butin des corps,
@@ -107,7 +107,7 @@ model Character {
 /// rejouable. La ligne n'existe que si l'achat a été *accepté* : un refus ne
 /// consomme pas le `purchaseId`, pour que le joueur puisse corriger son panier
 /// et réessayer avec le même id.
-/// @see docs/public/raw/11-INVENTORY-ECONOMY.md §2
+/// @see docs/canon/11-INVENTORY-ECONOMY.md §2
 model CounterPurchase {
   id          String    @id @default(uuid())
   characterId String
@@ -144,13 +144,13 @@ model GameSession {
   locale     String   @default("en")
   status     String   @default("active") // active | ended
   /// Why the session ended (death | extracted | returned_empty | abandon | calcined).
-  /// Null while active. Bridge to A3. @see docs/public/raw/23-RUN-STRUCTURE.md §5
+  /// Null while active. Bridge to A3. @see docs/canon/23-RUN-STRUCTURE.md §5
   endReason  String?
   /// URL résolue du cache d'images de scène partagé (#207), mise à jour à
   /// chaque compression N2. Null tant qu'aucun chunk n'a encore résolu d'image.
   currentImageUrl String?
 
-  // --- Structure de run (#228) — @see docs/public/raw/23-RUN-STRUCTURE.md
+  // --- Structure de run (#228) — @see docs/canon/23-RUN-STRUCTURE.md
   /// Mode de jeu courant (inn | exploration | combat | return). Une session
   /// commence à l'auberge : c'est là qu'on accepte un contrat.
   gameMode          String   @default("inn")
@@ -193,7 +193,7 @@ model GameSession {
   /// `returned_empty` au retour.
   objectiveSecured  Boolean  @default(false)
 
-  // --- Combat par tours (#235) — @see docs/public/raw/10-COMBAT.md
+  // --- Combat par tours (#235) — @see docs/canon/10-COMBAT.md
   /// État complet du combat en cours, sérialisé. Null hors combat — c'est ce
   /// null qui dit « pas de combat », jamais un `gameMode` désynchronisé.
   /// Persisté en entier (initiative, round, camp actif, PV et conditions de
@@ -257,7 +257,7 @@ model MemoryChunk {
 /// Bibliothèque d'images de scène partagée entre tous les joueurs (#207).
 /// Une ligne par combinaison sceneType_depthBand_lieuType rencontrée ; générée une
 /// seule fois puis réutilisée par tous les chunks qui matchent la même clé.
-/// @see docs/public/tech/DYNAMIC_SCENE_IMAGES.md
+/// @see docs/tech/SCENE_IMAGES.md
 model SceneImage {
   id        String   @id @default(uuid())
   cacheKey  String   @unique

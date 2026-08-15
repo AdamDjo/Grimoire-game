@@ -28,7 +28,7 @@ export const gameActionSchema = z.object({
    * The player turns back on this turn (#228). Irreversible — once the return
    * is engaged the run only climbs. It rides on the action rather than a
    * dedicated endpoint because the pivot *is* the turn the player spends.
-   * @see docs/public/raw/23-RUN-STRUCTURE.md §4
+   * @see docs/canon/23-RUN-STRUCTURE.md §4
    */
   engageReturn: z.boolean().optional(),
   /**
@@ -39,7 +39,7 @@ export const gameActionSchema = z.object({
    *
    * Ignored outside combat, and optional inside it — a turn taken in prose
    * carries no `combatAction` at all and is translated server-side instead.
-   * @see docs/public/raw/10-COMBAT.md §3
+   * @see docs/canon/10-COMBAT.md §3
    */
   combatAction: z
     .enum(['attack', 'defend', 'flee', 'command', 'use_item', 'awaken_artefact'])
@@ -77,7 +77,7 @@ export type CreateSessionRequest = z.infer<typeof createSessionSchema>
  * refinement below rejects a request that pairs the two rather than quietly
  * dropping one — a client sending `escort` with a depth is confused about what
  * it is starting, and must be told.
- * @see docs/public/raw/23-RUN-STRUCTURE.md §1, §2
+ * @see docs/canon/23-RUN-STRUCTURE.md §1, §2
  */
 export const startRunSchema = z
   .object({

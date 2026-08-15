@@ -47,7 +47,7 @@ export interface Inventory {
 /**
  * An item the AI signals as found during a scene. The backend validates
  * (known category, bag not full, valid slot) before creating and applying it.
- * @see docs/public/raw/11-INVENTORY-ECONOMY.md, docs/public/raw/15-GAME-MASTER.md §4.5
+ * @see docs/canon/11-INVENTORY-ECONOMY.md, docs/canon/15-GAME-MASTER.md §4.5
  */
 export interface ItemGained {
   name: string;
@@ -74,7 +74,7 @@ export interface ItemGainedEffect {
  * Distinct from `ItemGained` (raw AI proposal) and `InventoryItemRef`
  * (scene.types.ts, the display-facing projection sent to the client) — this
  * is the durable record the backend reads/writes every turn.
- * @see docs/public/raw/11-INVENTORY-ECONOMY.md §1
+ * @see docs/canon/11-INVENTORY-ECONOMY.md §1
  */
 export interface PersistedInventoryItem {
   id: string;
@@ -94,7 +94,7 @@ export interface PersistedInventoryItem {
    * name. Absent on AI-granted loot (#183), which stays name-matched by
    * `countCarriedSupplies` — that fallback is why this field is optional and
    * not required.
-   * @see docs/public/raw/11-INVENTORY-ECONOMY.md §2
+   * @see docs/canon/11-INVENTORY-ECONOMY.md §2
    */
   supply?: "water" | "food";
   /**

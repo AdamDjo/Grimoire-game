@@ -12,7 +12,7 @@ Feature to implement: $ARGUMENTS
 
 ### Step 1: Understand
 
-- Read `MEMORY.md`, `docs/public/current-state/PROJECT_STATUS.md`, then only the matching domain
+- Read `MEMORY.md`, `docs/state/PROJECT_STATUS.md`, then only the matching domain
   document: `FRONTEND.md` or `BACKEND.md`
 - Read ticket progress from GitHub, never from a `.md`: `gh issue list --milestone "v0.2.1 - Roguelike jouable" --state all`
 - Read the relevant tool entry and workspace instructions: `AGENTS.md` for Codex, `CLAUDE.md` for
@@ -53,5 +53,5 @@ Feature to implement: $ARGUMENTS
   settled a non-obvious choice: why this value, this closed type, this guard
 - Never write per-ticket progress in a `.md`: it becomes wrong at the first merge
 - Update `RELEASE_READINESS.md` when a `phase: predeploy` blocker changes
-- Add a `docs/public/nav/log.md` entry for a pivot or a structural decision
+- Add a `docs/log.md` entry for a pivot or a structural decision
 - Report what was done and what's next

@@ -14,8 +14,8 @@ réglages personnels ou régénérables.
 
 1. `MEMORY.md` est l'unique point d'entrée générique à la racine.
 2. `docs/00-START-HERE.md` route vers les sources de vérité.
-3. `docs/public/current-state/` contient le statut vivant et le backlog par domaine.
-4. `docs/public/nav/task-router.md` charge uniquement le canon nécessaire à la tâche.
+3. `docs/state/` contient le statut vivant et les décisions par domaine.
+4. `docs/task-router.md` charge uniquement le canon nécessaire à la tâche.
 
 Le statut ne doit jamais être recopié dans `MEMORY.md`, les fichiers agents ou les skills.
 
@@ -30,7 +30,8 @@ Le statut ne doit jamais être recopié dans `MEMORY.md`, les fichiers agents ou
 ## Ressources toujours versionnées
 
 - `MEMORY.md`, `AGENTS.md`, `CLAUDE.md` et les fichiers `CLAUDE.md` des workspaces ;
-- `docs/00-HOME.md`, `docs/00-START-HERE.md` et tout `docs/public/` ;
+- `docs/00-START-HERE.md`, `docs/task-router.md`, `docs/log.md` et les dossiers `docs/canon/`,
+  `docs/state/`, `docs/tech/` ;
 - les agents projet frontend, backend et code-review dans `.claude/agents/` ;
 - les sources canoniques des skills projet `bug`, `check`, `design-taste-frontend`, `feature`,
   `hotfix`, `implement`, `pr`, `release`, `status` et `sync` dans `.agents/skills/` ;

@@ -3,17 +3,17 @@ import { pathToFileURL } from "node:url";
 
 // Consolidation du 2026-08-08 : GitHub porte l'avancement, les docs portent les
 // décisions. Ce garde-fou ne réclame donc plus aucun document — il vérifie
-// qu'une PR n'en modifie pas trop. Règle : docs/public/current-state/PROJECT_STATUS.md.
-const FRONTEND_DOMAIN_FILE = "docs/public/current-state/FRONTEND.md";
-const BACKEND_DOMAIN_FILE = "docs/public/current-state/BACKEND.md";
-const RELEASE_STATUS_FILE = "docs/public/current-state/RELEASE_READINESS.md";
+// qu'une PR n'en modifie pas trop. Règle : docs/state/PROJECT_STATUS.md.
+const FRONTEND_DOMAIN_FILE = "docs/state/FRONTEND.md";
+const BACKEND_DOMAIN_FILE = "docs/state/BACKEND.md";
+const RELEASE_STATUS_FILE = "docs/state/RELEASE_READINESS.md";
 
 const DELETED_STATUS_FILES = [
-  "docs/public/current-state/FRONTEND_STATUS.md",
-  "docs/public/current-state/FRONTEND_NEXT.md",
-  "docs/public/current-state/BACKEND_STATUS.md",
-  "docs/public/current-state/BACKEND_NEXT.md",
-  "docs/public/current-state/NEXT_ACTIONS.md",
+  "docs/state/FRONTEND_STATUS.md",
+  "docs/state/FRONTEND_NEXT.md",
+  "docs/state/BACKEND_STATUS.md",
+  "docs/state/BACKEND_NEXT.md",
+  "docs/state/NEXT_ACTIONS.md",
 ];
 
 export function declaresPredeployPhase(prBody) {
@@ -45,7 +45,7 @@ export function currentStateViolations(changedFiles, prBody = "") {
   resurrected.forEach((file) => {
     violations.push(
       `${file} a été supprimé le 2026-08-08 : écrire la décision dans ${
-        file.startsWith("docs/public/current-state/FRONTEND")
+        file.startsWith("docs/state/FRONTEND")
           ? FRONTEND_DOMAIN_FILE
           : BACKEND_DOMAIN_FILE
       }.`,
@@ -130,7 +130,7 @@ function run() {
     console.error("Tenue des docs non respectée :");
     violations.forEach((violation) => console.error(`- ${violation}`));
     console.error(
-      "\nRègle : docs/public/current-state/PROJECT_STATUS.md § Règle de tenue des docs.",
+      "\nRègle : docs/state/PROJECT_STATUS.md § Règle de tenue des docs.",
     );
     process.exitCode = 1;
     return;

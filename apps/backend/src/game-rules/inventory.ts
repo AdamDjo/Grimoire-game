@@ -40,7 +40,7 @@ export interface AcquireItemResult {
  * the schema cannot: bag capacity (12) and a valid slot for an equipment item.
  * Silent rejection on failure, mirroring `apply_condition` (#181): narration
  * stays, nothing is added.
- * @see docs/public/raw/11-INVENTORY-ECONOMY.md §1, docs/public/raw/15-GAME-MASTER.md §4.5
+ * @see docs/canon/11-INVENTORY-ECONOMY.md §1, docs/canon/15-GAME-MASTER.md §4.5
  */
 export function acquireItem(
   items: PersistedInventoryItem[],

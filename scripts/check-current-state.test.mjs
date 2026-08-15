@@ -7,9 +7,9 @@ import {
   hasCrossDomainExemption,
 } from "./check-current-state.mjs";
 
-const FRONTEND = "docs/public/current-state/FRONTEND.md";
-const BACKEND = "docs/public/current-state/BACKEND.md";
-const RELEASE = "docs/public/current-state/RELEASE_READINESS.md";
+const FRONTEND = "docs/state/FRONTEND.md";
+const BACKEND = "docs/state/BACKEND.md";
+const RELEASE = "docs/state/RELEASE_READINESS.md";
 
 test("une PR qui ne modifie aucun document est valide — c'est le défaut", () => {
   assert.deepEqual(currentStateViolations(["apps/backend/src/index.ts"]), []);
@@ -63,7 +63,7 @@ Justification docs transverses: <!-- obligatoire -->`;
 
 test("refuse la résurrection d'un fichier supprimé", () => {
   const violations = currentStateViolations([
-    "docs/public/current-state/BACKEND_STATUS.md",
+    "docs/state/BACKEND_STATUS.md",
   ]);
 
   assert.equal(violations.length, 1);
@@ -73,7 +73,7 @@ test("refuse la résurrection d'un fichier supprimé", () => {
 
 test("oriente une résurrection frontend vers FRONTEND.md", () => {
   const violations = currentStateViolations([
-    "docs/public/current-state/FRONTEND_NEXT.md",
+    "docs/state/FRONTEND_NEXT.md",
   ]);
 
   assert.match(violations[0], /FRONTEND\.md/);

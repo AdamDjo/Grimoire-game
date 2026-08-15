@@ -25,7 +25,7 @@ export interface RecentTurnSummary {
  * Where the character stands in the run, as the prompt needs to know it.
  * Everything here is decided by the backend — the AI receives it as fact, and
  * `warnings` in particular is an order to narrate, not a hint to consider.
- * @see docs/public/raw/23-RUN-STRUCTURE.md §4.2
+ * @see docs/canon/23-RUN-STRUCTURE.md §4.2
  */
 export interface RunPromptContext {
   destination: string
@@ -51,7 +51,7 @@ export interface RunPromptContext {
  * `events` are plain sentences derived from the combat log by the backend — the
  * AI is never shown raw dice, DCs or hit points, because a model that reads a
  * number tends to print it, and canon keeps the arithmetic off the page.
- * @see docs/public/raw/10-COMBAT.md §3
+ * @see docs/canon/10-COMBAT.md §3
  */
 export interface CombatPromptContext {
   /** The tactical action actually resolved (after any prose translation). */
@@ -140,7 +140,7 @@ function buildSouvenirsSection(souvenirs: SouvenirModel[]): string[] {
  * already applies the mechanical effect (Désavantage at 25 and below, via
  * `computeDisadvantage`, non-cumulative across gauges) — this section never
  * asks the AI to decide or apply anything, only to color the prose.
- * @see docs/public/raw/06-SURVIVAL.md §1 "Échelle de chaque jauge"
+ * @see docs/canon/06-SURVIVAL.md §1 "Échelle de chaque jauge"
  */
 function buildGaugeTiersSection(character: Character): string[] {
   const { thirst, hunger, energy } = character.stats.survival
@@ -185,7 +185,7 @@ function buildGaugeTiersSection(character: Character): string[] {
  * `apply_condition`. `[BACKEND]` conditions (fever, wound) are applied
  * automatically server-side and are deliberately excluded from the whitelist
  * shown here — the AI cannot propose them.
- * @see docs/public/raw/06-SURVIVAL.md §2 "Les deux familles de conditions"
+ * @see docs/canon/06-SURVIVAL.md §2 "Les deux familles de conditions"
  */
 function buildConditionsSection(character: Character, locale: Locale): string[] {
   const nameKey = locale === 'fr' ? 'fr' : 'en'
@@ -233,7 +233,7 @@ function buildConditionsSection(character: Character, locale: Locale): string[] 
  * the AI never re-grants a duplicate) and the rules for proposing a new item.
  * The backend re-validates category/slot/capacity in `game-rules/inventory.ts`
  * before ever persisting a proposal — this is guidance only.
- * @see docs/public/raw/11-INVENTORY-ECONOMY.md §1
+ * @see docs/canon/11-INVENTORY-ECONOMY.md §1
  */
 function buildInventorySection(character: Character): string[] {
   const items = character.stats.inventory ?? []
@@ -262,7 +262,7 @@ function buildInventorySection(character: Character): string[] {
  * applies the canon rates (`game-rules/rest.ts`) and narrates the calm scene
  * itself. Only "short" and "fire" are in scope; "inn" belongs to the
  * separate session-ending inn flow and is never proposed mid-run.
- * @see docs/public/raw/06-SURVIVAL.md §3, docs/public/raw/15-GAME-MASTER.md §4.5
+ * @see docs/canon/06-SURVIVAL.md §3, docs/canon/15-GAME-MASTER.md §4.5
  */
 function buildRestSection(): string[] {
   return [
@@ -283,11 +283,11 @@ function buildRestSection(): string[] {
  * to let stakes climb from the character's REAL mechanical state (HP ratio,
  * calamine tier, active conditions, dying) rather than any invented act/beat
  * counter — no act state is persisted server-side (deliberately out of scope,
- * see docs/public/plans/gameplay-survie-v2.md ticket #6). The backend still
+ * see issue #185). The backend still
  * owns every roll, damage value, condition, item, and ending; this section
  * only shapes staging and pacing of the prose.
- * @see docs/public/raw/09-ACTION-LOOP.md §6 "La bascule narrative invisible"
- * @see docs/public/raw/15-GAME-MASTER.md §0
+ * @see docs/canon/09-ACTION-LOOP.md §6 "La bascule narrative invisible"
+ * @see docs/canon/15-GAME-MASTER.md §0
  */
 function buildDangerCrescendoSection(character: Character): string[] {
   const { hp, maxHp, calamine, isDying } = character.stats.survival
@@ -369,7 +369,7 @@ function buildDangerCrescendoSection(character: Character): string[] {
  * belong to the interface, which reads them from the backend's own projection.
  * A warning phrased as a system popup would break both the fiction and the
  * canon rule that the world speaks, not the UI.
- * @see docs/public/raw/23-RUN-STRUCTURE.md §4.2, §6
+ * @see docs/canon/23-RUN-STRUCTURE.md §4.2, §6
  */
 function buildRunSection(run: RunPromptContext | null): string[] {
   if (!run) return []
@@ -440,8 +440,8 @@ function buildRunSection(run: RunPromptContext | null): string[] {
  *
  * Omitted entirely when a fight is already running: the engine, not the
  * narrator, decides when that one ends.
- * @see docs/public/raw/10-COMBAT.md §1
- * @see docs/public/raw/03-BESTIARY.md §6bis
+ * @see docs/canon/10-COMBAT.md §1
+ * @see docs/canon/03-BESTIARY.md §6bis
  */
 function buildEncounterSection(run: RunPromptContext | null, inCombat: boolean): string[] {
   if (inCombat) return []
@@ -483,7 +483,7 @@ function buildEncounterSection(run: RunPromptContext | null, inCombat: boolean):
  * who hit, who died, or how the fight ends. Reversing that order is the one
  * failure mode combat cannot survive, since a narration that contradicts the
  * state leaves the player fighting an enemy the engine has already buried.
- * @see docs/public/raw/10-COMBAT.md §3
+ * @see docs/canon/10-COMBAT.md §3
  */
 function buildCombatSection(combat: CombatPromptContext | null): string[] {
   if (!combat) return []

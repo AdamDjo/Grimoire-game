@@ -29,7 +29,7 @@ export function classifyLieuType(location: string): LieuType {
  * the run state and `lieuType` from the narration, which keeps the key bounded
  * at 6 scene types × 5 bands × 5 archetypes.
  *
- * @see docs/public/raw/03-BESTIARY.md §6bis
+ * @see docs/canon/03-BESTIARY.md §6bis
  */
 export function buildCacheKey(
   sceneType: SceneType,
@@ -104,7 +104,7 @@ async function generateImage(prompt: string): Promise<Uint8Array | null> {
  * new URL. Never throws — returns null on any failure so the caller falls
  * back to the frontend's static theme image, same defensive pattern as the
  * stub scene fallback.
- * @see docs/public/tech/DYNAMIC_SCENE_IMAGES.md
+ * @see docs/tech/SCENE_IMAGES.md
  */
 export async function resolveSceneImage(
   sceneType: SceneType,
