@@ -12,7 +12,6 @@ const getAveugleHubState = vi.fn()
 const markTopicSeen = vi.fn()
 const generateAveugleTalkResponse = vi.fn()
 const spendSouvenirForLore = vi.fn()
-const priceForExchange = vi.fn()
 
 class SouvenirNotFoundError extends Error {}
 class SouvenirNotSpendableError extends Error {}
@@ -22,7 +21,6 @@ vi.mock('../services/aveugle.service', () => ({
   markTopicSeen,
   generateAveugleTalkResponse,
   spendSouvenirForLore,
-  priceForExchange,
   SouvenirNotFoundError,
   SouvenirNotSpendableError,
 }))
@@ -60,7 +58,6 @@ beforeEach(() => {
   markTopicSeen.mockReset()
   generateAveugleTalkResponse.mockReset()
   spendSouvenirForLore.mockReset()
-  priceForExchange.mockReset()
 })
 
 describe('GET /hub', () => {

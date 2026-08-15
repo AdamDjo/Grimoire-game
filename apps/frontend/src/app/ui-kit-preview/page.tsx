@@ -63,8 +63,8 @@ export default function UiKitPreviewPage() {
     <main className="ui-kit-preview">
       <header className="ui-kit-preview__hero">
         <GameBrand decorative size="md" />
-        <p>UI KIT · BIBLIOTHÈQUE GLOBALE</p>
-        <h1>Atlas des composants</h1>
+        <p>ENCRE DE SEL · NOUVEAU KIT</p>
+        <h1>Atlas du voyage</h1>
         <GameDivider variant="celestial" size="lg" />
       </header>
 
@@ -147,11 +147,7 @@ export default function UiKitPreviewPage() {
       <section className="ui-kit-preview__section">
         <h2>Variantes · Création de personnage</h2>
         <div className="ui-kit-preview__character-kit">
-          <GamePanel
-            className="ui-kit-preview__form-frame-legacy"
-            padding="none"
-            variant="form-frame-legacy"
-          >
+          <GamePanel padding="none" variant="form-frame">
             <div className="ui-kit-preview__character-stepper">
               <GameStepper
                 ariaLabel="Variante de progression"
@@ -167,17 +163,12 @@ export default function UiKitPreviewPage() {
                 title="Identité"
               />
               <GameField label="Nom du personnage">
-                <GameInput placeholder="Entrez votre nom…" variant="framed" />
+                <GameInput placeholder="Entrez votre nom…" />
               </GameField>
             </div>
           </GamePanel>
 
-          <GamePanel
-            as="aside"
-            className="ui-kit-preview__aside-frame-legacy"
-            padding="none"
-            variant="aside-frame-legacy"
-          >
+          <GamePanel as="aside" padding="none" variant="aside-frame">
             <span className="ui-kit-preview__character-medallion">
               <GameIcon decorative name="book" size={32} />
             </span>
@@ -190,15 +181,10 @@ export default function UiKitPreviewPage() {
       <section className="ui-kit-preview__section">
         <h2>Variantes V2 · Création premium</h2>
         <p className="ui-kit-preview__intro">
-          Nouveaux masters opaques et variantes responsive. Les composants historiques restent
-          disponibles au-dessus.
+          Primitives du nouveau langage visuel, opaques, lisibles et adaptatives.
         </p>
         <div className="ui-kit-preview__character-kit ui-kit-preview__character-kit--v2">
-          <GamePanel
-            className="ui-kit-preview__form-frame-legacy ui-kit-preview__form-frame-legacy--v2"
-            padding="none"
-            variant="form-frame"
-          >
+          <GamePanel padding="none" variant="form-frame">
             <div className="ui-kit-preview__character-stepper ui-kit-preview__character-stepper--v2">
               <GameStepper
                 ariaLabel="Progression premium"
@@ -214,17 +200,12 @@ export default function UiKitPreviewPage() {
                 title="Identité"
               />
               <GameField label="Nom du personnage">
-                <GameInput placeholder="Entre ton nom…" variant="framed-v2" />
+                <GameInput placeholder="Entre ton nom…" />
               </GameField>
             </div>
           </GamePanel>
 
-          <GamePanel
-            as="aside"
-            className="ui-kit-preview__aside-frame-legacy ui-kit-preview__aside-frame-legacy--v2"
-            padding="none"
-            variant="aside-frame"
-          >
+          <GamePanel as="aside" padding="none" variant="aside-frame">
             <span className="ui-kit-preview__character-medallion">
               <GameIcon decorative name="book" size={32} />
             </span>
@@ -285,10 +266,25 @@ export default function UiKitPreviewPage() {
       <section className="ui-kit-preview__section">
         <h2>Avatars et progression</h2>
         <div className="ui-kit-preview__row">
-          <GameAvatar src="/ui-kit/icons/stranger.webp" alt="Étranger" size="lg" />
-          <GameAvatar src="/ui-kit/icons/mage.webp" alt="Mage" size="lg" state="active" />
-          <GameAvatar src="/ui-kit/icons/helmet.webp" alt="Guerrier" size="lg" state="selected" />
-          <GameAvatar src="/ui-kit/icons/crown.webp" alt="Prestige" size="lg" state="prestige" />
+          <GameAvatar src="/encre-de-sel/icons/character-tile.webp" alt="Étranger" size="lg" />
+          <GameAvatar
+            src="/encre-de-sel/icons/journal-tile.webp"
+            alt="Chronique"
+            size="lg"
+            state="active"
+          />
+          <GameAvatar
+            src="/encre-de-sel/icons/inventory-tile.webp"
+            alt="Équipement"
+            size="lg"
+            state="selected"
+          />
+          <GameAvatar
+            src="/encre-de-sel/icons/character-tile.webp"
+            alt="Prestige"
+            size="lg"
+            state="prestige"
+          />
         </div>
         <GameStepper
           items={steps}
@@ -308,7 +304,6 @@ export default function UiKitPreviewPage() {
         />
         <GameSceneLayout
           className="ui-kit-preview__scene"
-          variant="sidebar"
           top={
             <GameTopBar
               start={
@@ -320,7 +315,13 @@ export default function UiKitPreviewPage() {
               }
               center={
                 <PlayerIdentity
-                  avatar={<GameAvatar alt="Aerion" size="sm" src="/ui-kit/icons/stranger.webp" />}
+                  avatar={
+                    <GameAvatar
+                      alt="Aerion"
+                      size="sm"
+                      src="/encre-de-sel/icons/character-tile.webp"
+                    />
+                  }
                   name="Aerion"
                   subtitle="Tisse-Verbe"
                 />
@@ -335,24 +336,36 @@ export default function UiKitPreviewPage() {
               }
             />
           }
-          main={
+          scene={
             <GameSurface padding="md" variant="card">
               <NarrativePassage dropCap>
                 <p>Le refuge bruisse de voix étouffées tandis que la nuit descend sur Tissan.</p>
               </NarrativePassage>
             </GameSurface>
           }
-          sidebar={
+          reader={
             <GameSurface padding="sm" variant="card">
               <h3>Souvenirs</h3>
               <div className="ui-kit-preview__memories">
                 <MemoryBadge
                   title="Le serment du Sel"
-                  visual={<GameAvatar alt="Souvenir" size="lg" src="/ui-kit/icons/memory.webp" />}
+                  visual={
+                    <GameAvatar
+                      alt="Souvenir"
+                      size="lg"
+                      src="/encre-de-sel/icons/journal-tile.webp"
+                    />
+                  }
                 />
                 <MemoryBadge
                   title="Le rêve archonique"
-                  visual={<GameAvatar alt="Rêve" size="lg" src="/ui-kit/icons/moon.webp" />}
+                  visual={
+                    <GameAvatar
+                      alt="Rêve"
+                      size="lg"
+                      src="/encre-de-sel/icons/character-tile.webp"
+                    />
+                  }
                 />
               </div>
             </GameSurface>

@@ -1,19 +1,15 @@
 'use client'
 
-import { getPeople, getVocation } from '@grimoire/shared'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useLocale, useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState, type KeyboardEvent } from 'react'
 
-import { GameAvatar } from '@/components/ui/grimoire/GameAvatar/GameAvatar'
+import { GameButton } from '@/components/ui/grimoire/GameButton/GameButton'
 import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
 import { GameSceneLayout } from '@/components/ui/grimoire/GameSceneLayout/GameSceneLayout'
 import { GameTopBar } from '@/components/ui/grimoire/GameTopBar/GameTopBar'
-import { LocationIdentity } from '@/components/ui/grimoire/LocationIdentity/LocationIdentity'
 import { NarrativeComposer } from '@/components/ui/grimoire/NarrativeComposer/NarrativeComposer'
-import { PlayerIdentity } from '@/components/ui/grimoire/PlayerIdentity/PlayerIdentity'
-import { LanguageSwitcher } from '@/components/ui/language-switcher'
 import { SoftSignupPrompt } from '@/features/auth/components/SoftSignupPrompt/SoftSignupPrompt'
 import { ChronicleEndExperience } from '@/features/chronicle/components/ChronicleEndExperience'
 import { gameSessionApi } from '@/features/game-session/api/game-session-api'
@@ -21,7 +17,6 @@ import { ChoiceList } from '@/features/game-session/components/ChoiceList'
 import { ConsequenceList } from '@/features/game-session/components/ConsequenceList'
 import { DiceRoll } from '@/features/game-session/components/DiceRoll'
 import { NarrativePanel } from '@/features/game-session/components/NarrativePanel'
-import { SourceBadge } from '@/features/game-session/components/SourceBadge'
 import { useGameSession } from '@/features/game-session/hooks/use-game-session'
 import { detectBrowserLocale } from '@/features/game-session/lib/browser-locale'
 import { getAuthHref } from '@/lib/internal-navigation'
@@ -95,6 +90,7 @@ function consequenceMessages(response: SceneResponse | null, copy: ConsequenceCo
 export function VelkharSession({ initialCharacter, locale }: VelkharSessionProps) {
   const uiLocale = useLocale()
   const t = useTranslations('Session')
+  const navigation = useTranslations('Navigation')
   // La langue de narration priorise : locale fournie par le parcours de jeu,
   // puis le choix explicite du switcher en jeu, puis le navigateur (#168, #181).
   const [detectedLocale] = useState<Locale | undefined>(() => detectBrowserLocale())
@@ -117,9 +113,6 @@ export function VelkharSession({ initialCharacter, locale }: VelkharSessionProps
   const abandonSession = session.abandon
   const closeTool = useCallback(() => setOpenTool(null), [])
 
-  const people = getPeople(initialCharacter.people)
-  const vocation = getVocation(initialCharacter.vocation)
-  const descriptor = [people?.name[uiLocale], vocation?.name[uiLocale]].filter(Boolean).join(' · ')
   const narrative = session.scene?.narrative ?? t('openingNarrative')
   const notifications = useMemo(() => {
     const statLabels: Record<string, string> = {
@@ -169,14 +162,13 @@ export function VelkharSession({ initialCharacter, locale }: VelkharSessionProps
     <>
       <GameSceneLayout
         className="velkhar-session"
-        variant="immersive"
         background={
           <Image
             alt={t('backgroundAlt')}
             className="velkhar-session__background"
             fill
             priority
-            sizes="100vw"
+            sizes="(max-width: 1120px) 100vw, 58vw"
             src={session.scene?.imageUrl ?? VELKHAR_WORLD.session.fallbackBackground}
           />
         }
@@ -184,37 +176,48 @@ export function VelkharSession({ initialCharacter, locale }: VelkharSessionProps
           <GameTopBar
             className="velkhar-session__topbar"
             label={t('mainNavigation')}
-            variant="transparent"
             start={
-              <LocationIdentity
-                icon={<GameIcon decorative name="compass" size={32} />}
-                place={session.scene?.location ?? t('saltRoad')}
-                world={VELKHAR_WORLD.name}
-              />
+              <div className="game-top-bar__nav velkhar-session__nav-group">
+                <Link href={`${VELKHAR_WORLD.routes.aveugle}?return=run`}>
+                  {VELKHAR_WORLD.name}
+                </Link>
+                <span aria-hidden="true">|</span>
+                <span>{t('regionLabel')}</span>
+              </div>
             }
             center={
-              <PlayerIdentity
-                avatar={
-                  <GameAvatar alt="" size="sm" src="/ui-kit/icons/stranger.webp" state="active" />
-                }
-                compact
-                label={t('characterIdentity', { name: initialCharacter.name })}
-                name={initialCharacter.name}
-                subtitle={descriptor}
-              />
+              <strong className="game-top-bar__title velkhar-session__nav-title">
+                {session.scene?.location ?? t('saltRoad')}
+              </strong>
             }
             end={
-              <div className="velkhar-session__topbar-end">
-                <LanguageSwitcher />
-                {session.source ? <SourceBadge source={session.source} /> : null}
-                <Link href={`${VELKHAR_WORLD.routes.aveugle}?return=run`}>
-                  {t('returnBlindOne')}
+              <div className="game-top-bar__nav velkhar-session__nav-group velkhar-session__nav-group--tools">
+                <span className="velkhar-session__gm-status" data-online={session.source === 'ai'}>
+                  <span aria-hidden="true" />
+                  {session.source === 'ai'
+                    ? t('gameMasterConnected')
+                    : t('gameMasterFallbackShort')}
+                </span>
+                <span aria-hidden="true">|</span>
+                <Link href={getAuthHref('/login', `${VELKHAR_WORLD.routes.session}/resume`)}>
+                  {navigation('signIn')}
                 </Link>
+                <span aria-hidden="true">|</span>
+                <button type="button" onClick={() => setOpenTool('menu')}>
+                  {t('navOptions')}
+                </button>
               </div>
             }
           />
         }
-        main={
+        scene={
+          <div className="velkhar-session__visual">
+            <span className="velkhar-session__visual-location">
+              {session.scene?.location ?? t('saltRoad')}
+            </span>
+          </div>
+        }
+        reader={
           <main className="velkhar-session__main">
             <div className="velkhar-session__stage" key={session.scene?.id ?? 'opening'}>
               <ConsequenceList messages={notifications} />
@@ -233,9 +236,14 @@ export function VelkharSession({ initialCharacter, locale }: VelkharSessionProps
                   <GameIcon decorative name={session.online ? 'warning' : 'hourglass'} size={48} />
                   <h1>{session.online ? t('gameMasterSilent') : t('roadUnavailable')}</h1>
                   <p>{t('requestError')}</p>
-                  <button type="button" onClick={session.retry} disabled={!session.online}>
+                  <GameButton
+                    type="button"
+                    variant="secondary"
+                    onClick={session.retry}
+                    disabled={!session.online}
+                  >
                     {t('retry')}
-                  </button>
+                  </GameButton>
                 </div>
               ) : session.gameOver ? (
                 <ChronicleEndExperience
@@ -245,6 +253,9 @@ export function VelkharSession({ initialCharacter, locale }: VelkharSessionProps
                 />
               ) : (
                 <>
+                  <header className="velkhar-session__reader-heading">
+                    <h1>{session.scene?.location ?? t('saltRoad')}</h1>
+                  </header>
                   <NarrativePanel narrative={narrative} loading={session.loading} />
 
                   {session.roll ? <DiceRoll key={session.turn} roll={session.roll} /> : null}
@@ -279,8 +290,6 @@ export function VelkharSession({ initialCharacter, locale }: VelkharSessionProps
         }
         bottom={
           <VelkharSurvivalHud
-            conditions={session.conditions}
-            gold={session.gold}
             inventory={session.inventory}
             survival={session.worldState}
             onOpenCharacter={() => setOpenTool('character')}
@@ -296,7 +305,6 @@ export function VelkharSession({ initialCharacter, locale }: VelkharSessionProps
         gold={session.gold}
         inventory={session.inventory}
         openTool={openTool}
-        source={session.source}
         survival={session.worldState}
         onAbandon={handleAbandon}
         onClose={closeTool}

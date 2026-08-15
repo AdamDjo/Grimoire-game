@@ -7,7 +7,6 @@ import {
   generateAveugleTalkResponse,
   getAveugleHubState,
   markTopicSeen,
-  priceForExchange,
   SouvenirNotFoundError,
   SouvenirNotSpendableError,
   spendSouvenirForLore,
@@ -178,6 +177,3 @@ aveugleRouter.post(
     }
   }
 )
-
-// Exported for the exchange price table the frontend may want to render.
-export { priceForExchange }

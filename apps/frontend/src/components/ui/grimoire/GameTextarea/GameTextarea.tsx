@@ -8,11 +8,19 @@ import './game-textarea.css'
 
 export interface GameTextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   invalid?: boolean
+  surface?: 'framed' | 'bare'
 }
 
 export const GameTextarea = forwardRef<HTMLTextAreaElement, GameTextareaProps>(
   function GameTextarea(
-    { 'aria-invalid': ariaInvalid, className, disabled = false, invalid = false, ...props },
+    {
+      'aria-invalid': ariaInvalid,
+      className,
+      disabled = false,
+      invalid = false,
+      surface = 'framed',
+      ...props
+    },
     ref
   ) {
     const isInvalid = invalid || ariaInvalid === true || ariaInvalid === 'true'
@@ -21,6 +29,7 @@ export const GameTextarea = forwardRef<HTMLTextAreaElement, GameTextareaProps>(
       <span
         className={cn(
           'game-textarea',
+          `game-textarea--${surface}`,
           isInvalid && 'game-textarea--invalid',
           disabled && 'game-textarea--disabled'
         )}

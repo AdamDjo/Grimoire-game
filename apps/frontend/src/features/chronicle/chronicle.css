@@ -2,7 +2,7 @@
   background:
     radial-gradient(circle at 50% 12%, rgba(145, 102, 47, 0.14), transparent 28rem),
     linear-gradient(180deg, #0c0906, #050403 42%, #090705);
-  color: var(--parchment);
+  color: var(--salt-white);
   min-height: 100dvh;
   padding: 1.25rem clamp(1rem, 4vw, 3rem) 6rem;
 }
@@ -26,7 +26,7 @@
 }
 
 .chronicle-page__nav a {
-  color: var(--gold-light);
+  color: var(--material-gold-bright);
   font-family: var(--font-game-display);
   font-size: 0.9rem;
   letter-spacing: 0.16em;
@@ -34,9 +34,9 @@
 
 .chronicle-page__nav > span,
 .chronicle-page__nav-actions > span {
-  color: var(--ink-2);
+  color: var(--salt-muted);
   font-family: var(--font-game-ui);
-  font-size: 0.76rem;
+  font-size: var(--text-game-caption);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -70,9 +70,9 @@
 }
 
 .chronicle-reader__eyebrow {
-  color: var(--gold);
+  color: var(--material-gold);
   font-family: var(--font-game-ui);
-  font-size: 0.76rem;
+  font-size: var(--text-game-label);
   letter-spacing: 0.13em;
   margin: 0 0 1.25rem;
   text-transform: uppercase;
@@ -94,7 +94,7 @@
 }
 
 .chronicle-reader__tagline {
-  color: var(--ink-2);
+  color: var(--salt-muted);
   font-family: var(--font-game-heading);
   font-size: clamp(1.2rem, 2.5vw, 1.65rem);
   font-style: italic;
@@ -166,16 +166,16 @@
 }
 
 .chronicle-reader__moments li {
-  color: var(--ink-2);
+  color: var(--salt-muted);
   counter-increment: moments;
   font-family: var(--font-game-ui);
-  font-size: 0.85rem;
+  font-size: var(--text-game-body-sm);
   line-height: 1.4;
   padding: 1rem;
 }
 
 .chronicle-reader__moments li::before {
-  color: var(--gold);
+  color: var(--material-gold);
   content: '0' counter(moments) ' — ';
   font-variant-numeric: tabular-nums;
 }
@@ -242,10 +242,10 @@
 }
 
 .chronicle-share span {
-  color: var(--ink-2);
+  color: var(--salt-muted);
   flex-basis: 100%;
   font-family: var(--font-game-ui);
-  font-size: 0.75rem;
+  font-size: var(--text-game-caption);
   letter-spacing: 0.1em;
   text-align: center;
   text-transform: uppercase;
@@ -257,10 +257,10 @@
 .chronicle-state button {
   background: transparent;
   border: 0;
-  color: var(--gold-light);
+  color: var(--material-gold-bright);
   cursor: pointer;
   font-family: var(--font-game-ui);
-  font-size: 0.9rem;
+  font-size: var(--text-game-body-sm);
   padding: 0.35rem;
   text-decoration: underline;
   text-decoration-color: rgba(217, 164, 65, 0.35);
@@ -303,9 +303,9 @@
 }
 
 .chronicle-reader__account-note {
-  color: var(--ink-2);
+  color: var(--salt-muted);
   font-family: var(--font-game-ui);
-  font-size: 0.8rem;
+  font-size: var(--text-game-caption);
   margin: 2rem 0 0;
   text-align: center;
 }
@@ -342,7 +342,7 @@
 }
 
 .chronicle-state p {
-  color: var(--ink-2);
+  color: var(--salt-muted);
   font-family: var(--font-game-body);
   font-size: 1.15rem;
   line-height: 1.6;

@@ -13,7 +13,7 @@ import {
   type ReturnWarning,
 } from '../game-rules/run'
 
-import type { Character as DbCharacter, GameSession } from '../generated/prisma/client'
+import type { GameSession } from '../generated/prisma/client'
 import type {
   ContractDepth,
   GameMode,
@@ -326,9 +326,4 @@ export function detectThresholdCrossings(
   after: CarriedSupplies
 ): ReturnWarning[] {
   return detectReturnWarnings(nextState, before, after, previousState)
-}
-
-/** Convenience read of the supplies a character carries right now. */
-export function readSupplies(character: DbCharacter): CarriedSupplies {
-  return countCarriedSupplies(character.inventory as unknown as PersistedInventoryItem[])
 }

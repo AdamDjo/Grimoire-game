@@ -1,8 +1,24 @@
 .game-ornament {
-  display: block;
-  height: auto;
-  object-fit: contain;
+  align-items: center;
+  color: var(--material-gold);
+  display: grid;
+  grid-template-columns: minmax(2rem, 1fr) auto minmax(2rem, 1fr);
+  gap: 0.85rem;
   user-select: none;
+}
+
+.game-ornament > span {
+  background: linear-gradient(90deg, transparent, currentColor);
+  height: 1px;
+}
+
+.game-ornament > span:last-child {
+  background: linear-gradient(90deg, currentColor, transparent);
+}
+
+.game-ornament svg {
+  height: auto;
+  width: 2.5rem;
 }
 
 .game-ornament--sm {

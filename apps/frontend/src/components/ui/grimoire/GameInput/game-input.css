@@ -1,10 +1,8 @@
 .game-input {
-  --game-field-frame-brightness: 0.9;
-  --game-field-frame-saturation: 0.88;
-  --game-field-halo-color: transparent;
-  --game-field-halo-size: 0px;
-
   align-items: center;
+  background: transparent;
+  border: 0;
+  box-shadow: 0 0.8rem 1.8rem rgba(0, 0, 0, 0.28);
   color: var(--gold-light, #f0d48a);
   display: inline-grid;
   grid-template-columns: minmax(0, 1fr);
@@ -16,55 +14,32 @@
 }
 
 .game-input::before {
-  border: 14px solid transparent;
-  border-image-source: url('/ui-kit/controls/game-input-frame-v2.webp');
-  border-image-slice: 42 fill;
-  border-image-width: 14px;
-  border-image-repeat: stretch;
-  box-sizing: border-box;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--material-gold) 7%, transparent), transparent 42%),
+    var(--ink-raised);
+  border: 1px solid color-mix(in srgb, var(--material-gold) 68%, transparent);
+  box-shadow:
+    inset 0 0 0 4px var(--ink-black),
+    inset 0 0 0 5px color-mix(in srgb, var(--material-gold) 22%, transparent);
   content: '';
-  filter: brightness(var(--game-field-frame-brightness))
-    saturate(var(--game-field-frame-saturation))
-    drop-shadow(0 0 var(--game-field-halo-size) var(--game-field-halo-color));
   inset: 0;
   pointer-events: none;
   position: absolute;
-  transition: filter 180ms cubic-bezier(0.2, 0, 0, 1);
-  z-index: -1;
+  transition: filter var(--motion-fast) var(--ease-grimoire-standard);
+  z-index: 0;
 }
 
-.game-input--framed::before {
-  background: url('/ui-kit/character-create/character-input-frame.webp') center / 100% 100%
-    no-repeat;
-  border: 0;
-  border-image: none;
-  filter: brightness(var(--game-field-frame-brightness))
-    saturate(var(--game-field-frame-saturation))
-    drop-shadow(0 0 var(--game-field-halo-size) var(--game-field-halo-color));
-}
-
-.game-input--framed-v2::before {
-  background: url('/ui-kit/character-create/character-input-frame-v2.webp') center / 100% 100%
-    no-repeat;
-  border: 0;
-  border-image: none;
-  filter: brightness(var(--game-field-frame-brightness))
-    saturate(var(--game-field-frame-saturation))
-    drop-shadow(0 0 var(--game-field-halo-size) var(--game-field-halo-color));
-}
-
-.game-input:not(.game-input--disabled):hover {
-  --game-field-frame-brightness: 1.04;
-  --game-field-frame-saturation: 1.04;
-  --game-field-halo-color: color-mix(in srgb, var(--gold, #d9a441) 18%, transparent);
-  --game-field-halo-size: 7px;
+.game-input:not(.game-input--disabled):hover::before {
+  filter: brightness(1.08);
 }
 
 .game-input:focus-within {
-  --game-field-frame-brightness: 1.14;
-  --game-field-frame-saturation: 1.12;
-  --game-field-halo-color: color-mix(in srgb, var(--gold-light, #efd48d) 32%, transparent);
-  --game-field-halo-size: 10px;
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--material-gold) 20%, transparent));
+}
+
+.game-input:focus-within::before {
+  border-color: var(--material-gold-bright);
+  filter: brightness(1.08);
 }
 
 .game-input--with-leading {
@@ -152,18 +127,11 @@
 }
 
 .game-input.game-input--invalid {
-  --game-field-frame-brightness: 0.94;
-  --game-field-frame-saturation: 1.28;
-  --game-field-halo-color: color-mix(in srgb, var(--blood, #c0392b) 25%, transparent);
-  --game-field-halo-size: 8px;
-
   color: var(--blood, #c0392b);
 }
 
 .game-input.game-input--invalid::before {
-  filter: sepia(0.3) brightness(var(--game-field-frame-brightness))
-    saturate(var(--game-field-frame-saturation))
-    drop-shadow(0 0 var(--game-field-halo-size) var(--game-field-halo-color));
+  border-color: color-mix(in srgb, var(--fresh-blood) 68%, var(--material-gold));
 }
 
 .game-input--disabled {
@@ -173,7 +141,7 @@
 }
 
 .game-input--disabled::before {
-  filter: grayscale(1) brightness(0.65);
+  filter: grayscale(0.72) brightness(0.64);
 }
 
 .game-input__control:disabled {
@@ -182,25 +150,17 @@
 }
 
 @media (max-width: 720px) {
-  .game-input--framed::before {
-    background-image: url('/ui-kit/character-create/character-input-frame-mobile.webp');
-  }
-
-  .game-input--framed-v2::before {
-    background-image: url('/ui-kit/character-create/character-input-frame-v2-mobile.webp');
-  }
-
   .game-input {
     min-height: 58px;
   }
 
+  .game-input::before {
+    box-shadow:
+      inset 0 0 0 3px var(--ink-black),
+      inset 0 0 0 4px color-mix(in srgb, var(--material-gold) 22%, transparent);
+  }
+
   .game-input__control {
     padding-inline: 1.4rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .game-input::before {
-    transition-duration: 0.01ms;
   }
 }

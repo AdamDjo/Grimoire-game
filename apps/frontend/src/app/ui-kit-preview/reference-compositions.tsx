@@ -93,7 +93,9 @@ export function HubComposition() {
           className="ui-kit-proof__hub-top"
           start={
             <PlayerIdentity
-              avatar={<GameAvatar alt="Aerion" size="sm" src="/ui-kit/icons/stranger.webp" />}
+              avatar={
+                <GameAvatar alt="Aerion" size="sm" src="/encre-de-sel/icons/character-tile.webp" />
+              }
               name="Aerion"
               subtitle="Niveau 1"
             />
@@ -136,15 +138,21 @@ export function HubComposition() {
         <div className="ui-kit-proof__memory-row" aria-label="Souvenirs récents">
           <MemoryBadge
             title="La nuit où tu as épargné Vane"
-            visual={<GameAvatar alt="Souvenir de Vane" src="/ui-kit/icons/stranger.webp" />}
+            visual={
+              <GameAvatar alt="Souvenir de Vane" src="/encre-de-sel/icons/character-tile.webp" />
+            }
           />
           <MemoryBadge
             title="Le serment du Sel"
-            visual={<GameAvatar alt="Souvenir du serment" src="/ui-kit/icons/memory.webp" />}
+            visual={
+              <GameAvatar alt="Souvenir du serment" src="/encre-de-sel/icons/journal-tile.webp" />
+            }
           />
           <MemoryBadge
             title="Le rêve archonique"
-            visual={<GameAvatar alt="Souvenir du rêve" src="/ui-kit/icons/moon.webp" />}
+            visual={
+              <GameAvatar alt="Souvenir du rêve" src="/encre-de-sel/icons/character-tile.webp" />
+            }
           />
         </div>
         <GameSurface className="ui-kit-proof__dialogue-panel" padding="sm" variant="card">
@@ -189,7 +197,9 @@ export function GameSessionComposition() {
           world="Velkhar"
         />
         <PlayerIdentity
-          avatar={<GameAvatar alt="Aerion" size="sm" src="/ui-kit/icons/stranger.webp" />}
+          avatar={
+            <GameAvatar alt="Aerion" size="sm" src="/encre-de-sel/icons/character-tile.webp" />
+          }
           compact
           name="Aerion"
           subtitle="Tisse-Verbe"

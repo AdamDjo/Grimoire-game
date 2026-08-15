@@ -16,9 +16,9 @@
 }
 
 .login-form__header h1 {
-  color: var(--gold-light);
-  font-family: var(--font-display);
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  color: var(--material-gold-bright);
+  font-family: var(--font-game-heading);
+  font-size: var(--text-game-title);
   font-weight: 500;
   letter-spacing: 0.035em;
   line-height: 1.16;
@@ -27,9 +27,9 @@
 }
 
 .login-form__header > p:last-child {
-  color: var(--ink-2);
-  font-family: var(--font-serif);
-  font-size: 1.02rem;
+  color: var(--salt-muted);
+  font-family: var(--font-game-body);
+  font-size: var(--text-game-body);
   line-height: 1.55;
   margin: 0;
   max-width: 29rem;
@@ -37,9 +37,9 @@
 }
 
 .login-form__eyebrow {
-  color: var(--gold);
-  font-family: var(--font-ui);
-  font-size: 0.72rem;
+  color: var(--material-gold);
+  font-family: var(--font-game-ui);
+  font-size: var(--text-game-label);
   letter-spacing: 0.18em;
   margin: 0.4rem 0 0;
   text-transform: uppercase;
@@ -51,9 +51,9 @@
 
 .login-form__preservation {
   align-items: flex-start;
-  background: rgba(53, 196, 172, 0.07);
-  border: 1px solid color-mix(in srgb, var(--soul) 32%, transparent);
-  color: var(--ink-2);
+  background: color-mix(in srgb, var(--breath-aqua) 7%, var(--ink-raised));
+  border: 1px solid color-mix(in srgb, var(--breath-aqua) 26%, transparent);
+  color: var(--salt-muted);
   display: flex;
   gap: 0.7rem;
   margin-top: 1.2rem;
@@ -67,20 +67,20 @@
 .login-form__preservation p,
 .login-form__account-switch {
   font-family: var(--font-game-ui);
-  font-size: 0.84rem;
+  font-size: var(--text-game-body-sm);
   line-height: 1.5;
   margin: 0;
 }
 
 .login-form__account-switch {
-  color: var(--ink-2);
+  color: var(--salt-muted);
   margin-top: 1rem;
   text-align: center;
 }
 
 .login-form__account-switch a,
 .login-form__recovery-link a {
-  color: var(--gold-light);
+  color: var(--material-gold-bright);
   text-decoration: underline;
   text-decoration-color: rgba(240, 212, 138, 0.32);
   text-underline-offset: 0.25em;
@@ -93,16 +93,16 @@
 
 .login-form__options {
   align-items: center;
-  color: var(--ink-2);
+  color: var(--salt-muted);
   display: flex;
-  font-family: var(--font-ui);
-  font-size: 0.84rem;
+  font-family: var(--font-game-ui);
+  font-size: var(--text-game-body-sm);
   justify-content: space-between;
 }
 
 .login-form__options a,
 .login-form__footer a {
-  color: var(--gold-light);
+  color: var(--material-gold-bright);
   text-decoration: underline;
   text-decoration-color: rgba(240, 212, 138, 0.32);
   text-underline-offset: 0.25em;
@@ -113,7 +113,7 @@
 
 .login-form__options a:hover,
 .login-form__footer a:hover {
-  color: var(--parchment);
+  color: var(--salt-white);
   text-decoration-color: currentColor;
 }
 
@@ -130,7 +130,7 @@
   background: rgba(8, 7, 5, 0.76);
   border: 1px solid rgba(240, 212, 138, 0.58);
   box-shadow: inset 0 0 0 2px rgba(10, 8, 6, 0.88);
-  color: var(--gold-light);
+  color: var(--material-gold-bright);
   display: grid;
   height: 1rem;
   place-content: center;
@@ -153,7 +153,7 @@
 
 .login-form__remember input:checked {
   background: rgba(217, 164, 65, 0.18);
-  border-color: var(--gold-light);
+  border-color: var(--material-gold-bright);
   box-shadow:
     inset 0 0 0 2px rgba(10, 8, 6, 0.88),
     0 0 10px rgba(217, 164, 65, 0.18);
@@ -164,7 +164,7 @@
 }
 
 .login-form__remember input:focus-visible {
-  border-color: var(--gold-light);
+  border-color: var(--material-gold-bright);
   box-shadow:
     inset 0 0 0 2px rgba(10, 8, 6, 0.88),
     0 0 0 3px rgba(217, 164, 65, 0.26);
@@ -183,21 +183,21 @@
 }
 
 .login-form__oauth .game-button {
-  font-size: 0.92rem;
+  font-size: var(--text-game-label);
   min-width: 0;
   width: 100%;
 }
 
 .login-form__recovery-link {
   font-family: var(--font-game-ui);
-  font-size: 0.82rem;
+  font-size: var(--text-game-body-sm);
   margin: -0.2rem 0 0.15rem;
   text-align: center;
 }
 
 .login-form__status {
-  color: var(--gold-light);
-  font-family: var(--font-ui);
+  color: var(--material-gold-bright);
+  font-family: var(--font-game-ui);
   min-height: 1.5rem;
   text-align: center;
 }
@@ -207,13 +207,13 @@
 }
 
 .login-form__status[role='alert'] {
-  color: color-mix(in srgb, var(--blood) 58%, var(--parchment));
+  color: color-mix(in srgb, var(--fresh-blood) 58%, var(--salt-white));
 }
 
 .login-form__footer {
-  color: var(--ink-2);
-  font-family: var(--font-ui);
-  font-size: 0.9rem;
+  color: var(--salt-muted);
+  font-family: var(--font-game-ui);
+  font-size: var(--text-game-body-sm);
   margin: 1rem 0 0;
   text-align: center;
 }

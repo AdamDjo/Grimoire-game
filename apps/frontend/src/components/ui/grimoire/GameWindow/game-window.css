@@ -6,7 +6,8 @@
 }
 
 .game-window-layer__backdrop {
-  background: var(--game-window-backdrop, rgba(0, 0, 0, 0.58));
+  backdrop-filter: blur(3px);
+  background: var(--game-window-backdrop, rgba(0, 0, 0, 0.72));
   border: 0;
   cursor: default;
   inset: 0;
@@ -15,13 +16,20 @@
 }
 
 .game-window {
-  background: var(--game-window-background, rgba(12, 10, 7, 0.98));
-  border: var(--game-window-border, 1px solid rgba(217, 164, 65, 0.44));
-  box-shadow: var(--game-window-shadow, 0 1.5rem 4rem rgba(0, 0, 0, 0.72));
-  color: var(--game-window-color, var(--parchment));
+  --game-window-frame: var(--game-window-border-color, var(--line-gold));
+
+  background:
+    linear-gradient(112deg, rgba(233, 223, 201, 0.025), transparent 38%),
+    var(--game-window-background, var(--ink-black));
+  border: 1px solid color-mix(in srgb, var(--material-gold) 76%, var(--salt-muted));
+  border-radius: 0.7rem;
+  box-shadow: var(--game-window-shadow, 0 1.5rem 4rem rgba(0, 0, 0, 0.78));
+  clip-path: none;
+  color: var(--game-window-color, var(--salt-white));
   max-height: min(75dvh, 44rem);
   max-width: min(92vw, 34rem);
-  overflow-y: auto;
+  isolation: isolate;
+  overflow: hidden;
   pointer-events: auto;
   position: absolute;
   right: var(--game-window-right, clamp(1rem, 3vw, 3rem));
@@ -29,24 +37,99 @@
   width: var(--game-window-width, 28rem);
 }
 
+.game-window::before {
+  border: 1px solid color-mix(in srgb, var(--ink-black) 72%, var(--material-gold));
+  border-radius: calc(0.7rem - 3px);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--material-gold-dim) 30%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--salt-white) 8%, transparent);
+  content: '';
+  inset: 3px;
+  pointer-events: none;
+  position: absolute;
+  z-index: 5;
+}
+
+.game-window::after {
+  display: none;
+}
+
 .game-window__header {
   align-items: center;
-  border-bottom: 1px solid rgba(217, 164, 65, 0.24);
   display: flex;
   justify-content: space-between;
-  padding: 1rem 1.2rem;
+  min-height: 5.75rem;
+  padding: 1.65rem clamp(2rem, 4vw, 3rem) 1rem;
+  position: relative;
+  z-index: 3;
+}
+
+.game-window__header::after {
+  background: url('/encre-de-sel/chrome/footer-separator.webp') center / 100% 100% no-repeat;
+  bottom: -6px;
+  content: '';
+  height: 12px;
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
 }
 
 .game-window__header h2 {
-  color: var(--gold-light);
-  font-family: var(--font-game-heading);
-  font-size: 1.25rem;
-  font-weight: 500;
+  color: var(--salt-white);
+  font-family: var(--font-game-display);
+  font-size: var(--text-game-modal-title);
+  font-weight: 400;
+  letter-spacing: 0.035em;
+  line-height: 1.1;
   margin: 0;
+  text-transform: uppercase;
+  text-shadow:
+    0 2px 0 var(--ink-black),
+    0 0 18px color-mix(in srgb, var(--fresh-blood) 24%, transparent);
 }
 
 .game-window__content {
-  padding: 1.2rem;
+  color: var(--salt-white);
+  font-family: var(--font-game-body);
+  font-size: var(--text-game-body);
+  line-height: 1.6;
+  max-height: calc(min(75dvh, 44rem) - 5.75rem);
+  overflow-wrap: anywhere;
+  overflow-y: auto;
+  padding: 1.7rem clamp(2rem, 4vw, 3rem) 2.5rem;
+  position: relative;
+  scrollbar-color: var(--material-gold-dim) var(--ink-black);
+  scrollbar-width: thin;
+  z-index: 2;
+}
+
+.game-window__content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.game-window__content::-webkit-scrollbar-track {
+  background: var(--ink-black);
+}
+
+.game-window__content::-webkit-scrollbar-thumb {
+  background: var(--material-gold-dim);
+  border: 3px solid var(--ink-black);
+}
+
+.game-window__header .game-button {
+  font-family: var(--font-game-display);
+  font-size: 1.85rem;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  width: 2.75rem;
+}
+
+.game-window__header .game-button--icon {
+  --game-button-text: var(--salt-white);
+  --game-button-text-hover: color-mix(in srgb, var(--fresh-blood) 74%, var(--salt-white));
+
+  text-shadow: 0 2px 6px var(--ink-black);
 }
 
 @media (max-width: 640px) {
@@ -55,5 +138,19 @@
     max-height: min(78dvh, 42rem);
     max-width: none;
     width: 100%;
+  }
+
+  .game-window__content {
+    max-height: calc(min(78dvh, 42rem) - 5.75rem);
+    padding: 1.45rem 1.6rem 2.2rem;
+  }
+
+  .game-window__header {
+    min-height: 5.75rem;
+    padding: 1.65rem 1.6rem 1rem;
+  }
+
+  .game-window__header h2 {
+    font-size: clamp(1.55rem, 6.3vw, 1.9rem);
   }
 }

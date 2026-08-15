@@ -17,6 +17,7 @@ export interface GameProgressRingProps {
 }
 
 interface RingStyle extends CSSProperties {
+  '--game-ring-percent': string
   '--game-ring-progress': string
 }
 
@@ -33,7 +34,10 @@ export function GameProgressRing({
   const safeMax = Math.max(1, max)
   const safeValue = Math.min(Math.max(0, value), safeMax)
   const percent = Math.round((safeValue / safeMax) * 100)
-  const style: RingStyle = { '--game-ring-progress': `${percent * 3.6}deg` }
+  const style: RingStyle = {
+    '--game-ring-percent': `${percent}%`,
+    '--game-ring-progress': `${percent * 3.6}deg`,
+  }
 
   return (
     <div
@@ -48,7 +52,11 @@ export function GameProgressRing({
       <span className="game-progress-ring__dial" aria-hidden="true">
         <span className="game-progress-ring__center">
           {icon ? <span className="game-progress-ring__icon">{icon}</span> : null}
-          {showValue ? <span className="game-progress-ring__value">{percent}%</span> : null}
+          {showValue ? (
+            <span className="game-progress-ring__value">
+              {safeValue}/{safeMax}
+            </span>
+          ) : null}
         </span>
       </span>
       <span className="game-progress-ring__label">{label}</span>
