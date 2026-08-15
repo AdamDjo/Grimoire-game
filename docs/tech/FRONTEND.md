@@ -157,69 +157,74 @@ Ne jamais créer un dossier de code par campagne.
 
 ### Palette
 
-Implémentée dans `apps/frontend/src/app/globals.css` :
+La palette **Encre de Sel** (#272 / PR #277) nomme des **matières et des états diégétiques**, pas
+des rôles d'interface génériques. Implémentée dans `apps/frontend/src/app/globals.css` :
 
 ```css
 :root {
-  --void: #0a0806; /* DS "Encre" — fond principal */
-  --parchment: #e8dcc0; /* DS "Parchemin" — texte primaire */
-  --gold: #d9a441; /* DS "Or" — accent principal, CTA */
-  --gold-light: #f0d48a; /* DS "Or clair" — hover, lueur */
-  --gold-hover: #f0d48a; /* Alias de --gold-light */
-  --gold-dark: rgba(
-    217,
-    164,
-    65,
-    0.55
-  ); /* dérivé DS (or atténué) — bordures, bronze ancien */
-  --blood: #c0392b; /* DS "Sang" — stat combat */
-  --soul: #35c4ac; /* DS "Souffle" — stat magie/soul */
-  --cendre: #e3b341; /* DS "Cendre" — stat ressource */
-  --border-gold: rgba(217, 164, 65, 0.34);
-  --ink-manuscript: #2a2118; /* DS "Encre manuscrite" — texte sur insert parchemin (cards) */
-  --ink: var(--parchment);
-  --ink-2: rgba(
-    232,
-    220,
-    192,
-    0.75
-  ); /* dérivé DS (parchemin atténué) — texte secondaire */
-  --focus-ring: 0 0 0 3px rgba(217, 164, 65, 0.3);
+  /* Encre de Sel — matières, pas de couleurs SaaS génériques. */
+  --ink-black: #050403; /* fond principal */
+  --ink-raised: #0c0a08; /* surface surélevée */
+  --salt-white: #e9dfc9; /* texte primaire */
+  --salt-muted: #b9aa8e; /* texte secondaire */
+  --material-gold: #bd7b26; /* accent principal, CTA */
+  --material-gold-bright: #e0a143; /* hover, lueur */
+  --material-gold-dim: #765021; /* or éteint */
+  --dried-blood: #6d211b; /* sang séché */
+  --fresh-blood: #bd3024; /* stat Sang */
+  --breath-aqua: #43aaa3; /* stat Souffle */
+  --hunger-ochre: #d19428; /* stat Faim */
+  --thirst-salt: #d8d0c0; /* stat Soif */
+  --calamine: #c2872d; /* Calamine */
+  --line-gold: color-mix(in srgb, var(--material-gold) 72%, transparent);
+  --ink-on-paper: #241a12; /* texte sur matière claire */
 }
 ```
 
-**Règle** : toute couleur nommée du DS (Encre, Or, Or clair, Parchemin, Sang, Souffle, Cendre,
-Encre manuscrite) est reprise en hex strictement identique. `--gold-dark` (sans équivalent nommé
-dans le DS) est dérivé d'une opacité de `rgba(217,164,65,*)` déjà présente dans le bundle DS
-(bordures, bronze ancien) plutôt que d'un hex inventé — aucune couleur du site ne doit provenir
-d'une valeur hors DS.
+**Règle** : un nouveau composant consomme **uniquement** les tokens de matière ci-dessus.
 
-> **Nettoyage 2026-07** : `--ash`, `--parchment-dim`, `--muted`, `--shadow-gold` retirés de
-> `globals.css` (0 usage réel dans `apps/frontend/src`). Si un besoin futur de fond secondaire ou
-> de texte muted apparaît, les réintroduire à ce moment plutôt que de les garder morts.
+Les anciens noms (`--void`, `--parchment`, `--gold`, `--blood`, `--soul`, `--cendre`,
+`--ink-manuscript`, `--border-gold`) subsistent dans `globals.css` mais **ne sont plus que des
+alias** pointant vers un token de matière — `--void: var(--ink-black)`, `--cendre:
+var(--hunger-ochre)`, etc. Toute l'application rend donc déjà la palette Encre de Sel ; les alias
+existent pour éviter une réécriture massive des feuilles existantes, pas pour être réutilisés.
+**Ne jamais en introduire un nouveau, ne jamais leur redonner un hex propre.**
+
+Les dérivés opacifiés passent par `color-mix(in srgb, …)` plutôt que par un `rgba()` recopié à la
+main : la teinte source reste unique et une correction de `--material-gold` se propage seule.
 
 Exposées comme utilities Tailwind via `@theme inline` : `bg-void`, `text-gold`, `text-gold-soft`,
 `text-parchment`, `text-blood`, `text-soul`, `text-cendre` (et leurs équivalents `bg-*`/`border-*`).
 
 ### Typographie
 
-Chargées dans `app/layout.tsx` via `next/font/google` :
+**Deux familles seulement**, chargées dans `app/layout.tsx` via `next/font/google` :
 
-| Variable CSS        | Font                                    | Usage                                                                                                                         |
-| ------------------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `--font-display`    | **Cinzel** 500/600/700                  | Titres, chapitres, logo                                                                                                       |
-| `--font-serif`      | **EB Garamond** 400/500/600 + italic    | Narration MJ, prose, dialogue                                                                                                 |
-| `--font-accent`     | **Cormorant Garamond** 400-700 + italic | Accents éditoriaux, citations                                                                                                 |
-| `--font-ui`         | **Alegreya Sans** 300/400/500/700       | UI chrome (boutons, stats, nav, labels)                                                                                       |
-| `--font-manuscript` | **Caveat** 400/500                      | Notes manuscrites — var CSS brute, consommée via `var(--font-manuscript)` (ex. `card.css`), pas exposée comme classe Tailwind |
+| Police source               | Variable Next         | Poids           |
+| --------------------------- | --------------------- | --------------- |
+| **IM Fell French Canon SC** | `--next-font-display` | 400             |
+| **Alegreya**                | `--next-font-text`    | 400/500/600/700 |
+
+Les variables applicatives s'y branchent :
+
+| Variable CSS        | Source                  | Usage                                     |
+| ------------------- | ----------------------- | ----------------------------------------- |
+| `--font-display`    | IM Fell French Canon SC | Titres gravés, lieux, chapitres           |
+| `--font-serif`      | Alegreya                | Narration, dialogue, texte éditorial      |
+| `--font-accent`     | Alegreya                | Accents, citations, boutons               |
+| `--font-ui`         | Alegreya                | Navigation, champs, labels, HUD           |
+| `--font-manuscript` | Alegreya                | Notes et textes courts sur matière claire |
+
+Quatre des cinq variables pointent donc vers la même famille : elles restent distinctes pour que
+les composants gardent une intention typographique lisible, et pour pouvoir réintroduire une
+seconde famille de texte sans toucher aux feuilles de style.
 
 Exposées en Tailwind (`@theme inline`) : `font-display`, `font-serif`, `font-accent`, `font-ui`.
 
-> **Nettoyage 2026-07** : `--font-hero` (TC Brookleigh) retiré. La police locale a été entièrement
-> supprimée du projet (chargement `localFont` dans `layout.tsx`, fichier
-> `apps/frontend/src/app/_fonts/tc-brookleigh-rough.ttf`) — 0 usage réel, résidu de l'ancien design
-> system. L'asset source reste archivé dans `docs/private/assets/font/` si une réintégration future
-> est décidée.
+> **Réduction #277** : Cinzel, EB Garamond, Cormorant Garamond, Alegreya Sans et Caveat sont
+> sorties du runtime, ainsi que `--font-hero` (TC Brookleigh, police locale). Deux familles
+> suffisent à porter l'identité et réduisent le coût de chargement. L'asset TC Brookleigh reste
+> archivé dans `docs/private/assets/font/`.
 
 ### Échelle typographique (type-scale)
 
@@ -373,10 +378,9 @@ loading réutilisent le même asset et sont exclusivement pilotés en CSS.
 
 ### Application des tokens aux composants
 
-- Titres : `--font-display` (Cinzel).
-- Prose : `--font-serif` (EB Garamond).
-- Accents éditoriaux et boutons : `--font-accent` (Cormorant Garamond).
-- Labels, champs, aides et HUD : `--font-ui` (Alegreya Sans).
+- Titres : `--font-display` (IM Fell French Canon SC).
+- Prose, accents, boutons, labels, champs et HUD : `--font-serif`, `--font-accent` et `--font-ui`
+  (Alegreya).
 
 Échelle appliquée aux composants :
 
@@ -411,6 +415,25 @@ visuel commun et des formulaires accessibles.
 ---
 
 ## 4. Session de jeu
+
+### Layout unifié — `GameSceneLayout`
+
+Depuis #272 / PR #277, le Hub et la Session partagent **un seul** layout :
+`components/ui/grimoire/GameSceneLayout`. Il n'existe plus de variantes `sidebar`, `immersive` ni
+`centered` — le composant n'expose aucune prop `variant`, seulement cinq emplacements :
+`background`, `top`, `scene`, `reader` et `bottom`.
+
+Géométrie réelle (`game-scene-layout.css`, source de vérité) :
+
+- **Desktop** — grille `auto / minmax(0, 1fr) / auto` sur `100dvh`. Le corps est une grille
+  `minmax(0, var(--game-scene-reader-start)) minmax(25rem, 42fr)`, soit **58 % scène / 42 %
+  reader**, le reader ayant un plancher de `25rem` et son propre scroll.
+- **Sous 1120 px** — passage en flux vertical : header compact, scène en
+  `clamp(15rem, 34dvh, 23rem)`, reader dans le flux naturel, puis footer.
+
+La séparation scène/reader est portée par `chrome/reader-separator.webp` en desktop et par
+`chrome/footer-separator.webp` en mobile. Modifier la géométrie se fait dans le CSS du layout, pas
+dans les écrans qui le consomment.
 
 ### HUD de session partagé
 
@@ -459,39 +482,42 @@ Un futur monde peut réutiliser le contrôleur sans importer un type de personna
 
 ### Assets
 
-Les assets runtime sont servis depuis `public/ui-kit/`. Les masters, prompts et planches de
-contrôle restent privés dans `docs/private/`. Les WebP runtime sont transparents et dimensionnés
-pour leur usage réel, avec une définition Retina pour les icônes.
+Les assets runtime sont servis depuis **`public/encre-de-sel/`** (#272 / PR #277). Les masters,
+prompts et planches de contrôle restent privés dans `docs/private/`. Les WebP runtime sont
+transparents et dimensionnés pour leur usage réel, avec une définition Retina pour les icônes.
 
 Organisation :
 
 ```txt
-public/ui-kit/
-  avatars/
-  brand/
-  controls/
-  dividers/
-  icons/
-  panels/
-  stepper/
-  surfaces/
-  vocations/
+public/encre-de-sel/
+  chrome/     # header, reader et footer separators, hud-stat-separator, hud-bar-mask
+  frames/     # choice-frame-gore, choice-number-plate, action-input-gore,
+              # button-primary-gore, button-secondary-ochre, narrative-surface-frame
+  icons/      # ressources (blood, breath, hunger, thirst, calamine),
+              # outils du footer (inventory-tile, journal-tile, character-tile),
+              # saisie (action-quill, action-submit-tile)
+    glyphs/   # pictogrammes génériques, consommés par GameIcon
+    vocations/
 ```
 
-Les cadres actuels des boutons sont `button-dark-frame-v2.webp`, `cta-gold-frame.webp` et
-`button-icon-frame.webp`. Le panel, la narration et les zones de structure réemploient
-`structural-frame-v2.webp`. Ce cadre 9-slice ne contient ni flèche, ni diamant, ni séparateur
-interne. Il habille les panels sombres, la narration, la barre haute, le dock d'étapes et le
-footer HUD avec un langage unique. Le parchemin, les boutons et les champs conservent leurs cadres
-dédiés pour respecter leurs proportions.
+`choice-frame-gore.webp`, `action-input-gore.webp` et `narrative-surface-frame.webp` sont rendus en
+9-slice via `border-image` : angles, gouttes et empreintes restent fixes pendant que le centre
+s'étire sur une ou plusieurs lignes. Chiffres, textes, labels et icônes restent du HTML
+accessible — aucun contenu n'est incrusté dans un master.
 
-Le cadre des champs utilise `game-input-frame-v2.webp`. Il est rendu en 9-slice avec
-`border-image` afin de préserver les angles gravés lorsque la largeur du champ varie. Les textes
-et icônes restent des éléments HTML indépendants ; aucun contenu n'est incrusté dans le master.
+Les glyphes de `icons/glyphs/` ne sont jamais référencés en dur : ils passent par `GameIcon`, qui
+construit le chemin depuis le nom (`/encre-de-sel/icons/glyphs/<name>.webp`).
 
-Les éléments consolidés depuis la landing sont copiés et optimisés dans cette arborescence. Les
-chemins historiques de la landing ne sont ni déplacés ni modifiés tant qu'une migration séparée
-n'est pas explicitement demandée.
+Les surfaces, panels et boutons génériques s'habillent avec les tokens de matière ; seuls le
+header, la séparation lecture/image, le footer et les trois outils permanents utilisent un bitmap
+validé, afin de conserver exactement le trait du master.
+
+> **Sorti du runtime en #277** : `structural-frame-v2.webp`, `button-dark-frame-v2.webp`,
+> `cta-gold-frame.webp`, `button-icon-frame.webp` et `game-input-frame-v2.webp` — vérifié, zéro
+> référence dans `apps/frontend/src`. Le dossier `public/ui-kit/` subsiste sur le disque
+> (character-create, brand, dividers, avatars…) mais **plus aucun de ses chemins n'est référencé
+> par le code** : le traiter comme un legacy à purger dans un ticket dédié, jamais comme une
+> source pour un nouvel écran.
 
 ### Preview et validation
 
@@ -501,9 +527,9 @@ de référence : création de personnage, hub narratif et session de jeu. Les an
 
 Le Hub et la Session utilisent des scènes propres dans `public/scenes/`. Ces images ne contiennent
 aucun texte ni élément d'interface : le rail de dialogue, les souvenirs, la narration, les actions
-et le HUD restent des composants HTML réels. La géométrie desktop suit les mockups de référence
-(Hub en grille 69/31, Session en superposition cinématique avec HUD bas) tandis que la déclinaison
-mobile privilégie la lisibilité et l'absence de chevauchement.
+et le HUD restent des composants HTML réels. Les deux écrans partagent désormais la même géométrie,
+celle de `GameSceneLayout` (§ 4) — il n'y a plus de grille propre au Hub ni de superposition
+cinématique propre à la Session.
 
 La route retourne une 404 en production. Aucun dossier `storybook-static` ne doit être versionné ;
 Storybook pourra être ajouté plus tard comme dépendance de développement si son coût de

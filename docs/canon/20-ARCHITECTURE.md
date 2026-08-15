@@ -32,7 +32,7 @@
 - **Langage** : TypeScript strict
 - **Styling** : Tailwind CSS 4 (tokens désertiques cf. `docs/canon/`)
 - **State client** : Zustand (UI state) + React Query (data fetching)
-- **Polices** : Cinzel (titres) · EB Garamond (corps narratif) · Outfit (UI/data)
+- **Polices** : IM Fell French Canon SC (titres) · Alegreya (corps narratif, UI et HUD)
 - **Hébergement** : Vercel (free tier — 100 GB bandwidth/mois suffit V1)
 
 ### Backend
