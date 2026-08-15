@@ -178,7 +178,7 @@ function creatureAttributes(armourClass: number): Attributes {
   // Creatures have no attribute sheet in canon; their AC already encodes how
   // hard they are to hit, so BREATH is derived from it for initiative purposes
   // and the rest sits at the human baseline.
-  return { blood: 10, breath: Math.max(6, armourClass - 2), ash: 10 }
+  return { blood: 10, breath: Math.max(6, armourClass - 2), will: 10 }
 }
 
 /**
@@ -258,8 +258,8 @@ export const FLEE_DC = { normal: 12, engaged: 15 } as const
 /** Commanding an ally: DC 12 for a human, 14 for a beast or mercenary. @see §5 */
 export const COMMAND_DC = { human: 12, beast: 14 } as const
 
-/** Presence: CENDRE +2 or better makes basic enemies hesitate on round 1. @see §5 */
-export const PRESENCE_ASH_MODIFIER = 2
+/** Presence: VOLONTÉ +2 or better makes basic enemies hesitate on round 1. @see §5 */
+export const PRESENCE_WILL_MODIFIER = 2
 
 /** Beating a target by this much is a « succès remarquable ». @see 08-DICE §4 */
 const REMARKABLE_MARGIN = 5
@@ -299,7 +299,7 @@ function isBasicEnemy(enemy: CombatEnemy): boolean {
 }
 
 /**
- * Présence, passive: a player at CENDRE +2 or better makes the basic ranks
+ * Présence, passive: a player at VOLONTÉ +2 or better makes the basic ranks
  * hesitate, so their *first* attack of the fight is taken at disadvantage.
  * Applied once, at the opening — hence the round check.
  * @see 10-COMBAT.md §5
@@ -307,7 +307,7 @@ function isBasicEnemy(enemy: CombatEnemy): boolean {
 function hasPresenceOver(state: CombatState, enemy: CombatEnemy): boolean {
   return (
     state.round === 1 &&
-    attributeModifier(state.player.attributes.ash) >= PRESENCE_ASH_MODIFIER &&
+    attributeModifier(state.player.attributes.will) >= PRESENCE_WILL_MODIFIER &&
     isBasicEnemy(enemy)
   )
 }
@@ -449,13 +449,13 @@ export function resolvePlayerTurn(input: PlayerTurnInput): PlayerTurnResult {
         if (!state.hasLivingAlly) {
           return { state, entry: { ...base, narrative: '' } }
         }
-        const roll = rollAgainst(state.player.attributes, 'ash', COMMAND_DC[input.allyKind], rng)
+        const roll = rollAgainst(state.player.attributes, 'will', COMMAND_DC[input.allyKind], rng)
         // The ally acting immediately is the session's business, not the
         // engine's: combat records that the order landed and hands it over.
         return { state, entry: { ...base, roll: roll.roll, hit: roll.success, narrative: '' } }
       }
 
-      // Intimidation: CENDRE against the target's CENDRE (§5). A success makes
+      // Intimidation: VOLONTÉ against the target's VOLONTÉ (§5). A success makes
       // one enemy hesitate; a remarkable one reaches two.
       const target = pickTarget(state, input.targetId)
       if (!target) {
@@ -463,8 +463,8 @@ export function resolvePlayerTurn(input: PlayerTurnInput): PlayerTurnResult {
       }
 
       // The opposed roll is an active d20 on the enemy's side, not a fixed DC.
-      const opposed = rollD20(rng) + attributeModifier(target.attributes.ash)
-      const roll = rollAgainst(state.player.attributes, 'ash', opposed, rng)
+      const opposed = rollD20(rng) + attributeModifier(target.attributes.will)
+      const roll = rollAgainst(state.player.attributes, 'will', opposed, rng)
 
       if (!roll.success) {
         // Critical failure galvanises the camp: every enemy attacks with
@@ -650,7 +650,7 @@ export function resolveEnemyTurn(input: EnemyTurnInput): EnemyTurnResult {
     if (block.engagement === 'hazard' || !block.damage) continue
 
     // Two modifiers pull in opposite directions and can cancel: the player is
-    // surrounded (§6) but also carries enough CENDRE to make the basic ranks
+    // surrounded (§6) but also carries enough VOLONTÉ to make the basic ranks
     // hesitate on the opening exchange (§5).
     const advantage = flanked || state.galvanised === true
     const disadvantage = hasPresenceOver(state, enemy)

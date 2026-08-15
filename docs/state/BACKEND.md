@@ -145,7 +145,7 @@ calcined`. L'ancien `inn` confondait « rentré avec l'objectif » (payé) et «
 ### Comptoir et préparation du départ — #249
 
 - **Prix fixes, contre le canon `11-INVENTORY-ECONOMY.md` §7** (« Pas de prix fixes », négociation
-  `d20 + CENDRE + Persuasion`). Le Comptoir vend des consommables de survie : le levier de jeu est
+  `d20 + VOLONTÉ + Persuasion`). Le Comptoir vend des consommables de survie : le levier de jeu est
   l'arbitrage or/place, pas le marchandage. Un jet sur le prix de l'eau ajoute de la variance sans
   ajouter une décision, et rend l'instantané de préparation non déterministe donc intestable. La
   négociation §7 vise le **marché** et les marchands de faction, dont les modificateurs de

@@ -38,7 +38,7 @@ function faceOf(face: number, faces = 20): number {
   return (face - 1) / faces
 }
 
-const ATTRIBUTES = { blood: 14, breath: 12, ash: 10 }
+const ATTRIBUTES = { blood: 14, breath: 12, will: 10 }
 
 function makePlayer(overrides: Partial<CombatPlayer> = {}): CombatPlayer {
   return {
@@ -385,7 +385,7 @@ describe('defending and items (§3)', () => {
   })
 })
 
-describe('the CENDRE Leader role (§5)', () => {
+describe('the VOLONTÉ Leader role (§5)', () => {
   // Intimidation is an opposed roll, not a fixed DC — the enemy rolls back.
   it('makes an intimidated enemy hesitate rather than die', () => {
     const soldier = instantiateEnemy('soldier', 'e1')
@@ -595,10 +595,10 @@ describe('the enemy block (§2, §6)', () => {
     expect(result.entries[0].roll).toBe(16)
   })
 
-  // Présence is the passive reward for a CENDRE build; it must actually bite.
-  it('gives basic enemies disadvantage on the opening attack at CENDRE +2', () => {
+  // Présence is the passive reward for a VOLONTÉ build; it must actually bite.
+  it('gives basic enemies disadvantage on the opening attack at VOLONTÉ +2', () => {
     const state = makeState({
-      player: makePlayer({ attributes: { blood: 14, breath: 12, ash: 14 } }),
+      player: makePlayer({ attributes: { blood: 14, breath: 12, will: 14 } }),
     })
     const result = resolveEnemyTurn({
       state,
@@ -611,7 +611,7 @@ describe('the enemy block (§2, §6)', () => {
   it('lets Présence lapse after the opening round', () => {
     const state = makeState({
       round: 2,
-      player: makePlayer({ attributes: { blood: 14, breath: 12, ash: 14 } }),
+      player: makePlayer({ attributes: { blood: 14, breath: 12, will: 14 } }),
     })
     const result = resolveEnemyTurn({
       state,

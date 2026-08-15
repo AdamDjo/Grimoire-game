@@ -79,7 +79,7 @@ Au-delà des jauges, le perso peut subir des **conditions** — altérations tem
 | `blindness`      | 😵 **Cécité temporaire**   | Ventre-Gris, lumière archontique     | Désavantage SOUFFLE (perception)          | Court                     | IA-PROPOSÉE |
 | `marsh_disease`  | 🤢 **Maladie des marais**  | Marais de Lekh                       | Désavantage à tous, fatigue double        | Long, soin spécifique     | IA-PROPOSÉE |
 | `cendre_corrupt` | 🔮 **Cendre-corrompu**     | Magie excessive (Tisse-Verbe)        | Progresse vers Calamine                   | Voir §4                   | IA-PROPOSÉE |
-| `shaken_reason`  | 🧠 **Raison ébranlée**     | Trauma, mort d'un proche, révélation | -1 CENDRE, hallucinations                 | Variable                  | IA-PROPOSÉE |
+| `shaken_reason`  | 🧠 **Raison ébranlée**     | Trauma, mort d'un proche, révélation | -1 VOLONTÉ, hallucinations                | Variable                  | IA-PROPOSÉE |
 | `petrification`  | 🪨 **Pétrification lente** | Veilleur archontique                 | Malus progressifs → mort si non soigné    | Mortel                    | IA-PROPOSÉE |
 
 🟢 _Le joueur peut subir plusieurs conditions simultanément — mais le MJ IA évite l'empilement punitif._

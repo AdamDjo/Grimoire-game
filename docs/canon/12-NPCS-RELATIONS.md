@@ -159,11 +159,11 @@ Si un PNJ-Marqueur meurt **par la main du joueur ou pour sauver le joueur**, c'e
 
 L'archive V1 propose 6 paliers avec scores 0-100. **V1 simplifie à 3 paliers narratifs** (jamais affichés en HUD) :
 
-| Palier         | Trigger                                                                  | Effet narratif                                                |
-| -------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------- |
-| 🟥 **Méfiant** | Insulte, menace, trahison, échec test social majeur                      | PNJ refuse aide, peut attaquer si poussé                      |
-| 🟨 **Neutre**  | État par défaut, premières interactions                                  | PNJ poli, transactionnel                                      |
-| 🟩 **Allié**   | Aide concrète, succès test CENDRE/SOUFFLE majeur, partage info précieuse | PNJ offre faveurs spontanées, peut accompagner sur 1-2 scènes |
+| Palier         | Trigger                                                                   | Effet narratif                                                |
+| -------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| 🟥 **Méfiant** | Insulte, menace, trahison, échec test social majeur                       | PNJ refuse aide, peut attaquer si poussé                      |
+| 🟨 **Neutre**  | État par défaut, premières interactions                                   | PNJ poli, transactionnel                                      |
+| 🟩 **Allié**   | Aide concrète, succès test VOLONTÉ/SOUFFLE majeur, partage info précieuse | PNJ offre faveurs spontanées, peut accompagner sur 1-2 scènes |
 
 **Stockage** : 1 champ `relations` dans `runs.metadata` JSON : `{ npc_vane: "allié", npc_elara: "méfiant" }`.
 

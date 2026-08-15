@@ -54,17 +54,12 @@ Phénomène mystique du Makhzen : brume scintillante qui apparaît au crépuscul
 **Calamine** _⚙️ Mécanique + 🌍 Lore_
 Coût magique unifié de Velkhar. Chaque action magique consomme de la Calamine (ressource interne au perso). Régénère lentement (au repos) ou rapidement (rituels). Représente le **prix charnel** de la magie — le corps brûle, littéralement.
 → [10-COMBAT](10-COMBAT.md), [11-INVENTORY-ECONOMY](11-INVENTORY-ECONOMY.md)
-⚠️ Ne pas confondre avec **Cendre** (stat) ni avec **Calcinés** (lore).
+⚠️ Ne pas confondre avec **VOLONTÉ** (stat) ni avec **Calcinés** (lore).
 
 **Calcinés (Les)** _🌍 Lore_
 Êtres tordus par un excès de Calamine — anciens mages, fanatiques, victimes de rituels ratés. Forme ennemie récurrente. Hybrides humain / cendre / pierre. Souvent muets, parfois prophétiques.
 → `docs/canon/`, [10-COMBAT](10-COMBAT.md)
 ⚠️ Lore distinct des Calmes (peuple Cendreur) — phonétique proche, sens opposés.
-
-**Cendre** _⚙️ Mécanique_
-Une des 3 stats du triptyque (🔥 CENDRE). Pilote : charisme, foi, commandement, résistance magique. Modificateur −3 à +4. Influence interactions sociales et résistance aux effets magiques.
-→ [04-ATTRIBUTES](04-ATTRIBUTES.md), [10-COMBAT](10-COMBAT.md)
-⚠️ Ne pas confondre avec la **cendre** (matière physique du lore) ni avec les **Cendreurs** (peuple).
 
 **Cendreurs** _🌍 Lore_
 Peuple mystique des hauts plateaux volcaniques. Voix elliptique, foi profonde dans la combustion sacrée, gardiens de rituels Calamine. Variante PNJ : voix mystique, métaphores.
@@ -290,11 +285,11 @@ Peuple militariste des cités fortifiées. Voix PNJ militaire, ordres concis, m�
 → `docs/canon/`, [15-GAME-MASTER §1](15-GAME-MASTER.md)
 
 **Tisse-Verbe** _🌍 Lore + ⚙️ Mécanique_
-Une des 4 vocations V1. **Seul à pouvoir éveiller les artefacts** (révéler leur pouvoir). Tisseur de parole et de sens caché. Stat pilote dominant : CENDRE.
+Une des 4 vocations V1. **Seul à pouvoir éveiller les artefacts** (révéler leur pouvoir). Tisseur de parole et de sens caché. Stat pilote dominant : VOLONTÉ.
 → [05-VOCATIONS](05-VOCATIONS.md), [11-INVENTORY-ECONOMY](11-INVENTORY-ECONOMY.md)
 
 **Triptyque** _⚙️ Mécanique_
-Le système de 3 stats : **🩸 SANG / 💨 SOUFFLE / 🔥 CENDRE**. Modificateurs −3 à +4. Pilote tous les jets de dés.
+Le système de 3 stats : **🩸 SANG / 💨 SOUFFLE / 🔥 VOLONTÉ**. Modificateurs −3 à +4. Pilote tous les jets de dés.
 → [04-ATTRIBUTES](04-ATTRIBUTES.md)
 
 ## V
@@ -305,7 +300,7 @@ Option future uniquement si Velkhar est saturé et si les métriques Premium le 
 ⚠️ Pas un lieu de Velkhar. Toute ouverture multi-univers exige un nouveau GDD.
 
 **Veilleur** _🌍 Lore + ⚙️ Mécanique_
-Une des 4 vocations V1. Sentinelle mystique, lecteur de signes, gardien des seuils. Stat pilote dominant : SOUFFLE/CENDRE.
+Une des 4 vocations V1. Sentinelle mystique, lecteur de signes, gardien des seuils. Stat pilote dominant : SOUFFLE/VOLONTÉ.
 → [05-VOCATIONS](05-VOCATIONS.md)
 
 **Velkhar** _🌍 Lore_
@@ -320,6 +315,11 @@ Les 3 styles d'écriture IA distincts : **Aveugle** (chaud ironique), **Narrateu
 **Vocation** _⚙️ Mécanique + 🌍 Lore_
 Le "rôle" du personnage. **4 vocations V1** : Marcheur-du-Sel, Lame-Ombre, Veilleur, Tisse-Verbe. Influence stats de départ, abilities, et perception PNJ.
 → [05-VOCATIONS](05-VOCATIONS.md)
+
+**VOLONTÉ** _⚙️ Mécanique_
+Une des 3 stats du triptyque (🔥). Pilote : charisme, foi, commandement, résistance magique. Modificateur −3 à +4. Influence interactions sociales et résistance aux effets magiques.
+→ [04-ATTRIBUTES](04-ATTRIBUTES.md), [10-COMBAT](10-COMBAT.md)
+⚠️ Renommée depuis **CENDRE** le 2026-08-10 (#264) : le mot désignait à la fois cet attribut et la Cendre du monde, et faisait doublon avec la **Calamine**. VOLONTÉ = la réserve, Calamine = le prix. Ne pas confondre avec la **Cendre** (matière du lore) ni avec les **Cendreurs** (peuple).
 
 ## Z
 
@@ -345,6 +345,7 @@ Pour éviter la dérive sémantique avec les premières versions du GDD ou des i
 | "Énergie" / "Stamina régen IRL" | Anti-pattern free-to-play, rejeté                      | Caps requêtes IA (transparent et honnête)        |
 | "Premium-only" (lore/contenu)   | Casse l'égalité narrative                              | Tout contenu narratif accessible à tous          |
 | "Mode hardcore" / "iron-mode"   | Hors scope V1                                          | (V2+ envisageable)                               |
+| "CENDRE" (l'attribut)           | Collision avec la Cendre du lore + doublon Calamine    | **VOLONTÉ** (#264)                               |
 
 ---
 

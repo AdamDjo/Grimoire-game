@@ -235,13 +235,13 @@ _Velkhar_ évite les races fantasy génériques. Les peuples sont **humains**, a
 
 ### Les 5 peuples jouables (origines du personnage)
 
-| Peuple            | Région  | Bonus                  | Culture                                                       |
-| ----------------- | ------- | ---------------------- | ------------------------------------------------------------- |
-| **_Sahélins_**    | Tissan  | +1 SANG                | Nomades caravanières, hospitalité sacrée, mémoire orale       |
-| **_Rivains_**     | Rivage  | +1 CENDRE              | Marchands, marains, profit et querelles de famille            |
-| **_Thériens_**    | Doigts  | +1 SANG                | Mineurs, forgerons, honneur du clan, méfiance envers la magie |
-| **_Cendreux_**    | Velkhar | +1 SOUFFLE             | Citadens, fonctionnaires, érudits, orthodoxie du Culte        |
-| **_Changepeaux_** | Marais  | +1 SOUFFLE / −1 CENDRE | Peuple persécuté, secret, survie dans la marge                |
+| Peuple            | Région  | Bonus                   | Culture                                                       |
+| ----------------- | ------- | ----------------------- | ------------------------------------------------------------- |
+| **_Sahélins_**    | Tissan  | +1 SANG                 | Nomades caravanières, hospitalité sacrée, mémoire orale       |
+| **_Rivains_**     | Rivage  | +1 VOLONTÉ              | Marchands, marains, profit et querelles de famille            |
+| **_Thériens_**    | Doigts  | +1 SANG                 | Mineurs, forgerons, honneur du clan, méfiance envers la magie |
+| **_Cendreux_**    | Velkhar | +1 SOUFFLE              | Citadens, fonctionnaires, érudits, orthodoxie du Culte        |
+| **_Changepeaux_** | Marais  | +1 SOUFFLE / −1 VOLONTÉ | Peuple persécuté, secret, survie dans la marge                |
 
 ### Peuples non-jouables
 

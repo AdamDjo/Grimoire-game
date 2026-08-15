@@ -27,7 +27,7 @@ function makePlayer(overrides: Partial<CombatPlayer> = {}): CombatPlayer {
     hp: 11,
     maxHp: 11,
     armourClass: 11,
-    attributes: { blood: 14, breath: 12, ash: 10 },
+    attributes: { blood: 14, breath: 12, will: 10 },
     conditions: [],
     combatConditions: [],
     ...overrides,
@@ -295,7 +295,7 @@ describe('opening a fight from what the AI narrated (§1)', () => {
     return openCombatFromEncounter({
       encounter: encounter(),
       run: makeRun(),
-      attributes: { blood: 14, breath: 12, ash: 10 },
+      attributes: { blood: 14, breath: 12, will: 10 },
       survival: makeSurvival(),
       conditions: [],
       rng: () => 0.5,

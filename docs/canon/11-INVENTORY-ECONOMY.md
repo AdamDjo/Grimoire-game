@@ -358,7 +358,7 @@ L'arbitrage est permanent, et il se joue surtout au **retour** :
 - Usable 1× par scène
 - Coûte 10 Cendre
 - Effet majeur garanti (effet d'éveil défini par l'artefact)
-- Option d'amplification : d20 + SOUFFLE + CENDRE + Éveil  vs  DC artefact
+- Option d'amplification : d20 + SOUFFLE + VOLONTÉ + Éveil  vs  DC artefact
   → Succès : effet amplifié (dégâts doublés, zone élargie, condition spéciale)
   → Échec : juste effet de base (Cendre payée UNE SEULE FOIS)
 ```
@@ -465,7 +465,7 @@ Parce que le pilier #3 (mort = tout perdu sauf héritage) est intouchable. La ba
 Pas de prix fixes. La **négociation** est mécanique :
 
 ```
-Jet : d20 + CENDRE + Persuasion  vs  DC 12 (marchand normal) à 18 (Guilde stricte)
+Jet : d20 + VOLONTÉ + Persuasion  vs  DC 12 (marchand normal) à 18 (Guilde stricte)
 ```
 
 → **Échec** : prix de base (référence des tableaux §4)
@@ -474,7 +474,7 @@ Jet : d20 + CENDRE + Persuasion  vs  DC 12 (marchand normal) à 18 (Guilde stric
 → **Nat 20** : -50% OU objet bonus (le marchand "oublie" un détail)
 → **Échec critique** : prix +10% (le marchand se sent insulté)
 
-🟢 _Le triptyque a un impact économique : un CENDRE +3 paye moins cher, gagne plus à la vente._
+🟢 _Le triptyque a un impact économique : un VOLONTÉ +3 paye moins cher, gagne plus à la vente._
 
 ### Variations selon réputation
 
@@ -492,7 +492,7 @@ Pas de système complexe de recettes. **3 stations dans le monde** :
 | ----------------- | ------------------------------------------------------------------------------------------------------------------- |
 | 🔨 **Forgeron**   | Réparer arme/armure (5-30 🪙) · forger amélioration (matériau + 50 🪙 → +1 dé) · personnaliser (cosmétique gratuit) |
 | 🌿 **Herboriste** | Distiller potion (matériau + 10 🪙 → soin / antidote / boost)                                                       |
-| 📜 **Scribe**     | Recopier une lettre · falsifier un document (CENDRE + 30 🪙) · acheter une carte régionale (50 🪙)                  |
+| 📜 **Scribe**     | Recopier une lettre · falsifier un document (VOLONTÉ + 30 🪙) · acheter une carte régionale (50 🪙)                 |
 
 🟢 _L'IA narre l'artisanat. Pas de mini-jeu, pas d'attente. Le joueur dépose matériau + or, reçoit objet._
 

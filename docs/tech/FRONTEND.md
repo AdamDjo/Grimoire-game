@@ -446,7 +446,7 @@ footer de jeu. Il ne connaît aucun univers et reçoit uniquement quatre groupes
 - `tools` : raccourcis vers inventaire, fiche, menu ou outils propres à l'univers.
 
 Chaque monde conserve un adaptateur local. Par exemple, `VelkharSurvivalHud` transforme SANG,
-SOUFFLE, CENDRE, faim, soif, fatigue et Calamine en configuration de `GameSessionHud`. Un autre
+SOUFFLE, VOLONTÉ, faim, soif, fatigue et Calamine en configuration de `GameSessionHud`. Un autre
 univers peut fournir PV, bouclier, stress et crédits sans importer le modèle de survie Velkhar.
 
 La structure, les breakpoints et l'accessibilité restent partagés. Les libellés, valeurs, icônes,

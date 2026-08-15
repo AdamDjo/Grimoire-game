@@ -22,15 +22,15 @@ import type {
 /**
  * Which attribute a choice tests, derived from its `type`.
  * SANG (blood) = force/combat, SOUFFLE (breath) = agility/movement,
- * CENDRE (ash) = mind/social.
+ * VOLONTÉ (will) = mind/social.
  */
 const ATTRIBUTE_BY_TYPE: Record<Choice['type'], Attribute> = {
   combat: 'blood',
   action: 'breath',
   flee: 'breath',
-  dialog: 'ash',
-  skill: 'ash',
-  use_item: 'ash',
+  dialog: 'will',
+  skill: 'will',
+  use_item: 'will',
 }
 
 /** Risk levels that warrant a visible d20 check. Below this, no roll. */

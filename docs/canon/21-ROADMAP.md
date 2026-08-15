@@ -34,7 +34,7 @@ C'est l'unique question à laquelle V1 doit répondre. Si oui → V1.1. Si non �
 - ✅ Auberge de L'Aveugle (hub permanent, voix canon)
 - ✅ Création personnage (nom + vocation + peuple)
 - ✅ 4 vocations : Marcheur-du-Sel, Lame-Ombre, Veilleur, Tisse-Verbe
-- ✅ Triptyque stats (SANG/SOUFFLE/CENDRE), dés d20
+- ✅ Triptyque stats (SANG/SOUFFLE/VOLONTÉ), dés d20
 - ✅ Boucle d'action (action libre + choix + dés)
 - ✅ Combat narratif (pas grille tactique)
 - ✅ Inventaire + or in-game + Calamine (magie unifiée)

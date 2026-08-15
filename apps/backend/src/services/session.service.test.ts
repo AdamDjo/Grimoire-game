@@ -116,7 +116,7 @@ describe('resolveChosenChoice', () => {
  * rules engine rather than asserting on its shape.
  */
 describe('free-form action mortality (#238)', () => {
-  const ATTRIBUTES: Attributes = { blood: 15, breath: 10, ash: 10 }
+  const ATTRIBUTES: Attributes = { blood: 15, breath: 10, will: 10 }
 
   const survival = (overrides: Partial<SurvivalStats> = {}): SurvivalStats => ({
     hp: 12,

@@ -39,7 +39,7 @@ const character = {
   vocation: 'salt-walker',
   blood: 10,
   breath: 10,
-  ash: 10,
+  will: 10,
   hp: 20,
   maxHp: 20,
   thirst: 100,

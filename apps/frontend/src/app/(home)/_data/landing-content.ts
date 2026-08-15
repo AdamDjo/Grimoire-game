@@ -26,5 +26,5 @@ export const LANDING_MEDIA = {
 export const GAMEPLAY_STATS = [
   { labelKey: 'blood', value: '3/6', filled: 3, tone: 'blood' },
   { labelKey: 'breath', value: '4/6', filled: 4, tone: 'soul' },
-  { labelKey: 'ash', value: '2/6', filled: 2, tone: 'ash' },
+  { labelKey: 'will', value: '2/6', filled: 2, tone: 'ash' },
 ] as const

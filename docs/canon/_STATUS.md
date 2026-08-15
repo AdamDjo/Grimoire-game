@@ -23,7 +23,7 @@ _Dernière màj : 2026-06-30 — Garder ce fichier à jour pour préserver les t
 
 | #   | Décision       | Valeur                                                 |
 | --- | -------------- | ------------------------------------------------------ |
-| 9   | Attributs      | Triptyque **SANG · SOUFFLE · CENDRE** + tooltips site  |
+| 9   | Attributs      | Triptyque **SANG · SOUFFLE · VOLONTÉ** + tooltips site |
 | 10  | Progression    | **Équipement-driven** (pas de niveaux)                 |
 | 11  | Vocations V1   | **Marcheur-du-Sel, Lame-Ombre, Veilleur, Tisse-Verbe** |
 | 12  | Vocations V2   | Changepeau, Chasseur-de-Revenants, Contrebandier       |
@@ -73,7 +73,7 @@ _Dernière màj : 2026-06-30 — Garder ce fichier à jour pour préserver les t
 | ---------- | ---------------------------------------------------- |
 | 🩸 SANG    | combat, survie, force, intimidation                  |
 | 💨 SOUFFLE | précision, furtivité, artisanat, éveil des artefacts |
-| 🔥 CENDRE  | charisme, foi, commandement, résistance magique      |
+| 🔥 VOLONTÉ | charisme, foi, commandement, résistance magique      |
 
 Échelle mods : −3 à +4. PV = 10 + SANG.
 ⚠️ Magie unifiée : plus de "Don/Verbe/Pierre" séparés. Les artefacts = pouvoir, Calamine = coût universel, Tisse-Verbe = seul à les éveiller.
@@ -82,14 +82,14 @@ _Dernière màj : 2026-06-30 — Garder ce fichier à jour pour préserver les t
 
 ## LES 4 VOCATIONS V1
 
-| Vocation           | SANG | SOUFFLE | CENDRE | Angle                                      | Faction liée  |
-| ------------------ | ---- | ------- | ------ | ------------------------------------------ | ------------- |
-| 🐫 Marcheur-du-Sel | +2   | 0       | 0      | Commerce/survie/désert                     | Guilde du Sel |
-| 🗡️ Lame-Ombre      | 0    | +2      | 0      | Contrats/secrets/ombres                    | Main d'Ombre  |
-| 🏛️ Veilleur        | 0    | +2      | 0      | Ruines/artefacts/savoir                    | Éveilleurs    |
-| 🔥 Tisse-Verbe     | −1   | +2      | +1     | Éveille les artefacts, risque max Calamine | Rénovateurs   |
+| Vocation           | SANG | SOUFFLE | VOLONTÉ | Angle                                      | Faction liée  |
+| ------------------ | ---- | ------- | ------- | ------------------------------------------ | ------------- |
+| 🐫 Marcheur-du-Sel | +2   | 0       | 0       | Commerce/survie/désert                     | Guilde du Sel |
+| 🗡️ Lame-Ombre      | 0    | +2      | 0       | Contrats/secrets/ombres                    | Main d'Ombre  |
+| 🏛️ Veilleur        | 0    | +2      | 0       | Ruines/artefacts/savoir                    | Éveilleurs    |
+| 🔥 Tisse-Verbe     | −1   | +2      | +1      | Éveille les artefacts, risque max Calamine | Rénovateurs   |
 
-Bonus peuple : Sahélin +1 SANG · Rivain +1 CENDRE · Thérien +1 SANG · Cendreur +1 SOUFFLE · Changepeau +1 SOUFFLE/−1 CENDRE.
+Bonus peuple : Sahélin +1 SANG · Rivain +1 VOLONTÉ · Thérien +1 SANG · Cendreur +1 SOUFFLE · Changepeau +1 SOUFFLE/−1 VOLONTÉ.
 
 ✅ `05-VOCATIONS.md` aligné : Veilleur et Tisse-Verbe parlent d'éveil d'artefacts, plus de "Verbe/Pierre/Don".
 
@@ -147,7 +147,7 @@ Aucune n'est canonique. Le joueur choisit par ses actes.
 
 - `09-ACTION-LOOP.md` — ✅ **CRÉÉ** (boucle hybride choix+✍️, 3 modes joueur, éveil artefact effet de base+amplif, 3 actes invisibles, 3 crochets rétention Chronique/Souvenirs/monde change)
 - `07-CHARACTER-CREATION.md` — ✅ **CRÉÉ** (5 étapes rituel L'Aveugle, concept libre → vocation hôte, 1ᵉʳ Souvenir gratuit, identification artefact, création raccourcie après mort)
-- `10-COMBAT.md` — ✅ **CRÉÉ** (tactique lite BG3, 4 catégories d'action, CENDRE Leader avec Intimidation/Commandement/Présence, fuite/mort/captivité)
+- `10-COMBAT.md` — ✅ **CRÉÉ** (tactique lite BG3, 4 catégories d'action, VOLONTÉ Leader avec Intimidation/Commandement/Présence, fuite/mort/captivité)
 - `11-INVENTORY-ECONOMY.md` — ✅ **CRÉÉ** (2 monnaies or/Souvenirs, inventaire 8+12+1+illimité, 3 tiers équipement, artefacts éveil amplif, héritage dégrade 3-4, banque L'Aveugle, donjons)
 
 ### ✅ FAIT — Phase C : Monde, IA & Architecture (complète)

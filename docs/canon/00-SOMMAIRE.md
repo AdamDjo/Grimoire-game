@@ -29,7 +29,7 @@ Ce Game Design Document décrit l'ensemble du produit. Il est versionné sous Gi
 | Multijoueur          | Solo V1, co-op en V2                                                                             |
 | Action               | Choix IA + saisie libre + dés BG3 aux pivots                                                     |
 | Survie               | Complète, pas hardcore — histoire = main focus                                                   |
-| Attributs            | Triptyque **SANG · SOUFFLE · CENDRE**                                                            |
+| Attributs            | Triptyque **SANG · SOUFFLE · VOLONTÉ**                                                           |
 | Vocations V1         | Marcheur-du-Sel, Lame-Ombre, Veilleur, Tisse-Verbe                                               |
 | Vocations V2         | Changepeau, Chasseur-de-Revenants, Contrebandier                                                 |
 | Création perso       | Vocation prédéfinie OU concept écrit libre                                                       |
@@ -62,7 +62,7 @@ Le document est organisé en **5 parties** et **23 sections** :
 
 | #   | Section                | Fichier                    | Thème                                              |
 | --- | ---------------------- | -------------------------- | -------------------------------------------------- |
-| 04  | Attributs              | `04-ATTRIBUTES.md`         | Triptyque SANG/SOUFFLE/CENDRE, mods, échelles      |
+| 04  | Attributs              | `04-ATTRIBUTES.md`         | Triptyque SANG/SOUFFLE/VOLONTÉ, mods, échelles     |
 | 05  | Vocations              | `05-VOCATIONS.md`          | 4 vocations d'aventurier, lentilles narratives     |
 | 06  | Survie                 | `06-SURVIVAL.md`           | PV, faim, soif, fatigue, conditions                |
 | 07  | Création de personnage | `07-CHARACTER-CREATION.md` | Prologue narratif, choix vocation ou concept libre |

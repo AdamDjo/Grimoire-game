@@ -10,9 +10,9 @@ export interface LocalizedString {
 
 import type { Attribute } from "../types/character.types";
 
-/** Canon attribute names (SANG / SOUFFLE / CENDRE). */
+/** Canon attribute names (SANG / SOUFFLE / VOLONTÉ). */
 export const ATTRIBUTE_LABELS: Record<Attribute, LocalizedString> = {
   blood: { en: "Blood", fr: "Sang" },
   breath: { en: "Breath", fr: "Souffle" },
-  ash: { en: "Ash", fr: "Cendre" },
+  will: { en: "Will", fr: "Volonté" },
 };

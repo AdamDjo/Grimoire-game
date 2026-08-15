@@ -10,7 +10,7 @@ import type { PersistedInventoryItem } from "./inventory.types";
  *   Inn destinations)
  *
  * Two deliberate departures from canon §7 ("Pas de prix fixes", negotiation by
- * d20 + CENDRE + Persuasion), decided for v0.2.1:
+ * d20 + VOLONTÉ + Persuasion), decided for v0.2.1:
  *
  * 1. **Fixed prices.** The Comptoir sells survival consumables — the lever of
  *    preparation, not a haggling scene. A dice roll on the price of water adds

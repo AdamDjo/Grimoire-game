@@ -160,7 +160,7 @@ Avant le dé, l'IA affiche un **encart transparent** (style BG3) :
 ┌────────────────────────────────────────┐
 │  Tu tentes de persuader l'Inquisiteur. │
 │                                         │
-│  [ Persuasion ]  CENDRE +2  vs  DC 16  │
+│  [ Persuasion ]  VOLONTÉ +2  vs  DC 16  │
 │                                         │
 │         🎲 d20 = ?                      │
 │                                         │

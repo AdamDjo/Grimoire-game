@@ -6,8 +6,8 @@
 import type { PersistedInventoryItem } from "./inventory.types";
 import type { ShiftedSkill } from "./vocation-resolution.types";
 
-/** The three canon attributes (SANG / SOUFFLE / CENDRE). Values range 3–18. */
-export type Attribute = "blood" | "breath" | "ash";
+/** The three canon attributes (SANG / SOUFFLE / VOLONTÉ). Values range 3–18. */
+export type Attribute = "blood" | "breath" | "will";
 
 export type Attributes = Record<Attribute, number>;
 

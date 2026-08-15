@@ -1,6 +1,6 @@
 # 04 — Attributs
 
-> Le triptyque **SANG · SOUFFLE · CENDRE**. La fondation mathématique de GRIMOIRE.
+> Le triptyque **SANG · SOUFFLE · VOLONTÉ**. La fondation mathématique de GRIMOIRE.
 
 ---
 
@@ -59,14 +59,14 @@ tooltip : "Précision, perception, éveil des artefacts.
 
 ---
 
-### 🔥 CENDRE — la présence, la volonté, le poids de l'âme
+### 🔥 VOLONTÉ — la présence, la volonté, le poids de l'âme
 
 ```
 tooltip : "Charisme, foi, commandement, résistance magique.
            Pilote la persuasion, la manipulation, le leadership, le surnaturel."
 ```
 
-**Ce que CENDRE pilote :**
+**Ce que VOLONTÉ pilote :**
 
 - Persuasion, marchandage, diplomatie, tromperie
 - Commandement, leadership, inspiration des alliés
@@ -74,7 +74,22 @@ tooltip : "Charisme, foi, commandement, résistance magique.
 - Foi, rituels, lien avec le Culte
 - Intimidation par l'aura, la peur, le mystère
 
-**Lien lore** : CENDRE, c'est la volonté face au déclin. Un haut CENDRE rapproche du pouvoir spirituel et de la résistance à la corruption, mais aussi du fanatisme.
+**Lien lore** : VOLONTÉ, c'est ce qui tient debout face au déclin. Une haute VOLONTÉ rapproche du pouvoir spirituel et de la résistance à la corruption, mais aussi du fanatisme.
+
+> **Renommage du 2026-08-10 (#264).** Cet attribut s'appelait **CENDRE**. Deux raisons de l'avoir
+> changé, aucune cosmétique :
+>
+> 1. **Collision de vocabulaire** — la Cendre dorée recouvre le monde _et_ désignait un attribut du
+>    personnage. Le joueur entendait le même mot pour l'environnement et pour lui-même.
+> 2. **Redondance mécanique** — la **Calamine** est déjà le coût magique unifié de Velkhar. Un
+>    attribut « surnaturel » séparé faisait doublon.
+>
+> **VOLONTÉ = la réserve** (combien de fois tu peux forcer le monde). **Calamine = le prix** (ce que
+> ça laisse dans la chair). Deux faces d'une même mécanique, jamais deux systèmes. Les charges
+> d'Emprise qui donnent son effet mécanique à la réserve arrivent en #267.
+>
+> La Cendre du **lore** n'est pas renommée : le monde, le peuple Cendreur et le coût des artefacts
+> gardent leur nom.
 
 ---
 
@@ -115,7 +130,7 @@ Chaque vocation propose un **profil d'attributs conseillé**, modifiable par le 
 ```
 SANG     14  (+2)   ← endurant, caravanière
 SOUFFLE  10  ( 0)   ← moyen
-CENDRE   10  ( 0)   ← moyen, mais bonne sociabilité
+VOLONTÉ  10  ( 0)   ← moyen, mais bonne sociabilité
 ```
 
 _Le survivant du désert. Endurant, débrouillard, sait lire le sable._
@@ -125,7 +140,7 @@ _Le survivant du désert. Endurant, débrouillard, sait lire le sable._
 ```
 SANG     10  ( 0)
 SOUFFLE  14  (+2)   ← précis, furtif
-CENDRE   10  ( 0)
+VOLONTÉ  10  ( 0)
 ```
 
 _L'assassin discret. La précision et l'ombre avant la force brute._
@@ -135,7 +150,7 @@ _L'assassin discret. La précision et l'ombre avant la force brute._
 ```
 SANG     10  ( 0)
 SOUFFLE  14  (+2)   ← érudit, manipule les artefacts
-CENDRE   10  ( 0)
+VOLONTÉ  10  ( 0)
 ```
 
 _Le chasseur de ruines. Le savoir et la main fine avant le combat._
@@ -145,7 +160,7 @@ _Le chasseur de ruines. Le savoir et la main fine avant le combat._
 ```
 SANG      8  (−1)
 SOUFFLE  14  (+2)   ← éveille les artefacts
-CENDRE   12  (+1)   ← la volonté de manier la Cendre
+VOLONTÉ  12  (+1)   ← la volonté de manier la Cendre
 ```
 
 _Le rare éveilleur. Puissant, mais fragile en chair et tenté par la corruption._
@@ -163,19 +178,19 @@ Jet de dés = d20 + modificateur d'attribut + bonus de compétence
 
 ### Exemples concrets
 
-| Action                  | Attribut       | Jet                                                      |
-| ----------------------- | -------------- | -------------------------------------------------------- |
-| Frapper au sabre        | SANG           | d20 + mod SANG + compétence Mêlée                        |
-| Tirer à l'arc           | SOUFFLE        | d20 + mod SOUFFLE + compétence Tir                       |
-| Se cacher dans l'ombre  | SOUFFLE        | d20 + mod SOUFFLE + compétence Furtivité                 |
-| Persuader un garde      | CENDRE         | d20 + mod CENDRE + compétence Persuasion                 |
-| Intimider un prisonnier | SANG ou CENDRE | selon l'approche (force ou peur)                         |
-| Éveiller un artefact    | SOUFFLE        | d20 + mod SOUFFLE + compétence Éveil (ET coût en Cendre) |
-| Résister à un sort      | CENDRE         | d20 + mod CENDRE (jet de sauvegarde)                     |
-| Résister au poison      | SANG           | d20 + mod SANG (jet de sauvegarde)                       |
-| Survivre dans le désert | SANG           | d20 + mod SANG + compétence Survie                       |
+| Action                  | Attribut        | Jet                                                      |
+| ----------------------- | --------------- | -------------------------------------------------------- |
+| Frapper au sabre        | SANG            | d20 + mod SANG + compétence Mêlée                        |
+| Tirer à l'arc           | SOUFFLE         | d20 + mod SOUFFLE + compétence Tir                       |
+| Se cacher dans l'ombre  | SOUFFLE         | d20 + mod SOUFFLE + compétence Furtivité                 |
+| Persuader un garde      | VOLONTÉ         | d20 + mod VOLONTÉ + compétence Persuasion                |
+| Intimider un prisonnier | SANG ou VOLONTÉ | selon l'approche (force ou peur)                         |
+| Éveiller un artefact    | SOUFFLE         | d20 + mod SOUFFLE + compétence Éveil (ET coût en Cendre) |
+| Résister à un sort      | VOLONTÉ         | d20 + mod VOLONTÉ (jet de sauvegarde)                    |
+| Résister au poison      | SANG            | d20 + mod SANG (jet de sauvegarde)                       |
+| Survivre dans le désert | SANG            | d20 + mod SANG + compétence Survie                       |
 
-🟢 _Un attribut donné n'est pas figé à une action. Intimider peut être SANG (force) ou CENDRE (peur) selon la manière décrite par le joueur. Le MJ IA interprète l'intention._
+🟢 _Un attribut donné n'est pas figé à une action. Intimider peut être SANG (force) ou VOLONTÉ (peur) selon la manière décrite par le joueur. Le MJ IA interprète l'intention._
 
 ---
 
@@ -206,13 +221,13 @@ C'est l'approche roguelike pure (façon Hades : la progression = ce que tu trouv
 
 Le peuple du personnage (Sahélin, Rivain, Thérien, Cendreur, Changepeau) influence légèrement la répartition initiale.
 
-| Peuple                  | Bonus      | Pénalité  | Raisonnement lore      |
-| ----------------------- | ---------- | --------- | ---------------------- |
-| **Sahélin** (désert)    | +1 SANG    | —         | Endurcis par le désert |
-| **Rivain** (littoral)   | +1 CENDRE  | —         | Marchands, sociables   |
-| **Thérien** (montagne)  | +1 SANG    | —         | Mineurs, trapus        |
-| **Cendreur** (capitale) | +1 SOUFFLE | —         | Érudits, lettrés       |
-| **Changepeau** (marge)  | +1 SOUFFLE | −1 CENDRE | Furtifs, mais méprisés |
+| Peuple                  | Bonus      | Pénalité   | Raisonnement lore      |
+| ----------------------- | ---------- | ---------- | ---------------------- |
+| **Sahélin** (désert)    | +1 SANG    | —          | Endurcis par le désert |
+| **Rivain** (littoral)   | +1 VOLONTÉ | —          | Marchands, sociables   |
+| **Thérien** (montagne)  | +1 SANG    | —          | Mineurs, trapus        |
+| **Cendreur** (capitale) | +1 SOUFFLE | —          | Érudits, lettrés       |
+| **Changepeau** (marge)  | +1 SOUFFLE | −1 VOLONTÉ | Furtifs, mais méprisés |
 
 🟢 _Chaque peuple a un bonus (pas de pénalité au lancement, pour rester accueillant — sauf Changepeau qui est une vocation difficile). Le peuple est un parfum, pas une optimisation._
 
@@ -228,7 +243,7 @@ Les attributs influencent aussi les statistiques de survie (détail dans `06-SUR
 | Faim (résistance)      | SANG                                                          |
 | Soif (résistance)      | SANG                                                          |
 | Fatigue (résistance)   | SANG                                                          |
-| Raison / Santé mentale | CENDRE                                                        |
+| Raison / Santé mentale | VOLONTÉ                                                       |
 | Cendre accumulée       | dépend de la magie utilisée (le Tisse-Verbe en accumule vite) |
 
 ---
@@ -250,7 +265,7 @@ La magie est rare et coûteuse (voir `02-WORLD-BIBLE.md`). Le système est **uni
 | -------------------------------------- | --------------------- | -------------------------- |
 | Utiliser un artefact (pouvoir de base) | SOUFFLE (activation)  | Tout le monde              |
 | Éveiller un artefact (pouvoir total)   | SOUFFLE (haut requis) | Tisse-Verbe seul           |
-| Résister à la Calamine                 | CENDRE                | Sauvegarde anti-corruption |
+| Résister à la Calamine                 | VOLONTÉ               | Sauvegarde anti-corruption |
 | Manipuler/réparer un artefact          | SOUFFLE (artisanat)   | Veilleur notamment         |
 
 🟢 _Seul le **Tisse-Verbe** démarre avec la compétence d'éveil des artefacts. Les autres vocations peuvent apprendre à les utiliser (pouvoir de base), mais pas à les éveiller._
@@ -270,7 +285,7 @@ La magie est rare et coûteuse (voir `02-WORLD-BIBLE.md`). Le système est **uni
   💨 SOUFFLE   le verbe, la main fine, l'esprit vif
               → précision, furtivité, artisanat, éveil des artefacts
 
-  🔥 CENDRE    la présence, la volonté, le poids de l'âme
+  🔥 VOLONTÉ    la présence, la volonté, le poids de l'âme
               → charisme, foi, commandement, résistance magique
 
   [survole un attribut pour en savoir plus]
@@ -298,14 +313,14 @@ La magie est rare et coûteuse (voir `02-WORLD-BIBLE.md`). Le système est **uni
 TROIS ATTRIBUTS
    ├── SANG    (corps, combat, survie)
    ├── SOUFFLE (esprit, précision, furtivité, éveil des artefacts)
-   └── CENDRE  (âme, charisme, foi, résistance magique)
+   └── VOLONTÉ  (âme, charisme, foi, résistance magique)
        ↓
 MODIFICATEURS (−3 à +4)
    ↓
 AFFECTENT :
    ├── les jets de dés (d20 + mod + compétence)
    ├── les stats de survie (PV, faim, soif, fatigue)
-   ├── l'usage des artefacts (éveil = SOUFFLE, résistance = CENDRE)
+   ├── l'usage des artefacts (éveil = SOUFFLE, résistance = VOLONTÉ)
    └── la progression par équipement (pas par niveaux)
 ```
 

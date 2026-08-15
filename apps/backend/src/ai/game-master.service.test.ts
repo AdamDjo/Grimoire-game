@@ -37,7 +37,7 @@ const character = {
   people: 'sahelin',
   vocation: 'salt-walker',
   stats: {
-    attributes: { blood: 10, breath: 10, ash: 10 },
+    attributes: { blood: 10, breath: 10, will: 10 },
     survival: {
       hp: 20,
       maxHp: 20,

@@ -13,7 +13,7 @@ interface VelkharCharacterSheetProps {
   survival: SurvivalStats
 }
 
-const ATTRIBUTE_ORDER = ['blood', 'breath', 'ash'] as const
+const ATTRIBUTE_ORDER = ['blood', 'breath', 'will'] as const
 
 export function VelkharCharacterSheet({
   character,
