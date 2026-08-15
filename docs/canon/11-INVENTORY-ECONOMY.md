@@ -324,7 +324,7 @@ Les artefacts sont **la seule source de pouvoir magique** dans Velkhar (cf. déc
 
 ### Le prix est toujours de la Calamine
 
-Chaque activation **coûte de la Calamine** — la Cendre qui s'accumule dans le corps du porteur
+Chaque activation **coûte de la Calamine** — la Cendre du monde qui s'accumule dans le corps du porteur
 (`06-SURVIVAL §4`, `02-WORLD-BIBLE`). C'est la boucle centrale de la magie de Velkhar :
 
 ```
@@ -345,7 +345,7 @@ L'arbitrage est permanent, et il se joue surtout au **retour** :
 
 ```
 - Usable 1× par scène
-- Coûte 5 Cendre (cf. 06-SURVIVAL §4)
+- Coûte 5 Calamine (cf. 06-SURVIVAL §4)
 - 1d8 dégâts OU effet narratif mineur défini par l'artefact
 - Le joueur ne connaît que l'effet de base (sauf si identifié)
 ```
@@ -356,11 +356,11 @@ L'arbitrage est permanent, et il se joue surtout au **retour** :
 
 ```
 - Usable 1× par scène
-- Coûte 10 Cendre
+- Coûte 10 Calamine
 - Effet majeur garanti (effet d'éveil défini par l'artefact)
 - Option d'amplification : d20 + SOUFFLE + VOLONTÉ + Éveil  vs  DC artefact
   → Succès : effet amplifié (dégâts doublés, zone élargie, condition spéciale)
-  → Échec : juste effet de base (Cendre payée UNE SEULE FOIS)
+  → Échec : juste effet de base (Calamine payée UNE SEULE FOIS)
 ```
 
 🟢 _L'éveil ne rate **jamais** totalement. Le Tisse-Verbe paye et reçoit toujours au minimum l'effet de base._
@@ -562,7 +562,7 @@ Le butin n'est jamais compté au moment où on le ramasse, seulement au moment o
 | **Artefact d'héritage abusé**                     | Dégradation après 3-4 transmissions. Garantit le besoin de trouver de nouveaux artefacts                                 |
 | **Souvenirs accumulés sans usage**                | L'Aveugle propose **toujours** des achats au retour. Le joueur ne doit jamais se demander "que faire de mes Souvenirs ?" |
 | **Mort frustrante (perte de 200 🪙)**             | Banque de L'Aveugle. Et l'héritage minimise la perte ressentie                                                           |
-| **Joueur qui spam les artefacts non-Tisse-Verbe** | Coût Cendre (5/usage) accumule la Calamine. Risque réel à long terme                                                     |
+| **Joueur qui spam les artefacts non-Tisse-Verbe** | Coût de 5 Calamine par usage, cumulatif. Risque réel à long terme                                                        |
 | **Donjon vide / sans loot**                       | Règle absolue : tout donjon termine sur **au moins** 1 récompense substantielle                                          |
 
 ---
@@ -602,10 +602,10 @@ Le butin n'est jamais compté au moment où on le ramasse, seulement au moment o
 ║                                                                    ║
 ║  ARTEFACTS                               HÉRITAGE                  ║
 ║  ─────────────────────────              ──────────────────────     ║
-║  Pouvoir de base : 1d8, 5 Cendre        1 artefact transmis        ║
+║  Pouvoir de base : 1d8, 5 Calamine      1 artefact transmis        ║
 ║   (toute vocation, 1×/scène)            Dégrade 3-4 runs           ║
 ║                                                                    ║
-║  Éveil (Tisse-Verbe) : 10 Cendre        + écho réputation/         ║
+║  Éveil (Tisse-Verbe) : 10 Calamine      + écho réputation/         ║
 ║   effet majeur garanti                    savoir mineur            ║
 ║   + amplif optionnelle (d20)                                       ║
 ║                                                                    ║

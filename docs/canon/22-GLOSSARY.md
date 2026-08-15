@@ -52,14 +52,19 @@ Phénomène mystique du Makhzen : brume scintillante qui apparaît au crépuscul
 ## C
 
 **Calamine** _⚙️ Mécanique + 🌍 Lore_
-Coût magique unifié de Velkhar. Chaque action magique consomme de la Calamine (ressource interne au perso). Régénère lentement (au repos) ou rapidement (rituels). Représente le **prix charnel** de la magie — le corps brûle, littéralement.
-→ [10-COMBAT](10-COMBAT.md), [11-INVENTORY-ECONOMY](11-INVENTORY-ECONOMY.md)
-⚠️ Ne pas confondre avec **VOLONTÉ** (stat) ni avec **Calcinés** (lore).
+Coût magique unifié de Velkhar, et **seule jauge magique du jeu** : une valeur `calamine` de 0 à 100 par personnage. Chaque action magique en **accumule** (5 par usage d'artefact, 10 par éveil). Elle ne redescend jamais seule — seuls un repos long (−10), un rituel des Sœurs du Silence (−30) ou un artefact purificateur (−50) la réduisent. À 100, le personnage devient un Calciné : fin de run. Représente le **prix charnel** de la magie — le corps brûle, littéralement.
+→ [06-SURVIVAL §4](06-SURVIVAL.md), [10-COMBAT](10-COMBAT.md), [11-INVENTORY-ECONOMY](11-INVENTORY-ECONOMY.md)
+⚠️ Ne pas confondre avec **VOLONTÉ** (stat), **Calcinés** (lore) ni **Cendre** (la matière du monde). Il n'existe **pas** de jauge de « Cendre » : c'est la Calamine.
 
 **Calcinés (Les)** _🌍 Lore_
 Êtres tordus par un excès de Calamine — anciens mages, fanatiques, victimes de rituels ratés. Forme ennemie récurrente. Hybrides humain / cendre / pierre. Souvent muets, parfois prophétiques.
 → `docs/canon/`, [10-COMBAT](10-COMBAT.md)
 ⚠️ Lore distinct des Calmes (peuple Cendreur) — phonétique proche, sens opposés.
+
+**Cendre (La)** _🌍 Lore_
+La poussière dorée qui recouvre Velkhar : la magie des Archontes dispersée après le cataclysme. Trois formes — sable doré (partout, toléré), brume dorée (concentrée, mortelle), et **Calamine** lorsqu'elle s'accumule dans un corps humain. Matière du monde, jamais une ressource de personnage.
+→ [02-WORLD-BIBLE §3](02-WORLD-BIBLE.md), [06-SURVIVAL §4](06-SURVIVAL.md)
+⚠️ **Pas une jauge.** Ce qu'un personnage accumule s'appelle **Calamine**. L'attribut autrefois nommé CENDRE est devenu **VOLONTÉ** (#264).
 
 **Cendreurs** _🌍 Lore_
 Peuple mystique des hauts plateaux volcaniques. Voix elliptique, foi profonde dans la combustion sacrée, gardiens de rituels Calamine. Variante PNJ : voix mystique, métaphores.

@@ -178,17 +178,17 @@ Jet de dés = d20 + modificateur d'attribut + bonus de compétence
 
 ### Exemples concrets
 
-| Action                  | Attribut        | Jet                                                      |
-| ----------------------- | --------------- | -------------------------------------------------------- |
-| Frapper au sabre        | SANG            | d20 + mod SANG + compétence Mêlée                        |
-| Tirer à l'arc           | SOUFFLE         | d20 + mod SOUFFLE + compétence Tir                       |
-| Se cacher dans l'ombre  | SOUFFLE         | d20 + mod SOUFFLE + compétence Furtivité                 |
-| Persuader un garde      | VOLONTÉ         | d20 + mod VOLONTÉ + compétence Persuasion                |
-| Intimider un prisonnier | SANG ou VOLONTÉ | selon l'approche (force ou peur)                         |
-| Éveiller un artefact    | SOUFFLE         | d20 + mod SOUFFLE + compétence Éveil (ET coût en Cendre) |
-| Résister à un sort      | VOLONTÉ         | d20 + mod VOLONTÉ (jet de sauvegarde)                    |
-| Résister au poison      | SANG            | d20 + mod SANG (jet de sauvegarde)                       |
-| Survivre dans le désert | SANG            | d20 + mod SANG + compétence Survie                       |
+| Action                  | Attribut        | Jet                                                        |
+| ----------------------- | --------------- | ---------------------------------------------------------- |
+| Frapper au sabre        | SANG            | d20 + mod SANG + compétence Mêlée                          |
+| Tirer à l'arc           | SOUFFLE         | d20 + mod SOUFFLE + compétence Tir                         |
+| Se cacher dans l'ombre  | SOUFFLE         | d20 + mod SOUFFLE + compétence Furtivité                   |
+| Persuader un garde      | VOLONTÉ         | d20 + mod VOLONTÉ + compétence Persuasion                  |
+| Intimider un prisonnier | SANG ou VOLONTÉ | selon l'approche (force ou peur)                           |
+| Éveiller un artefact    | SOUFFLE         | d20 + mod SOUFFLE + compétence Éveil (ET coût en Calamine) |
+| Résister à un sort      | VOLONTÉ         | d20 + mod VOLONTÉ (jet de sauvegarde)                      |
+| Résister au poison      | SANG            | d20 + mod SANG (jet de sauvegarde)                         |
+| Survivre dans le désert | SANG            | d20 + mod SANG + compétence Survie                         |
 
 🟢 _Un attribut donné n'est pas figé à une action. Intimider peut être SANG (force) ou VOLONTÉ (peur) selon la manière décrite par le joueur. Le MJ IA interprète l'intention._
 
@@ -244,7 +244,7 @@ Les attributs influencent aussi les statistiques de survie (détail dans `06-SUR
 | Soif (résistance)      | SANG                                                          |
 | Fatigue (résistance)   | SANG                                                          |
 | Raison / Santé mentale | VOLONTÉ                                                       |
-| Cendre accumulée       | dépend de la magie utilisée (le Tisse-Verbe en accumule vite) |
+| Calamine accumulée     | dépend de la magie utilisée (le Tisse-Verbe en accumule vite) |
 
 ---
 
@@ -257,7 +257,7 @@ La magie est rare et coûteuse (voir `02-WORLD-BIBLE.md`). Le système est **uni
 - **Les artefacts** = la seule source de vraie magie. Chacun unique, chacun offre un pouvoir unique.
 - **Tout le monde** peut utiliser un artefact (pouvoir de base).
 - **Le Tisse-Verbe** est le seul à pouvoir **éveiller** un artefact (en tirer le pouvoir total). Il utilise son SOUFFLE pour "parler" à l'artefact.
-- **La Calamine** = le coût universel. Tout usage accumule de la Cendre dans le corps. Le Tisse-Verbe l'accumule plus vite.
+- **La Calamine** = le coût universel. Tout usage accumule de la Calamine dans le corps. Le Tisse-Verbe l'accumule plus vite.
 
 ### Quel attribut pour quel usage ?
 
@@ -302,7 +302,7 @@ La magie est rare et coûteuse (voir `02-WORLD-BIBLE.md`). Le système est **uni
 | ------------------------------------------------ | ----------------------------------------------------------------------------------- |
 | Trop simple par rapport à D&D (6 stats)          | La profondeur vient des **compétences** (~12) greffées sur les 3 attributs          |
 | Une vocation "meilleure" que les autres          | Balancing par playtests, chaque attribut a ses forces                               |
-| Le Tisse-Verbe trop puissant (magie = pouvoir)   | La magie coûte de la Cendre → Calamine → mort/transformations                       |
+| Le Tisse-Verbe trop puissant (magie = pouvoir)   | La magie coûte de la Calamine → paliers → mort/transformations                      |
 | Attributs inutiles pour une vocation (dump stat) | Compétences qui utilisent tous les attributs (même le magicien doit parfois courir) |
 
 ---

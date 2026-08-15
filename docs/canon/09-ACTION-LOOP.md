@@ -187,7 +187,7 @@ L'éveil suit un flux **particulier** parce que c'est le geste central du Tisse-
    ┌──────────────────────────────────────────┐
    │  Tu poses la main sur la Clé d'Ombre.    │
    │  Effet de base : tu désactives un piège. │
-   │  Coût : 10 Cendre.                       │
+   │  Coût : 10 Calamine.                     │
    │                                           │
    │  Veux-tu tenter une AMPLIFICATION ?       │
    │  → d20 + SOUFFLE vs DC 14                 │
@@ -198,11 +198,11 @@ L'éveil suit un flux **particulier** parce que c'est le geste central du Tisse-
    │  [ EFFET DE BASE ]  [ TENTER AMPLI ]      │
    └──────────────────────────────────────────┘
    ↓
-3a. Si EFFET DE BASE → l'effet a lieu, Cendre payée, on continue
+3a. Si EFFET DE BASE → l'effet a lieu, Calamine payée, on continue
 3b. Si AMPLIFICATION → roule d20
     ├── Réussite : effet majeur + bonus
     └── Échec    : juste effet de base
-    (Cendre payée UNE SEULE FOIS)
+    (Calamine payée UNE SEULE FOIS)
 ```
 
 🟢 _Règle d'or : l'éveil ne rate **jamais** totalement. Le joueur paye, le joueur reçoit au minimum l'effet de base._
@@ -227,7 +227,7 @@ L'IA bascule d'acte selon :
 
 - **Le rythme** (~30% du run en Installation, ~50% en Complications, ~20% en Climax)
 - **Les actions du joueur** (s'il fonce vers un boss, le climax arrive plus tôt)
-- **Les conditions de survie** (si la Cendre monte vers 80, l'IA pousse vers le climax)
+- **Les conditions de survie** (si la Calamine monte vers 80, l'IA pousse vers le climax)
 - **Les quêtes en cours** (une quête majeure résolue peut déclencher le climax)
 
 🟢 _Le joueur ressent le crescendo sans le voir. C'est exactement le but d'un bon récit : tu sais qu'il se passe quelque chose, pas comment ça marche._
@@ -266,7 +266,7 @@ secours, mort). Si mort effective → run terminé, Chronique générée, hérit
 
 ### 🌀 Fin par la Calamine
 
-Si la Cendre atteint 100 → transformation en Calciné → le perso devient un monstre du bestiaire. Run terminé, Chronique générée avec **fin spéciale** ("Tu es devenu ce que tu chassais"). Pas d'héritage transmis (l'artefact est corrompu).
+Si la Calamine atteint 100 → transformation en Calciné → le perso devient un monstre du bestiaire. Run terminé, Chronique générée avec **fin spéciale** ("Tu es devenu ce que tu chassais"). Pas d'héritage transmis (l'artefact est corrompu).
 
 ### Contrat moteur — `endReason`
 

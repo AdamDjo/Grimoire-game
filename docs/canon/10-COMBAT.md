@@ -143,8 +143,8 @@ Voir §5. Le joueur **utilise sa voix** pour modifier le champ de bataille.
 
 Le joueur active un artefact (toute vocation, 1×/scène, voir `11-INVENTORY-ECONOMY §5`) :
 
-- **Pouvoir de base** : 1d8 dégâts ou effet narratif, coûte 5 Cendre
-- **Éveil** (Tisse-Verbe seul) : effet majeur garanti + d20 amplification, coûte 10 Cendre
+- **Pouvoir de base** : 1d8 dégâts ou effet narratif, coûte 5 Calamine
+- **Éveil** (Tisse-Verbe seul) : effet majeur garanti + d20 amplification, coûte 10 Calamine
 
 🟢 _L'artefact en combat = "spell slot" thématique. Précieux, à choisir au bon moment._
 
@@ -363,7 +363,7 @@ Pas de niveau, pas d'XP cumulatif. Les récompenses sont **immédiates et narrat
 | **TPK frustrant**                              | À 0 PV → inconscience d'abord, l'IA décide. Captivité = nouvelle scène, pas game over                             |
 | **Combat trash systématique**                  | Les ennemis ne sont jamais "pour XP". Chaque combat = enjeu narratif (lettre, contrat, témoin)                    |
 | **VOLONTÉ inutile**                            | Le rôle Leader est core, pas optionnel. Les builds VOLONTÉ doivent briller en combat                              |
-| **Tisse-Verbe OP**                             | Coût Cendre élevé (10/éveil), risque Calamine (cf. `06-SURVIVAL §4`), max 1-2 éveils par combat avant danger      |
+| **Tisse-Verbe OP**                             | Coût élevé (10 Calamine/éveil), risque de palier (cf. `06-SURVIVAL §4`), max 1-2 éveils par combat avant danger   |
 | **Fuite abusée**                               | Coût en dégâts + perte d'or potentielle + désavantage si échec                                                    |
 | **Joueur ne comprend pas pourquoi il a perdu** | Transparence dés (cf. `08-DICE §4`) + narration IA des dégâts (_"Le sabre traverse ton cuir, tu chancelles"_)     |
 

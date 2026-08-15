@@ -73,7 +73,7 @@ export interface SurvivalStats {
   thirst: number;
   hunger: number;
   energy: number;
-  /** Accumulated Cendre corruption (0–100). 100 = death (Calciné). */
+  /** Accumulated Calamine (0–100), the single magic cost gauge. 100 = death (Calciné). */
   calamine: number;
   /** True after the first 0-HP hit: one telegraphed turn of reprieve before a second 0-HP hit is definitive death. */
   isDying: boolean;
