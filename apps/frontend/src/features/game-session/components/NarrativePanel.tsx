@@ -19,7 +19,7 @@ export function NarrativePanel({ narrative, loading }: NarrativePanelProps) {
       aria-busy={loading}
       aria-live="polite"
     >
-      <NarrativePassage align="center">
+      <NarrativePassage align="left">
         {paragraphs.map((paragraph) => (
           <p key={paragraph}>{paragraph}</p>
         ))}

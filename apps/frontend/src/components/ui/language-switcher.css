@@ -1,6 +1,6 @@
 .language-switcher {
   align-items: center;
-  color: var(--ink-2);
+  color: var(--salt-muted);
   display: inline-flex;
   font-family: var(--font-game-ui);
   min-height: 44px;
@@ -8,7 +8,7 @@
 
 .language-switcher__label {
   color: rgba(239, 225, 194, 0.58);
-  font-size: 0.68rem;
+  font-size: var(--text-game-micro);
   letter-spacing: 0.12em;
   margin-inline-end: 0.75rem;
   text-transform: uppercase;
@@ -28,7 +28,7 @@
   cursor: pointer;
   display: inline-flex;
   font: inherit;
-  font-size: 0.72rem;
+  font-size: var(--text-game-caption);
   font-weight: 600;
   justify-content: center;
   letter-spacing: 0.12em;
@@ -42,7 +42,7 @@
 }
 
 .language-switcher__option::after {
-  background: var(--gold-light);
+  background: var(--material-gold-bright);
   bottom: 7px;
   content: '';
   height: 1px;
@@ -58,11 +58,11 @@
 }
 
 .language-switcher__option:hover:not(:disabled) {
-  color: var(--parchment);
+  color: var(--salt-white);
 }
 
 .language-switcher__option[data-active='true'] {
-  color: var(--gold-light);
+  color: var(--material-gold-bright);
 }
 
 .language-switcher__option[data-active='true']::after {
@@ -75,7 +75,7 @@
 }
 
 .language-switcher__option:focus-visible {
-  outline: 2px solid var(--gold-light);
+  outline: 2px solid var(--material-gold-bright);
   outline-offset: -4px;
 }
 
@@ -116,7 +116,7 @@
 }
 
 .language-switcher--menu .language-switcher__label {
-  font-size: 0.66rem;
+  font-size: var(--text-game-micro);
   margin: 0;
 }
 
@@ -127,7 +127,7 @@
 }
 
 .language-switcher--menu .language-switcher__option {
-  font-size: 0.8rem;
+  font-size: var(--text-game-caption);
   min-width: 72px;
 }
 

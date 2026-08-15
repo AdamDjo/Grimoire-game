@@ -1,38 +1,63 @@
 .game-brand {
-  display: block;
-  height: auto;
-  object-fit: contain;
+  align-items: center;
+  color: var(--salt-white);
+  display: inline-flex;
+  flex-direction: column;
+  font-family: var(--font-game-heading);
+  line-height: 1;
+  text-align: center;
+  text-shadow: 0 2px 10px var(--ink-black);
   user-select: none;
 }
 
+.game-brand__name {
+  font-size: 1em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.game-brand__subtitle {
+  color: var(--material-gold);
+  font-family: var(--font-game-ui);
+  font-size: 0.3em;
+  letter-spacing: 0.26em;
+  margin-top: 0.32em;
+  text-transform: uppercase;
+}
+
 .game-brand--lockup.game-brand--sm {
-  width: min(100%, 12rem);
+  font-size: 1rem;
 }
 
 .game-brand--lockup.game-brand--md {
-  width: min(100%, 20rem);
+  font-size: 1.75rem;
 }
 
 .game-brand--lockup.game-brand--lg {
-  width: min(100%, 30rem);
+  font-size: 2.5rem;
 }
 
 .game-brand--lockup.game-brand--xl {
-  width: min(100%, 42rem);
+  font-size: 3.5rem;
 }
 
 .game-brand--sigil.game-brand--sm {
-  width: 3rem;
+  width: 2.25rem;
 }
 
 .game-brand--sigil.game-brand--md {
-  width: 5rem;
+  width: 3.5rem;
 }
 
 .game-brand--sigil.game-brand--lg {
-  width: 8rem;
+  width: 5rem;
 }
 
 .game-brand--sigil.game-brand--xl {
-  width: 12rem;
+  width: 7rem;
+}
+
+.game-brand--sigil svg {
+  height: auto;
+  width: 100%;
 }
