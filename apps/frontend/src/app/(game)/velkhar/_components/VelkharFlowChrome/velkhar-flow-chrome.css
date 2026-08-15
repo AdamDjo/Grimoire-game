@@ -1,0 +1,171 @@
+.velkhar-flow-topbar {
+  min-height: clamp(3.75rem, 7dvh, 4.5rem);
+}
+
+.velkhar-flow-topbar a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.velkhar-flow-topbar__nav--muted {
+  cursor: default;
+}
+
+.velkhar-flow-hud {
+  align-items: stretch;
+  background: rgba(3, 3, 2, 0.98);
+  border-top: 1px solid var(--gold-dark);
+  box-shadow: 0 -0.45rem 1.2rem rgba(0, 0, 0, 0.76);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: clamp(5.4rem, 11.5dvh, 6.8rem);
+}
+
+.velkhar-flow-hud__stats {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(8.5rem, 1fr));
+  min-width: 0;
+}
+
+.velkhar-flow-hud__stat {
+  align-items: center;
+  border-right: 1px solid rgba(190, 137, 59, 0.52);
+  display: grid;
+  gap: clamp(0.25rem, 0.6vw, 0.65rem);
+  grid-template-columns: clamp(2.7rem, 3.5vw, 4rem) minmax(0, 1fr);
+  min-width: 0;
+  padding: 0.55rem clamp(0.45rem, 1vw, 1rem);
+}
+
+.velkhar-flow-hud__stat-icon,
+.velkhar-flow-hud__stat-icon img {
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+.velkhar-flow-hud__stat-copy,
+.velkhar-flow-hud__stat-heading {
+  display: grid;
+  min-width: 0;
+}
+
+.velkhar-flow-hud__stat-copy {
+  gap: 0.45rem;
+}
+
+.velkhar-flow-hud__stat-heading {
+  align-items: baseline;
+  color: var(--stat-color, var(--parchment));
+  font-family: var(--font-game-heading);
+  font-size: var(--text-game-stat-label);
+  gap: 0.5rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.velkhar-flow-hud__stat-heading strong {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.velkhar-flow-hud__stat-track {
+  background: linear-gradient(90deg, var(--stat-color, var(--parchment)) 0 18%, transparent 18%);
+  border-block: 2px solid color-mix(in srgb, var(--stat-color, var(--parchment)) 35%, transparent);
+  height: 0.45rem;
+  opacity: 0.45;
+}
+
+.velkhar-flow-hud__stat[data-tone='blood'] {
+  --stat-color: #c83c2f;
+}
+.velkhar-flow-hud__stat[data-tone='breath'] {
+  --stat-color: #45aaa7;
+}
+.velkhar-flow-hud__stat[data-tone='hunger'] {
+  --stat-color: #d39a2e;
+}
+.velkhar-flow-hud__stat[data-tone='thirst'] {
+  --stat-color: #d8d2c8;
+}
+.velkhar-flow-hud__stat[data-tone='calamine'] {
+  --stat-color: #c58a27;
+}
+
+.velkhar-flow-hud__tools {
+  align-items: center;
+  display: flex;
+  gap: 0.65rem;
+  padding: 0.55rem clamp(0.65rem, 1.3vw, 1.25rem);
+}
+
+.velkhar-flow-hud__tools button {
+  background: transparent;
+  border: 1px solid rgba(190, 137, 59, 0.5);
+  height: clamp(3.55rem, 6vw, 4.7rem);
+  opacity: 0.52;
+  padding: 0;
+  position: relative;
+  width: clamp(3.55rem, 6vw, 4.7rem);
+}
+
+.velkhar-flow-hud__tools img {
+  object-fit: cover;
+}
+
+@media (max-width: 1180px) {
+  .velkhar-flow-hud__stats {
+    grid-template-columns: repeat(5, minmax(6.2rem, 1fr));
+  }
+  .velkhar-flow-hud__stat {
+    grid-template-columns: 2.65rem minmax(0, 1fr);
+  }
+  .velkhar-flow-hud__tools {
+    gap: 0.35rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .velkhar-flow-hud {
+    grid-template-columns: 1fr;
+  }
+  .velkhar-flow-hud__tools {
+    display: none;
+  }
+  .velkhar-flow-hud__stats {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .velkhar-flow-topbar__nav span:not(:first-child) {
+    display: none;
+  }
+  .velkhar-flow-hud__stat {
+    gap: 0.15rem;
+    grid-template-columns: 2.2rem;
+    justify-content: center;
+    justify-items: center;
+    padding-inline: 0.25rem;
+  }
+  .velkhar-flow-hud__stat-copy {
+    gap: 0.18rem;
+    justify-items: center;
+    width: 100%;
+  }
+  .velkhar-flow-hud__stat-heading {
+    display: flex;
+    font-size: var(--text-game-micro);
+    gap: 0.15rem;
+    justify-content: center;
+  }
+  .velkhar-flow-hud__stat-heading strong {
+    display: none;
+  }
+  .velkhar-flow-hud__stat-track {
+    width: 80%;
+  }
+}

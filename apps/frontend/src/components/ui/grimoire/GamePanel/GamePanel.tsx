@@ -13,11 +13,10 @@ export type GamePanelVariant =
   | 'compact'
   | 'header'
   | 'footer'
-  | 'form-frame-legacy'
-  | 'aside-frame-legacy'
   | 'form-frame'
   | 'aside-frame'
   | 'dialogue-frame'
+  | 'narrative-frame'
 export type GamePanelTone = 'neutral' | 'gold' | 'danger' | 'aqua' | 'ember'
 export type GamePanelPadding = 'none' | 'sm' | 'md' | 'lg'
 

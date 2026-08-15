@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 
+import { GameButton } from '@/components/ui/grimoire/GameButton/GameButton'
 import { GameIcon, type GameIconName } from '@/components/ui/grimoire/GameIcon/GameIcon'
 import { InventorySlot } from '@/components/ui/grimoire/InventorySlot/InventorySlot'
 import { cn } from '@/lib/utils'
@@ -197,14 +198,15 @@ export function VelkharInventoryPanel({ gold, items, onAction }: VelkharInventor
                   {selectedItem.allowedActions
                     .filter((action) => action !== 'inspect')
                     .map((action) => (
-                      <button
+                      <GameButton
                         key={action}
-                        type="button"
                         className="velkhar-inventory__action-button"
+                        size="sm"
+                        variant="primary"
                         onClick={() => onAction(selectedItem, action)}
                       >
                         {actionLabels[action]}
-                      </button>
+                      </GameButton>
                     ))}
                 </div>
               ) : (

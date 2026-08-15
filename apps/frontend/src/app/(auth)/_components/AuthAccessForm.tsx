@@ -102,7 +102,7 @@ export function AuthAccessForm({
   }
 
   return (
-    <GamePanel className="login-form" ornament="diamond" padding="lg" variant="main">
+    <GamePanel className="login-form" ornament="diamond" padding="lg" variant="narrative-frame">
       <header className="login-form__header">
         <GameIcon decorative name={copy.icon} size={48} />
         <p className="login-form__eyebrow">{copy.eyebrow}</p>

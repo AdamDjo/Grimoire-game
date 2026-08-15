@@ -26,9 +26,9 @@
 }
 
 .auth-layout__home {
-  color: var(--gold-light);
-  font-family: var(--font-display);
-  font-size: 0.76rem;
+  color: var(--material-gold-bright);
+  font-family: var(--font-game-ui);
+  font-size: var(--text-game-label);
   left: clamp(1.25rem, 3vw, 3rem);
   letter-spacing: 0.18em;
   opacity: 0.82;
@@ -42,7 +42,7 @@
 }
 
 .auth-layout__home:hover {
-  color: var(--parchment);
+  color: var(--salt-white);
   opacity: 1;
 }
 

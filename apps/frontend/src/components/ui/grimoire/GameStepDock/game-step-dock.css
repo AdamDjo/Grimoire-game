@@ -1,7 +1,7 @@
 .game-step-dock {
   align-items: center;
-  background: linear-gradient(rgba(7, 6, 4, 0.78), rgba(7, 6, 4, 0.94));
-
+  background: var(--ink-black);
+  border-top: 1px solid var(--line-gold);
   display: flex;
   gap: 1rem;
   justify-content: space-between;
@@ -11,12 +11,14 @@
   width: 100%;
 }
 .game-step-dock::before {
-  border: 18px solid transparent;
-  border-image: url('/ui-kit/surfaces/structural-frame-v2.webp') 48 62 fill / 18px;
+  background: linear-gradient(90deg, transparent, var(--material-gold-bright), transparent 35%);
   content: '';
-  inset: 0;
+  height: 1px;
+  left: 0;
   pointer-events: none;
   position: absolute;
+  top: -1px;
+  width: 45%;
   z-index: 0;
 }
 .game-step-dock__steps {
