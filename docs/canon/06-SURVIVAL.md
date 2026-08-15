@@ -144,14 +144,19 @@ Valeurs normatives appliquées par le backend (`game-rules/rest.ts`). Toutes les
 
 ---
 
-## 4. La Cendre et la Calamine
+## 4. La Calamine
 
-La magie n'est jamais gratuite (voir `02-WORLD-BIBLE.md`). **Tout usage d'artefact** accumule de la **Cendre** dans le corps de l'aventurier. Aucun n'y échappe — mais tous ne payent pas au même rythme.
+La magie n'est jamais gratuite (voir `02-WORLD-BIBLE.md`). **Tout usage d'artefact** accumule de la **Calamine** dans le corps de l'aventurier. Aucun n'y échappe — mais tous ne payent pas au même rythme.
 
-- 🩸 **Aventuriers ordinaires** (Marcheur-du-Sel, Lame-Ombre, Veilleur) — accumulent de la Cendre uniquement quand ils déclenchent un artefact (pouvoir de base). Lent.
+> **Une seule jauge.** La Calamine est le coût magique unique de Velkhar : il n'existe pas de
+> seconde jauge de « Cendre ». La **Cendre** désigne la matière du monde (le fléau, les Cendreurs,
+> _Of Ash and Salt_) — jamais une ressource de personnage. Le moteur ne connaît qu'un champ,
+> `calamine` (0–100). Ne jamais réintroduire une jauge de Cendre.
+
+- 🩸 **Aventuriers ordinaires** (Marcheur-du-Sel, Lame-Ombre, Veilleur) — accumulent de la Calamine uniquement quand ils déclenchent un artefact (pouvoir de base). Lent.
 - 🔥 **Tisse-Verbe** — accumule à chaque **éveil**, beaucoup plus vite que les autres. C'est le prix de son don : il tire le pouvoir total des artefacts, mais sa Calamine progresse en compte à rebours accéléré.
 
-### La jauge de Cendre (0–100)
+### La jauge de Calamine (0–100)
 
 | Seuil | Effet            | Narration                                       |
 | ----- | ---------------- | ----------------------------------------------- |
@@ -161,17 +166,21 @@ La magie n'est jamais gratuite (voir `02-WORLD-BIBLE.md`). **Tout usage d'artefa
 | 75–99 | Stade 3          | transformation en _Calciné_ imminente           |
 | 100   | Transformation   | Le perso devient un Calciné → **mort du perso** |
 
-### Comment réduire la Cendre
+Implémentée par `calamineTier()` (`apps/backend/src/game-rules/conditions.ts`) : mêmes seuils.
 
-- 🟢 **Repos long** : -10 Cendre
-- 🟢 **Sœurs du Silence** (rituel au Culte) : -30 Cendre, mais coût (or, quête, secret)
-- 🟢 **Artefact purificateur** (rare) : -50 Cendre une fois
+### Comment réduire la Calamine
+
+La Calamine ne régénère pas et ne redescend jamais seule : elle ne baisse que sur une action explicite.
+
+- 🟢 **Repos long** : -10 Calamine
+- 🟢 **Sœurs du Silence** (rituel au Culte) : -30 Calamine, mais coût (or, quête, secret)
+- 🟢 **Artefact purificateur** (rare) : -50 Calamine une fois
 
 🟢 _Tout aventurier qui touche aux artefacts gère un compte à rebours. Le Tisse-Verbe vit ce dilemme à chaque scène (éveiller = puissance immédiate, Calamine plus proche), les autres vocations ne le rencontrent qu'aux moments où elles décident d'activer un artefact trouvé._
 
-### Sources d'accumulation de Cendre (contrat moteur)
+### Sources d'accumulation de Calamine (contrat moteur)
 
-La Cendre **ne monte jamais toute seule** : pas de drain passif par tour. Elle augmente uniquement sur un **événement source** identifié. Le backend applique le delta ; l'IA ne peut le **proposer** (via `applyCondition` avec `id: "cendre_corrupt"`) que si le contexte correspond à l'une des sources canon ci-dessous — sinon le delta est **rejeté**.
+La Calamine **ne monte jamais toute seule** : pas de drain passif par tour. Elle augmente uniquement sur un **événement source** identifié. Le backend applique le delta ; l'IA ne peut le **proposer** (via `applyCondition` avec `id: "cendre_corrupt"` — identifiant historique de la condition, conservé tel quel côté code) que si le contexte correspond à l'une des sources canon ci-dessous — sinon le delta est **rejeté**.
 
 | Source                                           | Delta indicatif | Qui déclenche         |
 | ------------------------------------------------ | --------------- | --------------------- |
@@ -203,7 +212,7 @@ appliquées.
 
 ### Paliers de Calamine (contrat moteur)
 
-Le backend applique les effets de palier automatiquement dès franchissement du seuil (cf. table §4 « jauge de Cendre »). À **100**, la transformation en Calciné est **immédiate et non réversible** → fin de run avec `endReason: "calcined"` (cf. `09-ACTION-LOOP §7`). Pas d'héritage transmis (artefact corrompu).
+Le backend applique les effets de palier automatiquement dès franchissement du seuil (cf. table §4 « jauge de Calamine »). À **100**, la transformation en Calciné est **immédiate et non réversible** → fin de run avec `endReason: "calcined"` (cf. `09-ACTION-LOOP §7`). Pas d'héritage transmis (artefact corrompu).
 
 ---
 
@@ -280,17 +289,17 @@ appliqué.
 
 L'équipement de survie est **stocké en base** et injecté dans le prompt du MJ IA (voir `11-INVENTORY-ECONOMY.md`).
 
-| Équipement           | Effet sur la survie                                                 |
-| -------------------- | ------------------------------------------------------------------- |
-| Gourde               | + capacité d'eau, ralentit la soif                                  |
-| Vêtements du désert  | Résistent à la chaleur diurne et au gel nocturne                    |
-| Tente / toile        | Repos plus sûr, protège du Ventre-Gris                              |
-| Bandages             | Soin lors du repos                                                  |
-| Antidote             | Retire l'empoisonnement                                             |
-| Nourriture séchée    | Restaure la faim sans chasse                                        |
-| Boussole archontique | + navigation                                                        |
-| Outre de Cendre      | Permet au Tisse-Verbe de stocker de la Cendre (retarde la Calamine) |
-| Masque filtrant      | Protège du Ventre-Gris et des marais                                |
+| Équipement           | Effet sur la survie                                                        |
+| -------------------- | -------------------------------------------------------------------------- |
+| Gourde               | + capacité d'eau, ralentit la soif                                         |
+| Vêtements du désert  | Résistent à la chaleur diurne et au gel nocturne                           |
+| Tente / toile        | Repos plus sûr, protège du Ventre-Gris                                     |
+| Bandages             | Soin lors du repos                                                         |
+| Antidote             | Retire l'empoisonnement                                                    |
+| Nourriture séchée    | Restaure la faim sans chasse                                               |
+| Boussole archontique | + navigation                                                               |
+| Outre de Cendre      | Absorbe une part de la Calamine du Tisse-Verbe (retarde le palier suivant) |
+| Masque filtrant      | Protège du Ventre-Gris et des marais                                       |
 
 🟢 _Le MJ IA prend en compte l'équipement du joueur : "Ta gourde est vide depuis deux jours" ou "Ton masque filtrant grésille, le Ventre-Gris approche."_
 

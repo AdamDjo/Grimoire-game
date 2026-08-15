@@ -252,7 +252,7 @@ VOLONTÉ   12  (+1)   ← la volonté de manier la Cendre
 
 ### Lentille narrative
 
-> _Tu vois le monde comme un champs de ruines endormies — chaque artefact est une voix étouffée, et toi seul peux la réveiller. Tu es un **Tisse-Verbe**, l'un des rares êtres capables d'**éveiller** les objets archontiques. Le pouvoir est là, tapi dans le sable doré, attendant qu'une main le saisisse. Mais chaque éveil te coûte de la **Cendre** — et la **Calamine** guette. Le Culte te traque, les Veilleurs te convoitent, et chaque artefact que tu pousses trop loin te rapproche de la transformation._
+> _Tu vois le monde comme un champs de ruines endormies — chaque artefact est une voix étouffée, et toi seul peux la réveiller. Tu es un **Tisse-Verbe**, l'un des rares êtres capables d'**éveiller** les objets archontiques. Le pouvoir est là, tapi dans le sable doré, attendant qu'une main le saisisse. Mais chaque éveil te coûte de la **Calamine** — et la transformation guette. Le Culte te traque, les Veilleurs te convoitent, et chaque artefact que tu pousses trop loin te rapproche de la transformation._
 
 ### Scènes privilégiées
 
@@ -273,7 +273,7 @@ VOLONTÉ   12  (+1)   ← la volonté de manier la Cendre
 - **Éveil (SOUFFLE)** — réveiller et pousser un artéfact archontique
 - **Érudition (SOUFFLE)** — lire les langues anciennes, identifier les artefacts
 - **Discrétion (SOUFFLE)** — cacher sa nature d'éveilleur
-- **Résistance à la Cendre (VOLONTÉ)** — retarder la Calamine (un peu)
+- **Résistance à la Cendre (VOLONTÉ)** — retarder la montée de Calamine (un peu)
 
 ### Tabous
 

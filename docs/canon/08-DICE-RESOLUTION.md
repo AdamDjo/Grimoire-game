@@ -209,14 +209,14 @@ Le MJ IA génère des conséquences **fertiles** (voir `01-PILLARS.md`).
 - **Combat** : coup fatal, l'ennemi est désarmé, le sang gicle, les alliés dégainent
 - **Persuasion** : le garde devient un allié, offre une information, te laisse passer avec respect
 - **Furtivité** : tu disparais totalement, tu surprends une conversation, tu trouves une cachette parfaite
-- **Artefact** : l'effet est amplifié, ne coûte pas de Cendre cette fois, révèle une propriété oubliée
+- **Artefact** : l'effet est amplifié, ne coûte pas de Calamine cette fois, révèle une propriété oubliée
 
 ### Nat 1 — exemples
 
 - **Combat** : l'arme se coince, glisse, se brise
 - **Persuasion** : ton argument se retourne contre toi, le PNJ se ferme définitivement
 - **Furtivité** : tu fais du bruit, tu tombes sur un objet bruyant, un garde te repère
-- **Artefact** : l'effet se retourne, la Cendre accumulée est double, tu te blesses sur le coup
+- **Artefact** : l'effet se retourne, la Calamine accumulée est double, tu te blesses sur le coup
 
 🟢 _Le nat 1 doit créer de la situation, pas de la frustration._
 

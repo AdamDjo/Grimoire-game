@@ -10,7 +10,7 @@
 
 Le joueur incarne un aventurier — Marcheur-du-Sel, Lame-Ombre, Veilleur ou Tisse-Verbe — et vit une aventure complète en **3 à 15 heures**. À la fin du run, une **Chronique** est générée : le récit de son histoire. Le joueur peut recommencer avec la même vocation ou une autre — le **méta-monde** aura changé, et l'IA générera une toute nouvelle aventure.
 
-La **survie** est la pression de tous les jours. La **magie** est une tentation rare, corruptrice, qui coûte la **Cendre** — et peut mener à la **Calamine**.
+La **survie** est la pression de tous les jours. La **magie** est une tentation rare, corruptrice, qui coûte de la **Calamine** — et peut mener à la transformation en Calciné.
 
 Le jeu est en anglais, avec direction artistique dark fantasy désertique.
 
