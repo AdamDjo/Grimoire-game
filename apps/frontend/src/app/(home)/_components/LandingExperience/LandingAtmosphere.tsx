@@ -17,8 +17,7 @@ export function LandingAtmosphere() {
         <div className="salt-atmosphere__grain" />
       </div>
       <div className="salt-cursor" aria-hidden="true">
-        <div className="salt-cursor__ring" />
-        <div className="salt-cursor__dot" />
+        <div className="salt-cursor__grain" />
       </div>
       <div className="salt-counter" aria-hidden="true">
         <span className="salt-counter__index">

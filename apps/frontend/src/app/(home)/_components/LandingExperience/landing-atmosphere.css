@@ -1,6 +1,6 @@
 /* Atmosphere, cursor and page veil. Decorative overlays only: fixed, never
    hit-testable, transform/opacity only, and every animation sleeps under
-   reduced motion. Colours reuse the landing tokens declared in salt-landing.css. */
+   reduced motion. Colours reuse the landing tokens declared in landing-experience.css. */
 
 .salt-atmosphere {
   position: fixed;
@@ -40,8 +40,8 @@
 }
 
 /* ── Cursor ─────────────────────────────────────────────────────────────────
-   Ring plus dot. Shown only once JS confirms a fine pointer, so touch and
-   keyboard users never meet it. */
+   A single grain of salt: the page's own lozenge, no ring around it. Shown only
+   once JS confirms a fine pointer, so touch and keyboard users never meet it. */
 .salt-cursor {
   position: fixed;
   top: 0;
@@ -51,21 +51,12 @@
   opacity: 0;
   will-change: transform;
 }
-.salt-cursor__ring {
+.salt-cursor__grain {
   position: absolute;
-  width: 38px;
-  height: 38px;
-  margin: -19px 0 0 -19px;
-  border: 1px solid var(--salt-gold, #d9ac55);
-  border-radius: 50%;
-}
-.salt-cursor__dot {
-  position: absolute;
-  width: 5px;
-  height: 5px;
-  margin: -2.5px 0 0 -2.5px;
-  background: var(--salt-paper, #eee8db);
-  border-radius: 50%;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  background: var(--salt-gold, #d9ac55);
 }
 
 /* ── Page veil ──────────────────────────────────────────────────────────────

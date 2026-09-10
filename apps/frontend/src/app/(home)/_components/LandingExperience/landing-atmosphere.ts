@@ -35,28 +35,26 @@ export function attachReadingBeam(beam: HTMLElement) {
 }
 
 /**
- * Custom cursor: a dot pinned to the pointer and a ring that trails it, opening
- * up over anything interactive. The native cursor stays visible — hiding it
- * would strip an affordance if a frame ever drops.
+ * Custom cursor: one grain of salt riding the pointer — the page's own lozenge,
+ * no ring around it. It widens over anything interactive. The native cursor
+ * stays visible — hiding it would strip an affordance if a frame ever drops.
  */
 export function attachCursor(cursor: HTMLElement) {
-  const ring = cursor.querySelector<HTMLElement>('.salt-cursor__ring')
-  const dot = cursor.querySelector<HTMLElement>('.salt-cursor__dot')
-  if (!ring || !dot) return noop
+  const grain = cursor.querySelector<HTMLElement>('.salt-cursor__grain')
+  if (!grain) return noop
 
-  // The ring lags; the dot is immediate. That gap is what reads as weight.
-  const ringX = gsap.quickTo(ring, 'x', { duration: 0.5, ease: 'power3.out' })
-  const ringY = gsap.quickTo(ring, 'y', { duration: 0.5, ease: 'power3.out' })
-  const dotX = gsap.quickTo(dot, 'x', { duration: 0.12, ease: 'power3.out' })
-  const dotY = gsap.quickTo(dot, 'y', { duration: 0.12, ease: 'power3.out' })
+  // The lozenge is drawn square and tilted here, so GSAP owns the whole
+  // transform: a CSS rotate would be wiped by the very first position tween.
+  gsap.set(grain, { rotation: 45 })
+
+  const grainX = gsap.quickTo(grain, 'x', { duration: 0.14, ease: 'power3.out' })
+  const grainY = gsap.quickTo(grain, 'y', { duration: 0.14, ease: 'power3.out' })
 
   let shown = false
   const move = (event: PointerEvent) => {
     if (event.pointerType !== 'mouse') return
-    ringX(event.clientX)
-    ringY(event.clientY)
-    dotX(event.clientX)
-    dotY(event.clientY)
+    grainX(event.clientX)
+    grainY(event.clientY)
     if (shown) return
     shown = true
     gsap.to(cursor, { opacity: 1, duration: 0.4 })
@@ -66,20 +64,19 @@ export function attachCursor(cursor: HTMLElement) {
     const target = event.target
     if (!(target instanceof Element)) return
     const active = Boolean(target.closest(INTERACTIVE))
-    gsap.to(ring, {
-      scale: active ? 1.55 : 1,
-      borderColor: active ? 'var(--salt-paper, #eee8db)' : 'var(--salt-gold, #d9ac55)',
-      duration: 0.35,
+    gsap.to(grain, {
+      scale: active ? 1.9 : 1,
+      backgroundColor: active ? 'var(--salt-paper, #eee8db)' : 'var(--salt-gold, #d9ac55)',
+      duration: 0.3,
       ease: 'power3.out',
     })
-    gsap.to(dot, { scale: active ? 0 : 1, duration: 0.3, ease: 'power3.out' })
   }
 
   const down = () => {
-    gsap.to(ring, { scale: 0.85, duration: 0.18 })
+    gsap.to(grain, { scale: 0.7, duration: 0.16 })
   }
   const up = () => {
-    gsap.to(ring, { scale: 1, duration: 0.3 })
+    gsap.to(grain, { scale: 1, duration: 0.28 })
   }
   const hide = () => {
     shown = false

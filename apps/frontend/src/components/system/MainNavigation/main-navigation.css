@@ -141,17 +141,6 @@
   text-shadow: 0 1px 10px rgba(0, 0, 0, 0.8);
 }
 
-.main-navigation--marketing .main-navigation__links li + li a::before {
-  aspect-ratio: 1;
-  border: 1px solid rgba(218, 170, 74, 0.42);
-  content: '';
-  left: clamp(-36px, -2.1vw, -28px);
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%) rotate(45deg);
-  width: 8px;
-}
-
 .main-navigation--marketing .main-navigation__links a:hover,
 .main-navigation--marketing .main-navigation__account:hover {
   color: var(--material-gold-bright);
@@ -170,18 +159,6 @@
 
 .main-navigation--marketing .main-navigation__account {
   letter-spacing: 0.08em;
-  padding-inline-start: 1.25rem;
-}
-
-.main-navigation--marketing .main-navigation__account::before {
-  aspect-ratio: 1;
-  border: 1px solid rgba(217, 164, 65, 0.62);
-  content: '';
-  left: 1px;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%) rotate(45deg);
-  width: 8px;
 }
 
 .main-navigation__actions {

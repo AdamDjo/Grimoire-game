@@ -12,8 +12,8 @@ import { LandingAtmosphere } from './LandingAtmosphere'
 import { LandingDemo } from './LandingDemo'
 import { useLandingMotion } from './use-landing-motion'
 
-import './salt-landing.css'
-import './salt-atmosphere.css'
+import './landing-experience.css'
+import './landing-atmosphere.css'
 
 // Native anchors preserve keyboard navigation, history and reduced-motion preferences.
 const useNativeAnchor = () => false
@@ -115,7 +115,7 @@ export function LandingExperience({ resumeHref }: { resumeHref?: string }) {
         </section>
       </main>
       <footer className="salt-footer">
-        <span>GRIMOIRE © 2026</span>
+        <span>{t('brand')} © 2026</span>
         <span>{t('created')}</span>
         <a href="https://github.com/AdamDjo/Grimoire-game">GitHub</a>
       </footer>

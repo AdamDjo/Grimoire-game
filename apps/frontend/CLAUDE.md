@@ -53,7 +53,8 @@ src/
 
 ## Landing
 
-- Sections scroll de `(home)` dans `_components/Section<N><Nom>/`.
+- La landing vit dans `(home)/_components/LandingExperience/` : un seul composant racine,
+  ses sous-composants colocalisés et son CSS `landing-experience.css`.
 - Contenu/copy à garder cohérent avec le canon `../../docs/canon/` (via `../../docs/task-router.md`).
 - Phase 1A (landing) livrée — plans landing archivés, pas de plan actif restant.
 

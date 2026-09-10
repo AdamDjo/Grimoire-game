@@ -22,7 +22,7 @@ import {
   attachPlanTransition,
   attachSeams,
 } from './landing-transitions'
-import { createSectionDeck } from './use-section-deck'
+import { createSectionDeck } from './section-deck'
 
 import type { RefObject } from 'react'
 
