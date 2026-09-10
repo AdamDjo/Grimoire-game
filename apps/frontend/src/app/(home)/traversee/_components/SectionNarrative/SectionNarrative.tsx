@@ -38,12 +38,39 @@ export function SectionNarrative({ beginHref, copy }: SectionNarrativeProps) {
           <span className="cross-eyebrow">{copy.previewLabel}</span>
           <h3>{copy.previewTitle}</h3>
           <p>{copy.previewBody}</p>
+          <ol className="cross-proof-flow" aria-label={copy.proofFlowLabel} data-cross-proof-flow>
+            {copy.proofFlow.map((step, index) => (
+              <li key={step.label} data-cross-proof-step>
+                <span className="cross-proof-flow__index" aria-hidden="true">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <span className="cross-proof-flow__content">
+                  <span className="cross-proof-flow__label">{step.label}</span>
+                  <span className="cross-proof-flow__text">{step.text}</span>
+                </span>
+                {'outcome' in step ? (
+                  <strong className="cross-proof-flow__outcome" data-cross-proof-outcome>
+                    {step.outcome}
+                  </strong>
+                ) : null}
+              </li>
+            ))}
+          </ol>
           <GameLink variant="landing" href={beginHref}>
             {copy.continue}
             <ArrowRight size={18} aria-hidden="true" />
           </GameLink>
         </div>
       </article>
+
+      <ul className="cross-proof-points" aria-label={copy.proofPointsLabel} data-cross-reveal>
+        {copy.proofPoints.map((point, index) => (
+          <li key={point}>
+            <span aria-hidden="true">0{index + 1}</span>
+            {point}
+          </li>
+        ))}
+      </ul>
     </section>
   )
 }

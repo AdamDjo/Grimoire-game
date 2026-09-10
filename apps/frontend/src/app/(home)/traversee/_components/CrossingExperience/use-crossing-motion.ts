@@ -23,7 +23,6 @@ export function useCrossingMotion(root: RefObject<HTMLDivElement | null>, paused
       media.add(MOTION, () => {
         const nav = page.querySelector<HTMLElement>('[data-cross-nav]')
         const progress = page.querySelector<HTMLElement>('.cross-progress')
-        const heroLines = page.querySelectorAll<HTMLElement>('.cross-hero__copy h1 span')
 
         if (progress) {
           gsap.to(progress, {
@@ -53,14 +52,6 @@ export function useCrossingMotion(root: RefObject<HTMLDivElement | null>, paused
           })
         }
 
-        gsap.from(heroLines, {
-          y: 24,
-          autoAlpha: 0,
-          duration: 1.15,
-          stagger: 0.1,
-          ease: 'power3.out',
-        })
-
         page.querySelectorAll<HTMLElement>('[data-cross-reveal]').forEach((element) => {
           gsap.from(element, {
             y: 34,
@@ -80,6 +71,32 @@ export function useCrossingMotion(root: RefObject<HTMLDivElement | null>, paused
             ease: 'power3.out',
             scrollTrigger: { trigger: frame, start: 'top 90%', once: true },
           })
+        }
+
+        const proofFlow = page.querySelector<HTMLElement>('[data-cross-proof-flow]')
+        const proofSteps = page.querySelectorAll<HTMLElement>('[data-cross-proof-step]')
+        const proofOutcome = page.querySelector<HTMLElement>('[data-cross-proof-outcome]')
+
+        if (proofFlow && proofSteps.length > 0) {
+          const proofTimeline = gsap.timeline({
+            scrollTrigger: { trigger: proofFlow, start: 'top 82%', once: true },
+          })
+
+          proofTimeline.from(proofSteps, {
+            y: 18,
+            autoAlpha: 0,
+            duration: 0.66,
+            stagger: 0.2,
+            ease: 'power3.out',
+          })
+
+          if (proofOutcome) {
+            proofTimeline.from(
+              proofOutcome,
+              { scale: 0.78, duration: 0.48, ease: 'back.out(1.8)' },
+              '-=0.28'
+            )
+          }
         }
 
         const rule = page.querySelector<HTMLElement>('.cross-gold-rule')

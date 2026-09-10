@@ -24,10 +24,32 @@ export const CROSSING_COPY = {
     proof: 'Des mots. Des règles. Des conséquences.',
     proofBody:
       'Tu proposes une action. Le jeu en arbitre l’issue. Le récit porte les traces de tes décisions.',
-    previewLabel: 'Aperçu narratif scénarisé',
-    previewTitle: 'Le monde te répond.',
+    previewLabel: 'Un tour de jeu',
+    previewTitle: 'Tu décris. Le monde tranche.',
     previewBody:
-      'Une chaîne barre le chemin. Sous sa capuche, le garde attend. Tu peux lui parler, observer les alentours… ou tenter autre chose.',
+      'Une chaîne barre le chemin. Tu avances une idée. Les règles en mesurent le risque, puis le récit assume le résultat.',
+    proofFlowLabel: 'Exemple d’un tour de jeu',
+    proofFlow: [
+      {
+        label: 'Ton action',
+        text: '« Je convaincs le garde que L’Aveugle m’envoie. »',
+      },
+      {
+        label: 'Le monde tranche',
+        text: 'Persuasion · VOLONTÉ +2 · 18 contre 14',
+        outcome: 'Réussite',
+      },
+      {
+        label: 'La trace demeure',
+        text: 'Le garde ouvre le passage. Il se souviendra du nom que tu as donné.',
+      },
+    ],
+    proofPointsLabel: 'Les promesses de la boucle de jeu',
+    proofPoints: [
+      'Un choix rapide ou tes propres mots',
+      'Des jets visibles aux moments décisifs',
+      'Des conséquences gardées dans ta Chronique',
+    ],
     continue: 'Commencer mon histoire',
     innLabel: 'Retour à l’Auberge',
     innTitle: 'L’Aveugle t’attend.',
@@ -56,10 +78,32 @@ export const CROSSING_COPY = {
     proof: 'Words. Rules. Consequences.',
     proofBody:
       'You propose an action. The game resolves its outcome. The story carries the traces of your decisions.',
-    previewLabel: 'Scripted narrative preview',
-    previewTitle: 'The world answers.',
+    previewLabel: 'One turn of play',
+    previewTitle: 'You describe. The world decides.',
     previewBody:
-      'A chain blocks the path. Beneath his hood, the guard waits. Talk to him, look around… or try something else.',
+      'A chain blocks the path. You propose an idea. The rules measure its risk, then the story carries the result forward.',
+    proofFlowLabel: 'Example of one turn of play',
+    proofFlow: [
+      {
+        label: 'Your action',
+        text: '“I convince the guard that the Blind One sent me.”',
+      },
+      {
+        label: 'The world decides',
+        text: 'Persuasion · WILL +2 · 18 against 14',
+        outcome: 'Success',
+      },
+      {
+        label: 'The trace remains',
+        text: 'The guard opens the way. He will remember the name you gave him.',
+      },
+    ],
+    proofPointsLabel: 'The promises of the game loop',
+    proofPoints: [
+      'A quick choice or your own words',
+      'Visible rolls at decisive moments',
+      'Consequences preserved in your Chronicle',
+    ],
     continue: 'Begin my story',
     innLabel: 'Back to the Inn',
     innTitle: 'The Blind One awaits.',

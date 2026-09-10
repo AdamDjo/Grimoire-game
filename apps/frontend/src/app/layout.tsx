@@ -19,7 +19,7 @@ const alegreyaText = Alegreya({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   style: ['normal', 'italic'],
-  display: 'swap',
+  display: 'optional',
 })
 
 export async function generateMetadata(): Promise<Metadata> {

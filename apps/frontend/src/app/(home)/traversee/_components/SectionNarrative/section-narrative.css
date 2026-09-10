@@ -26,7 +26,7 @@
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1.06fr) minmax(360px, 0.94fr);
-  min-height: 520px;
+  min-height: 620px;
   padding: 12px;
   border: 1px solid var(--cross-gold);
   background: var(--cross-ink);
@@ -63,7 +63,7 @@
 
 .cross-narrative__art {
   position: relative;
-  min-height: 490px;
+  min-height: 590px;
   overflow: hidden;
 }
 
@@ -111,10 +111,97 @@
 }
 
 .cross-narrative__copy > p {
-  margin-bottom: 36px;
+  margin-bottom: 28px;
   color: rgb(239 225 194 / 88%);
   font-size: clamp(20px, 1.65vw, 24px);
   line-height: 1.52;
+}
+
+.cross-proof-flow {
+  display: grid;
+  width: 100%;
+  margin: 0 0 30px;
+  padding: 0;
+  border-top: 1px solid color-mix(in srgb, var(--material-gold) 42%, transparent);
+  list-style: none;
+}
+
+.cross-proof-flow li {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  align-items: center;
+  min-height: 74px;
+  padding: 12px 4px;
+  border-bottom: 1px solid color-mix(in srgb, var(--material-gold) 24%, transparent);
+  gap: 12px;
+}
+
+.cross-proof-flow__index,
+.cross-proof-flow__label,
+.cross-proof-flow__outcome {
+  font-family: var(--font-game-ui);
+  font-size: 11px;
+  font-style: normal;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cross-proof-flow__index {
+  color: color-mix(in srgb, var(--material-gold) 64%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+
+.cross-proof-flow__content {
+  display: grid;
+  gap: 3px;
+}
+
+.cross-proof-flow__label {
+  color: var(--material-gold-bright);
+}
+
+.cross-proof-flow__text {
+  color: var(--salt-white);
+  font-size: 16px;
+  line-height: 1.28;
+}
+
+.cross-proof-flow__outcome {
+  padding: 5px 8px;
+  border: 1px solid color-mix(in srgb, var(--breath-aqua) 48%, transparent);
+  color: color-mix(in srgb, var(--breath-aqua) 78%, var(--salt-white));
+  white-space: nowrap;
+}
+
+.cross-proof-points {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--material-gold) 28%, transparent);
+  list-style: none;
+}
+
+.cross-proof-points li {
+  display: flex;
+  align-items: baseline;
+  min-height: 82px;
+  padding: 24px 28px;
+  color: color-mix(in srgb, var(--salt-white) 84%, transparent);
+  font-size: 16px;
+  gap: 14px;
+}
+
+.cross-proof-points li + li {
+  border-left: 1px solid color-mix(in srgb, var(--material-gold) 28%, transparent);
+}
+
+.cross-proof-points span {
+  color: var(--material-gold);
+  font-family: var(--font-game-ui);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.1em;
 }
 
 .cross-narrative__copy .game-button {
@@ -154,5 +241,33 @@
 
   .cross-narrative__copy .game-button {
     font-size: 18px;
+  }
+
+  .cross-proof-flow {
+    margin-bottom: 26px;
+  }
+
+  .cross-proof-flow li {
+    grid-template-columns: 26px minmax(0, 1fr);
+    min-height: 70px;
+  }
+
+  .cross-proof-flow__outcome {
+    grid-column: 2;
+    width: fit-content;
+  }
+
+  .cross-proof-points {
+    grid-template-columns: 1fr;
+  }
+
+  .cross-proof-points li {
+    min-height: 62px;
+    padding: 17px 20px;
+  }
+
+  .cross-proof-points li + li {
+    border-top: 1px solid color-mix(in srgb, var(--material-gold) 28%, transparent);
+    border-left: 0;
   }
 }
