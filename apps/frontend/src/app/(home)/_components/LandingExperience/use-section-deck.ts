@@ -39,6 +39,13 @@ export function createSectionDeck(root: HTMLElement) {
   let locked = false
   let timer = 0
 
+  /** The nearest stop to a given position — the deck's own reading of "where we are". */
+  const nearest = (y: number) =>
+    targets.reduce(
+      (best, value, at) => (Math.abs(value - y) < Math.abs(targets[best] - y) ? at : best),
+      0
+    )
+
   const fly = (duration: number) => {
     getLenis()?.scrollTo(targets[index], {
       duration,
@@ -58,14 +65,15 @@ export function createSectionDeck(root: HTMLElement) {
       return
     }
     // Keep the current plan under the reader after a resize or a late reflow.
-    const y = window.scrollY
-    index = targets.reduce(
-      (best, value, at) => (Math.abs(value - y) < Math.abs(targets[best] - y) ? at : best),
-      0
-    )
+    index = nearest(window.scrollY)
   }
 
   const go = (direction: number) => {
+    // Anything that moves the page without going through the deck — an anchor
+    // click, a hash on load, the keyboard — would otherwise leave the index on a
+    // plan the reader has already left, and the next gesture would fly backwards.
+    // Mid-flight the index is the destination and must be kept.
+    if (!locked) index = nearest(window.scrollY)
     const next = Math.min(Math.max(index + direction, 0), targets.length - 1)
     if (next === index) return
     index = next
@@ -77,10 +85,32 @@ export function createSectionDeck(root: HTMLElement) {
     fly(TRAVEL)
   }
 
+  /**
+   * The demo keeps the wheel only while it still has somewhere to go. Handing it
+   * every gesture that merely lands on it — the reader's cursor sits over the
+   * demo the whole time they read that plan — let the native scroll through and
+   * dropped the deck between two plans, which is why the plan after the demo was
+   * the one that never arrived square.
+   */
+  const scrolls = (target: EventTarget | null, direction: number) => {
+    if (!(target instanceof Element) || !target.closest('.salt-demo')) return false
+    let node: Element | null = target
+    while (node) {
+      const overflow = getComputedStyle(node).overflowY
+      if (overflow === 'auto' || overflow === 'scroll') {
+        const room =
+          direction > 0 ? node.scrollHeight - node.clientHeight - node.scrollTop : node.scrollTop
+        if (room > 1) return true
+      }
+      if (node.classList.contains('salt-demo')) break
+      node = node.parentElement
+    }
+    return false
+  }
+
   const onWheel = (event: WheelEvent) => {
-    // The playable demo keeps its own scrolling; the deck never steals it.
-    const target = event.target
-    if (target instanceof Element && target.closest('.salt-demo')) return
+    // The playable demo keeps its own scrolling, but only where it can act on it.
+    if (scrolls(event.target, event.deltaY > 0 ? 1 : -1)) return
     event.preventDefault()
     if (locked || Math.abs(event.deltaY) < 4) return
     go(event.deltaY > 0 ? 1 : -1)
