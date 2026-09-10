@@ -8,11 +8,13 @@ import { GameLink } from '@/components/ui/game-link'
 import { WORLD_ROUTES } from '@/config/worlds'
 
 import { LandingArt } from './LandingArt'
+import { LandingAtmosphere } from './LandingAtmosphere'
 import { LandingDemo } from './LandingDemo'
 import { LandingHud } from './LandingHud'
 import { useLandingMotion } from './use-landing-motion'
 
 import './salt-landing.css'
+import './salt-atmosphere.css'
 
 // Native anchors preserve keyboard navigation, history and reduced-motion preferences.
 const useNativeAnchor = () => false
@@ -53,7 +55,6 @@ export function LandingExperience({ resumeHref }: { resumeHref?: string }) {
           <a className="salt-scroll" href="#contrat">
             <i aria-hidden="true">↓</i> <span>{t('threshold')}</span>
           </a>
-          <div className="salt-door" aria-hidden="true" />
         </section>
         <section id="contrat" className="salt-plan salt-contrat" aria-labelledby="contract-title">
           <LandingArt name="contrat" />
@@ -82,7 +83,6 @@ export function LandingExperience({ resumeHref }: { resumeHref?: string }) {
             </dl>
             <p>{t('contractNote')}</p>
           </div>
-          <div className="salt-paper" aria-hidden="true" />
         </section>
         <section id="gameplay" className="salt-plan salt-partie" aria-labelledby="play-title">
           <header className="salt-copy">
@@ -107,8 +107,6 @@ export function LandingExperience({ resumeHref }: { resumeHref?: string }) {
             </a>
           </div>
           <LandingHud />
-          <div className="salt-wipe salt-wipe--salt" aria-hidden="true" />
-          <div className="salt-wipe salt-wipe--black" aria-hidden="true" />
         </section>
         <section id="world" className="salt-plan salt-heritage" aria-labelledby="heritage-title">
           <LandingArt name="heritage" />
@@ -135,7 +133,6 @@ export function LandingExperience({ resumeHref }: { resumeHref?: string }) {
               <strong>{t('black')}</strong>
               <span>{t('blackTime')}</span>
             </div>
-            <i aria-hidden="true" />
           </div>
           <div className="salt-heritage__end">
             <GameLink variant="landing" href="#outro">
@@ -143,15 +140,9 @@ export function LandingExperience({ resumeHref }: { resumeHref?: string }) {
             </GameLink>
             <p>{t('heritageNote')}</p>
           </div>
-          <div className="salt-door" aria-hidden="true" />
         </section>
         <section id="outro" className="salt-plan salt-auberge" aria-labelledby="outro-title">
           <LandingArt name="auberge" />
-          <div className="salt-values" aria-hidden="true">
-            <i />
-            <i />
-            <i />
-          </div>
           <div className="salt-copy">
             <p className="salt-eyebrow">{t('outroLabel')}</p>
             <h2 id="outro-title">{t('outroTitle')}</h2>
@@ -171,6 +162,7 @@ export function LandingExperience({ resumeHref }: { resumeHref?: string }) {
         <span>{t('created')}</span>
         <a href="https://github.com/AdamDjo/Grimoire-game">GitHub</a>
       </footer>
+      <LandingAtmosphere />
     </div>
   )
 }

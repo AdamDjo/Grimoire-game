@@ -7,7 +7,7 @@ import { LandingExperience } from './LandingExperience'
 vi.mock('./use-landing-motion', () => ({ useLandingMotion: vi.fn() }))
 vi.mock('next/navigation', () => ({
   usePathname: () => '/',
-  useRouter: () => ({ refresh: vi.fn() }),
+  useRouter: () => ({ refresh: vi.fn(), push: vi.fn() }),
 }))
 
 describe('Encre de Sel landing', () => {

@@ -1,0 +1,110 @@
+.cross-nav {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 28px max(24px, 3.3vw);
+  background: linear-gradient(rgb(8 9 8 / 82%), transparent);
+  transform-origin: top;
+}
+
+.cross-nav::after {
+  position: absolute;
+  right: max(24px, 3.3vw);
+  bottom: 0;
+  left: max(24px, 3.3vw);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(181 139 68 / 48%), transparent);
+  content: '';
+  opacity: 0;
+  transform: scaleX(0.6);
+}
+
+.cross-brand {
+  display: block;
+  flex: 0 0 auto;
+  font-family: var(--font-game-display);
+  font-size: clamp(26px, 2.5vw, 42px);
+  letter-spacing: 0.15em;
+  line-height: 1;
+  text-shadow: 0 2px 12px var(--cross-ink);
+}
+
+.cross-brand span {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--font-game-body);
+  font-size: 10px;
+  letter-spacing: 0.43em;
+  text-align: center;
+}
+
+.cross-nav nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 2.2vw, 34px);
+  padding: 8px 10px 8px 24px;
+  color: var(--cross-salt);
+  background: rgb(8 9 8 / 76%);
+  backdrop-filter: blur(8px);
+}
+
+.cross-nav nav > a:not(.game-button) {
+  border-bottom: 1px solid transparent;
+  font-size: clamp(16px, 1.25vw, 20px);
+  transition:
+    color 180ms ease,
+    border-color 180ms ease;
+}
+
+.cross-nav nav > a:not(.game-button):hover {
+  color: var(--cross-gold);
+  border-color: currentColor;
+}
+
+.cross-nav .game-button {
+  min-height: 48px;
+  padding: 10px 26px;
+  font-size: 18px;
+}
+
+@media (max-width: 1200px) {
+  .cross-nav__section-link {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .cross-nav {
+    padding: 22px 18px;
+  }
+
+  .cross-brand {
+    font-size: 23px;
+  }
+
+  .cross-brand span {
+    margin-top: 7px;
+    font-size: 7px;
+    letter-spacing: 0.3em;
+  }
+
+  .cross-nav nav {
+    padding: 0;
+    background: transparent;
+    backdrop-filter: none;
+  }
+
+  .cross-nav__account {
+    display: none;
+  }
+
+  .cross-nav .game-button {
+    min-height: 44px;
+    padding: 9px 18px;
+    font-size: 16px;
+  }
+}
