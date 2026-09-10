@@ -10,7 +10,6 @@ import { WORLD_ROUTES } from '@/config/worlds'
 import { LandingArt } from './LandingArt'
 import { LandingAtmosphere } from './LandingAtmosphere'
 import { LandingDemo } from './LandingDemo'
-import { LandingHud } from './LandingHud'
 import { useLandingMotion } from './use-landing-motion'
 
 import './salt-landing.css'
@@ -88,10 +87,6 @@ export function LandingExperience({ resumeHref }: { resumeHref?: string }) {
           <header className="salt-copy">
             <p className="salt-eyebrow">{t('playLabel')}</p>
             <h2 id="play-title">{t('playTitle')}</h2>
-            <p>{t('playBody')}</p>
-            <GameLink variant="landing" href={beginHref}>
-              {t('try')} →
-            </GameLink>
           </header>
           <LandingDemo />
         </section>
@@ -101,44 +96,6 @@ export function LandingExperience({ resumeHref }: { resumeHref?: string }) {
             <p className="salt-eyebrow">{t('survivalLabel')}</p>
             <h2 id="survival-title">{t('survivalTitle')}</h2>
             <p>{t('survivalBody')}</p>
-            <p className="salt-detail">{t('survivalDetail')}</p>
-            <a className="salt-text-link" href="#world">
-              {t('survivalLink')} →
-            </a>
-          </div>
-          <LandingHud />
-        </section>
-        <section id="world" className="salt-plan salt-heritage" aria-labelledby="heritage-title">
-          <LandingArt name="heritage" />
-          <div className="salt-ash salt-ash--memory" aria-hidden="true">
-            {Array.from({ length: 5 }, (_, i) => (
-              <i key={i} />
-            ))}
-          </div>
-          <div className="salt-copy">
-            <p className="salt-eyebrow">{t('heritageLabel')}</p>
-            <h2 id="heritage-title">{t('heritageTitle')}</h2>
-            <p>{t('heritageBody')}</p>
-          </div>
-          <div className="salt-times">
-            <div>
-              <strong>{t('salt')}</strong>
-              <span>{t('saltTime')}</span>
-            </div>
-            <div>
-              <strong>{t('ash')}</strong>
-              <span>{t('ashTime')}</span>
-            </div>
-            <div>
-              <strong>{t('black')}</strong>
-              <span>{t('blackTime')}</span>
-            </div>
-          </div>
-          <div className="salt-heritage__end">
-            <GameLink variant="landing" href="#outro">
-              {t('heritageLink')} →
-            </GameLink>
-            <p>{t('heritageNote')}</p>
           </div>
         </section>
         <section id="outro" className="salt-plan salt-auberge" aria-labelledby="outro-title">

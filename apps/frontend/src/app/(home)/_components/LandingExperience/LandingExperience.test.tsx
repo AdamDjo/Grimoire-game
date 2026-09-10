@@ -11,10 +11,10 @@ vi.mock('next/navigation', () => ({
 }))
 
 describe('Encre de Sel landing', () => {
-  it('keeps the six chapters, real destinations and native anchors accessible', () => {
+  it('keeps the five chapters, real destinations and native anchors accessible', () => {
     const { container } = render(<LandingExperience />)
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
-    expect(container.querySelectorAll('main > section')).toHaveLength(6)
+    expect(container.querySelectorAll('main > section')).toHaveLength(5)
     expect(screen.getByRole('link', { name: 'Begin' })).toHaveAttribute('href', '/velkhar/aveugle')
     expect(screen.getByRole('link', { name: 'See a game' })).toHaveAttribute('href', '#gameplay')
     for (const link of container.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')) {

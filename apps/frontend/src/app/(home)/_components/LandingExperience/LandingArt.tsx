@@ -1,6 +1,6 @@
 import Image from 'next/image'
 
-export type LandingArtName = 'seuil' | 'contrat' | 'partie' | 'survie' | 'heritage' | 'auberge'
+export type LandingArtName = 'seuil' | 'contrat' | 'partie' | 'survie' | 'auberge'
 
 /** Text-free scene plates. The browser requests only the matching mobile crop. */
 export function LandingArt({

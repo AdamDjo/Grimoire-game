@@ -59,7 +59,6 @@ export function MainNavigation(props: MainNavigationProps) {
   const marketingLinks: readonly NavigationLink[] = [
     { href: '#velkhar', label: t('discover') },
     { href: '#gameplay', label: t('gameplay') },
-    { href: '#world', label: t('world') },
   ]
   const gameAubergeLink: NavigationLink = {
     href: WORLD_ROUTES.velkhar.aveugle,
