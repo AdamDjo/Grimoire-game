@@ -53,9 +53,29 @@ src/
 
 ## Landing
 
-- Sections scroll de `(home)` dans `_components/Section<N><Nom>/`.
+- La landing vit dans `(home)/_components/LandingExperience/` : un seul composant racine,
+  ses sous-composants colocalisés et son CSS `landing-experience.css`.
 - Contenu/copy à garder cohérent avec le canon `../../docs/canon/` (via `../../docs/task-router.md`).
 - Phase 1A (landing) livrée — plans landing archivés, pas de plan actif restant.
+
+## Doctrine de code — permanente
+
+> Détail et épisode fondateur : `../../docs/state/FRONTEND.md` § « Doctrine de code ».
+
+- **Noms simples et évidents.** Le mot le plus court qui reste juste (`GameScene`, `GameHud`), jamais
+  un nom descriptif à rallonge. Si le nom a besoin d'un commentaire, changer le nom.
+- **Un dossier par composant.** `NomDuComposant/NomDuComposant.tsx` + `nom-du-composant.css` +
+  sous-composants privés colocalisés. L'arborescence se lit comme un sommaire.
+- **Tokens uniquement.** Aucune couleur, police, durée ou espacement en dur. Si le token manque,
+  créer le token dans `src/styles/`.
+- **Clean code humain, garde-fous d'ingénieur.** Lisible de haut en bas, commentaires qui disent le
+  _pourquoi_, pas d'abstraction spéculative — mais typage strict sans `any`, dépendances à sens
+  unique, et porte de validation complète (Prettier, `tsc`, ESLint, Vitest) avant de dire « fini ».
+- **Un composant partagé reçoit des chaînes déjà résolues**, jamais des clés de traduction :
+  `useTranslations()` n'accepte qu'un namespace littéral, donc résoudre ses propres clés soude le
+  composant à un seul catalogue.
+- **Une règle ESLint qui bloque un emplacement a raison.** Déplacer le code, jamais désactiver la
+  règle : `components/ui/` ne peut importer ni `app/**`, ni `features/**`, ni `stores/**`.
 
 ## UI
 

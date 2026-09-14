@@ -17,7 +17,7 @@
   z-index: -1;
 }
 .main-shell__grain {
-  background: url('/landing/textures/grain.svg') center / 180px 180px repeat;
+  background: url('/ui-kit/surfaces/grain.svg') center / 180px 180px repeat;
   inset: 0;
   mix-blend-mode: soft-light;
   opacity: 0.05;

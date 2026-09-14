@@ -1,11 +1,22 @@
+/* Le passage narratif ne suppose pas sa surface : il la lit.
+   `data-surface` bascule l'encre et la lettrine d'un bloc, sans qu'aucun
+   consommateur n'ait a redeclarer une couleur. */
 .narrative-passage {
-  color: color-mix(in srgb, var(--salt-white) 88%, var(--material-gold));
+  --narrative-ink: var(--narrative-ink-on-dark);
+  --narrative-drop-cap: var(--narrative-drop-cap-on-dark);
+
+  color: var(--narrative-ink);
   font-family: var(--font-game-body);
   font-size: var(--text-game-lead);
   font-style: italic;
   line-height: var(--text-body-editorial--line-height);
   max-width: 52rem;
   text-wrap: pretty;
+}
+
+.narrative-passage[data-surface='paper'] {
+  --narrative-ink: var(--narrative-ink-on-paper);
+  --narrative-drop-cap: var(--narrative-drop-cap-on-paper);
 }
 
 .narrative-passage--center {
@@ -17,8 +28,12 @@
   margin: 0;
 }
 
-.narrative-passage--drop-cap p:first-child::first-letter {
-  color: var(--material-gold-bright);
+/* La lettrine vise le premier bloc quel qu'il soit : le passage recoit
+   parfois des paragraphes, parfois du texte nu. Cibler `p` seul laissait
+   le texte nu sans lettrine. */
+.narrative-passage--drop-cap::first-letter,
+.narrative-passage--drop-cap > :first-child::first-letter {
+  color: var(--narrative-drop-cap);
   float: left;
   font-family: var(--font-game-display);
   font-size: 3.25em;

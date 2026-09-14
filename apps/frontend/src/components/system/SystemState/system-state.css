@@ -22,7 +22,7 @@
 }
 
 .system-state__grain {
-  background: url('/landing/textures/grain.svg') center / 180px 180px repeat;
+  background: url('/ui-kit/surfaces/grain.svg') center / 180px 180px repeat;
   inset: -40px;
   mix-blend-mode: soft-light;
   opacity: 0.07;

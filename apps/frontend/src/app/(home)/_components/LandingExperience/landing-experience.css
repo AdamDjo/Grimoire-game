@@ -1,0 +1,549 @@
+.salt-landing {
+  background: var(--salt-page);
+  color: var(--salt-paper);
+  font-family: var(--font-serif);
+  isolation: isolate;
+}
+.salt-landing .main-navigation--marketing.game-top-bar {
+  position: absolute;
+  opacity: 1;
+  transform: none;
+  padding: 8px 3.4vw;
+  height: 72px;
+  background: var(--salt-page);
+  border-bottom: 1px solid var(--salt-gold);
+}
+.salt-landing .main-navigation__marketing-logo {
+  width: 180px;
+  height: 52px;
+  filter: none;
+}
+.salt-skip {
+  position: fixed;
+  top: 0;
+  left: 1rem;
+  z-index: 100;
+  transform: translateY(-150%);
+  background: var(--salt-paper);
+  color: var(--salt-page);
+  padding: 1rem;
+}
+.salt-skip:focus {
+  transform: none;
+}
+.salt-landing a:focus-visible {
+  outline: 2px solid var(--salt-paper);
+  outline-offset: 6px;
+}
+.salt-plan {
+  position: relative;
+  isolation: isolate;
+  min-height: 740px;
+  min-height: max(740px, 100svh);
+  padding: 64px 4.5vw;
+  overflow: clip;
+  scroll-margin-top: 12px;
+  /* The deck scrolls from one plan's top to the next, so anything taller than a
+     screen is simply unreachable — the reader is carried past it. Above the deck
+     breakpoint a plan is therefore exactly one screen, never more: content that
+     does not fit has to be laid out to fit, not allowed to spill. */
+}
+.salt-art {
+  position: absolute;
+  /* The entry transition slides the plate in from yPercent: 6, so it is bled
+     past the bottom edge by that much: without the bleed the move would uncover
+     a strip of page colour under the art mid-scrub. */
+  inset: 0 0 -6% 0;
+  z-index: -3;
+  display: block;
+  overflow: hidden;
+}
+/* Readability veil. The plates are photographic and pale wherever sand or sky
+   sits under the copy, so cream text on cream sand loses its contrast. Rather
+   than a panel behind each block — which reads as a visible shape laid over the
+   art — every plan darkens from the edge the copy is anchored to, the way a
+   cinema grade does. The gradient spans the whole plan and dies out past the
+   middle, so no seam is ever perceptible. Orientation and strength are set per
+   plan through the two custom properties below. */
+.salt-plan::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background: linear-gradient(
+    var(--salt-veil-angle, 90deg),
+    color-mix(in srgb, var(--salt-page) var(--salt-veil-strength, 78%), transparent) 0%,
+    color-mix(in srgb, var(--salt-page) calc(var(--salt-veil-strength, 78%) * 0.62), transparent)
+      34%,
+    color-mix(in srgb, var(--salt-page) calc(var(--salt-veil-strength, 78%) * 0.2), transparent) 62%,
+    transparent 82%
+  );
+}
+.salt-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.salt-copy {
+  position: relative;
+  z-index: 2;
+  max-width: 660px;
+}
+.salt-copy h1,
+.salt-copy h2 {
+  font-family: var(--font-display);
+  font-size: clamp(44px, 4.15vw, 84px);
+  font-weight: 400;
+  line-height: 1.02;
+  text-transform: uppercase;
+  margin: 14px 0 20px;
+  text-wrap: balance;
+}
+.salt-copy p {
+  font-size: clamp(22px, 1.75vw, 30px);
+  line-height: 1.24;
+  margin: 0 0 24px;
+  text-wrap: pretty;
+}
+.salt-copy .salt-eyebrow {
+  color: var(--salt-gold);
+  font-family: var(--font-ui);
+  font-size: clamp(16px, 1.35vw, 22px);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin: 0;
+}
+.salt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px 30px;
+  margin-top: 28px;
+}
+.salt-actions > a:not(.game-button),
+.salt-text-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 19px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--salt-gold);
+  text-decoration: none;
+}
+.salt-text-link {
+  color: var(--salt-gold);
+}
+.salt-landing .game-button {
+  max-width: 100%;
+  white-space: normal;
+}
+.salt-landing .game-button__label {
+  white-space: normal;
+  text-wrap: balance;
+}
+.game-scene__location {
+  text-align: center;
+  text-transform: uppercase;
+  font-family: var(--font-display);
+  font-size: 28px;
+  padding: 9px;
+  border-bottom: 1px solid var(--salt-gold);
+}
+.game-scene__location small {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  color: var(--salt-paper-dim);
+}
+.game-scene__reader {
+  padding: 20px 24px;
+}
+.game-scene__reader h3 {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--salt-gold);
+  margin: 0 0 10px;
+}
+.game-scene__reader > p {
+  font-size: clamp(22px, 1.65vw, 26px);
+  line-height: 1.22;
+  margin: 0 0 20px;
+}
+.game-scene__choices {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.game-scene__response p {
+  font-size: 19px;
+  line-height: 1.35;
+}
+.game-scene__response:empty {
+  display: none;
+}
+/* The thirst gauge reads as salt, not ember — a landing-only tint. */
+.salt-hud__thirst {
+  --stat-bar-color: var(--salt-paper);
+  --stat-bar-light: var(--salt-paper);
+}
+.salt-footer {
+  border-top: 1px solid var(--salt-gold);
+  padding: 22px 3.4vw;
+  display: flex;
+  justify-content: space-between;
+  gap: 22px;
+  align-items: center;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.salt-footer a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+@media (min-width: 768px) and (max-width: 1120px) {
+  .salt-plan {
+    min-height: 780px;
+  }
+  .salt-copy h1,
+  .salt-copy h2 {
+    font-size: 44px;
+  }
+}
+@media (max-width: 767px) {
+  .salt-landing .main-navigation--marketing.game-top-bar {
+    height: 64px;
+    padding: 6px 16px;
+  }
+  .salt-landing .main-navigation__marketing-logo {
+    width: 130px;
+    height: 44px;
+  }
+  .salt-plan {
+    min-height: 0;
+    padding: 36px 22px;
+    overflow: clip;
+  }
+  .salt-copy,
+  .salt-contrat .salt-copy,
+  .salt-seuil .salt-copy,
+  .salt-survie .salt-copy {
+    max-width: none;
+    width: 100%;
+    margin: 0;
+  }
+  .salt-copy h1,
+  .salt-copy h2 {
+    font-size: clamp(34px, 8.9vw, 58px);
+    line-height: 1.04;
+    margin: 12px 0 18px;
+  }
+  .salt-copy p {
+    font-size: 22px;
+    line-height: 1.26;
+  }
+  .salt-copy .salt-eyebrow {
+    font-size: 15px;
+    letter-spacing: 0.11em;
+  }
+  .salt-actions {
+    gap: 12px 18px;
+    margin-top: 18px;
+  }
+  .salt-actions > a:not(.game-button),
+  .salt-text-link {
+    font-size: 16px;
+  }
+  .salt-plan > .salt-art {
+    position: relative;
+    inset: auto;
+    margin: -36px -22px 26px;
+    height: 320px;
+    z-index: -1;
+  }
+  /* The plate leaves the flow on every plan but the threshold, whose art stays
+       behind the copy — so only the threshold still needs a veil, read bottom-up. */
+  .salt-plan::before {
+    display: none;
+  }
+  .game-scene__location {
+    font-size: 24px;
+  }
+  .game-scene__reader {
+    padding: 18px 12px;
+  }
+  .game-scene__reader > p {
+    font-size: 22px;
+  }
+  .salt-footer {
+    flex-wrap: wrap;
+    padding: 18px 22px;
+    font-size: 13px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .salt-landing *,
+  .salt-landing *::before,
+  .salt-landing *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+/* Existing landing CTA variant: keep the approved gold material without the old halo. */
+.salt-landing .game-button--landing {
+  min-width: 0;
+  min-height: 62px;
+  padding: 10px 34px;
+  font-size: clamp(21px, 1.8vw, 28px);
+  text-transform: uppercase;
+}
+.salt-landing .game-button--landing::after {
+  box-shadow: none;
+}
+.salt-landing .main-navigation__brand .game-brand {
+  width: auto;
+}
+.salt-landing .main-navigation__brand .game-brand__name {
+  font-size: 32px;
+  letter-spacing: 0.14em;
+}
+.salt-landing .main-navigation__brand .game-brand__subtitle {
+  font-size: 12px;
+}
+.salt-copy:focus-within,
+.salt-demo .game-scene-layout__reader:focus-within {
+  opacity: 1 !important;
+  transform: none !important;
+}
+/* Park skip navigation outside the viewport, even on a scrolled full-page capture. */
+.salt-skip {
+  top: -100px;
+  transform: none;
+}
+.salt-skip:focus {
+  top: 8px;
+}
+@media (min-width: 1121px) {
+  /* One plan, one screen — the deck's own unit. Paired with the min-height
+       above, the height is pinned rather than merely floored. */
+  .salt-plan {
+    height: 100svh;
+    max-height: 100svh;
+    min-height: 100svh;
+  }
+  .game-scene__location {
+    font-size: 25px;
+  }
+  /* The reader is the one part whose text can outgrow the frame — a long
+       passage or a fourth choice. It scrolls inside the panel instead of
+       stretching the section, so the plate and the HUD keep their place. */
+  .game-scene__reader {
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--salt-gold) 55%, transparent) transparent;
+  }
+  .game-scene__reader > p {
+    font-size: 24px;
+    line-height: 1.2;
+    margin-bottom: 14px;
+  }
+  .game-scene__reader {
+    padding: 18px 22px;
+  }
+  .game-scene__choices {
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+}
+@media (max-width: 767px) {
+  .salt-landing .main-navigation__brand .game-brand__name {
+    font-size: 24px;
+  }
+  .salt-landing .main-navigation__brand .game-brand__subtitle {
+    font-size: 9px;
+  }
+  .salt-landing .game-button--landing {
+    min-height: 56px;
+    padding: 10px 24px;
+    font-size: 21px;
+  }
+}
+/* ImageGen masters rebuilt from the approved compositions, with fixed corner slices. */
+.salt-landing .game-button--landing::before,
+.salt-landing .game-button--landing:hover::before {
+  background: none;
+  border: 10px solid transparent;
+  border-image: url('/encre-de-sel/landing/button-gold.webp') 44 fill / 10px;
+  filter: none;
+}
+.salt-landing .game-button--landing {
+  color: var(--salt-on-gold);
+  font-family: var(--font-display);
+  letter-spacing: 0.01em;
+  transition:
+    filter 180ms ease,
+    transform 220ms ease;
+}
+.salt-landing .game-button--landing:hover {
+  filter: brightness(1.08);
+}
+.salt-landing .game-button--landing:active {
+  transform: translateY(2px);
+}
+.game-scene__location {
+  border-bottom: 3px solid transparent;
+  border-image: url('/encre-de-sel/landing/input-frame.webp') 22 / 0 0 3px 0;
+}
+.salt-ash--gate {
+  left: 71%;
+  top: 38%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.salt-landing) {
+    scroll-behavior: smooth;
+  }
+}
+/* Lenis owns the scroll position; native smoothing would fight it. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+/* Motion layer. Everything below is transform/opacity only and disabled under reduced motion. */
+.salt-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  height: 2px;
+  background: var(--salt-gold);
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+}
+/* Masked heading lines need room for ascenders and descenders inside the clip. */
+.salt-line-mask {
+  padding: 0.12em 0.05em 0.08em;
+  margin: -0.12em -0.05em -0.08em;
+}
+.salt-landing .game-button--landing {
+  overflow: hidden;
+}
+.salt-landing .game-button--landing .game-button__label {
+  position: relative;
+  overflow: hidden;
+}
+.salt-landing .game-button--landing .game-button__label::after {
+  content: '';
+  position: absolute;
+  inset: -20% -10%;
+  background: linear-gradient(105deg, transparent 38%, var(--salt-sheen) 50%, transparent 62%);
+  transform: translateX(-130%) skewX(-18deg);
+  pointer-events: none;
+}
+.salt-actions > a:not(.game-button),
+.salt-text-link {
+  position: relative;
+  border-bottom-color: transparent;
+}
+.salt-actions > a:not(.game-button)::after,
+.salt-text-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: var(--salt-gold);
+  transform-origin: left center;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .salt-landing .main-navigation--marketing.game-top-bar {
+    opacity: 0;
+    transform: translateY(-14px);
+    animation: salt-hero-fallback 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.6s forwards;
+  }
+  .salt-landing--motion .salt-seuil .salt-copy > :not(.salt-actions),
+  .salt-landing--motion .salt-seuil .salt-actions > *,
+  .salt-landing--motion .salt-seuil .salt-scroll,
+  .salt-landing--motion .salt-seuil .salt-depth,
+  .salt-landing--motion .main-navigation--marketing.game-top-bar {
+    animation: none;
+  }
+  .salt-landing .game-button--landing:hover .game-button__label::after {
+    animation: salt-sheen 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  .salt-actions > a:not(.game-button):hover::after,
+  .salt-text-link:hover::after {
+    animation: salt-underline 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .game-scene__response {
+    animation: salt-fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+@keyframes salt-hero-fallback {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes salt-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+@keyframes salt-sheen {
+  to {
+    transform: translateX(130%) skewX(-18deg);
+  }
+}
+@keyframes salt-underline {
+  0% {
+    transform: scaleX(1);
+    transform-origin: right center;
+  }
+  49% {
+    transform: scaleX(0);
+    transform-origin: right center;
+  }
+  51% {
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+  100% {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+}
+@keyframes salt-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

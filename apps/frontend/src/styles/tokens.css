@@ -1,0 +1,204 @@
+/**
+ * Encre de Sel — design tokens, single source of truth.
+ *
+ * Every colour, font, size, duration and easing used across the app is declared
+ * here and nowhere else. A component never writes a literal: it reads a token.
+ *
+ * Reading order inside :root mirrors the doc (`src/styles/README.md`):
+ *   1. Matières      — the raw palette. Named after what they are, not where they are used.
+ *   2. Rôles         — semantic aliases. This is what components should consume.
+ *   3. Traits        — borders and lines derived from the palette.
+ *   4. Typographies  — font stacks.
+ *   5. Échelles      — fluid type scales, clamp(min mobile, vw + base, max desktop).
+ *   6. Mouvement     — durations and easings.
+ *   7. États         — focus, selection.
+ *
+ * Tailwind reads the `@theme inline` block in `globals.css`, which re-exports a
+ * subset of these under Tailwind's own names. Adding a token here does not make
+ * it a Tailwind utility — mirror it there if a utility is wanted.
+ */
+
+:root {
+  /* ------------------------------------------------------------------ *
+   * 1. Matières — la palette brute
+   * ------------------------------------------------------------------ */
+
+  /* Encres : les noirs du monde. `ink-black` est le fond de page. */
+  --ink-black: #050403;
+  --ink-raised: #0c0a08;
+  --ink-on-paper: #241a12;
+
+  /* Sels : les clairs. `salt-white` porte le texte courant. */
+  --salt-white: #e9dfc9;
+  --salt-muted: #b9aa8e;
+
+  /* Landing : la marque est plus contrastée que l'in-game. Trois matières
+     propres, volontairement distinctes de `ink-black` / `salt-white`. */
+  --landing-black: #080908;
+  --landing-paper: #eee8db;
+  --landing-paper-dim: #d1c9b7;
+
+  /* Or : l'accent unique de la marque. Les trois degrés suffisent. */
+  --material-gold: #bd7b26;
+  --material-gold-bright: #e0a143;
+  --material-gold-dim: #765021;
+
+  /* Jauges de survie : une couleur par ressource, jamais réutilisée ailleurs. */
+  --fresh-blood: #bd3024; /* sang    */
+  --dried-blood: #6d211b; /* sang épuisé */
+  --breath-aqua: #43aaa3; /* souffle */
+  --hunger-ochre: #d19428; /* faim    */
+  --thirst-salt: #d8d0c0; /* soif    */
+  --calamine: #c2872d; /* calamine */
+
+  /* ------------------------------------------------------------------ *
+   * 2. Rôles — ce que les composants consomment
+   * ------------------------------------------------------------------ */
+
+  --void: var(--ink-black);
+  --parchment: var(--salt-white);
+  --gold: var(--material-gold);
+  --gold-light: var(--material-gold-bright);
+  --gold-hover: var(--material-gold-bright);
+  --gold-dark: color-mix(in srgb, var(--material-gold) 52%, transparent);
+  --blood: var(--fresh-blood);
+  --soul: var(--breath-aqua);
+  --cendre: var(--hunger-ochre);
+
+  --ink: var(--parchment);
+  --ink-2: rgba(232, 220, 192, 0.75);
+  --ink-manuscript: var(--ink-on-paper);
+
+  /* Landing. `salt-*` est le préfixe historique de la marque : on le garde,
+     mais il pointe désormais ici plutôt que d'être redéclaré dans un composant. */
+  --salt-page: var(--landing-black);
+  --salt-paper: var(--landing-paper);
+  --salt-paper-dim: var(--landing-paper-dim);
+  --salt-gold: var(--material-gold);
+  --salt-gold-bright: var(--material-gold-bright);
+  /* Texte posé sur un aplat d'or : presque noir, jamais le noir de page. */
+  --salt-on-gold: color-mix(in srgb, var(--landing-black) 82%, var(--material-gold));
+
+  /* Voiles : le noir de page à quatre opacités. Aucune autre valeur admise. */
+  --salt-veil-soft: color-mix(in srgb, var(--landing-black) 40%, transparent);
+  --salt-veil: color-mix(in srgb, var(--landing-black) 50%, transparent);
+  --salt-veil-strong: color-mix(in srgb, var(--landing-black) 75%, transparent);
+  --salt-veil-deep: color-mix(in srgb, var(--landing-black) 91%, transparent);
+  --salt-veil-solid: color-mix(in srgb, var(--landing-black) 97%, transparent);
+
+  /* Filets et lueurs de la landing. */
+  --salt-rule: color-mix(in srgb, var(--landing-paper) 60%, transparent);
+  --salt-glow-gold: color-mix(in srgb, var(--material-gold) 8%, transparent);
+  --salt-glow-warm: color-mix(in srgb, #f4d9a0 7%, transparent);
+  --salt-sheen: color-mix(in srgb, #fff5d9 33%, transparent);
+  /* Braise claire : les cendres qui montent au seuil. */
+  --salt-ember: #eac36f;
+
+  /* Jauges : le creux du rail, ses sertissages et la brillance du remplissage.
+     Une jauge n'invente jamais sa propre matiere. */
+  --gauge-well: color-mix(in srgb, var(--ink-black) 92%, transparent);
+  --gauge-stud: color-mix(in srgb, var(--ink-black) 88%, var(--material-gold));
+  --gauge-stud-edge: color-mix(in srgb, var(--material-gold-bright) 60%, transparent);
+  --gauge-sheen: color-mix(in srgb, var(--salt-white) 16%, transparent);
+  --gauge-sheen-soft: color-mix(in srgb, var(--salt-white) 14%, transparent);
+  --gauge-shade: color-mix(in srgb, var(--ink-black) 88%, var(--material-gold-dim));
+
+  /* Passages narratifs : deux surfaces possibles, jamais une seule.
+     Le texte du Maitre du Jeu se lit aussi bien sur l'encre que sur le
+     parchemin ; chaque surface porte son encre et sa lettrine. */
+  --narrative-ink-on-dark: color-mix(in srgb, var(--salt-white) 88%, var(--material-gold));
+  --narrative-drop-cap-on-dark: var(--material-gold-bright);
+  --narrative-ink-on-paper: var(--ink-on-paper);
+  --narrative-drop-cap-on-paper: color-mix(
+    in srgb,
+    var(--material-gold-dim) 82%,
+    var(--ink-on-paper)
+  );
+
+  /* ------------------------------------------------------------------ *
+   * 3. Traits — filets et bordures
+   * ------------------------------------------------------------------ */
+
+  --line-gold: color-mix(in srgb, var(--material-gold) 72%, transparent);
+  --border-gold: color-mix(in srgb, var(--material-gold) 34%, transparent);
+  --frame-reader-border: var(--line-gold);
+  --frame-reader-separator: url('/encre-de-sel/chrome/reader-separator.webp');
+
+  /* ------------------------------------------------------------------ *
+   * 4. Typographies
+   * ------------------------------------------------------------------ */
+
+  --font-display: var(--next-font-display), Georgia, serif;
+  --font-serif: var(--next-font-text), Georgia, serif;
+  --font-accent: var(--next-font-text), Georgia, serif;
+  --font-ui: var(--next-font-text), Georgia, serif;
+  --font-manuscript: var(--next-font-text), Georgia, serif;
+
+  --font-game-display: var(--font-display);
+  --font-game-heading: var(--font-accent);
+  --font-game-body: var(--font-serif);
+  --font-game-ui: var(--font-ui);
+
+  /* ------------------------------------------------------------------ *
+   * 5. Échelles typographiques
+   *
+   * Deux familles cohabitent volontairement :
+   *   `--text-game-*`  in-game (scènes, HUD, dialogues)
+   *   `--text-*`       éditorial (landing, pages marketing)
+   * Toutes fluides : aucun palier px dur, donc pas d'override en media query.
+   * ------------------------------------------------------------------ */
+
+  /* In-game */
+  --text-game-title: clamp(2rem, 1.6vw + 1.4rem, 3.35rem);
+  --text-game-modal-title: clamp(1.7rem, 1vw + 1.35rem, 2.35rem);
+  --text-game-heading: clamp(1.55rem, 0.8vw + 1.2rem, 2.2rem);
+  --text-game-section: clamp(1.28rem, 0.45vw + 1.12rem, 1.6rem);
+  --text-game-lead: clamp(1.125rem, 0.35vw + 1.02rem, 1.375rem);
+  --text-game-quote: clamp(1.2rem, 0.5vw + 1.05rem, 1.5rem);
+  --text-game-body: clamp(1.08rem, 0.24vw + 1rem, 1.28rem);
+  --text-game-body-sm: clamp(1rem, 0.18vw + 0.94rem, 1.12rem);
+  --text-game-label: clamp(0.96rem, 0.16vw + 0.92rem, 1.08rem);
+  --text-game-caption: clamp(0.86rem, 0.13vw + 0.82rem, 0.96rem);
+  --text-game-micro: clamp(0.78rem, 0.12vw + 0.74rem, 0.88rem);
+  --text-game-kicker: clamp(0.82rem, 0.14vw + 0.78rem, 0.94rem);
+  --text-game-stat-label: clamp(0.9rem, 0.18vw + 0.84rem, 1.06rem);
+  --text-game-stat-value: clamp(1rem, 0.2vw + 0.94rem, 1.18rem);
+  --text-game-button-sm: clamp(1.3rem, 0.32vw + 1.18rem, 1.5rem);
+  --text-game-button: clamp(1.3rem, 0.45vw + 1.15rem, 1.625rem);
+
+  /* Éditorial */
+  --text-h1: clamp(44px, 2.6vw + 28px, 72px);
+  --text-h2: clamp(32px, 1.4vw + 22px, 44px);
+  --text-accroche: clamp(20px, 0.7vw + 15px, 26px);
+  --text-body-editorial: clamp(18px, 0.5vw + 15px, 24px);
+  --text-body-editorial--line-height: 1.6;
+  --text-ui: 16px;
+  --text-card-num: clamp(32px, 0.9vw + 25px, 40px);
+  --text-card-title: clamp(21px, 0.5vw + 17px, 25px);
+  --text-card-manuscript: clamp(20px, 0.5vw + 16px, 24px);
+  --text-stat-label: 17px;
+  --text-stat-value: 20px;
+  --text-btn-primary: clamp(20px, 0.7vw + 15px, 26px);
+  --text-btn-secondary: clamp(21px, 0.7vw + 16px, 27px);
+
+  /* ------------------------------------------------------------------ *
+   * 6. Mouvement
+   *
+   * Quatre durées, pas une de plus : une transition qui ne rentre dans
+   * aucune des quatre est probablement une transition de trop.
+   * ------------------------------------------------------------------ */
+
+  --motion-fast: 160ms; /* survol, pression      */
+  --motion-ui: 220ms; /* ouverture d'un panneau */
+  --motion-step: 280ms; /* passage d'une étape    */
+  --motion-page: 650ms; /* voile de navigation    */
+
+  --ease-grimoire-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-grimoire-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ------------------------------------------------------------------ *
+   * 7. États
+   * ------------------------------------------------------------------ */
+
+  --focus-ring: 0 0 0 3px rgba(217, 164, 65, 0.3);
+}

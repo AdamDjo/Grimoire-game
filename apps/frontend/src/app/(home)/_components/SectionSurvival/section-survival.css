@@ -1,0 +1,23 @@
+.salt-survie {
+  display: flex;
+  align-items: center;
+  /* Copy sits right, over the brightest plate of the five — bare sand. */
+  --salt-veil-angle: 270deg;
+  --salt-veil-strength: 88%;
+}
+.salt-survie .salt-copy {
+  margin-left: 57%;
+  width: 43%;
+}
+@media (min-width: 768px) and (max-width: 1120px) {
+  .salt-survie .salt-copy {
+    margin-left: 48%;
+    width: 52%;
+  }
+}
+@media (max-width: 767px) {
+  .salt-survie {
+    display: block;
+    padding-bottom: 0;
+  }
+}

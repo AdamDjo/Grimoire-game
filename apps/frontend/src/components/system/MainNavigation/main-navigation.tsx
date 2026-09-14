@@ -59,7 +59,6 @@ export function MainNavigation(props: MainNavigationProps) {
   const marketingLinks: readonly NavigationLink[] = [
     { href: '#velkhar', label: t('discover') },
     { href: '#gameplay', label: t('gameplay') },
-    { href: '#world', label: t('world') },
   ]
   const gameAubergeLink: NavigationLink = {
     href: WORLD_ROUTES.velkhar.aveugle,
@@ -160,7 +159,7 @@ export function MainNavigation(props: MainNavigationProps) {
           aria-label={isMarketing ? t('siteHome') : t('gameHome')}
         >
           {isMarketing ? (
-            <span className="main-navigation__marketing-logo" aria-hidden="true" />
+            <GameBrand decorative size="sm" variant="lockup" />
           ) : (
             <GameBrand decorative size="sm" variant="lockup" />
           )}

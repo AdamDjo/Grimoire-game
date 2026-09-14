@@ -84,6 +84,62 @@ ticket soit livré se lit sur GitHub.
   jauges fines et séparateurs ; il n'adopte pas la surcharge gore de l'illustration et des choix.
 - **Tailwind pour le responsive, jamais un hook JS.**
 
+## Doctrine de code — comment on écrit le frontend
+
+Règle permanente, pas une décision ponctuelle : tout code frontend est écrit ainsi, sans rappel.
+
+- **Des noms simples et évidents.** On nomme ce que la chose _est_, avec le mot le plus court qui
+  reste juste : `GameScene`, `GameHud` — jamais `GameTurnPreview` ni `SurvivalReadout`. Un nom doit
+  pouvoir être retrouvé de mémoire six mois plus tard. Si le nom a besoin d'un commentaire pour être
+  compris, c'est le nom qu'il faut changer.
+- **Un dossier par composant, jamais un fichier fourre-tout.** `NomDuComposant/NomDuComposant.tsx` +
+  son CSS colocalisé `nom-du-composant.css` + ses sous-composants privés à côté. Une section de page
+  est un dossier, pas un bloc dans un fichier de 600 lignes. L'arborescence doit se lire comme un
+  sommaire : on trouve le fichier sans `grep`.
+- **Tokens uniquement, aucune valeur en dur.** Jamais un `#080908`, un `0.76s` ni une famille de
+  police écrits dans un fichier de composant. Les couleurs, espacements et durées viennent de
+  `src/styles/`. Si le token manque, on crée le token — on ne code pas la valeur.
+- **Du code propre, humain, lisible d'abord.** Un composant se lit de haut en bas comme une phrase.
+  Les commentaires expliquent le _pourquoi_, jamais le _quoi_. Pas d'abstraction ajoutée « au cas
+  où » : on factorise à la troisième occurrence, pas à la première.
+- **Mais avec les garde-fous d'un vrai ingénieur.** Typage strict sans `any` ni cast de confort,
+  dépendances orientées dans un seul sens (`components/ui/` ne connaît ni les routes ni les
+  features — la règle `no-restricted-imports` d'`eslint.config.js` en est le gardien), composants
+  partagés qui reçoivent des **chaînes déjà résolues** plutôt que des clés de traduction, et une
+  porte de validation complète — Prettier, `tsc`, ESLint, Vitest — avant de dire qu'un travail est
+  fini.
+
+**L'épisode qui a fixé la règle (ticket #310).** La démo de la landing devait devenir réutilisable
+par la vraie session de jeu. Trois choses en sont sorties, toutes générales :
+
+1. `useTranslations()` n'accepte qu'un namespace littéral. Un composant partagé qui résout ses
+   propres clés est donc soudé à un seul catalogue — d'où la règle des chaînes déjà résolues.
+2. Un défaut anodin (`background={<LandingArt />}`) faisait dépendre un composant partagé d'une
+   route. Une prop requise vaut mieux qu'un défaut qui crée un couplage.
+3. Le kit visait `components/ui/velkhar/`, mais il compose `GameSessionHud` : ESLint l'a refusé à
+   juste titre. Il vit donc dans `features/game-session/velkhar/`. **Quand une règle d'architecture
+   bloque un emplacement, c'est l'emplacement qui est faux, pas la règle** — on ne désactive pas le
+   garde-fou.
+
+**Une marque peut avoir sa palette, pas ses littéraux (ticket #310).** La landing utilisait trois
+couleurs déclarées dans son propre CSS (`--salt-page`, `--salt-paper`, `--salt-gold`), plus une
+vingtaine de littéraux `#080908e8` en dur. Deux réflexes étaient faux :
+
+- **Les aligner sur `--ink-black` / `--salt-white`** aurait restylé 36 points d'appel : la landing
+  est volontairement plus contrastée que l'in-game. Ces couleurs sont donc devenues de vraies
+  matières dans `tokens.css` (`--landing-black`, `--landing-paper`, `--landing-paper-dim`), avec
+  les rôles `--salt-*` en alias. Le préfixe historique survit, la déclaration remonte au centre.
+- **Garder le motif `var(--token, #hex)`** — le « token legacy ». Le fallback ne servait jamais
+  (le token existait), mais il faisait croire à deux sources de vérité et masquait une divergence :
+  `var(--material-gold, #d9ac55)` rendait `#bd7b26` depuis longtemps. Tout fallback de couleur a
+  été supprimé.
+
+Les opacités ne s'écrivent plus en suffixe hexadécimal mais en tokens nommés
+(`--salt-veil`, `--salt-veil-deep`, `--salt-rule`), construits en `color-mix`. Un voile a un nom et
+une intention ; `#08090866` n'en a pas. Reste autorisé : `var(--x, <valeur>)` pour un **paramètre
+d'animation** posé par JS ou par une section (`--beam-x`, `--salt-veil-strength`) — là, le défaut
+est la valeur de repos, pas une couleur de secours.
+
 ## Dette et suivis connus
 
 - **#218 — les textes de lisibilité existent déjà** dans `docs/canon/04-ATTRIBUTES.md` et n'ont
