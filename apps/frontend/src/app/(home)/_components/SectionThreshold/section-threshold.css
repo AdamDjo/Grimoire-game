@@ -49,10 +49,16 @@
   }
 }
 @media (max-width: 767px) {
+  /* Le seuil est une rangee sur desktop (plaque a gauche, copie a droite).
+     Sur mobile il n'y a pas la place : la plaque passe en fond, la copie
+     occupe toute la largeur. Sans `flex-direction`, les deux restaient
+     cote a cote et la copie tombait a 222px sur un ecran de 375. */
   .salt-seuil {
     min-height: 100svh;
     display: flex;
-    align-items: end;
+    flex-direction: column;
+    justify-content: end;
+    align-items: stretch;
     padding: 290px 22px 64px;
   }
   .salt-seuil > .salt-art {
