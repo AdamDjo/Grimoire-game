@@ -141,15 +141,14 @@
     opacity var(--motion-step) var(--ease-grimoire-standard);
 }
 
+/* La couleur et la famille viennent du composant : la scene ne regle ici
+   que ce qui lui est propre — un corps plus dense, sans italique. */
 .game-session-narrative .narrative-passage {
-  color: var(--salt-white);
-  font-family: var(--font-game-body);
   font-size: var(--text-game-body);
   font-style: normal;
   font-weight: 400;
   line-height: 1.5;
   max-width: 40rem;
-  text-wrap: pretty;
 }
 
 .game-session-narrative .narrative-passage p + p {
@@ -161,7 +160,7 @@
   font-family: var(--font-game-heading);
   font-size: 1.12em;
   font-weight: 600;
-  text-shadow: 0 0 12px rgba(217, 164, 65, 0.3);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--material-gold-bright) 30%, transparent);
 }
 
 .game-session-narrative[data-loading='true'] .narrative-passage {

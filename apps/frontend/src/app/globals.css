@@ -1,73 +1,7 @@
 @import 'tailwindcss';
 
-:root {
-  /* Encre de Sel — matières, pas de couleurs SaaS génériques. */
-  --ink-black: #050403;
-  --ink-raised: #0c0a08;
-  --salt-white: #e9dfc9;
-  --salt-muted: #b9aa8e;
-  --material-gold: #bd7b26;
-  --material-gold-bright: #e0a143;
-  --material-gold-dim: #765021;
-  --dried-blood: #6d211b;
-  --fresh-blood: #bd3024;
-  --breath-aqua: #43aaa3;
-  --hunger-ochre: #d19428;
-  --thirst-salt: #d8d0c0;
-  --calamine: #c2872d;
-  --line-gold: color-mix(in srgb, var(--material-gold) 72%, transparent);
-  --ink-on-paper: #241a12;
-  --frame-reader-border: var(--line-gold);
-  --frame-reader-separator: url('/encre-de-sel/chrome/reader-separator.webp');
-
-  /* Alias transitoires : l'ensemble de l'application adopte immédiatement la palette. */
-  --void: var(--ink-black);
-  --parchment: var(--salt-white);
-  --gold: var(--material-gold);
-  --gold-light: var(--material-gold-bright);
-  --gold-hover: var(--material-gold-bright);
-  --gold-dark: color-mix(in srgb, var(--material-gold) 52%, transparent);
-  --blood: var(--fresh-blood);
-  --soul: var(--breath-aqua);
-  --cendre: var(--hunger-ochre);
-  --border-gold: color-mix(in srgb, var(--material-gold) 34%, transparent);
-  --ink-manuscript: var(--ink-on-paper);
-
-  --font-display: var(--next-font-display), Georgia, serif;
-  --font-serif: var(--next-font-text), Georgia, serif;
-  --font-accent: var(--next-font-text), Georgia, serif;
-  --font-ui: var(--next-font-text), Georgia, serif;
-  --font-manuscript: var(--next-font-text), Georgia, serif;
-  --font-game-display: var(--font-display);
-  --font-game-heading: var(--font-accent);
-  --font-game-body: var(--font-serif);
-  --font-game-ui: var(--font-ui);
-  --text-game-title: clamp(2rem, 1.6vw + 1.4rem, 3.35rem);
-  --text-game-modal-title: clamp(1.7rem, 1vw + 1.35rem, 2.35rem);
-  --text-game-heading: clamp(1.55rem, 0.8vw + 1.2rem, 2.2rem);
-  --text-game-section: clamp(1.28rem, 0.45vw + 1.12rem, 1.6rem);
-  --text-game-lead: clamp(1.125rem, 0.35vw + 1.02rem, 1.375rem);
-  --text-game-quote: clamp(1.2rem, 0.5vw + 1.05rem, 1.5rem);
-  --text-game-body: clamp(1.08rem, 0.24vw + 1rem, 1.28rem);
-  --text-game-body-sm: clamp(1rem, 0.18vw + 0.94rem, 1.12rem);
-  --text-game-label: clamp(0.96rem, 0.16vw + 0.92rem, 1.08rem);
-  --text-game-caption: clamp(0.86rem, 0.13vw + 0.82rem, 0.96rem);
-  --text-game-micro: clamp(0.78rem, 0.12vw + 0.74rem, 0.88rem);
-  --text-game-kicker: clamp(0.82rem, 0.14vw + 0.78rem, 0.94rem);
-  --text-game-stat-label: clamp(0.9rem, 0.18vw + 0.84rem, 1.06rem);
-  --text-game-stat-value: clamp(1rem, 0.2vw + 0.94rem, 1.18rem);
-  --text-game-button-sm: clamp(1.3rem, 0.32vw + 1.18rem, 1.5rem);
-  --text-game-button: clamp(1.3rem, 0.45vw + 1.15rem, 1.625rem);
-  --motion-fast: 160ms;
-  --motion-ui: 220ms;
-  --motion-step: 280ms;
-  --motion-page: 650ms;
-  --ease-grimoire-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-grimoire-standard: cubic-bezier(0.2, 0, 0, 1);
-  --ink: var(--parchment);
-  --ink-2: rgba(232, 220, 192, 0.75);
-  --focus-ring: 0 0 0 3px rgba(217, 164, 65, 0.3);
-}
+/* Tokens — source unique. Voir src/styles/README.md. */
+@import '../styles/tokens.css';
 
 body {
   font-synthesis: none;
@@ -232,9 +166,7 @@ html.has-landing-scroll-progress::-webkit-scrollbar {
 }
 
 .landing-experience__exit-curtain {
-  background:
-    radial-gradient(circle at 50% 44%, rgba(34, 24, 13, 0.18), transparent 38%),
-    #050403;
+  background: radial-gradient(circle at 50% 44%, rgba(34, 24, 13, 0.18), transparent 38%), #050403;
   inset: 0;
   opacity: 0;
   pointer-events: none;
@@ -269,7 +201,7 @@ html.has-landing-scroll-progress::-webkit-scrollbar {
    Coupé en reduced-motion. z-index sous les braises (55) n'a pas d'importance :
    les deux sont pointer-events:none et se composent visuellement. */
 .landing-experience::before {
-  background-image: url('/landing/textures/grain.svg');
+  background-image: url('/ui-kit/surfaces/grain.svg');
   background-size: 180px 180px;
   content: '';
   inset: -60px;

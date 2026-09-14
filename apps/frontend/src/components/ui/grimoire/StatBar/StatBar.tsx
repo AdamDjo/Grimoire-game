@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 
-import type { ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 
 import './stat-bar.css'
 
@@ -66,7 +66,12 @@ export function StatBar({
         ) : null}
       </div>
       <div className="stat-bar__track" aria-hidden="true">
-        <span className="stat-bar__fill" style={{ width: `${percentage}%` }} />
+        {/* La jauge se remplit en `transform`, jamais en `width` : une largeur animee
+            declenche un reflow a chaque image, un `scaleX` reste sur le compositeur. */}
+        <span
+          className="stat-bar__fill"
+          style={{ '--stat-bar-fill': percentage / 100 } as CSSProperties}
+        />
       </div>
     </div>
   )

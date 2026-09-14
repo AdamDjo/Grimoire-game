@@ -1,7 +1,4 @@
 .salt-landing {
-  --salt-page: #080908;
-  --salt-paper: #eee8db;
-  --salt-gold: var(--material-gold, #d9ac55);
   background: var(--salt-page);
   color: var(--salt-paper);
   font-family: var(--font-serif);
@@ -13,7 +10,7 @@
   transform: none;
   padding: 8px 3.4vw;
   height: 72px;
-  background: #080908;
+  background: var(--salt-page);
   border-bottom: 1px solid var(--salt-gold);
 }
 .salt-landing .main-navigation__marketing-logo {
@@ -28,7 +25,7 @@
   z-index: 100;
   transform: translateY(-150%);
   background: var(--salt-paper);
-  color: #080908;
+  color: var(--salt-page);
   padding: 1rem;
 }
 .salt-skip:focus {
@@ -146,111 +143,7 @@
   white-space: normal;
   text-wrap: balance;
 }
-.salt-seuil {
-  display: flex;
-  align-items: center;
-  padding-top: 118px;
-  padding-bottom: 100px;
-  /* Kept light: the hero art is the strongest of the five and carries its own shade. */
-  --salt-veil-strength: 62%;
-}
-.salt-seuil .salt-art {
-  top: 72px;
-}
-.salt-seuil .salt-copy {
-  width: 43%;
-  max-width: 720px;
-  margin-top: 6vh;
-}
-/* The plate is offset below the bar, so the veil follows it rather than the plan. */
-.salt-seuil::before {
-  inset: 72px 0 0;
-}
-.salt-scroll {
-  position: absolute;
-  bottom: 32px;
-  left: 4.5vw;
-  display: flex;
-  gap: 22px;
-  align-items: center;
-  min-height: 44px;
-  text-decoration: none;
-}
-.salt-scroll span {
-  font-size: 16px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-.salt-depth {
-  position: absolute;
-  inset: 72px 0 0;
-  pointer-events: none;
-  /* Sits between the plate and the veil: it shades the art, not the copy. */
-  z-index: -3;
-  box-shadow:
-    inset 30px 0 45px #08090866,
-    inset -30px 0 45px #08090888;
-}
-.salt-contrat .salt-copy {
-  max-width: 650px;
-  width: 46%;
-}
-.salt-contract-details {
-  position: absolute;
-  bottom: 8%;
-  right: 4.5%;
-  width: 290px;
-  padding: 16px;
-  background: #080908e8;
-  z-index: 2;
-}
-.salt-contract-details dl {
-  margin: 0;
-}
-.salt-contract-details dl div {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  border-bottom: 1px solid #eee8db99;
-  padding: 12px 0;
-  font-size: 18px;
-  text-transform: uppercase;
-}
-.salt-contract-details dd {
-  margin: 0;
-  color: var(--salt-gold);
-}
-.salt-contract-details p {
-  font-size: 17px;
-  line-height: 1.3;
-  margin: 18px 0 0;
-}
-.salt-partie {
-  padding: 42px 2.5vw;
-  background: var(--salt-page);
-}
-/* No plate here — the demo stands on the page colour, so there is nothing to veil. */
-.salt-partie::before {
-  display: none;
-}
-.salt-partie > .salt-copy {
-  max-width: 890px;
-}
-.salt-partie > .salt-copy h2 {
-  font-size: clamp(38px, 3.5vw, 70px);
-}
-.salt-partie > .salt-copy p:not(.salt-eyebrow) {
-  max-width: 760px;
-}
-.salt-partie > .salt-copy .game-button {
-  margin-bottom: 28px;
-}
-.salt-demo.game-scene-layout {
-  height: auto;
-  min-height: 0;
-  border: 1px solid var(--salt-gold);
-}
-.salt-demo__location {
+.game-scene__location {
   text-align: center;
   text-transform: uppercase;
   font-family: var(--font-display);
@@ -258,21 +151,18 @@
   padding: 9px;
   border-bottom: 1px solid var(--salt-gold);
 }
-.salt-demo__location small {
+.game-scene__location small {
   display: block;
   font-family: var(--font-ui);
   font-size: 14px;
   text-transform: none;
   letter-spacing: 0.04em;
-  color: #d1c9b7;
+  color: var(--salt-paper-dim);
 }
-.salt-demo .game-scene-layout__body {
-  min-height: 540px;
-}
-.salt-demo__reader {
+.game-scene__reader {
   padding: 20px 24px;
 }
-.salt-demo__reader h3 {
+.game-scene__reader h3 {
   font-family: var(--font-display);
   font-size: 34px;
   font-weight: 400;
@@ -280,88 +170,27 @@
   color: var(--salt-gold);
   margin: 0 0 10px;
 }
-.salt-demo__reader > p {
+.game-scene__reader > p {
   font-size: clamp(22px, 1.65vw, 26px);
   line-height: 1.22;
   margin: 0 0 20px;
 }
-.salt-demo__choices {
+.game-scene__choices {
   display: grid;
   gap: 8px;
   margin-bottom: 16px;
 }
-.salt-demo .dialogue-choice {
-  min-height: 64px;
-}
-.salt-demo__response p {
+.game-scene__response p {
   font-size: 19px;
   line-height: 1.35;
 }
-.salt-demo__response:empty {
+.game-scene__response:empty {
   display: none;
 }
-.salt-hud {
-  background: #080908;
-  border-top: 1px solid var(--salt-gold);
-}
-.salt-hud .game-session-hud__bars {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  width: 100%;
-}
-.salt-hud .game-session-hud__tools {
-  display: none;
-}
-.salt-hud.game-session-hud {
-  display: block;
-}
+/* The thirst gauge reads as salt, not ember — a landing-only tint. */
 .salt-hud__thirst {
   --stat-bar-color: var(--salt-paper);
   --stat-bar-light: var(--salt-paper);
-}
-.salt-hud .stat-bar__icon img {
-  object-fit: contain;
-}
-.salt-survie {
-  display: flex;
-  align-items: center;
-  /* Copy sits right, over the brightest plate of the five — bare sand. */
-  --salt-veil-angle: 270deg;
-  --salt-veil-strength: 88%;
-}
-.salt-survie .salt-copy {
-  margin-left: 57%;
-  width: 43%;
-}
-.salt-auberge {
-  display: flex;
-  align-items: end;
-  justify-content: center;
-  padding-bottom: 28px;
-  /* Copy is centred at the foot of the plate: the veil rises from the bottom. */
-  --salt-veil-angle: 0deg;
-  --salt-veil-strength: 82%;
-}
-.salt-auberge .salt-copy {
-  text-align: center;
-  width: 100%;
-  max-width: 1050px;
-  padding-top: 350px;
-}
-.salt-auberge .salt-copy h2 {
-  font-size: clamp(42px, 4.5vw, 84px);
-}
-.salt-auberge .salt-copy > p:not(.salt-eyebrow) {
-  max-width: 860px;
-  margin-inline: auto;
-}
-.salt-auberge .salt-actions {
-  justify-content: center;
-}
-.salt-copy .salt-meta {
-  font-size: 16px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  margin: 26px 0 0;
 }
 .salt-footer {
   border-top: 1px solid var(--salt-gold);
@@ -379,14 +208,6 @@
   display: inline-flex;
   align-items: center;
 }
-@media (min-width: 1440px) {
-  .salt-partie > .salt-copy {
-    max-width: 940px;
-  }
-  .salt-partie .salt-demo {
-    margin-top: 0;
-  }
-}
 @media (min-width: 768px) and (max-width: 1120px) {
   .salt-plan {
     min-height: 780px;
@@ -394,19 +215,6 @@
   .salt-copy h1,
   .salt-copy h2 {
     font-size: 44px;
-  }
-  .salt-seuil .salt-copy {
-    width: 52%;
-  }
-  .salt-contrat .salt-copy {
-    width: 57%;
-  }
-  .salt-survie .salt-copy {
-    margin-left: 48%;
-    width: 52%;
-  }
-  .salt-demo .game-scene-layout__scene {
-    height: 420px;
   }
 }
 @media (max-width: 767px) {
@@ -460,132 +268,24 @@
     height: 320px;
     z-index: -1;
   }
-  .salt-seuil {
-    min-height: 100svh;
-    display: flex;
-    align-items: end;
-    padding: 290px 22px 64px;
-  }
-  .salt-seuil > .salt-art {
-    position: absolute;
-    inset: 64px 0 0;
-    height: auto;
-    margin: 0;
-    z-index: -3;
-  }
   /* The plate leaves the flow on every plan but the threshold, whose art stays
-     behind the copy — so only the threshold still needs a veil, read bottom-up. */
+       behind the copy — so only the threshold still needs a veil, read bottom-up. */
   .salt-plan::before {
     display: none;
   }
-  .salt-seuil::before {
-    display: block;
-    inset: 30% 0 0;
-    background: linear-gradient(
-      0deg,
-      var(--salt-page) 4%,
-      color-mix(in srgb, var(--salt-page) 95%, transparent) 48%,
-      transparent 100%
-    );
-  }
-  .salt-seuil .salt-copy p:not(.salt-eyebrow) {
-    font-size: 21px;
-    max-width: 420px;
-  }
-  .salt-seuil .salt-copy h1 {
-    max-width: 520px;
-  }
-  .salt-scroll {
-    left: 22px;
-    bottom: 8px;
-    gap: 12px;
-  }
-  .salt-scroll span {
-    font-size: 12px;
-  }
-  .salt-contract-details {
-    position: static;
-    width: auto;
-    padding: 0;
-    margin-top: 24px;
-    background: transparent;
-  }
-  .salt-contract-details dl div {
-    font-size: 17px;
-  }
-  .salt-partie {
-    padding: 40px 16px;
-  }
-  .salt-partie > .salt-copy h2 {
-    font-size: clamp(34px, 8.9vw, 58px);
-  }
-  .salt-demo__location {
+  .game-scene__location {
     font-size: 24px;
   }
-  .salt-demo .game-scene-layout__body {
-    min-height: 0;
-  }
-  .salt-demo .game-scene-layout__scene {
-    height: 300px;
-  }
-  .salt-demo__reader {
+  .game-scene__reader {
     padding: 18px 12px;
   }
-  .salt-demo__reader > p {
+  .game-scene__reader > p {
     font-size: 22px;
-  }
-  .salt-demo .dialogue-choice {
-    font-size: 18px;
-  }
-  .salt-hud .game-session-hud__bars {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
-  }
-  .salt-hud .stat-bar:last-child {
-    grid-column: 1 / -1;
-  }
-  .salt-hud {
-    padding: 18px 12px;
-  }
-  .salt-survie {
-    display: block;
-    padding-bottom: 0;
-  }
-  .salt-auberge {
-    display: block;
-    padding-top: 36px;
-  }
-  .salt-auberge > .salt-art {
-    height: 370px;
-  }
-  .salt-auberge .salt-copy {
-    padding-top: 0;
-  }
-  .salt-auberge .salt-copy h2 {
-    font-size: clamp(34px, 8.9vw, 58px);
   }
   .salt-footer {
     flex-wrap: wrap;
     padding: 18px 22px;
     font-size: 13px;
-  }
-  .salt-depth {
-    display: none;
-  }
-}
-@media (max-width: 767px) and (max-height: 740px) {
-  .salt-seuil {
-    padding-top: 190px;
-  }
-  .salt-seuil .salt-copy h1 {
-    font-size: 34px;
-  }
-  .salt-seuil .salt-copy p {
-    margin-bottom: 14px;
-    font-size: 19px;
-  }
-  .salt-seuil .salt-actions {
-    margin-top: 12px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -597,7 +297,6 @@
     scroll-behavior: auto !important;
   }
 }
-
 /* Existing landing CTA variant: keep the approved gold material without the old halo. */
 .salt-landing .game-button--landing {
   min-width: 0;
@@ -619,62 +318,6 @@
 .salt-landing .main-navigation__brand .game-brand__subtitle {
   font-size: 12px;
 }
-.salt-landing .salt-hud .game-hud-dock__content {
-  display: block;
-}
-.salt-hud .game-session-hud__bars {
-  max-width: none;
-  gap: 28px;
-  background: transparent;
-  padding: 6px 16px;
-}
-.salt-hud .stat-bar__label {
-  color: var(--stat-bar-light);
-  font-size: 16px;
-  font-weight: 400;
-  letter-spacing: 0.04em;
-  gap: 12px;
-}
-.salt-hud .stat-bar__value {
-  font-size: 18px;
-  white-space: nowrap;
-}
-.salt-hud .stat-bar__icon {
-  border: 0;
-  background: none;
-  box-shadow: none;
-  transform: none;
-  width: 34px;
-  height: 36px;
-  padding: 0;
-}
-.salt-hud .stat-bar__icon > img {
-  transform: none;
-  filter: none;
-}
-.salt-hud .stat-bar__track {
-  height: 7px;
-  border: 0;
-  padding: 0;
-  box-shadow: none;
-}
-.salt-hud .stat-bar__fill {
-  box-shadow: none;
-}
-.salt-hud .stat-bar__track::before,
-.salt-hud .stat-bar__track::after {
-  display: none;
-}
-.salt-demo .dialogue-choice {
-  padding-left: 70px;
-  padding-right: 38px;
-}
-.salt-demo .dialogue-choice__number {
-  left: 15px;
-}
-.salt-demo .dialogue-choice__label {
-  font-size: 21px;
-}
 .salt-copy:focus-within,
 .salt-demo .game-scene-layout__reader:focus-within {
   opacity: 1 !important;
@@ -690,100 +333,33 @@
 }
 @media (min-width: 1121px) {
   /* One plan, one screen — the deck's own unit. Paired with the min-height
-     above, the height is pinned rather than merely floored. */
+       above, the height is pinned rather than merely floored. */
   .salt-plan {
     height: 100svh;
     max-height: 100svh;
     min-height: 100svh;
   }
-  /* The intro used to be a full block that the demo was then pulled back over
-     with a negative margin, which forced the location bar and the plate to be
-     shoved sideways to dodge it. Nothing overlaps any more: the intro is a band
-     — title left, sentence and button right, on one baseline — and the demo is
-     a plain rectangle underneath it. */
-  .salt-partie {
-    display: grid;
-    /* minmax(0, 1fr), not 1fr: a bare 1fr keeps an automatic minimum equal to
-       the demo's content height, which is exactly what used to push the section
-       past the fold. Allowing the row to shrink is what caps the section. */
-    grid-template-rows: auto minmax(0, 1fr);
-    align-content: stretch;
-    gap: 20px;
-    padding-top: 28px;
-  }
-  /* Title on the left, supporting copy and call to action on the right when they
-     are present — the intro reads as one band either way, and the demo below it
-     keeps a straight top edge. */
-  .salt-partie > .salt-copy {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: end;
-    justify-content: space-between;
-    column-gap: 40px;
-    row-gap: 8px;
-    width: 100%;
-    max-width: none;
-  }
-  .salt-partie > .salt-copy .salt-eyebrow {
-    flex: 1 0 100%;
-    margin-bottom: 0;
-  }
-  .salt-partie > .salt-copy h2 {
-    flex: 1 1 520px;
-    font-size: clamp(32px, 2.5vw, 48px);
-    margin-bottom: 0;
-  }
-  .salt-partie > .salt-copy > p:not(.salt-eyebrow) {
-    flex: 1 1 340px;
-    width: auto;
-    font-size: 19px;
-    line-height: 1.25;
-    margin-bottom: 0;
-  }
-  .salt-partie > .salt-copy .game-button {
-    flex: 0 0 auto;
-    font-size: 19px;
-    padding-inline: 24px;
-    min-height: 50px;
-    margin-bottom: 0;
-  }
-  .salt-demo__location {
+  .game-scene__location {
     font-size: 25px;
   }
-  /* The demo takes the row the grid leaves it rather than setting its own
-     height, so the section ends with the viewport instead of past it. Each
-     nested track repeats the minmax(0, …) so the chain can actually shrink. */
-  .salt-partie .salt-demo {
-    min-height: 0;
-    height: 100%;
-    margin-top: 0;
-    grid-template-rows: auto minmax(0, 1fr) auto;
-  }
-  .salt-demo .game-scene-layout__body {
-    min-height: 0;
-    height: 100%;
-  }
   /* The reader is the one part whose text can outgrow the frame — a long
-     passage or a fourth choice. It scrolls inside the panel instead of
-     stretching the section, so the plate and the HUD keep their place. */
-  .salt-demo__reader {
+       passage or a fourth choice. It scrolls inside the panel instead of
+       stretching the section, so the plate and the HUD keep their place. */
+  .game-scene__reader {
     min-height: 0;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: color-mix(in srgb, var(--salt-gold) 55%, transparent) transparent;
   }
-  .salt-demo__reader > p {
+  .game-scene__reader > p {
     font-size: 24px;
     line-height: 1.2;
     margin-bottom: 14px;
   }
-  .salt-demo__reader {
+  .game-scene__reader {
     padding: 18px 22px;
   }
-  .salt-demo .dialogue-choice {
-    padding-block: 10px;
-  }
-  .salt-demo__choices {
+  .game-scene__choices {
     gap: 6px;
     margin-bottom: 12px;
   }
@@ -800,37 +376,7 @@
     padding: 10px 24px;
     font-size: 21px;
   }
-  .salt-hud .game-session-hud__bars {
-    gap: 18px;
-    padding: 6px 0;
-  }
-  .salt-hud .stat-bar__label {
-    font-size: 15px;
-    gap: 6px;
-  }
-  .salt-hud .stat-bar__value {
-    font-size: 16px;
-  }
-  .salt-hud .stat-bar__icon {
-    width: 24px;
-    height: 26px;
-  }
-  .salt-hud .stat-bar__icon img {
-    width: 24px;
-    height: 26px;
-  }
-  .salt-demo .dialogue-choice__label {
-    font-size: 18px;
-  }
-  .salt-demo .dialogue-choice {
-    padding-left: 56px;
-    padding-right: 26px;
-  }
-  .salt-demo .dialogue-choice__number {
-    left: 8px;
-  }
 }
-
 /* ImageGen masters rebuilt from the approved compositions, with fixed corner slices. */
 .salt-landing .game-button--landing::before,
 .salt-landing .game-button--landing:hover::before {
@@ -840,7 +386,7 @@
   filter: none;
 }
 .salt-landing .game-button--landing {
-  color: #13110b;
+  color: var(--salt-on-gold);
   font-family: var(--font-display);
   letter-spacing: 0.01em;
   transition:
@@ -853,117 +399,19 @@
 .salt-landing .game-button--landing:active {
   transform: translateY(2px);
 }
-.salt-demo .dialogue-choice::before {
-  background: none;
-  border: 8px solid transparent;
-  border-image: url('/encre-de-sel/landing/choice-paper.webp') 20 110 20 30 fill / 8px 36px 8px 10px;
-  inset: 0 0 0 40px;
-  filter: none;
-}
-.salt-demo .dialogue-choice {
-  min-height: 64px;
-  padding: 12px 36px 12px 77px;
-  gap: 0;
-}
-.salt-demo .dialogue-choice__number {
-  background: url('/encre-de-sel/landing/choice-number.webp') center / 100% 100% no-repeat;
-  width: 61px;
-  height: 62px;
-  left: 0;
-  top: 50%;
-  bottom: auto;
-  transform: translateY(-50%);
-  padding-right: 9px;
-  font-size: 35px;
-}
-.salt-demo .dialogue-choice__label {
-  grid-column: 1 / -1;
-}
-.salt-demo .narrative-composer::before {
-  border-image: url('/encre-de-sel/landing/input-frame.webp') 22 fill / 7px;
-  border-width: 7px;
-}
-.salt-demo .narrative-composer {
-  background: #080908;
-}
-.salt-demo .narrative-composer__heading {
-  font-family: var(--font-ui);
-}
-.salt-demo .narrative-composer__control {
-  font-size: 19px;
-}
-.salt-demo .narrative-composer__action {
-  width: 50px;
-  min-width: 50px;
-  height: 50px;
-}
-.salt-demo.game-scene-layout {
-  border: 3px solid transparent;
-  border-image: url('/encre-de-sel/landing/input-frame.webp') 22 / 3px;
-}
-.salt-demo__location {
+.game-scene__location {
   border-bottom: 3px solid transparent;
   border-image: url('/encre-de-sel/landing/input-frame.webp') 22 / 0 0 3px 0;
-}
-@media (max-width: 767px) {
-  .salt-demo .dialogue-choice {
-    padding-left: 64px;
-    padding-right: 26px;
-  }
-  .salt-demo .dialogue-choice__number {
-    width: 50px;
-    height: 58px;
-    font-size: 30px;
-  }
-  .salt-demo .dialogue-choice::before {
-    left: 30px;
-  }
-}
-
-.salt-ash {
-  position: absolute;
-  width: 75px;
-  height: 100px;
-  z-index: -1;
-  pointer-events: none;
 }
 .salt-ash--gate {
   left: 71%;
   top: 38%;
-}
-.salt-ash i {
-  position: absolute;
-  width: 2px;
-  height: 3px;
-  background: #eac36f;
-  opacity: 0;
-  top: 60%;
-  left: 45%;
-}
-.salt-ash i:nth-child(2n) {
-  left: 25%;
-  top: 40%;
-}
-.salt-ash i:nth-child(3n) {
-  left: 70%;
-  top: 75%;
-}
-.salt-ash i:nth-child(4n) {
-  left: 55%;
-  top: 30%;
-  width: 3px;
-}
-@media (max-width: 767px), (prefers-reduced-motion: reduce) {
-  .salt-ash {
-    display: none;
-  }
 }
 @media (prefers-reduced-motion: no-preference) {
   html:has(.salt-landing) {
     scroll-behavior: smooth;
   }
 }
-
 /* Lenis owns the scroll position; native smoothing would fight it. */
 html.lenis,
 html.lenis body {
@@ -978,7 +426,6 @@ html.lenis body {
 .lenis.lenis-stopped {
   overflow: hidden;
 }
-
 /* Motion layer. Everything below is transform/opacity only and disabled under reduced motion. */
 .salt-progress {
   position: fixed;
@@ -997,9 +444,6 @@ html.lenis body {
   padding: 0.12em 0.05em 0.08em;
   margin: -0.12em -0.05em -0.08em;
 }
-.salt-scroll i {
-  font-style: normal;
-}
 .salt-landing .game-button--landing {
   overflow: hidden;
 }
@@ -1011,7 +455,7 @@ html.lenis body {
   content: '';
   position: absolute;
   inset: -20% -10%;
-  background: linear-gradient(105deg, transparent 38%, #fff5d955 50%, transparent 62%);
+  background: linear-gradient(105deg, transparent 38%, var(--salt-sheen) 50%, transparent 62%);
   transform: translateX(-130%) skewX(-18deg);
   pointer-events: none;
 }
@@ -1032,18 +476,6 @@ html.lenis body {
   transform-origin: left center;
 }
 @media (prefers-reduced-motion: no-preference) {
-  /* Hero copy stays hidden until the opening runs; without JS it fades in on its own. */
-  .salt-seuil .salt-copy > :not(.salt-actions),
-  .salt-seuil .salt-actions > *,
-  .salt-seuil .salt-scroll,
-  .salt-seuil .salt-depth {
-    opacity: 0;
-    transform: translateY(24px);
-    animation: salt-hero-fallback 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.6s forwards;
-  }
-  .salt-seuil .salt-depth {
-    transform: none;
-  }
   .salt-landing .main-navigation--marketing.game-top-bar {
     opacity: 0;
     transform: translateY(-14px);
@@ -1056,10 +488,6 @@ html.lenis body {
   .salt-landing--motion .main-navigation--marketing.game-top-bar {
     animation: none;
   }
-  .salt-scroll i {
-    display: inline-block;
-    animation: salt-bob 2.2s ease-in-out infinite;
-  }
   .salt-landing .game-button--landing:hover .game-button__label::after {
     animation: salt-sheen 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
@@ -1067,7 +495,7 @@ html.lenis body {
   .salt-text-link:hover::after {
     animation: salt-underline 0.6s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  .salt-demo__response {
+  .game-scene__response {
     animation: salt-fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1);
   }
 }

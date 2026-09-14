@@ -66,7 +66,7 @@ export function attachCursor(cursor: HTMLElement) {
     const active = Boolean(target.closest(INTERACTIVE))
     gsap.to(grain, {
       scale: active ? 1.9 : 1,
-      backgroundColor: active ? 'var(--salt-paper, #eee8db)' : 'var(--salt-gold, #d9ac55)',
+      backgroundColor: active ? 'var(--salt-paper)' : 'var(--salt-gold)',
       duration: 0.3,
       ease: 'power3.out',
     })

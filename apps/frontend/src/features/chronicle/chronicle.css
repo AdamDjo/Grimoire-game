@@ -8,7 +8,7 @@
 }
 
 .chronicle-page::before {
-  background-image: url('/landing/textures/grain.svg');
+  background-image: url('/ui-kit/surfaces/grain.svg');
   content: '';
   inset: 0;
   opacity: 0.045;

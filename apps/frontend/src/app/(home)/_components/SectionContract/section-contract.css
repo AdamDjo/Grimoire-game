@@ -1,0 +1,51 @@
+.salt-contrat .salt-copy {
+  max-width: 650px;
+  width: 46%;
+}
+.salt-contract-details {
+  position: absolute;
+  bottom: 8%;
+  right: 4.5%;
+  width: 290px;
+  padding: 16px;
+  background: var(--salt-veil-deep);
+  z-index: 2;
+}
+.salt-contract-details dl {
+  margin: 0;
+}
+.salt-contract-details dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--salt-rule);
+  padding: 12px 0;
+  font-size: 18px;
+  text-transform: uppercase;
+}
+.salt-contract-details dd {
+  margin: 0;
+  color: var(--salt-gold);
+}
+.salt-contract-details p {
+  font-size: 17px;
+  line-height: 1.3;
+  margin: 18px 0 0;
+}
+@media (min-width: 768px) and (max-width: 1120px) {
+  .salt-contrat .salt-copy {
+    width: 57%;
+  }
+}
+@media (max-width: 767px) {
+  .salt-contract-details {
+    position: static;
+    width: auto;
+    padding: 0;
+    margin-top: 24px;
+    background: transparent;
+  }
+  .salt-contract-details dl div {
+    font-size: 17px;
+  }
+}

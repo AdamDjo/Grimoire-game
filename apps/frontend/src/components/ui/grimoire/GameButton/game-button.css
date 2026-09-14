@@ -33,7 +33,11 @@
 
 .game-button::before {
   background:
-    linear-gradient(90deg, color-mix(in srgb, var(--material-gold) 8%, transparent), transparent 36%),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--material-gold) 8%, transparent),
+      transparent 36%
+    ),
     var(--ink-raised);
   border: 1px solid color-mix(in srgb, var(--material-gold) 68%, transparent);
   box-shadow:
@@ -55,10 +59,14 @@
 
 .game-button::after {
   background:
-    linear-gradient(var(--material-gold-bright), var(--material-gold-bright)) left top / 15px 1px no-repeat,
-    linear-gradient(var(--material-gold-bright), var(--material-gold-bright)) left top / 1px 15px no-repeat,
-    linear-gradient(var(--material-gold-bright), var(--material-gold-bright)) right bottom / 15px 1px no-repeat,
-    linear-gradient(var(--material-gold-bright), var(--material-gold-bright)) right bottom / 1px 15px no-repeat;
+    linear-gradient(var(--material-gold-bright), var(--material-gold-bright)) left top / 15px 1px
+      no-repeat,
+    linear-gradient(var(--material-gold-bright), var(--material-gold-bright)) left top / 1px 15px
+      no-repeat,
+    linear-gradient(var(--material-gold-bright), var(--material-gold-bright)) right bottom / 15px
+      1px no-repeat,
+    linear-gradient(var(--material-gold-bright), var(--material-gold-bright)) right bottom / 1px
+      15px no-repeat;
   box-shadow: none;
   content: '';
   inset: 7px;
@@ -72,7 +80,11 @@
 
 .game-button:hover:not(:disabled):not([aria-disabled='true'])::before {
   background:
-    linear-gradient(90deg, color-mix(in srgb, var(--material-gold) 14%, transparent), transparent 48%),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--material-gold) 14%, transparent),
+      transparent 48%
+    ),
     color-mix(in srgb, var(--ink-raised) 92%, var(--material-gold));
   filter: brightness(1.05);
   transform: translate3d(0, 0, 0);
@@ -214,8 +226,8 @@
 .game-button--landing::before,
 .game-button--landing-gameplay::before {
   background-image: image-set(
-    url('/landing/ui/cta-gold-texture-trimmed.webp') type('image/webp'),
-    url('/landing/ui/cta-gold-texture-trimmed.png') type('image/png')
+    url('/ui-kit/controls/cta-gold-texture.webp') type('image/webp'),
+    url('/ui-kit/controls/cta-gold-texture.png') type('image/png')
   );
   background-position: center;
   background-repeat: no-repeat;
@@ -253,8 +265,8 @@
 
 .game-button--landing-gameplay::before {
   background-image: image-set(
-    url('/landing/ui/gameplay-cta-texture-trimmed.webp') type('image/webp'),
-    url('/landing/ui/gameplay-cta-texture-trimmed.png') type('image/png')
+    url('/ui-kit/controls/cta-dark-texture.webp') type('image/webp'),
+    url('/ui-kit/controls/cta-dark-texture.png') type('image/png')
   );
 }
 
@@ -363,29 +375,17 @@
 
 .game-button--danger {
   --game-button-accent: var(--fresh-blood);
-  --game-button-accent-light: color-mix(
-    in srgb,
-    var(--fresh-blood) 68%,
-    var(--salt-white)
-  );
+  --game-button-accent-light: color-mix(in srgb, var(--fresh-blood) 68%, var(--salt-white));
 }
 
 .game-button--aqua {
   --game-button-accent: var(--breath-aqua);
-  --game-button-accent-light: color-mix(
-    in srgb,
-    var(--breath-aqua) 68%,
-    var(--salt-white)
-  );
+  --game-button-accent-light: color-mix(in srgb, var(--breath-aqua) 68%, var(--salt-white));
 }
 
 .game-button--ember {
   --game-button-accent: var(--calamine);
-  --game-button-accent-light: color-mix(
-    in srgb,
-    var(--calamine) 72%,
-    var(--salt-white)
-  );
+  --game-button-accent-light: color-mix(in srgb, var(--calamine) 72%, var(--salt-white));
 }
 
 .game-button--sm {

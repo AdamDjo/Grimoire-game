@@ -1,0 +1,163 @@
+.salt-seuil {
+  display: flex;
+  align-items: center;
+  padding-top: 118px;
+  padding-bottom: 100px;
+  /* Kept light: the hero art is the strongest of the five and carries its own shade. */
+  --salt-veil-strength: 62%;
+}
+.salt-seuil .salt-art {
+  top: 72px;
+}
+.salt-seuil .salt-copy {
+  width: 43%;
+  max-width: 720px;
+  margin-top: 6vh;
+}
+/* The plate is offset below the bar, so the veil follows it rather than the plan. */
+.salt-seuil::before {
+  inset: 72px 0 0;
+}
+.salt-scroll {
+  position: absolute;
+  bottom: 32px;
+  left: 4.5vw;
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  min-height: 44px;
+  text-decoration: none;
+}
+.salt-scroll span {
+  font-size: 16px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.salt-depth {
+  position: absolute;
+  inset: 72px 0 0;
+  pointer-events: none;
+  /* Sits between the plate and the veil: it shades the art, not the copy. */
+  z-index: -3;
+  box-shadow:
+    inset 30px 0 45px var(--salt-veil-soft),
+    inset -30px 0 45px var(--salt-veil);
+}
+@media (min-width: 768px) and (max-width: 1120px) {
+  .salt-seuil .salt-copy {
+    width: 52%;
+  }
+}
+@media (max-width: 767px) {
+  .salt-seuil {
+    min-height: 100svh;
+    display: flex;
+    align-items: end;
+    padding: 290px 22px 64px;
+  }
+  .salt-seuil > .salt-art {
+    position: absolute;
+    inset: 64px 0 0;
+    height: auto;
+    margin: 0;
+    z-index: -3;
+  }
+  .salt-seuil::before {
+    display: block;
+    inset: 30% 0 0;
+    background: linear-gradient(
+      0deg,
+      var(--salt-page) 4%,
+      color-mix(in srgb, var(--salt-page) 95%, transparent) 48%,
+      transparent 100%
+    );
+  }
+  .salt-seuil .salt-copy p:not(.salt-eyebrow) {
+    font-size: 21px;
+    max-width: 420px;
+  }
+  .salt-seuil .salt-copy h1 {
+    max-width: 520px;
+  }
+  .salt-scroll {
+    left: 22px;
+    bottom: 8px;
+    gap: 12px;
+  }
+  .salt-scroll span {
+    font-size: 12px;
+  }
+  .salt-depth {
+    display: none;
+  }
+}
+@media (max-width: 767px) and (max-height: 740px) {
+  .salt-seuil {
+    padding-top: 190px;
+  }
+  .salt-seuil .salt-copy h1 {
+    font-size: 34px;
+  }
+  .salt-seuil .salt-copy p {
+    margin-bottom: 14px;
+    font-size: 19px;
+  }
+  .salt-seuil .salt-actions {
+    margin-top: 12px;
+  }
+}
+.salt-ash {
+  position: absolute;
+  width: 75px;
+  height: 100px;
+  z-index: -1;
+  pointer-events: none;
+}
+.salt-ash i {
+  position: absolute;
+  width: 2px;
+  height: 3px;
+  background: var(--salt-ember);
+  opacity: 0;
+  top: 60%;
+  left: 45%;
+}
+.salt-ash i:nth-child(2n) {
+  left: 25%;
+  top: 40%;
+}
+.salt-ash i:nth-child(3n) {
+  left: 70%;
+  top: 75%;
+}
+.salt-ash i:nth-child(4n) {
+  left: 55%;
+  top: 30%;
+  width: 3px;
+}
+@media (max-width: 767px), (prefers-reduced-motion: reduce) {
+  .salt-ash {
+    display: none;
+  }
+}
+.salt-scroll i {
+  font-style: normal;
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* Hero copy stays hidden until the opening runs; without JS it fades in on its own. */
+  .salt-seuil .salt-copy > :not(.salt-actions),
+  .salt-seuil .salt-actions > *,
+  .salt-seuil .salt-scroll,
+  .salt-seuil .salt-depth {
+    opacity: 0;
+    transform: translateY(24px);
+    animation: salt-hero-fallback 0.9s cubic-bezier(0.22, 1, 0.36, 1) 1.6s forwards;
+  }
+  .salt-seuil .salt-depth {
+    transform: none;
+  }
+  .salt-scroll i {
+    display: inline-block;
+    animation: salt-bob 2.2s ease-in-out infinite;
+  }
+}
