@@ -13,8 +13,9 @@ Exécuter dans l'ordre :
 1. **Créer l'issue GitHub**
    - Demander : "Décris le problème en production en une phrase"
    - Déduire le domaine : `domain: frontend`, `domain: backend` et/ou `domain: ai`.
-   - Créer l'issue avec `gh issue create`, les labels `type: bug`, `priority: high`,
-     `phase: postdeploy` et le domaine, puis l'assigner à `AdamDjo`.
+   - Créer l'issue avec `gh issue create`, les labels `phase: postdeploy` et le domaine pour seuls
+     labels, puis l'assigner à `AdamDjo`. Aucun label `type:` ni `priority:` : ces familles ont été
+     supprimées ; l'urgence se lit dans le titre et la branche `hotfix/*`.
    - Noter le numéro de l'issue créée → `<numéro>`
 
 2. **Ajouter l'issue au projet Scrum Board**

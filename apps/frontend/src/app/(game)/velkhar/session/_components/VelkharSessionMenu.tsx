@@ -1,9 +1,9 @@
 'use client'
 
-import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 
+import { GameLink } from '@/components/ui/game-link'
 import { GameButton } from '@/components/ui/grimoire/GameButton/GameButton'
 import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
 import { LanguageSwitcher } from '@/components/ui/language-switcher'
@@ -14,15 +14,9 @@ interface VelkharSessionMenuProps {
   ending: boolean
   onAbandon: () => Promise<void>
   onResume: () => void
-  source?: 'ai' | 'stub'
 }
 
-export function VelkharSessionMenu({
-  ending,
-  onAbandon,
-  onResume,
-  source,
-}: VelkharSessionMenuProps) {
+export function VelkharSessionMenu({ ending, onAbandon, onResume }: VelkharSessionMenuProps) {
   const t = useTranslations('Session')
   const [confirmingAbandon, setConfirmingAbandon] = useState(false)
 
@@ -51,14 +45,12 @@ export function VelkharSessionMenu({
   return (
     <div className="velkhar-session-menu">
       <LanguageSwitcher variant="menu" />
-      <p className="velkhar-session-menu__status">
-        <span aria-hidden="true" data-online={source === 'ai'} />
-        {t('gameMasterStatus', {
-          status: source === 'ai' ? t('gameMasterAlive') : t('gameMasterFallback'),
-        })}
-      </p>
 
-      <GameButton leadingIcon={<GameIcon decorative name="arrow" size={24} />} onClick={onResume}>
+      <GameButton
+        leadingIcon={<GameIcon decorative name="arrow" size={24} />}
+        onClick={onResume}
+        variant="secondary"
+      >
         {t('resumeJourney')}
       </GameButton>
 
@@ -70,21 +62,17 @@ export function VelkharSessionMenu({
         {t('settingsSoon')}
       </GameButton>
 
-      <Link
-        className="velkhar-session-menu__link"
+      <GameLink
         href={`${VELKHAR_WORLD.routes.aveugle}?return=run`}
+        leadingIcon={<GameIcon decorative name="hourglass" size={24} />}
+        variant="secondary"
       >
-        <GameIcon decorative name="hourglass" size={24} />
         {t('returnBlindOne')}
-      </Link>
+      </GameLink>
 
-      <button
-        className="velkhar-session-menu__danger"
-        onClick={() => setConfirmingAbandon(true)}
-        type="button"
-      >
+      <GameButton onClick={() => setConfirmingAbandon(true)} tone="danger" variant="secondary">
         {t('abandonRun')}
-      </button>
+      </GameButton>
     </div>
   )
 }

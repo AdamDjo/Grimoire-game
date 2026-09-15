@@ -1,0 +1,216 @@
+/* Atmosphere, cursor and page veil. Decorative overlays only: fixed, never
+   hit-testable, transform/opacity only, and every animation sleeps under
+   reduced motion. Colours reuse the landing tokens declared in landing-experience.css. */
+
+.salt-atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  pointer-events: none;
+  contain: strict;
+}
+
+/* Grain is tiled SVG turbulence: no network request, no decode, no layout. */
+.salt-atmosphere__grain {
+  position: absolute;
+  inset: -50%;
+  opacity: 0.055;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Vignette holds the eye centred; the warm rim ties it to the gold material. */
+.salt-atmosphere__vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      126% 92% at 50% 50%,
+      transparent 44%,
+      var(--salt-veil) 86%,
+      var(--salt-veil-strong) 100%
+    ),
+    radial-gradient(100% 70% at 50% 108%, var(--salt-glow-gold), transparent 60%);
+}
+
+/* A lantern held to the page: warm light tracking the pointer. JS owns the position. */
+.salt-atmosphere__beam {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: radial-gradient(
+    440px 440px at var(--beam-x, 50%) var(--beam-y, 50%),
+    var(--salt-glow-warm),
+    transparent 66%
+  );
+}
+
+/* ── Cursor ─────────────────────────────────────────────────────────────────
+   A single grain of salt: the page's own lozenge, no ring around it. Shown only
+   once JS confirms a fine pointer, so touch and keyboard users never meet it. */
+.salt-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform;
+}
+.salt-cursor__grain {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  background: var(--salt-gold);
+}
+
+/* ── Page veil ──────────────────────────────────────────────────────────────
+   Covers the viewport while the next route loads, so leaving the landing
+   reads as a cut in the same film rather than a browser navigation. */
+.salt-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  background: var(--salt-page);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+.salt-veil__mark {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2vw, 30px);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--salt-gold);
+  opacity: 0;
+}
+
+/* ── Seam ───────────────────────────────────────────────────────────────────
+   A gold hairline drawn across the top edge of each plan as the reader crosses
+   into it. Injected by JS, so it never exists without motion. */
+.salt-seam {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  z-index: 6;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--salt-gold) 22%,
+    var(--salt-gold) 78%,
+    transparent
+  );
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+/* ── Reading counter ────────────────────────────────────────────────────────
+   Where the reader stands, in a page whose scrollbar rhythm says little. */
+.salt-counter {
+  position: fixed;
+  right: 2.6vw;
+  bottom: 2.4vw;
+  z-index: 44;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  opacity: 0;
+  pointer-events: none;
+  font-family: var(--font-ui);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  mix-blend-mode: difference;
+}
+.salt-counter__index {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  font-size: 15px;
+  color: var(--salt-paper);
+}
+.salt-counter__current {
+  font-size: 22px;
+  color: var(--salt-gold);
+}
+.salt-counter__total {
+  opacity: 0.65;
+}
+.salt-counter__label {
+  max-width: 30vw;
+  overflow: hidden;
+  font-size: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--salt-paper);
+  opacity: 0.75;
+}
+
+@media (max-width: 767px) {
+  .salt-counter {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Eight discrete offsets read as true film grain; steps() avoids tweening. */
+  .salt-atmosphere__grain {
+    animation: salt-grain 0.9s steps(1) infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .salt-atmosphere__grain {
+    opacity: 0.03;
+    animation: none;
+  }
+  .salt-atmosphere__beam,
+  .salt-cursor,
+  .salt-veil,
+  .salt-counter,
+  .salt-seam {
+    display: none;
+  }
+}
+
+/* A coarse pointer never gets the custom cursor or the beam. */
+@media (hover: none), (pointer: coarse) {
+  .salt-cursor,
+  .salt-atmosphere__beam {
+    display: none;
+  }
+}
+
+@keyframes salt-grain {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  12.5% {
+    transform: translate3d(-6%, 3%, 0);
+  }
+  25% {
+    transform: translate3d(4%, -5%, 0);
+  }
+  37.5% {
+    transform: translate3d(-3%, -4%, 0);
+  }
+  50% {
+    transform: translate3d(5%, 4%, 0);
+  }
+  62.5% {
+    transform: translate3d(-5%, 2%, 0);
+  }
+  75% {
+    transform: translate3d(3%, 5%, 0);
+  }
+  87.5% {
+    transform: translate3d(-4%, -3%, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}

@@ -1,4 +1,10 @@
-import { type Character, getPeople, getVocation, maxHpFromBlood } from '@grimoire/shared'
+import {
+  type Character,
+  attributeModifier,
+  getPeople,
+  getVocation,
+  maxHpFromBlood,
+} from '@grimoire/shared'
 
 /**
  * Canonical Velkhar character used to seed the gamesession demo.
@@ -17,9 +23,11 @@ if (!VOCATION || !PEOPLE) {
 
 const blood = VOCATION.baseAttributes.blood + (PEOPLE.attributeBonus.blood ?? 0)
 const breath = VOCATION.baseAttributes.breath + (PEOPLE.attributeBonus.breath ?? 0)
-const ash = VOCATION.baseAttributes.ash + (PEOPLE.attributeBonus.ash ?? 0)
+const will = VOCATION.baseAttributes.will + (PEOPLE.attributeBonus.will ?? 0)
 
 const maxHp = maxHpFromBlood(blood)
+// Mirrors apps/backend/src/game-rules/emprise.ts maxEmpriseCharges — not importable from the frontend package.
+const empriseCharges = Math.max(0, Math.min(5, attributeModifier(will) + 1))
 
 export const MOCK_CHARACTER: Character = {
   id: 'char-demo-01',
@@ -28,7 +36,7 @@ export const MOCK_CHARACTER: Character = {
   people: PEOPLE.id,
   vocation: VOCATION.id,
   stats: {
-    attributes: { blood, breath, ash },
+    attributes: { blood, breath, will },
     survival: {
       hp: maxHp,
       maxHp,
@@ -36,6 +44,7 @@ export const MOCK_CHARACTER: Character = {
       hunger: 100,
       energy: 100,
       calamine: 0,
+      empriseCharges,
       isDying: false,
       neglectStreak: 0,
     },

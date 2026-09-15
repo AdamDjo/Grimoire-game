@@ -92,29 +92,29 @@
 
 .game-divider--celestial,
 .game-divider--auberge {
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  display: block;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   max-width: none;
   width: 100%;
 }
 
-.game-divider--celestial {
-  aspect-ratio: 1695 / 218;
-  background-image: url('/ui-kit/dividers/celestial-divider.webp');
-}
-
-.game-divider--auberge {
-  aspect-ratio: 1975 / 89;
-  background-image: url('/ui-kit/dividers/auberge-divider.webp');
-}
-
 .game-divider--celestial .game-divider__line,
+.game-divider--auberge .game-divider__line {
+  background:
+    linear-gradient(90deg, transparent, currentColor 18%, currentColor 82%, transparent),
+    linear-gradient(90deg, transparent, color-mix(in srgb, currentColor 35%, transparent), transparent);
+  box-shadow: none;
+  height: 1px;
+}
+
 .game-divider--celestial .game-divider__ornament,
-.game-divider--auberge .game-divider__line,
 .game-divider--auberge .game-divider__ornament {
-  display: none;
+  background: transparent;
+  border: 1px solid currentColor;
+  box-shadow: inset 0 0 0 2px var(--ink-black);
+  display: block;
+  height: 9px;
+  width: 9px;
 }
 
 .game-divider--horizontal.game-divider--sm {

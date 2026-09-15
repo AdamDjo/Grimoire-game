@@ -14,8 +14,8 @@ Exécuter dans l'ordre :
    - Demander : "Décris le bug en une phrase (pour l'issue GitHub)"
    - Déduire ou demander la phase : `phase: predeploy` ou `phase: postdeploy`.
    - Déduire le domaine : `domain: frontend`, `domain: backend` et/ou `domain: ai`.
-   - Créer l'issue avec `gh issue create`, le label `type: bug`, la phase et le domaine, puis
-     l'assigner à `AdamDjo`.
+   - Créer l'issue avec `gh issue create`, la phase et le domaine pour seuls labels, puis l'assigner
+     à `AdamDjo`. Aucun label `type:`, `priority:` ou `size:` : ces familles ont été supprimées.
    - Noter le numéro de l'issue créée → `<numéro>`
 
 2. **Ajouter l'issue au projet Scrum Board**

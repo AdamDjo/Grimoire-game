@@ -1,13 +1,13 @@
 .location-identity {
   align-items: center;
-  color: var(--gold-light);
+  color: var(--material-gold-bright);
   display: inline-flex;
-  font-family: var(--font-display);
-  font-size: clamp(0.95rem, 0.35vw + 0.9rem, 1.2rem);
+  font-family: var(--font-game-display);
+  font-size: var(--text-game-label);
   gap: 0.55rem;
   letter-spacing: 0.04em;
   white-space: nowrap;
 }
 .location-identity strong { font-weight: 500; }
-.location-identity i { color: var(--gold); font-style: normal; }
+.location-identity i { color: var(--material-gold); font-style: normal; }
 .location-identity__icon { display: inline-flex; }

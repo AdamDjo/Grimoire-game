@@ -3,7 +3,7 @@
   "extends": ["config:recommended"],
   "timezone": "Europe/Paris",
   "schedule": ["every weekend"],
-  "labels": ["type: chore"],
+  "labels": ["dependencies"],
   "assignees": ["AdamDjo"],
   "packageRules": [
     {
@@ -47,8 +47,7 @@
     {
       "description": "Never auto-merge major updates",
       "matchUpdateTypes": ["major"],
-      "automerge": false,
-      "addLabels": ["priority: high"]
+      "automerge": false
     },
     {
       "description": "Pin GitHub Actions to digest",

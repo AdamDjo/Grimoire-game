@@ -18,7 +18,7 @@ afterEach(() => {
 describe('Aveugle API', () => {
   it('lit le hub réel sans cache', async () => {
     const hub = {
-      iron: 7,
+      gold: 7,
       spendableSouvenirCount: 1,
       namedSouvenirs: [],
       seenTopicIds: ['calcines'],

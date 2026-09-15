@@ -3,7 +3,7 @@ import type { LocalizedString } from "./localized";
 
 /**
  * Who is allowed to apply a condition.
- * @see docs/public/raw/06-SURVIVAL.md §2
+ * @see docs/canon/06-SURVIVAL.md §2
  */
 export type ConditionFamily = "backend" | "ia";
 
@@ -23,7 +23,7 @@ export interface ConditionDefinition {
 
 /**
  * Canon table of survival conditions.
- * @see docs/public/raw/06-SURVIVAL.md §2
+ * @see docs/canon/06-SURVIVAL.md §2
  */
 export const CONDITIONS: ConditionDefinition[] = [
   {

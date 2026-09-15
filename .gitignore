@@ -126,13 +126,19 @@ skills-lock.json
 .obsidian/
 
 # ─────────────────────────────────────────────────────────────
-# Docs — track only the public vault, keep canon and plans private
+# Docs — allow-list : tout est ignoré sauf le vault public.
+# `docs/private/` (assets, plans, masters) reste hors du repo.
 # ─────────────────────────────────────────────────────────────
 /docs/*
-!/docs/00-HOME.md
 !/docs/00-START-HERE.md
-!/docs/public/
-!/docs/public/**
+!/docs/task-router.md
+!/docs/log.md
+!/docs/canon/
+!/docs/canon/**
+!/docs/state/
+!/docs/state/**
+!/docs/tech/
+!/docs/tech/**
 
 # Design files (local, not tracked)
 docs/Design/

@@ -12,8 +12,8 @@
 }
 
 .dashboard-content__welcome {
-  color: var(--ink-2);
-  font-family: var(--font-accent);
+  color: var(--salt-muted);
+  font-family: var(--font-game-body);
   font-size: var(--text-game-lead);
   font-style: italic;
   margin: 0 0 1rem;
@@ -40,8 +40,8 @@
 }
 
 .dashboard-content__panel-heading p {
-  color: var(--gold);
-  font-family: var(--font-ui);
+  color: var(--material-gold);
+  font-family: var(--font-game-ui);
   font-size: var(--text-game-label);
   letter-spacing: 0.15em;
   margin: 0 0 0.15rem;
@@ -49,8 +49,8 @@
 }
 
 .dashboard-content__panel-heading h2 {
-  color: var(--gold-light);
-  font-family: var(--font-accent);
+  color: var(--material-gold-bright);
+  font-family: var(--font-game-heading);
   font-size: clamp(1.55rem, 2vw, 2.1rem);
   font-weight: 500;
   line-height: 1.1;
@@ -59,7 +59,10 @@
 }
 
 .dashboard-content__copy {
-  color: var(--ink-2);
+  color: var(--salt-muted);
+  font-family: var(--font-game-body);
+  font-size: var(--text-game-body);
+  line-height: 1.55;
   margin: clamp(1.5rem, 3vw, 2.5rem) 0;
   max-width: 48ch;
   text-wrap: pretty;
@@ -83,8 +86,8 @@
 }
 
 .dashboard-content__empty p {
-  color: var(--parchment);
-  font-family: var(--font-accent);
+  color: var(--salt-white);
+  font-family: var(--font-game-body);
   font-size: var(--text-game-quote);
   font-style: italic;
   margin: 0 0 0.4rem;
@@ -92,14 +95,14 @@
 }
 
 .dashboard-content__empty span {
-  color: var(--ink-2);
-  font-family: var(--font-ui);
+  color: var(--salt-muted);
+  font-family: var(--font-game-ui);
   font-size: var(--text-game-body-sm);
 }
 
 .dashboard-content__boundary {
   align-items: center;
-  color: var(--ink-2);
+  color: var(--salt-muted);
   display: flex;
   gap: 0.8rem;
   justify-content: center;
@@ -109,7 +112,7 @@
 }
 
 .dashboard-content__boundary p {
-  font-family: var(--font-accent);
+  font-family: var(--font-game-body);
   font-size: var(--text-game-body-sm);
   font-style: italic;
   margin: 0;
@@ -127,10 +130,10 @@
 .auth-sign-out button {
   background: transparent;
   border: 0;
-  color: var(--ink-2);
+  color: var(--salt-muted);
   cursor: pointer;
   font-family: var(--font-game-ui);
-  font-size: 0.82rem;
+  font-size: var(--text-game-body-sm);
   min-height: 44px;
   padding: 0.5rem 0.75rem;
   text-decoration: underline;
@@ -139,7 +142,7 @@
 }
 
 .auth-sign-out button:hover {
-  color: var(--gold-light);
+  color: var(--material-gold-bright);
 }
 
 .auth-sign-out button:disabled {
@@ -148,9 +151,9 @@
 }
 
 .auth-sign-out span {
-  color: color-mix(in srgb, var(--blood) 58%, var(--parchment));
+  color: color-mix(in srgb, var(--fresh-blood) 58%, var(--salt-white));
   font-family: var(--font-game-ui);
-  font-size: 0.8rem;
+  font-size: var(--text-game-caption);
 }
 
 @media (max-width: 900px) {

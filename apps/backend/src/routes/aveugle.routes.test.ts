@@ -12,7 +12,6 @@ const getAveugleHubState = vi.fn()
 const markTopicSeen = vi.fn()
 const generateAveugleTalkResponse = vi.fn()
 const spendSouvenirForLore = vi.fn()
-const priceForExchange = vi.fn()
 
 class SouvenirNotFoundError extends Error {}
 class SouvenirNotSpendableError extends Error {}
@@ -22,7 +21,6 @@ vi.mock('../services/aveugle.service', () => ({
   markTopicSeen,
   generateAveugleTalkResponse,
   spendSouvenirForLore,
-  priceForExchange,
   SouvenirNotFoundError,
   SouvenirNotSpendableError,
 }))
@@ -60,13 +58,12 @@ beforeEach(() => {
   markTopicSeen.mockReset()
   generateAveugleTalkResponse.mockReset()
   spendSouvenirForLore.mockReset()
-  priceForExchange.mockReset()
 })
 
 describe('GET /hub', () => {
   it('returns the hub state scoped to the caller', async () => {
     getAveugleHubState.mockResolvedValue({
-      iron: 5,
+      gold: 5,
       spendableSouvenirCount: 2,
       namedSouvenirs: [],
       seenTopicIds: [],
@@ -75,9 +72,9 @@ describe('GET /hub', () => {
     await withServer(AUTH, async (baseUrl) => {
       const res = await fetch(`${baseUrl}/api/aveugle/hub`)
       expect(res.status).toBe(200)
-      const body = (await res.json()) as { success: boolean; data: { iron: number } }
+      const body = (await res.json()) as { success: boolean; data: { gold: number } }
       expect(body.success).toBe(true)
-      expect(body.data.iron).toBe(5)
+      expect(body.data.gold).toBe(5)
       expect(getAveugleHubState).toHaveBeenCalledWith('user1')
     })
   })

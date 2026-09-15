@@ -53,7 +53,7 @@ export type AiSouvenirCandidate = z.infer<typeof aiSouvenirCandidateSchema>
  * whitelist copy or renamed id must never silently pass through).
  * `calamineDelta` is only meaningful when `id === "cendre_corrupt"` (#182) —
  * capped at +20/turn by `clampCalamineDelta`, ignored for every other id.
- * @see docs/public/raw/06-SURVIVAL.md §2 "Les deux familles de conditions", §4 "La Cendre et la Calamine"
+ * @see docs/canon/06-SURVIVAL.md §2 "Les deux familles de conditions", §4 "La Cendre et la Calamine"
  */
 export const aiApplyConditionSchema = z.object({
   id: z.string().min(1).refine(isValidAiConditionId, {
@@ -71,7 +71,7 @@ export type AiApplyCondition = z.infer<typeof aiApplyConditionSchema>
  * `game-rules/inventory.ts` before ever persisting it — this schema only
  * checks structure (known category, a known slot when the item is
  * equipment). "heirloom" is never AI-proposable (death/inheritance only).
- * @see docs/public/raw/11-INVENTORY-ECONOMY.md §1, docs/public/raw/15-GAME-MASTER.md §4.5
+ * @see docs/canon/11-INVENTORY-ECONOMY.md §1, docs/canon/15-GAME-MASTER.md §4.5
  */
 export const aiItemGainedEffectSchema = z.object({
   healAmount: z.number().finite().optional(),
@@ -101,13 +101,63 @@ export type AiItemGained = z.infer<typeof aiItemGainedSchema>
  * values, those are computed by `game-rules/rest.ts` from the canon table.
  * "inn" is a distinct, session-ending flow (`endSessionAtInn`) and is out of
  * scope here — the backend silently ignores it if proposed.
- * @see docs/public/raw/06-SURVIVAL.md §3, docs/public/raw/15-GAME-MASTER.md §4.5
+ * @see docs/canon/06-SURVIVAL.md §3, docs/canon/15-GAME-MASTER.md §4.5
  */
 export const aiRestRequestedSchema = z.object({
   type: z.enum(['short', 'fire', 'inn']),
 })
 
 export type AiRestRequested = z.infer<typeof aiRestRequestedSchema>
+
+/**
+ * Zod schema for the optional per-turn `combat_encounter` proposal (#235).
+ *
+ * Canon is explicit that a fight is "jamais activé par le joueur" — it is a
+ * narrative pivot the Game Master announces (`10-COMBAT §1`). That makes the AI
+ * the only thing that can *signal* an encounter, and it is precisely why this
+ * schema is the narrowest of the four proposals: the AI names creatures and
+ * says whether they ambushed. It supplies no HP, no AC, no damage and no
+ * initiative — those come from the bestiary, keyed by an id this schema forces
+ * to be a canon one.
+ *
+ * The count is capped at four because a camp acts as a block (§2): a larger
+ * group would not make the fight richer, only longer and more lethal without
+ * the player ever getting a decision in between.
+ *
+ * The backend re-validates every id against the *floor* the player is actually
+ * on (`creaturesForDepth`) before instantiating anything — a Watcher King
+ * proposed on floor 2 is refused, not obeyed.
+ * @see docs/canon/10-COMBAT.md §1, §2
+ * @see docs/canon/03-BESTIARY.md §6bis
+ */
+export const aiCombatEncounterSchema = z.object({
+  creatureIds: z.array(z.string().min(1)).min(1).max(4),
+  /**
+   * An ambush skips the disengagement options canon otherwise requires the AI
+   * to offer (§1). It is a fact about the fiction, not a difficulty knob.
+   */
+  ambush: z.boolean().optional(),
+  reason: z.string().min(1).max(280),
+})
+
+export type AiCombatEncounter = z.infer<typeof aiCombatEncounterSchema>
+
+/**
+ * Zod schema for the optional per-turn `break_deadlock` proposal (#267). The
+ * AI signals that no other narrative path exists and the player is forcing
+ * one open through sheer Emprise (VOLONTÉ). It only supplies a justification —
+ * the backend is the sole authority on whether the character can even attempt
+ * this: `canForceAction` re-checks the live Emprise charge count independently
+ * of anything the AI believes, and the proposal is silently dropped (no charge
+ * spent, no narration changed) if the character is at 0 charges.
+ * @see docs/canon/04-ATTRIBUTES.md "Les charges d'Emprise" §"Garde-fous"
+ * @see docs/canon/11-INVENTORY-ECONOMY.md §5bis
+ */
+export const aiBreakDeadlockSchema = z.object({
+  reason: z.string().min(1).max(280),
+})
+
+export type AiBreakDeadlock = z.infer<typeof aiBreakDeadlockSchema>
 
 export const sceneTypeSchema = z.enum(['exploration', 'combat', 'dialog', 'event', 'shop', 'rest'])
 
@@ -130,6 +180,10 @@ export const aiSceneSchema = z.object({
   item_gained: aiItemGainedSchema.nullish().transform((v) => v ?? undefined),
   /** Optional rest proposal for this turn (#184). Some models emit `null` instead of omitting the field. */
   rest_requested: aiRestRequestedSchema.nullish().transform((v) => v ?? undefined),
+  /** Optional hostile-encounter signal for this turn (#235). Some models emit `null` instead of omitting the field. */
+  combat_encounter: aiCombatEncounterSchema.nullish().transform((v) => v ?? undefined),
+  /** Optional forced-deadlock-break signal for this turn (#267). Some models emit `null` instead of omitting the field. */
+  break_deadlock: aiBreakDeadlockSchema.nullish().transform((v) => v ?? undefined),
 })
 
 export type AiScenePayload = z.infer<typeof aiSceneSchema>

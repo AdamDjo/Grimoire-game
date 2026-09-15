@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { Eye } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 
@@ -27,32 +27,24 @@ interface DecorativeGameOrnamentProps {
 export type GameOrnamentProps = GameOrnamentBaseProps &
   (AccessibleGameOrnamentProps | DecorativeGameOrnamentProps)
 
-const ORNAMENT_DIMENSIONS: Record<GameOrnamentName, { width: number; height: number }> = {
-  watcher: { width: 1200, height: 431 },
-}
-
 export function GameOrnament({
   className,
   decorative = false,
   label,
   name,
-  priority = false,
+  priority: _priority = false,
   size = 'md',
 }: GameOrnamentProps) {
-  const dimensions = ORNAMENT_DIMENSIONS[name]
-
   return (
-    <Image
-      alt={decorative ? '' : (label ?? name)}
+    <span
       aria-hidden={decorative || undefined}
+      aria-label={decorative ? undefined : (label ?? name)}
       className={cn('game-ornament', `game-ornament--${name}`, `game-ornament--${size}`, className)}
-      draggable={false}
-      height={dimensions.height}
-      priority={priority}
-      sizes="(max-width: 640px) 88vw, 720px"
-      src={`/ui-kit/ornaments/${name}.webp`}
-      unoptimized
-      width={dimensions.width}
-    />
+      role={decorative ? undefined : 'img'}
+    >
+      <span aria-hidden="true" />
+      <Eye aria-hidden="true" strokeWidth={1.2} />
+      <span aria-hidden="true" />
+    </span>
   )
 }

@@ -10,12 +10,22 @@ import './dialogue-choice.css'
 
 export interface DialogueChoiceProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: ReactNode
+  number?: number
   selected?: boolean
 }
 
 export const DialogueChoice = forwardRef<HTMLButtonElement, DialogueChoiceProps>(
   function DialogueChoice(
-    { children, className, disabled = false, icon, selected = false, type = 'button', ...props },
+    {
+      children,
+      className,
+      disabled = false,
+      icon,
+      number,
+      selected = false,
+      type = 'button',
+      ...props
+    },
     ref
   ) {
     return (
@@ -27,6 +37,11 @@ export const DialogueChoice = forwardRef<HTMLButtonElement, DialogueChoiceProps>
         type={type}
         {...props}
       >
+        {number !== undefined ? (
+          <span className="dialogue-choice__number" aria-hidden="true">
+            {number}
+          </span>
+        ) : null}
         {icon ? <span className="dialogue-choice__icon">{icon}</span> : null}
         <span className="dialogue-choice__label">{children}</span>
       </button>

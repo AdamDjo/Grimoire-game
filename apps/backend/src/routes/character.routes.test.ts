@@ -54,7 +54,7 @@ const BASE_CHARACTER = {
   avatarUrl: null as string | null,
   blood: 10,
   breath: 14,
-  ash: 10,
+  will: 10,
   hp: 10,
   maxHp: 10,
   thirst: 100,
@@ -63,6 +63,7 @@ const BASE_CHARACTER = {
   calamine: 0,
   isDying: false,
   neglectStreak: 0,
+  empriseCharges: 0,
   createdAt: new Date('2026-01-01T00:00:00.000Z'),
 }
 

@@ -1,22 +1,22 @@
 .resource-counter {
   align-items: center;
-  color: var(--gold-light);
+  color: var(--material-gold-bright);
   display: inline-grid;
-  font-family: var(--font-ui);
+  font-family: var(--font-game-ui);
   gap: 0.15rem 0.55rem;
   grid-template-columns: auto auto;
 }
 
 .resource-counter__icon { display: inline-flex; grid-row: 1 / span 2; }
 .resource-counter__value {
-  font-family: var(--font-accent);
-  font-size: var(--text-stat-value);
+  font-family: var(--font-game-heading);
+  font-size: var(--text-game-stat-value);
   font-variant-numeric: tabular-nums;
   font-weight: 600;
 }
 .resource-counter__label {
-  color: var(--ink-2);
-  font-size: 0.8rem;
+  color: var(--salt-muted);
+  font-size: var(--text-game-caption);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }

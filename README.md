@@ -63,13 +63,11 @@ Grimoire-game/
 │   └── prettier-config/       # Shared Prettier config (@grimoire/prettier-config)
 ├── docs/
 │   ├── 00-START-HERE.md       # AI entrypoint
-│   └── public/
-│       ├── current-state/     # Live status + next actions
-│       ├── design/            # GAME_DESIGN.md, DESIGN_TOKENS.md
-│       ├── tech/               # TECH_STACK.md, ARCHITECTURE_RULES.md
-│       ├── wiki/               # task-router, canon-index, log
-│       ├── reference/          # canon policy, RAG rules
-│       └── raw/                # Full Velkhar canon (lore + rules)
+│   ├── task-router.md         # What to read for a given task
+│   ├── log.md                 # Decision timeline (append-only)
+│   ├── canon/                 # Full Velkhar canon (lore + rules)
+│   ├── state/                 # Live status + per-domain decisions
+│   └── tech/                  # Architecture, frontend, auth, security, AI setup
 ├── .github/
 │   ├── workflows/             # CI (lint, type-check, build) + Release
 │   └── ISSUE_TEMPLATE/        # GitHub issue templates

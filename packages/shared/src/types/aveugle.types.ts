@@ -10,8 +10,8 @@ import type { Souvenir } from "./souvenir.types";
 
 /** State of the Aveugle hub screen for the authenticated player's character. */
 export interface AveugleHubState {
-  /** Fer (🪙) currently held by the character. */
-  iron: number;
+  /** Gold (🪙) currently held by the character. */
+  gold: number;
   /** Count of anonymous (spendable) Souvenirs still available. */
   spendableSouvenirCount: number;
   /** Named Souvenirs the player has earned so far, most recent first. */

@@ -1,23 +1,24 @@
 # Frontend — Next.js App Router
 
 > Lire d'abord : `../../MEMORY.md`, puis `../../docs/00-START-HERE.md`.
-> Statut vivant : `../../docs/public/current-state/FRONTEND_STATUS.md` + `FRONTEND_NEXT.md`.
-> Design/gameplay : `../../docs/public/design/GAME_DESIGN.md`.
-> Tokens UI : `../../docs/public/design/DESIGN_TOKENS.md`.
-> Architecture/API : `../../docs/public/tech/ARCHITECTURE_RULES.md`.
-> Canon (source de vérité) : `../../docs/public/nav/canon-index.md` → `../../docs/public/raw/*`.
+> Décisions du domaine : `../../docs/state/FRONTEND.md`.
+> Avancement : `gh issue list --milestone "v0.2.1 - Roguelike jouable" --state all` (GitHub, jamais un `.md`).
+> Architecture, tokens et UI Kit : `../../docs/tech/FRONTEND.md`.
+> Architecture/API : `../../docs/tech/RULES.md`.
+> Canon (source de vérité) : `../../docs/task-router.md` → `../../docs/canon/*`.
 
 ## Règle absolue — lire le canon AVANT de coder
 
-**Toute copie affichée, règle de jeu visible ou lore présenté à l'écran doit être vérifié dans `docs/public/raw/` AVANT d'écrire le code.** Jamais de valeur, de libellé ou de comportement « provisoire, à valider plus tard ». Si `GAME_DESIGN.md` (résumé) contredit le canon `raw/`, le `raw/` gagne. Le canon est versionné → lisible directement dans tout worktree. Voir `../../docs/public/nav/PRIVATE_CANON_POLICY.md`.
+**Toute copie affichée, règle de jeu visible ou lore présenté à l'écran doit être vérifié dans `docs/canon/` AVANT d'écrire le code.** Jamais de valeur, de libellé ou de comportement « provisoire, à valider plus tard ». `docs/canon/` est la seule source de vérité gameplay : aucun résumé ne fait autorité contre lui. Le canon est versionné → lisible directement dans tout worktree.
 
 ## Scope
 
 Travailler uniquement dans `apps/frontend/`, sauf changement de contrat partagé explicitement inclus
 dans la tâche. Codex est assigné au frontend par défaut, mais Claude suit exactement ces mêmes règles
-lorsqu'il reçoit une tâche frontend. Toute PR frontend met à jour `FRONTEND_STATUS.md` et
-`FRONTEND_NEXT.md` selon l'état attendu après merge, ainsi que `RELEASE_READINESS.md` si elle change
-un bloqueur `phase: predeploy`.
+lorsqu'il reçoit une tâche frontend. **Par défaut, une PR ne modifie aucun document** : elle ferme son
+issue, c'est suffisant. Elle met à jour `FRONTEND.md` uniquement si elle a tranché un choix non évident
+(pourquoi tel comportement, telle contrainte de rendu, tel garde-fou), et `RELEASE_READINESS.md` si elle
+change un bloqueur `phase: predeploy`.
 
 ## Architecture — colocation
 
@@ -52,14 +53,34 @@ src/
 
 ## Landing
 
-- Sections scroll de `(home)` dans `_components/Section<N><Nom>/`.
-- Contenu/copy à garder cohérent avec `../../docs/public/design/GAME_DESIGN.md`.
+- La landing vit dans `(home)/_components/LandingExperience/` : un seul composant racine,
+  ses sous-composants colocalisés et son CSS `landing-experience.css`.
+- Contenu/copy à garder cohérent avec le canon `../../docs/canon/` (via `../../docs/task-router.md`).
 - Phase 1A (landing) livrée — plans landing archivés, pas de plan actif restant.
+
+## Doctrine de code — permanente
+
+> Détail et épisode fondateur : `../../docs/state/FRONTEND.md` § « Doctrine de code ».
+
+- **Noms simples et évidents.** Le mot le plus court qui reste juste (`GameScene`, `GameHud`), jamais
+  un nom descriptif à rallonge. Si le nom a besoin d'un commentaire, changer le nom.
+- **Un dossier par composant.** `NomDuComposant/NomDuComposant.tsx` + `nom-du-composant.css` +
+  sous-composants privés colocalisés. L'arborescence se lit comme un sommaire.
+- **Tokens uniquement.** Aucune couleur, police, durée ou espacement en dur. Si le token manque,
+  créer le token dans `src/styles/`.
+- **Clean code humain, garde-fous d'ingénieur.** Lisible de haut en bas, commentaires qui disent le
+  _pourquoi_, pas d'abstraction spéculative — mais typage strict sans `any`, dépendances à sens
+  unique, et porte de validation complète (Prettier, `tsc`, ESLint, Vitest) avant de dire « fini ».
+- **Un composant partagé reçoit des chaînes déjà résolues**, jamais des clés de traduction :
+  `useTranslations()` n'accepte qu'un namespace littéral, donc résoudre ses propres clés soude le
+  composant à un seul catalogue.
+- **Une règle ESLint qui bloque un emplacement a raison.** Déplacer le code, jamais désactiver la
+  règle : `components/ui/` ne peut importer ni `app/**`, ni `features/**`, ni `stores/**`.
 
 ## UI
 
 - Ne jamais hardcoder couleur ou police.
-- Utiliser les tokens de `../../docs/public/design/DESIGN_TOKENS.md` et les variables CSS existantes.
+- Utiliser les tokens de `../../docs/tech/FRONTEND.md` et les variables CSS existantes.
 - Pas de logique de jeu critique côté client.
 - Textes UI/code en anglais, conversation utilisateur en français.
 - Appliquer le skill global `vercel-react-best-practices` pour tout code React/Next.js.

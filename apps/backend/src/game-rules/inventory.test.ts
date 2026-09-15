@@ -18,6 +18,7 @@ const survival = (overrides: Partial<SurvivalStats> = {}): SurvivalStats => ({
   calamine: 10,
   isDying: false,
   neglectStreak: 0,
+  empriseCharges: 0,
   ...overrides,
 })
 
@@ -67,6 +68,23 @@ describe('acquireItem', () => {
     const result = acquireItem(fullBag, proposal(), 'new-id')
     expect(result.accepted).toBe(false)
     expect(result.items).toBe(fullBag)
+  })
+
+  it('rejects loot when the cap is reached by stacked quantities, not entry count', () => {
+    // A Comptoir purchase (#249) fills the bag as one entry of quantity 12.
+    // Counting entries would see a single item and let the loot through, so the
+    // player could carry 12 rations *and* keep looting — canon §1's "sac
+    // délibérément trop petit" arbitrage would evaporate.
+    const stockedBag = [bagItem({ id: 'rations', quantity: 12 })]
+    const result = acquireItem(stockedBag, proposal(), 'new-id')
+
+    expect(result.accepted).toBe(false)
+    expect(result.items).toBe(stockedBag)
+  })
+
+  it('still accepts loot when stacked quantities leave a slot free', () => {
+    const result = acquireItem([bagItem({ id: 'rations', quantity: 11 })], proposal(), 'new-id')
+    expect(result.accepted).toBe(true)
   })
 
   it('does not count equipment/artifact/key items toward the bag cap', () => {

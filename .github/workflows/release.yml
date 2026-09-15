@@ -93,9 +93,12 @@ jobs:
           - GitHub Release has been published
           - Merge this PR into \`main\` to complete the release
 
-          After merging, sync \`develop\`:
+          After merging, sync \`develop\` via a PR — a squash merge rewrites history,
+          so \`git merge origin/main\` into \`develop\` would raise add/add conflicts
+          on every file. Port only the release tooling files instead:
           \`\`\`bash
-          git checkout develop && git merge origin/main && git push origin develop
+          git checkout -b chore/sync-release-${VERSION} origin/develop
+          git checkout origin/main -- apps/*/package.json packages/*/package.json
           \`\`\`"
 
           # Only skip when the PR genuinely exists — any other failure must fail the job.

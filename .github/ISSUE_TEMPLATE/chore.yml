@@ -1,7 +1,7 @@
 name: "Chore / Maintenance"
 description: "Tâche technique, tooling, refactoring ou maintenance"
 title: "[CHORE] "
-labels: ["type:chore"]
+labels: []
 body:
   - type: textarea
     id: description
@@ -33,23 +33,11 @@ body:
     id: domain
     attributes:
       label: Domaine
+      description: "Pose le label `domain: *` correspondant après création."
       options:
-        - "domain:devops"
-        - "domain:frontend"
-        - "domain:backend"
-        - "domain:shared"
-        - "domain:database"
-    validations:
-      required: true
-
-  - type: dropdown
-    id: priority
-    attributes:
-      label: Priorité
-      options:
-        - "priority:high"
-        - "priority:medium"
-        - "priority:low"
+        - "domain: frontend"
+        - "domain: backend"
+        - "domain: ai"
     validations:
       required: true
 

@@ -1,73 +1,65 @@
 .game-textarea {
-  --game-field-border: rgba(218, 170, 74, 0.56);
-  --game-field-corner: rgba(218, 170, 74, 0.72);
-  --game-field-inset: rgba(38, 27, 16, 0.72);
-  --game-field-glow: rgba(217, 164, 65, 0);
-
-  background: rgba(9, 8, 6, 0.92);
-  box-shadow:
-    inset 0 0 0 1px var(--game-field-border),
-    inset 0 0 0 4px var(--game-field-inset),
-    inset 0 10px 24px rgba(0, 0, 0, 0.28),
-    0 0 18px var(--game-field-glow);
+  background: transparent;
+  border: 0;
+  box-shadow: 0 0.8rem 1.8rem rgba(0, 0, 0, 0.28);
   display: block;
   isolation: isolate;
-  min-height: 8rem;
+  min-height: 7rem;
   position: relative;
-  transition: box-shadow 180ms cubic-bezier(0.2, 0, 0, 1);
+  transition: filter var(--motion-fast) var(--ease-grimoire-standard);
   width: 100%;
 }
 
 .game-textarea::before,
 .game-textarea::after {
-  border-color: var(--game-field-corner);
-  border-style: solid;
   content: '';
-  height: 12px;
   pointer-events: none;
   position: absolute;
-  transition: border-color 180ms cubic-bezier(0.2, 0, 0, 1);
-  width: 12px;
 }
 
-.game-textarea:not(.game-textarea--disabled):hover {
-  --game-field-border: rgba(239, 212, 141, 0.7);
-  --game-field-corner: rgba(239, 212, 141, 0.86);
-  --game-field-inset: rgba(48, 33, 17, 0.74);
-  --game-field-glow: rgba(217, 164, 65, 0.12);
+.game-textarea:not(.game-textarea--disabled):hover::before {
+  filter: brightness(1.08);
 }
 
 .game-textarea::before {
-  border-width: 1px 0 0 1px;
-  left: 7px;
-  top: 7px;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--material-gold) 7%, transparent), transparent 42%),
+    var(--ink-raised);
+  border: 1px solid color-mix(in srgb, var(--material-gold) 68%, transparent);
+  box-shadow:
+    inset 0 0 0 4px var(--ink-black),
+    inset 0 0 0 5px color-mix(in srgb, var(--material-gold) 22%, transparent);
+  inset: 0;
+  transition: filter var(--motion-fast) var(--ease-grimoire-standard);
+  z-index: 0;
 }
 
 .game-textarea::after {
-  border-width: 0 1px 1px 0;
-  bottom: 7px;
-  right: 7px;
+  display: none;
 }
 
 .game-textarea:focus-within {
-  --game-field-border: rgba(239, 212, 141, 0.9);
-  --game-field-corner: rgba(239, 212, 141, 1);
-  --game-field-inset: rgba(60, 40, 18, 0.76);
-  --game-field-glow: rgba(217, 164, 65, 0.24);
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--material-gold) 20%, transparent));
+}
+
+.game-textarea:focus-within::before {
+  border-color: var(--material-gold-bright);
+  filter: brightness(1.08);
 }
 
 .game-textarea.game-textarea--invalid {
-  --game-field-border: rgba(164, 58, 50, 0.9);
-  --game-field-corner: rgba(190, 72, 60, 0.94);
-  --game-field-inset: rgba(55, 20, 18, 0.76);
-  --game-field-glow: rgba(164, 58, 50, 0.2);
+  color: var(--fresh-blood);
+}
+
+.game-textarea.game-textarea--invalid::before {
+  border-color: color-mix(in srgb, var(--fresh-blood) 68%, var(--material-gold));
 }
 
 .game-textarea__control {
   background: transparent;
   border: 0;
   caret-color: var(--gold-light, #f0d48a);
-  color: var(--parchment, #e8dcc0);
+  color: var(--salt-white);
   display: block;
   font-family: var(--font-game-ui);
   font-size: var(--text-game-body);
@@ -76,8 +68,26 @@
   min-height: inherit;
   outline: 0;
   padding: 1.25rem 1.4rem;
+  position: relative;
   resize: vertical;
   width: 100%;
+  z-index: 1;
+}
+
+.game-textarea--bare {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  min-height: 0;
+}
+
+.game-textarea--bare::before,
+.game-textarea--bare::after {
+  display: none;
+}
+
+.game-textarea--bare:focus-within {
+  filter: none;
 }
 
 .game-textarea--disabled {
@@ -87,11 +97,10 @@
 }
 
 .game-textarea__control::placeholder {
-  color: color-mix(in srgb, var(--parchment, #e8dcc0) 62%, transparent);
+  color: color-mix(in srgb, var(--salt-white) 58%, transparent);
   opacity: 1;
 }
 
-/* Même contrat que GameInput : le focus appartient à la surface englobante. */
 .game-textarea__control:focus-visible {
   box-shadow: none;
   outline: 0;
@@ -107,5 +116,13 @@
   .game-textarea::before,
   .game-textarea::after {
     transition-duration: 0.01ms;
+  }
+}
+
+@media (max-width: 720px) {
+  .game-textarea::before {
+    box-shadow:
+      inset 0 0 0 3px var(--ink-black),
+      inset 0 0 0 4px color-mix(in srgb, var(--material-gold) 22%, transparent);
   }
 }

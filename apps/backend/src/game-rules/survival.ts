@@ -57,7 +57,7 @@ export function clampGauge(value: number, max = 100): number {
 
 /**
  * Consecutive turns of thirst=0 or hunger=0 required before prolonged neglect
- * starts corroding Calamine. #201, docs/public/raw/06-SURVIVAL.md §4.
+ * starts corroding Calamine. #201, docs/canon/06-SURVIVAL.md §4.
  */
 export const NEGLECT_STREAK_THRESHOLD = 3
 
@@ -87,7 +87,7 @@ export function tickNeglectStreak(stats: SurvivalStats): SurvivalStats {
 /**
  * BACKEND-triggered Calamine source (never AI-proposed): once neglect has run
  * `NEGLECT_STREAK_THRESHOLD`+ consecutive turns, +3 to +5 Calamine/turn.
- * @see docs/public/raw/06-SURVIVAL.md §4
+ * @see docs/canon/06-SURVIVAL.md §4
  */
 export function rollNeglectCalamine(
   neglectStreak: number,
@@ -96,6 +96,44 @@ export function rollNeglectCalamine(
   if (neglectStreak < NEGLECT_STREAK_THRESHOLD) return 0
   const { min, max } = NEGLECT_CALAMINE_RANGE
   return min + Math.floor(rng() * (max - min + 1))
+}
+
+export interface TurnUpkeepResult {
+  survival: SurvivalStats
+  /** Calamine added by prolonged neglect this turn, 0 when the streak is short. */
+  neglectCalamineDelta: number
+}
+
+/**
+ * The full per-turn survival upkeep: drain, neglect erosion, streak, and the
+ * Calamine that prolonged neglect corrodes.
+ *
+ * Extracted so that *every* kind of turn pays it, not just the exploration one.
+ * Canon says "-1 PV par tour" and "+3 à +5 Calamine par tour" without carving
+ * out an exception for fighting (§4, §59) — and a turn spent trading blows is
+ * still a turn. Leaving combat outside this cycle would have made starving free
+ * as long as the player kept swinging, which is the opposite of the pressure
+ * survival is meant to apply.
+ *
+ * Pure given `rng`, like every other rule in this folder.
+ * @see docs/canon/06-SURVIVAL.md §4
+ */
+export function applyTurnUpkeep(
+  stats: SurvivalStats,
+  rng: () => number = Math.random
+): TurnUpkeepResult {
+  const drained = applyTurnDrain(stats)
+  const eroded = applyNeglectErosion(drained)
+  const tracked = tickNeglectStreak(eroded)
+  const neglectCalamineDelta = rollNeglectCalamine(tracked.neglectStreak, rng)
+
+  return {
+    survival:
+      neglectCalamineDelta > 0
+        ? { ...tracked, calamine: clamp(tracked.calamine + neglectCalamineDelta, 0, 100) }
+        : tracked,
+    neglectCalamineDelta,
+  }
 }
 
 export interface DyingResolution {
@@ -111,7 +149,7 @@ export interface DyingResolution {
  * for one full reprieve turn — no immediate game over. A second 0-HP hit while
  * already dying is definitive death. Healing back above 0 clears the flag
  * elsewhere (`clearDyingOnHeal`) — this function only ever sets it.
- * @see docs/public/raw/06-SURVIVAL.md §7
+ * @see docs/canon/06-SURVIVAL.md §7
  */
 export function resolveDying(stats: SurvivalStats): DyingResolution {
   if (stats.hp > 0) return { survival: stats, definitiveDeath: false }

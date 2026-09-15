@@ -1,10 +1,10 @@
 .game-section-heading {
-  color: var(--parchment);
+  color: var(--salt-white);
   text-align: center;
 }
 
 .game-section-heading__eyebrow {
-  color: var(--gold);
+  color: var(--material-gold);
   font-family: var(--font-game-ui);
   font-size: var(--text-game-label);
   letter-spacing: 0.16em;
@@ -29,7 +29,7 @@
 .game-section-heading h1,
 .game-section-heading h2,
 .game-section-heading h3 {
-  color: var(--gold-light);
+  color: var(--material-gold-bright);
   font-family: var(--font-game-display);
   font-size: var(--text-game-title);
   font-weight: 500;
@@ -40,8 +40,8 @@
 }
 
 .game-section-heading__description {
-  color: var(--ink-2);
-  font-family: var(--font-game-heading);
+  color: var(--salt-muted);
+  font-family: var(--font-game-body);
   font-size: var(--text-game-lead);
   margin: 0.8rem auto 0;
   max-width: 42rem;

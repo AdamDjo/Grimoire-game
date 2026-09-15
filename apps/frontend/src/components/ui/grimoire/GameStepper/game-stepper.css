@@ -1,5 +1,5 @@
 .game-stepper {
-  --game-step-size: 68px;
+  --game-step-size: 62px;
   --game-step-color: rgba(184, 152, 101, 0.58);
   --game-step-accent: var(--gold, #d9a441);
   --game-step-light: var(--gold-light, #efd48d);
@@ -29,7 +29,7 @@
     color-mix(in srgb, currentColor 36%, transparent)
   );
   content: '';
-  height: 1px;
+  height: 2px;
   left: calc(50% + var(--game-step-size) / 2);
   position: absolute;
   right: calc(-50% + var(--game-step-size) / 2);
@@ -55,7 +55,7 @@
   display: flex;
   flex-direction: column;
   font: inherit;
-  gap: 0.65rem;
+  gap: 0.55rem;
   margin: 0 auto;
   min-width: 44px;
   padding: 0;
@@ -66,13 +66,17 @@
 
 .game-stepper__button:disabled {
   cursor: not-allowed;
-  opacity: 0.42;
+  opacity: 0.52;
 }
 
 .game-stepper__frame {
   align-items: center;
-  background: rgba(11, 9, 7, 0.88);
-  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(224, 161, 67, 0.12), transparent 50%),
+    var(--ink-black);
+  border: 1px solid color-mix(in srgb, var(--material-gold) 58%, transparent);
+  border-radius: 3px;
+  clip-path: polygon(18% 0, 82% 0, 100% 18%, 100% 82%, 82% 100%, 18% 100%, 0 82%, 0 18%);
   display: inline-flex;
   height: var(--game-step-size);
   isolation: isolate;
@@ -82,10 +86,12 @@
 }
 
 .game-stepper__frame::before {
-  background: url('/ui-kit/stepper/step-frame.webp') center / contain no-repeat;
+  background:
+    linear-gradient(var(--material-gold-bright), var(--material-gold-bright)) left 7px top 7px / 10px 1px no-repeat,
+    linear-gradient(var(--material-gold-bright), var(--material-gold-bright)) left 7px top 7px / 1px 10px no-repeat;
   content: '';
   filter: grayscale(0.32) brightness(0.74);
-  inset: -7%;
+  inset: 0;
   pointer-events: none;
   position: absolute;
   transition:
@@ -94,18 +100,9 @@
   z-index: 1;
 }
 
-.game-stepper--creation .game-stepper__frame::before {
-  background-image: url('/ui-kit/character-create/character-medallion.webp');
-  filter: grayscale(0.18) brightness(0.8);
-  inset: -18%;
-}
-
-.game-stepper--creation .game-stepper__item--active .game-stepper__frame::before {
-  filter: brightness(1.18) saturate(1.12);
-}
-
 .game-stepper__frame::after {
-  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--material-gold-bright) 20%, transparent);
+  border-radius: 2px;
   box-shadow: 0 0 0 transparent;
   content: '';
   inset: 8%;
@@ -134,7 +131,7 @@
   color: currentColor;
   font-family: var(--font-game-ui);
   font-size: var(--text-game-label);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.1em;
   line-height: 1.3;
   text-transform: uppercase;
@@ -173,7 +170,7 @@
 .game-stepper__item--completed .game-stepper__glyph::after {
   color: var(--game-step-light);
   content: '✓';
-  font-family: var(--font-ui);
+  font-family: var(--font-game-ui);
   font-size: calc(var(--game-step-size) * 0.34);
   font-weight: 600;
   left: 50%;
@@ -213,10 +210,6 @@
 }
 
 @media (max-width: 720px) {
-  .game-stepper--creation .game-stepper__frame::before {
-    background-image: url('/ui-kit/character-create/character-medallion-mobile.webp');
-  }
-
   .game-stepper--responsive .game-stepper__list {
     flex-direction: column;
     gap: 1rem;

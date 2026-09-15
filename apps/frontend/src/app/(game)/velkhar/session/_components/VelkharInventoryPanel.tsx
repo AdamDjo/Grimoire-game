@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 
+import { GameButton } from '@/components/ui/grimoire/GameButton/GameButton'
 import { GameIcon, type GameIconName } from '@/components/ui/grimoire/GameIcon/GameIcon'
 import { InventorySlot } from '@/components/ui/grimoire/InventorySlot/InventorySlot'
 import { cn } from '@/lib/utils'
@@ -12,7 +13,7 @@ import { buildVelkharInventoryView, VELKHAR_BAG_CAPACITY } from '../_lib/velkhar
 import type { InventoryItemRef } from '@grimoire/shared'
 
 interface VelkharInventoryPanelProps {
-  iron: number | null
+  gold: number | null
   items: InventoryItemRef[]
   onAction: (item: InventoryItemRef, action: 'use' | 'equip' | 'unequip') => void
 }
@@ -63,7 +64,7 @@ function ItemSlot({ fallbackIcon, item, label, onSelect, selectedId }: ItemSlotP
   )
 }
 
-export function VelkharInventoryPanel({ iron, items, onAction }: VelkharInventoryPanelProps) {
+export function VelkharInventoryPanel({ gold, items, onAction }: VelkharInventoryPanelProps) {
   const t = useTranslations('Session')
   const inventory = useMemo(() => buildVelkharInventoryView(items), [items])
   const [selectedId, setSelectedId] = useState<string | null>(null)
@@ -93,7 +94,7 @@ export function VelkharInventoryPanel({ iron, items, onAction }: VelkharInventor
     <div className="velkhar-inventory">
       <div className="velkhar-inventory__summary" aria-label={t('inventorySummary')}>
         <span>
-          <GameIcon decorative name="coin" size={24} /> {t('iron')} <strong>{iron ?? '—'}</strong>
+          <GameIcon decorative name="coin" size={24} /> {t('gold')} <strong>{gold ?? '—'}</strong>
         </span>
         <span>
           <GameIcon decorative name="chest" size={24} /> {t('bag')}{' '}
@@ -197,14 +198,15 @@ export function VelkharInventoryPanel({ iron, items, onAction }: VelkharInventor
                   {selectedItem.allowedActions
                     .filter((action) => action !== 'inspect')
                     .map((action) => (
-                      <button
+                      <GameButton
                         key={action}
-                        type="button"
                         className="velkhar-inventory__action-button"
+                        size="sm"
+                        variant="primary"
                         onClick={() => onAction(selectedItem, action)}
                       >
                         {actionLabels[action]}
-                      </button>
+                      </GameButton>
                     ))}
                 </div>
               ) : (

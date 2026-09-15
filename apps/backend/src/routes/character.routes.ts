@@ -84,7 +84,7 @@ characterRouter.post('/', async (req: Request, res: Response<ApiResponse<Charact
       backstory: character.backstory ?? undefined,
       avatarUrl: character.avatarUrl ?? undefined,
       stats: {
-        attributes: { blood: character.blood, breath: character.breath, ash: character.ash },
+        attributes: { blood: character.blood, breath: character.breath, will: character.will },
         survival: {
           hp: character.hp,
           maxHp: character.maxHp,
@@ -94,6 +94,7 @@ characterRouter.post('/', async (req: Request, res: Response<ApiResponse<Charact
           calamine: character.calamine,
           isDying: character.isDying,
           neglectStreak: character.neglectStreak,
+          empriseCharges: character.empriseCharges,
         },
         conditions: [],
         inventory: [],

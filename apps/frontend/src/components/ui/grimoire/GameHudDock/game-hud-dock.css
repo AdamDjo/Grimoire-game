@@ -1,6 +1,7 @@
 .game-hud-dock {
-  background: rgba(7, 6, 4, 0.94);
-  box-shadow: 0 -14px 32px rgba(0, 0, 0, 0.38);
+  background:
+    linear-gradient(90deg, rgba(109, 33, 27, 0.04), transparent 24%),
+    var(--ink-black);
   isolation: isolate;
   padding: clamp(1.25rem, 2vw, 2rem);
   position: relative;
@@ -8,12 +9,14 @@
 }
 
 .game-hud-dock::before {
-  border: 22px solid transparent;
-  border-image: url('/ui-kit/surfaces/structural-frame-v2.webp') 48 62 fill / 22px;
+  background: url('/encre-de-sel/chrome/footer-separator.webp') center / 100% 100% no-repeat;
   content: '';
-  inset: 0;
+  height: 14px;
+  left: 0;
   pointer-events: none;
   position: absolute;
+  right: 0;
+  top: -7px;
   z-index: 0;
 }
 

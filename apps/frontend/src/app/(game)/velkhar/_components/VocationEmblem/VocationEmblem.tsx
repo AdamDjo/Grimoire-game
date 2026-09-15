@@ -42,7 +42,7 @@ export function VocationEmblem({
       draggable={false}
       height={320}
       sizes="(max-width: 640px) 72px, 96px"
-      src={`/ui-kit/vocations/${name}.webp`}
+      src={`/encre-de-sel/icons/vocations/${name}.webp`}
       unoptimized
       width={320}
     />

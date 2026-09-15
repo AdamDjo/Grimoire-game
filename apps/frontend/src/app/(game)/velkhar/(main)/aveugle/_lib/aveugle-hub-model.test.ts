@@ -36,6 +36,7 @@ describe('aveugle hub model', () => {
 
   it('oriente un personnage existant vers un nouveau run', () => {
     const snapshot = resolveAveugleHubSnapshot({
+      campaignId: 'nouvelle chronique',
       character: CHARACTER,
       hasActiveSession: false,
       isRunReturn: false,
@@ -47,7 +48,7 @@ describe('aveugle hub model', () => {
       people: 'Sahélin',
       vocation: 'Marcheur-du-Sel',
     })
-    expect(snapshot.primaryHref).toBe('/velkhar/session/new')
+    expect(snapshot.primaryHref).toBe('/velkhar/session/new?campaign=nouvelle%20chronique')
   })
 
   it('donne la priorité à la reprise d’une session active', () => {

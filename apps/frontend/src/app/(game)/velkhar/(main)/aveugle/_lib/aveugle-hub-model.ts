@@ -126,7 +126,7 @@ export function resolveAveugleHubSnapshot({
 
   return {
     character: hubCharacter,
-    primaryHref: `${VELKHAR_WORLD.routes.session}/new`,
+    primaryHref: withCampaign(`${VELKHAR_WORLD.routes.session}/new`, campaignId),
     primaryLabel: isRunReturn ? labels.prepareDeparture : labels.startRun,
     stage: isRunReturn ? 'run-return' : 'ready',
   }

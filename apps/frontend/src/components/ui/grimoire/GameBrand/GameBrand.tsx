@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { BookOpen } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 
@@ -27,46 +27,32 @@ interface DecorativeGameBrandProps {
 export type GameBrandProps = GameBrandBaseProps &
   (AccessibleGameBrandProps | DecorativeGameBrandProps)
 
-const BRAND_ASSETS: Record<
-  GameBrandVariant,
-  { src: string; width: number; height: number; defaultLabel: string }
-> = {
-  lockup: {
-    src: '/ui-kit/brand/grimoire-lockup.webp',
-    width: 720,
-    height: 336,
-    defaultLabel: 'GRIMOIRE — Of Ash and Salt',
-  },
-  sigil: {
-    src: '/ui-kit/brand/grimoire-sigil.webp',
-    width: 503,
-    height: 512,
-    defaultLabel: 'Sceau de GRIMOIRE',
-  },
-}
-
 export function GameBrand({
   className,
   decorative = false,
   label,
-  priority = false,
+  priority: _priority = false,
   size = 'md',
   variant = 'lockup',
 }: GameBrandProps) {
-  const asset = BRAND_ASSETS[variant]
+  const accessibleLabel =
+    label ?? (variant === 'lockup' ? 'GRIMOIRE — Of Ash and Salt' : 'Sceau de GRIMOIRE')
 
   return (
-    <Image
-      alt={decorative ? '' : (label ?? asset.defaultLabel)}
+    <span
       aria-hidden={decorative || undefined}
+      aria-label={decorative ? undefined : accessibleLabel}
       className={cn('game-brand', `game-brand--${variant}`, `game-brand--${size}`, className)}
-      draggable={false}
-      height={asset.height}
-      priority={priority}
-      sizes="(max-width: 640px) 70vw, 520px"
-      src={asset.src}
-      unoptimized
-      width={asset.width}
-    />
+      role={decorative ? undefined : 'img'}
+    >
+      {variant === 'sigil' ? (
+        <BookOpen aria-hidden="true" strokeWidth={1.25} />
+      ) : (
+        <>
+          <span className="game-brand__name">Grimoire</span>
+          <span className="game-brand__subtitle">Of Ash and Salt</span>
+        </>
+      )}
+    </span>
   )
 }

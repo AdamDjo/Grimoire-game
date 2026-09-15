@@ -49,7 +49,7 @@
 
 .main-navigation__marketing-logo {
   aspect-ratio: 1733 / 808;
-  background: url('/landing/ui/brand-lockup-grimoire.webp') center / contain no-repeat;
+  background: url('/ui-kit/brand/grimoire-lockup.webp') center / contain no-repeat;
   display: block;
   filter: drop-shadow(0 5px 18px rgba(0, 0, 0, 0.72));
   transition-property: filter, width;
@@ -77,7 +77,7 @@
 
 .main-navigation__links a,
 .main-navigation__account {
-  color: var(--ink-2);
+  color: var(--salt-muted);
   font-family: var(--font-game-ui);
   font-size: var(--text-game-label);
   letter-spacing: 0.08em;
@@ -94,7 +94,7 @@
 }
 
 .main-navigation__links a::after {
-  background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+  background: linear-gradient(90deg, transparent, var(--material-gold-bright), transparent);
   bottom: 5px;
   content: '';
   height: 1px;
@@ -111,7 +111,7 @@
 .main-navigation__links a:hover,
 .main-navigation__links a[aria-current='page'],
 .main-navigation__account:hover {
-  color: var(--gold-light);
+  color: var(--material-gold-bright);
 }
 
 .main-navigation__links a[aria-current='page']::after {
@@ -120,7 +120,7 @@
 }
 
 .main-navigation__links .main-navigation__priority-link {
-  color: var(--gold-light);
+  color: var(--material-gold-bright);
   text-shadow: 0 0 18px rgba(217, 164, 65, 0.24);
 }
 
@@ -136,25 +136,14 @@
 .main-navigation--marketing .main-navigation__links a,
 .main-navigation--marketing .main-navigation__account {
   color: rgba(239, 225, 194, 0.92);
-  font-family: var(--font-ui);
+  font-family: var(--font-game-ui);
   font-size: 0.9375rem;
   text-shadow: 0 1px 10px rgba(0, 0, 0, 0.8);
 }
 
-.main-navigation--marketing .main-navigation__links li + li a::before {
-  aspect-ratio: 1;
-  border: 1px solid rgba(218, 170, 74, 0.42);
-  content: '';
-  left: clamp(-36px, -2.1vw, -28px);
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%) rotate(45deg);
-  width: 8px;
-}
-
 .main-navigation--marketing .main-navigation__links a:hover,
 .main-navigation--marketing .main-navigation__account:hover {
-  color: var(--gold-light);
+  color: var(--material-gold-bright);
 }
 
 .main-navigation__account {
@@ -170,18 +159,6 @@
 
 .main-navigation--marketing .main-navigation__account {
   letter-spacing: 0.08em;
-  padding-inline-start: 1.25rem;
-}
-
-.main-navigation--marketing .main-navigation__account::before {
-  aspect-ratio: 1;
-  border: 1px solid rgba(217, 164, 65, 0.62);
-  content: '';
-  left: 1px;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%) rotate(45deg);
-  width: 8px;
 }
 
 .main-navigation__actions {
@@ -197,7 +174,7 @@
   box-shadow:
     0 0 0 1px rgba(0, 0, 0, 0.72),
     inset 0 0 16px rgba(217, 164, 65, 0.08);
-  color: var(--gold-light);
+  color: var(--material-gold-bright);
   cursor: pointer;
   display: none;
   flex-direction: column;
@@ -234,7 +211,7 @@
 }
 
 .main-navigation.game-top-bar--transparent .main-navigation__menu-trigger:hover {
-  color: var(--gold);
+  color: var(--material-gold);
 }
 
 .main-navigation__mobile-menu {

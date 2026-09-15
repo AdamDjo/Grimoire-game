@@ -39,7 +39,7 @@ const character = {
   vocation: 'salt-walker',
   blood: 10,
   breath: 10,
-  ash: 10,
+  will: 10,
   hp: 20,
   maxHp: 20,
   thirst: 100,
@@ -71,6 +71,15 @@ const choice = {
   text: 'settle down to rest',
   type: 'action' as const,
   riskLevel: 'safe' as const,
+}
+
+/** A bag entry the backend recognises as provisions — the Comptoir's `supply` marker (#249). */
+const PROVISIONS = {
+  id: 'r1',
+  name: 'Rations de route',
+  category: 'bag',
+  quantity: 2,
+  supply: 'food',
 }
 
 /** Reads the `data` payload passed to the mocked `gameSession.update` call. */
@@ -135,6 +144,7 @@ describe('resolveTurn — rest_requested (#184)', () => {
         calamine: 30,
         isDying: false,
         neglectStreak: 0,
+        empriseCharges: 0,
       },
       updatedConditions: [],
       consequences: {},
@@ -165,6 +175,7 @@ describe('resolveTurn — rest_requested (#184)', () => {
         calamine: 30,
         isDying: false,
         neglectStreak: 0,
+        empriseCharges: 0,
       },
       updatedConditions: [],
       consequences: {},
@@ -175,12 +186,52 @@ describe('resolveTurn — rest_requested (#184)', () => {
       source: 'ai',
     })
 
-    await resolveTurn({ session: session(3), character, choice })
+    // The +60 hunger/thirst is gated on carrying provisions (#249), so the
+    // character must actually have some for the full canon rate to apply.
+    await resolveTurn({
+      session: session(3),
+      character: { ...character, inventory: [PROVISIONS] },
+      choice,
+    })
 
     const data = lastCharacterUpdateData()
     expect(data.energy).toBe(80)
     expect(data.hunger).toBe(80)
     expect(data.thirst).toBe(80)
+    expect(data.calamine).toBe(20)
+  })
+
+  it('recovers energy but no hunger/thirst at the fire with an empty bag', async () => {
+    // Canon 06-SURVIVAL §3: "« +60 faim/soif » ne s'applique que si le perso a
+    // des provisions". Without this gate a player could skip the Comptoir
+    // entirely and still eat at every fire (#249).
+    resolveChoice.mockReturnValue({
+      updatedSurvival: {
+        hp: 20,
+        maxHp: 20,
+        thirst: 20,
+        hunger: 20,
+        energy: 20,
+        calamine: 30,
+        isDying: false,
+        neglectStreak: 0,
+        empriseCharges: 0,
+      },
+      updatedConditions: [],
+      consequences: {},
+      gameOver: false,
+    })
+    generateScene.mockResolvedValue({
+      scene: { rest_requested: { type: 'fire' } },
+      source: 'ai',
+    })
+
+    await resolveTurn({ session: session(3), character: { ...character, inventory: [] }, choice })
+
+    const data = lastCharacterUpdateData()
+    expect(data.energy).toBe(80)
+    expect(data.hunger).toBe(20)
+    expect(data.thirst).toBe(20)
     expect(data.calamine).toBe(20)
   })
 
@@ -195,6 +246,7 @@ describe('resolveTurn — rest_requested (#184)', () => {
         calamine: 30,
         isDying: false,
         neglectStreak: 0,
+        empriseCharges: 0,
       },
       updatedConditions: [],
       consequences: {},
@@ -205,7 +257,11 @@ describe('resolveTurn — rest_requested (#184)', () => {
       source: 'ai',
     })
 
-    await resolveTurn({ session: session(3), character, choice })
+    await resolveTurn({
+      session: session(3),
+      character: { ...character, inventory: [PROVISIONS] },
+      choice,
+    })
 
     const data = lastCharacterUpdateData()
     expect(data.energy).toBe(100)
@@ -224,6 +280,7 @@ describe('resolveTurn — rest_requested (#184)', () => {
         calamine: 30,
         isDying: false,
         neglectStreak: 0,
+        empriseCharges: 0,
       },
       updatedConditions: [],
       consequences: {},
@@ -240,7 +297,7 @@ describe('resolveTurn — rest_requested (#184)', () => {
     expect(data.energy).toBe(40)
     expect(data.hunger).toBe(40)
     expect(data.thirst).toBe(40)
-    expect(lastGameSessionUpdateData().endReason).not.toBe('inn')
+    expect(lastGameSessionUpdateData().endReason).toBeUndefined()
   })
 
   it('leaves survival untouched when the AI omits rest_requested', async () => {
@@ -254,6 +311,7 @@ describe('resolveTurn — rest_requested (#184)', () => {
         calamine: 30,
         isDying: false,
         neglectStreak: 0,
+        empriseCharges: 0,
       },
       updatedConditions: [],
       consequences: {},
@@ -281,6 +339,7 @@ describe('resolveTurn — rest_requested (#184)', () => {
         calamine: 30,
         isDying: true,
         neglectStreak: 0,
+        empriseCharges: 0,
       },
       updatedConditions: [],
       consequences: {},
@@ -317,6 +376,7 @@ describe('resolveTurn — rest_requested (#184)', () => {
         calamine: 30,
         isDying: true,
         neglectStreak: 0,
+        empriseCharges: 0,
       },
       updatedConditions: [],
       consequences: {},
@@ -356,6 +416,7 @@ describe('resolveTurn — rest_requested (#184)', () => {
         calamine: 30,
         isDying: true,
         neglectStreak: 0,
+        empriseCharges: 0,
       },
       updatedConditions: [],
       consequences: { gameOver: true },
@@ -371,5 +432,131 @@ describe('resolveTurn — rest_requested (#184)', () => {
     const data = lastCharacterUpdateData()
     expect(data.energy).toBe(40)
     expect(lastGameSessionUpdateData()).toMatchObject({ status: 'ended', endReason: 'death' })
+  })
+})
+
+describe('resolveTurn — break_deadlock (#267)', () => {
+  beforeEach(() => {
+    transaction.mockClear()
+    characterUpdate.mockClear()
+    gameSessionUpdate.mockClear()
+    generateChronicle.mockClear()
+
+    assembleScene.mockReturnValue({
+      sceneType: 'exploration',
+      location: 'The Camp',
+      narrative: 'text',
+      choices: [],
+    })
+  })
+
+  it('spends one charge and applies the resisted Calamine cost when proposed with charges available', async () => {
+    resolveChoice.mockReturnValue({
+      updatedSurvival: {
+        hp: 20,
+        maxHp: 20,
+        thirst: 40,
+        hunger: 40,
+        energy: 40,
+        calamine: 30,
+        isDying: false,
+        neglectStreak: 0,
+        empriseCharges: 2,
+      },
+      updatedConditions: [],
+      consequences: {},
+      gameOver: false,
+    })
+    generateScene.mockResolvedValue({
+      scene: { break_deadlock: { reason: 'no other path exists' } },
+      source: 'ai',
+    })
+
+    await resolveTurn({ session: session(3), character, choice })
+
+    // will: 10 -> modifier 0 -> resistance 1 -> base cost 5 - 1 = 4.
+    const data = lastCharacterUpdateData()
+    expect(data.calamine).toBe(34)
+  })
+
+  it('silently drops the proposal — no charge spent, no Calamine change — at 0 charges', async () => {
+    resolveChoice.mockReturnValue({
+      updatedSurvival: {
+        hp: 20,
+        maxHp: 20,
+        thirst: 40,
+        hunger: 40,
+        energy: 40,
+        calamine: 30,
+        isDying: false,
+        neglectStreak: 0,
+        empriseCharges: 0,
+      },
+      updatedConditions: [],
+      consequences: {},
+      gameOver: false,
+    })
+    generateScene.mockResolvedValue({
+      scene: { break_deadlock: { reason: 'no other path exists' } },
+      source: 'ai',
+    })
+
+    await resolveTurn({ session: session(3), character, choice })
+
+    const data = lastCharacterUpdateData()
+    expect(data.calamine).toBe(30)
+  })
+
+  it('does not apply break_deadlock when the turn ends in game over', async () => {
+    resolveChoice.mockReturnValue({
+      updatedSurvival: {
+        hp: 0,
+        maxHp: 20,
+        thirst: 40,
+        hunger: 40,
+        energy: 40,
+        calamine: 30,
+        isDying: true,
+        neglectStreak: 0,
+        empriseCharges: 2,
+      },
+      updatedConditions: [],
+      consequences: { gameOver: true },
+      gameOver: true,
+    })
+    generateScene.mockResolvedValue({
+      scene: { break_deadlock: { reason: 'no other path exists' } },
+      source: 'ai',
+    })
+
+    await resolveTurn({ session: session(3), character, choice })
+
+    const data = lastCharacterUpdateData()
+    expect(data.calamine).toBe(30)
+  })
+
+  it('leaves survival untouched when the AI omits break_deadlock', async () => {
+    resolveChoice.mockReturnValue({
+      updatedSurvival: {
+        hp: 20,
+        maxHp: 20,
+        thirst: 40,
+        hunger: 40,
+        energy: 40,
+        calamine: 30,
+        isDying: false,
+        neglectStreak: 0,
+        empriseCharges: 2,
+      },
+      updatedConditions: [],
+      consequences: {},
+      gameOver: false,
+    })
+    generateScene.mockResolvedValue({ scene: {}, source: 'ai' })
+
+    await resolveTurn({ session: session(3), character, choice })
+
+    const data = lastCharacterUpdateData()
+    expect(data.calamine).toBe(30)
   })
 })

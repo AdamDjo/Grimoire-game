@@ -24,6 +24,42 @@ export const gameActionSchema = z.object({
   /** Chosen choice label, passed through so the GM knows what the player picked. */
   chosenActionText: z.string().min(1).max(280).optional(),
   freeAction: z.string().min(1).max(500).optional(),
+  /**
+   * The player turns back on this turn (#228). Irreversible — once the return
+   * is engaged the run only climbs. It rides on the action rather than a
+   * dedicated endpoint because the pivot *is* the turn the player spends.
+   * @see docs/canon/23-RUN-STRUCTURE.md §4
+   */
+  engageReturn: z.boolean().optional(),
+  /**
+   * The tactical action, when this turn is spent in a fight (#235). Only ever a
+   * *declaration of intent*: which of the six canon actions the player pressed.
+   * Every die, DC and consequence behind it is rolled by the backend, so a
+   * forged request can pick a different action but never a better outcome.
+   *
+   * Ignored outside combat, and optional inside it — a turn taken in prose
+   * carries no `combatAction` at all and is translated server-side instead.
+   * @see docs/canon/10-COMBAT.md §3
+   */
+  combatAction: z
+    .enum([
+      'attack',
+      'defend',
+      'flee',
+      'command',
+      'use_item',
+      'awaken_artefact',
+      'submit_enemy',
+      'force_awaken_artefact',
+    ])
+    .optional(),
+  /** Which enemy the action is aimed at. The engine falls back to the first one standing. */
+  targetId: z.string().min(1).max(64).optional(),
+  /**
+   * Which way the player runs when fleeing. Backward engages the return trip;
+   * forward escapes the fight but carries on with the quest (10-COMBAT §7).
+   */
+  fleeDirection: z.enum(['forward', 'backward']).optional(),
 })
 
 export type GameActionRequest = z.infer<typeof gameActionSchema>
@@ -40,6 +76,42 @@ export const createSessionSchema = z.object({
 })
 
 export type CreateSessionRequest = z.infer<typeof createSessionSchema>
+
+/**
+ * Accepting a contract at the inn and setting out (#228, reshaped in #260,
+ * generalized in #269).
+ *
+ * The intensity is the commitment the contract asks for — ~45 min at 3, 2h30
+ * at 7 — and it is required of *every* family, not just dungeons: a hunt and a
+ * negotiation are as long or as short as a delve. Only the canon values are
+ * accepted, so no request can open a run past the hard cap. A dungeon reads its
+ * floors off that same number (`depthForIntensity`), which is why no request
+ * ever carries a depth of its own — two fields would be two truths.
+ * @see docs/canon/23-RUN-STRUCTURE.md §1, §2
+ */
+export const startRunSchema = z.object({
+  sessionId: z.string().min(1),
+  family: z.enum([
+    'dungeon',
+    'escort',
+    'investigation',
+    'hunt',
+    'recovery',
+    'negotiation',
+    'dilemma',
+  ]),
+  destination: z.string().min(1).max(120),
+  commissioner: z.string().min(1).max(120),
+  danger: z.enum(['easy', 'medium', 'hard']),
+  duration: z.enum(['short', 'long', 'major']),
+  intensity: z.union([z.literal(3), z.literal(5), z.literal(7)]),
+  rewardGold: z.number().int().min(0).max(10_000),
+  objective: z.string().min(1).max(280),
+  successCondition: z.string().min(1).max(280),
+  failureConditions: z.array(z.string().min(1).max(280)).max(5).default([]),
+})
+
+export type StartRunRequest = z.infer<typeof startRunSchema>
 
 /** Request to voluntarily end a session (inn choice or explicit abandon). */
 export const endSessionSchema = z.object({

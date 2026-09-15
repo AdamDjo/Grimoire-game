@@ -2,20 +2,33 @@ import { randomUUID } from 'node:crypto'
 
 import {
   type ActiveCondition,
+  armourBonusForItemName,
   type Attributes,
   type Choice,
+  type CombatAction,
+  type CombatState,
+  type QuestIntensity,
+  type QuestDanger,
+  type QuestDuration,
+  type QuestFamily,
+  type Difficulty,
+  type FleeDirection,
   type InventoryActionResponse,
   type InventoryItemRef,
   type Locale,
   type PersistedInventoryItem,
+  attributeModifier,
   resolveLocale,
+  type RunState,
   type SceneResponse,
   type SessionEndReason,
   type SurvivalStats,
+  weaponDamageForItemName,
 } from '@grimoire/shared'
 
 import { generateScene } from '../ai/game-master.service'
 import { persistedChoicesSchema } from '../ai/scene-validator'
+import { armourClassFromBreath } from '../game-rules/combat'
 import {
   applyAiCondition,
   applyCalamineDelta,
@@ -23,14 +36,44 @@ import {
   isValidAiConditionId,
 } from '../game-rules/conditions'
 import { resolveChoice } from '../game-rules/consequences'
+import {
+  canForceAction,
+  EMPRISE_BASE_CALAMINE_COST,
+  empriseSpendCost,
+  maxEmpriseCharges,
+  spendEmpriseCharge,
+} from '../game-rules/emprise'
 import { acquireItem, equipItem, unequipItem, useItem } from '../game-rules/inventory'
+import { projectPowerGap } from '../game-rules/power-balance'
 import { applyRest } from '../game-rules/rest'
-import { clearDyingOnHeal } from '../game-rules/survival'
+import { createContract, createRunState, engageReturn } from '../game-rules/run'
+import { applyTurnUpkeep, clearDyingOnHeal } from '../game-rules/survival'
 import { prisma } from '../lib/prisma'
 
 import { deriveAttributes } from './character.service'
 import { generateChronicle } from './chronicle.service'
+import {
+  openCombatFromEncounter,
+  projectCombatState,
+  readCombatState,
+  resolveCombatTurn,
+  toCombatPromptContext,
+  toCombatStatePersistence,
+  translateFreeAction,
+} from './combat.service'
 import { compressScene } from './memory.service'
+import {
+  advanceRun,
+  countCarriedSupplies,
+  detectThresholdCrossings,
+  hasContract,
+  hasProvisionsInBag,
+  projectRun,
+  readRunState,
+  resolveReturnEnding,
+  toContractPersistence,
+  toRunStatePersistence,
+} from './run.service'
 import { assembleScene } from './scene-assembler'
 import { validateAndPersistSouvenirCandidate } from './souvenir.service'
 
@@ -75,7 +118,7 @@ function readCharacter(character: DbCharacter): {
   inventory: PersistedInventoryItem[]
 } {
   return {
-    attributes: { blood: character.blood, breath: character.breath, ash: character.ash },
+    attributes: { blood: character.blood, breath: character.breath, will: character.will },
     survival: {
       hp: character.hp,
       maxHp: character.maxHp,
@@ -85,6 +128,7 @@ function readCharacter(character: DbCharacter): {
       calamine: character.calamine,
       isDying: character.isDying,
       neglectStreak: character.neglectStreak,
+      empriseCharges: character.empriseCharges,
     },
     activeConditions: character.activeConditions as unknown as ActiveCondition[],
     inventory: character.inventory as unknown as PersistedInventoryItem[],
@@ -121,6 +165,7 @@ function toStatsRecord(survival: SurvivalStats): Record<string, number> {
     hunger: survival.hunger,
     energy: survival.energy,
     calamine: survival.calamine,
+    empriseCharges: survival.empriseCharges,
   }
 }
 
@@ -195,13 +240,14 @@ export async function getOrCreateSession(
         vocation: seed.vocation,
         blood: seed.attributes.blood,
         breath: seed.attributes.breath,
-        ash: seed.attributes.ash,
+        will: seed.attributes.will,
         hp: seed.maxHp,
         maxHp: seed.maxHp,
         thirst: 100,
         hunger: 100,
         energy: 100,
         calamine: 0,
+        empriseCharges: maxEmpriseCharges(attributeModifier(seed.attributes.will)),
         activeConditions: [],
       },
     })
@@ -220,6 +266,20 @@ export async function getOrCreateSession(
  * against) instead of regenerating them. Returns null for a session with no turn
  * logged yet. The persisted scene is the source of truth — never regenerated.
  */
+/**
+ * Projects the session's run state for the client, or nothing at all when the
+ * session carries no run structure (still at the inn, or created before the run
+ * loop existed — those sessions stay playable, just without the panel).
+ */
+function runProjectionFor(
+  session: GameSession,
+  inventory: PersistedInventoryItem[]
+): Pick<SceneResponse, 'run'> {
+  const state = readRunState(session)
+  if (!state) return {}
+  return { run: projectRun(state, countCarriedSupplies(inventory), inventory) }
+}
+
 async function resumeLatestScene({
   session,
   character,
@@ -250,13 +310,14 @@ async function resumeLatestScene({
 
   return {
     activeConditions,
-    iron: character.iron,
+    gold: character.gold,
     scene,
     survival,
     updatedStats: toStatsRecord(survival),
     updatedInventory: toInventoryRefs(inventory),
     notifications: [],
     source,
+    ...runProjectionFor(session, inventory),
   }
 }
 
@@ -306,13 +367,14 @@ export async function buildOpeningScene(context: SessionContext): Promise<SceneR
 
   return {
     activeConditions,
-    iron: character.iron,
+    gold: character.gold,
     scene,
     survival,
     updatedStats: toStatsRecord(survival),
     updatedInventory: toInventoryRefs(inventory),
     notifications: [],
     source: gm.source,
+    ...runProjectionFor(session, inventory),
   }
 }
 
@@ -323,12 +385,51 @@ export async function buildOpeningScene(context: SessionContext): Promise<SceneR
  */
 export const INVALID_CHOICE = Symbol('invalid-choice')
 
+/** Ascending danger, so the scene's stakes can be compared and maxed. */
+const RISK_ORDER: readonly Difficulty[] = ['safe', 'low', 'medium', 'high', 'deadly']
+
+/** The stakes a free-form action is arbitrated under, inherited from the scene. */
+type InheritedStakes = Pick<Choice, 'type' | 'riskLevel'>
+
+/** A scene with nothing at stake: a calm turn, narrated without a d20. */
+const CALM_STAKES: InheritedStakes = { type: 'action', riskLevel: 'safe' }
+
+/**
+ * The stakes a free-form action inherits: those of the most dangerous choice the
+ * scene itself puts on the table. A scene that offers a `deadly` combat option is
+ * a deadly combat situation, so describing an action in prose is arbitrated
+ * exactly like clicking — no input channel is invulnerable by construction (#238).
+ *
+ * Both fields come from the *same* choice on purpose. `riskLevel` alone decides
+ * whether a d20 is rolled, but `type` decides which attribute it tests and, above
+ * all, whether a failure draws blood: only `combat`/`flee` cost HP
+ * (`PHYSICAL_RISK_TYPES`). Inheriting a `deadly` risk while defaulting the type to
+ * `action` would roll a die that can never kill — the exact invulnerability #238
+ * exists to remove.
+ *
+ * Choices with no `riskLevel` count as `safe`; a scene with no choices at all (or
+ * unparsable ones) yields calm stakes.
+ * @see docs/canon/08-DICE-RESOLUTION.md §9, docs/canon/06-SURVIVAL.md §6
+ */
+function inheritedSceneStakes(choices: readonly InheritedStakes[]): InheritedStakes {
+  return choices.reduce<InheritedStakes>((worst, choice) => {
+    const risk = choice.riskLevel ?? 'safe'
+    return RISK_ORDER.indexOf(risk) > RISK_ORDER.indexOf(worst.riskLevel ?? 'safe')
+      ? { type: choice.type, riskLevel: risk }
+      : worst
+  }, CALM_STAKES)
+}
+
 /**
  * Resolves the `Choice` that drives a turn's mechanics from the persisted
  * world-state — never from client-supplied risk. When a `choiceId` is given it
  * is looked up in the latest scene's stored `choices`; its real `type`/`riskLevel`
  * decide the d20 and stakes. An unknown `choiceId` yields `INVALID_CHOICE`.
- * A free-form action (no `choiceId`) is a deliberate safe, no-roll turn.
+ *
+ * A free-form action (no `choiceId`) inherits the scene's own stakes — both its
+ * risk and its type — rather than falling back to a safe `action`: before #238
+ * typing prose bypassed the d20 entirely, making the text box a way to attempt
+ * lethal actions risk-free.
  */
 export async function resolveChosenChoice(
   sessionId: string,
@@ -336,15 +437,21 @@ export async function resolveChosenChoice(
   chosenActionText: string | undefined,
   freeAction: string | undefined
 ): Promise<Choice | typeof INVALID_CHOICE> {
-  if (!choiceId) {
-    return { id: 'free-action', text: freeAction ?? '', type: 'action', riskLevel: 'safe' }
-  }
-
   const lastScene = await prisma.sceneLog.findFirst({
     where: { sessionId },
     orderBy: { turnNumber: 'desc' },
   })
   const choices = persistedChoicesSchema.safeParse(lastScene?.choices)
+
+  if (!choiceId) {
+    const stakes = choices.success ? inheritedSceneStakes(choices.data) : CALM_STAKES
+    return {
+      id: 'free-action',
+      text: freeAction ?? '',
+      ...stakes,
+    }
+  }
+
   const chosen = choices.success ? choices.data.find((c) => c.id === choiceId) : undefined
   if (!chosen) {
     return INVALID_CHOICE
@@ -365,6 +472,236 @@ export interface ResolveTurnInput {
   choice: Choice
   chosenActionText?: string
   freeAction?: string
+  /**
+   * Set when the player took the "faire demi-tour" pivot offered at the end of
+   * a floor. Irreversible — from here the run only climbs (#228).
+   * @see docs/canon/23-RUN-STRUCTURE.md §3
+   */
+  engageReturn?: boolean
+  /**
+   * The tactical action pressed, when this turn is spent in a fight (#235).
+   * Absent for a turn taken in prose, which is translated server-side instead.
+   */
+  combatAction?: CombatAction
+  targetId?: string
+  fleeDirection?: FleeDirection
+  /**
+   * Dice source for the fight. Left unset in production, where the engine falls
+   * back to `Math.random`; tests pin it so a scenario asserts the wiring rather
+   * than the roll it happened to get.
+   */
+  combatRng?: () => number
+}
+
+/**
+ * Moves the run one step for this turn, before the scene is generated.
+ *
+ * Progression is driven by the *turn*, never by elapsed real time: a session
+ * left open for an hour advances exactly as far as one that ran without a
+ * pause. The minute figures the run carries are an honest estimate shown to the
+ * player, not a clock the engine reads back.
+ * @see docs/canon/23-RUN-STRUCTURE.md §1, §3
+ */
+function advanceRunForTurn(
+  session: GameSession,
+  engageReturnRequested: boolean
+): { previous: RunState; next: RunState } | null {
+  const previous = readRunState(session)
+  if (!previous) return null
+
+  const turned = engageReturnRequested ? engageReturn(previous) : previous
+  return { previous, next: advanceRun(turned) }
+}
+
+/**
+ * Resolves one turn spent inside a fight (#235).
+ *
+ * This is a separate path from `resolveTurn`'s d20, not a variant of it: combat
+ * carries its own dice, its own DCs and its own end conditions, all of them in
+ * `game-rules/combat.ts`. What the two paths share is the order of operations —
+ * the backend resolves everything first, and only then does the AI narrate what
+ * already happened.
+ *
+ * The tactical action comes from a button when there is one, and from prose
+ * otherwise: a free-form action is *translated* into one of the six canon
+ * actions rather than being resolved on its own terms, so the text box cannot
+ * be a cheaper way to fight than the buttons (#238 inside a fight).
+ *
+ * @see docs/canon/10-COMBAT.md §3, §7, §8, §9
+ */
+async function resolveCombatTurnForSession(
+  input: ResolveTurnInput,
+  state: CombatState
+): Promise<SceneResponse> {
+  const { session, character, chosenActionText, freeAction } = input
+  const { attributes, survival, activeConditions, inventory } = readCharacter(character)
+
+  // A button states its action outright; prose has to be read. Either way the
+  // resolution below is identical — same dice, same costs.
+  const translated = input.combatAction
+    ? { action: input.combatAction, fleeDirection: input.fleeDirection }
+    : translateFreeAction(freeAction ?? chosenActionText ?? '')
+
+  // A round of fighting is a turn like any other, and canon prices it the same:
+  // the drain, the -1 PV of an empty gauge and the Calamine of prolonged neglect
+  // all apply (06-SURVIVAL §4). Without this, starving would cost nothing for as
+  // long as the player kept swinging.
+  //
+  // Paid BEFORE the blows are traded, so a character the thirst finishes off
+  // drops to 0 on the upkeep and lets `resolveCombatTurn` arbitrate the dying
+  // rule on the real HP — rather than dying twice over in the same turn.
+  const upkeep = applyTurnUpkeep(survival, input.combatRng)
+
+  // Gear is re-read every turn, never frozen at the fight's opening: canon has
+  // the player feel a new armour straight away (10-COMBAT §4), and swapping a
+  // weapon mid-fight has to bite on the very next swing. Both sides go through
+  // the closed catalogue, so an unknown name falls back to tier 0 rather than
+  // being guessed at.
+  const equippedWeapon = inventory.find((item) => item.equippedSlot === 'main-hand')
+  const weapon = weaponDamageForItemName(equippedWeapon?.name)
+  const armourBonus = armourBonusForItemName(
+    inventory.find((item) => item.equippedSlot === 'armor')?.name
+  )
+
+  const turn = resolveCombatTurn({
+    state: {
+      ...state,
+      player: {
+        ...state.player,
+        armourClass: armourClassFromBreath(state.player.attributes.breath, armourBonus),
+      },
+    },
+    survival: upkeep.survival,
+    action: translated.action,
+    targetId: input.targetId,
+    fleeDirection: input.fleeDirection ?? translated.fleeDirection,
+    allyKind: 'human',
+    weapon,
+    rng: input.combatRng,
+  })
+
+  // Running backward is the same pivot as the "faire demi-tour" button: it
+  // engages the return trip, irreversibly. Running forward escapes the fight
+  // and carries on with the quest, which the ordinary per-turn advance already
+  // does — so only the backward case needs an extra move here (§7).
+  const fledBackward = turn.result?.outcome === 'fled' && turn.state.fleeDirection === 'backward'
+  const run = advanceRunForTurn(session, input.engageReturn === true || fledBackward)
+
+  const gm = await generateScene({
+    character: toGmCharacter(character, attributes, turn.survival, activeConditions, inventory),
+    locale: session.locale,
+    sessionId: session.id,
+    chosenActionText,
+    freeAction,
+    run: run
+      ? {
+          destination: run.next.contract.destination,
+          objective: run.next.contract.objective,
+          intensity: run.next.contract.intensity,
+          targetDepth: run.next.contract.targetDepth,
+          currentDepth: run.next.currentDepth,
+          maxDepthReached: run.next.maxDepthReached,
+          mode: run.next.mode,
+          returnEngaged: run.next.returnEngaged,
+          warnings: [],
+        }
+      : null,
+    combat: {
+      ...toCombatPromptContext(turn.state, translated.action, turn.entriesThisTurn),
+      // §2bis: computed live from the carried inventory, same as `powerGapProjection` —
+      // never persisted, and only meaningful once the fight has ended in death.
+      ...(turn.state.knockoutVerdict === 'dead' && run
+        ? { deathIntensity: projectPowerGap(inventory, run.next.contract.danger).deathIntensity }
+        : {}),
+    },
+  })
+
+  const nextTurn = session.turnNumber + 1
+  const goldGained = turn.result?.goldGained ?? 0
+
+  const scene = assembleScene({
+    payload: gm.scene,
+    sessionId: session.id,
+    turnNumber: nextTurn,
+    imageUrl: session.currentImageUrl,
+  })
+
+  // Only a definitive death ends the session. A first drop to 0 HP is the one
+  // turn of reprieve canon grants (06-SURVIVAL §7), and being captured or
+  // pulled out by an ally (§8) leaves the character alive to keep playing —
+  // the backend already arbitrated which of the three happened.
+  const endReason: SessionEndReason | null = turn.definitiveDeath ? 'death' : null
+
+  await prisma.$transaction([
+    prisma.sceneLog.create({
+      data: {
+        sessionId: session.id,
+        turnNumber: nextTurn,
+        sceneType: scene.sceneType,
+        location: scene.location,
+        narrative: scene.narrative,
+        turnSummary: gm.scene.turnSummary,
+        choices: scene.choices as unknown as object,
+        chosenChoice: input.choice.text ? (input.choice as unknown as object) : undefined,
+        source: gm.source,
+      },
+    }),
+    prisma.character.update({
+      where: { id: character.id },
+      data: {
+        // The whole survival sheet, not just HP: the upkeep above moved the
+        // gauges, and persisting only the damage would let a fight rewind the
+        // thirst it just cost.
+        hp: turn.survival.hp,
+        thirst: turn.survival.thirst,
+        hunger: turn.survival.hunger,
+        energy: turn.survival.energy,
+        calamine: turn.survival.calamine,
+        isDying: turn.survival.isDying,
+        neglectStreak: turn.survival.neglectStreak,
+        empriseCharges: turn.survival.empriseCharges,
+        // Gold is paid on the same write that clears the fight, so a reload can
+        // never bank the same corpses twice.
+        ...(goldGained > 0 ? { gold: { increment: goldGained } } : {}),
+      },
+    }),
+    prisma.gameSession.update({
+      where: { id: session.id },
+      data: {
+        turnNumber: nextTurn,
+        location: scene.location,
+        ...(run ? toRunStatePersistence(run.next) : {}),
+        // The fight's own persistence decides the mode: a finished fight clears
+        // the column and returns to exploration on this very write.
+        ...toCombatStatePersistence(turn.state),
+        ...(endReason ? { status: 'ended', endReason } : {}),
+      },
+    }),
+  ])
+
+  if (endReason) {
+    void (async () => {
+      try {
+        await generateChronicle(session.id)
+      } catch (err) {
+        console.warn(`[Chronicle] failed to generate for session ${session.id}:`, err)
+      }
+    })()
+  }
+
+  return {
+    activeConditions,
+    ...(endReason ? { endReason } : {}),
+    gold: character.gold + goldGained,
+    scene,
+    survival: turn.survival,
+    updatedStats: toStatsRecord(turn.survival),
+    updatedInventory: toInventoryRefs(inventory),
+    notifications: [],
+    source: gm.source,
+    combat: projectCombatState(turn.state, turn.survival, turn.result),
+    ...(run ? { run: projectRun(run.next, countCarriedSupplies(inventory), inventory) } : {}),
+  }
 }
 
 /**
@@ -372,10 +709,25 @@ export interface ResolveTurnInput {
  * mechanic: it rolls the d20 (via `resolveChoice`), applies survival + HP,
  * persists the outcome, and — on death (`hp<=0`) — ends the session with
  * `endReason='death'`. The AI only narrates. Returns the enriched `SceneResponse`.
+ *
+ * A turn taken while a fight is in progress is routed to the combat engine
+ * instead (#235): the persisted `combatState` is the sole authority on whether
+ * that is the case, never a `gameMode` string that could drift out of sync.
  */
 export async function resolveTurn(input: ResolveTurnInput): Promise<SceneResponse> {
+  const combat = readCombatState(input.session)
+  if (combat) {
+    return resolveCombatTurnForSession(input, combat)
+  }
+
   const { session, character, choice, chosenActionText, freeAction } = input
   const { attributes, survival, activeConditions, inventory } = readCharacter(character)
+
+  // The run moves first, so the scene is narrated from where the character
+  // actually stands — and so a threshold crossed by descending is caught even
+  // when the player spent nothing this turn.
+  const run = advanceRunForTurn(session, input.engageReturn === true)
+  const suppliesBefore = countCarriedSupplies(inventory)
 
   const resolution = resolveChoice({
     attributes,
@@ -385,6 +737,15 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
     turnNumber: session.turnNumber,
     locale: session.locale,
   })
+
+  // Threshold crossings are detected against the move that just happened: the
+  // supplies are unchanged this turn (items are only ever *gained* mid-turn,
+  // which can never create a shortage), so what makes the trip home newly
+  // unaffordable is the extra floor. Computed before the prompt is built, since
+  // the narration must carry the warning in the same breath (§4.2).
+  const returnWarnings = run
+    ? detectThresholdCrossings(run.previous, run.next, suppliesBefore, suppliesBefore)
+    : []
 
   const gm = await generateScene({
     character: toGmCharacter(
@@ -399,6 +760,19 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
     sessionId: session.id,
     chosenActionText,
     freeAction,
+    run: run
+      ? {
+          destination: run.next.contract.destination,
+          objective: run.next.contract.objective,
+          intensity: run.next.contract.intensity,
+          targetDepth: run.next.contract.targetDepth,
+          currentDepth: run.next.currentDepth,
+          maxDepthReached: run.next.maxDepthReached,
+          mode: run.next.mode,
+          returnEngaged: run.next.returnEngaged,
+          warnings: returnWarnings,
+        }
+      : null,
   })
 
   const nextTurn = session.turnNumber + 1
@@ -444,11 +818,40 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
   const restedSurvival =
     !gameOver && restProposal && (restProposal.type === 'short' || restProposal.type === 'fire')
       ? clearDyingOnHeal(
-          applyRest(restProposal.type, finalSurvival, finalInventory, attributes.blood, {
-            hasProvisions: true,
-          }).survival
+          applyRest(
+            restProposal.type,
+            finalSurvival,
+            finalInventory,
+            attributes.blood,
+            attributes.will,
+            {
+              // Read from the bag, never assumed (#249): a character who carries
+              // no water and no food recovers no hunger/thirst at the fire. The
+              // stock is the one the Comptoir sells into, so leaving without
+              // supplies now actually costs something (canon 06-SURVIVAL §3).
+              hasProvisions: hasProvisionsInBag(finalInventory),
+            }
+          ).survival
         )
       : finalSurvival
+
+  // The AI may signal a forced Emprise resolution via break_deadlock (#267).
+  // canForceAction is re-checked here independently of the AI's own belief —
+  // the prompt already omits the option below 1 charge (system-prompt.ts),
+  // but a model can still hallucinate the field, so at 0 charges the proposal
+  // is silently dropped: no charge spent, no Calamine cost applied.
+  // @see docs/canon/04-ATTRIBUTES.md "Les charges d'Emprise" §"Garde-fous"
+  const deadlockProposal = gm.scene.break_deadlock
+  const forcedSurvival =
+    !gameOver && deadlockProposal && canForceAction(restedSurvival)
+      ? spendEmpriseCharge(
+          restedSurvival,
+          empriseSpendCost(
+            EMPRISE_BASE_CALAMINE_COST.break_deadlock,
+            attributeModifier(attributes.will)
+          )
+        )
+      : restedSurvival
 
   const scene = assembleScene({
     payload: gm.scene,
@@ -458,11 +861,55 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
     imageUrl: session.currentImageUrl,
   })
 
+  // Reaching the surface alive settles the run: `extracted` with the objective,
+  // `returned_empty` without. Death and Calamine take precedence — a character
+  // who dies on the last climb did not come home. @see 23-RUN-STRUCTURE.md §5
+  const returnEnding = run && !gameOver ? resolveReturnEnding(run.next) : null
+
+  // The AI may signal that what it just narrated turned hostile (#235). Canon
+  // makes the fight a narrative pivot the Game Master announces, never a button
+  // the player presses (10-COMBAT §1) — so the signal has to come from the AI,
+  // and the arbitration has to stay here: `openCombatFromEncounter` re-checks
+  // the creatures against the floor before anything is instantiated.
+  //
+  // A turn that already ended the run opens nothing. Persisting a fight onto a
+  // session the same write is closing would leave a session that is `ended` and
+  // in `combat` at once — and on death it would drop a reload into a fight the
+  // character did not survive to see.
+  const openedCombat =
+    !gameOver && !returnEnding && gm.scene.combat_encounter
+      ? openCombatFromEncounter({
+          encounter: gm.scene.combat_encounter,
+          run: run?.next ?? null,
+          attributes,
+          survival: forcedSurvival,
+          conditions: finalConditions,
+          armourBonus: armourBonusForItemName(
+            finalInventory.find((item) => item.equippedSlot === 'armor')?.name
+          ),
+          rng: input.combatRng,
+        })
+      : null
+
   const endReason: SessionEndReason | null = resolution.gameOver
     ? 'death'
     : calcined
       ? 'calcined'
-      : null
+      : returnEnding
+
+  const runOver = gameOver || returnEnding !== null
+
+  // The reward is only owed on a genuine extraction, and it is scaled by how
+  // outmatched the gear was for the danger accepted — farming the low tiers
+  // pays 40% less, an underequipped extraction pays up to 60% more.
+  // @see docs/canon/23-RUN-STRUCTURE.md §2bis
+  const rewardGold =
+    endReason === 'extracted' && run
+      ? Math.round(
+          run.next.contract.rewardGold *
+            projectPowerGap(finalInventory, run.next.contract.danger).rewardMultiplier
+        )
+      : 0
 
   await prisma.$transaction([
     prisma.sceneLog.create({
@@ -483,15 +930,17 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
     prisma.character.update({
       where: { id: character.id },
       data: {
-        hp: restedSurvival.hp,
-        thirst: restedSurvival.thirst,
-        hunger: restedSurvival.hunger,
-        energy: restedSurvival.energy,
-        calamine: restedSurvival.calamine,
-        isDying: restedSurvival.isDying,
-        neglectStreak: restedSurvival.neglectStreak,
+        hp: forcedSurvival.hp,
+        thirst: forcedSurvival.thirst,
+        hunger: forcedSurvival.hunger,
+        energy: forcedSurvival.energy,
+        calamine: forcedSurvival.calamine,
+        isDying: forcedSurvival.isDying,
+        neglectStreak: forcedSurvival.neglectStreak,
+        empriseCharges: forcedSurvival.empriseCharges,
         activeConditions: finalConditions as unknown as object,
         inventory: finalInventory as unknown as object,
+        ...(rewardGold > 0 ? { gold: { increment: rewardGold } } : {}),
       },
     }),
     prisma.gameSession.update({
@@ -499,7 +948,13 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
       data: {
         turnNumber: nextTurn,
         location: scene.location,
-        ...(gameOver ? { status: 'ended', endReason } : {}),
+        ...(run ? toRunStatePersistence(run.next) : {}),
+        // Switches the session into combat mode when the turn just opened a
+        // fight. `openedCombat` is null on every other turn, which this same
+        // call writes back as exploration — this path is only ever reached with
+        // no fight in progress, so clearing is a no-op rather than a risk.
+        ...toCombatStatePersistence(openedCombat),
+        ...(runOver ? { status: 'ended', endReason } : {}),
       },
     }),
   ])
@@ -515,8 +970,9 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
         await compressScene(
           session.id,
           recentTurns,
-          toGmCharacter(character, attributes, restedSurvival, finalConditions, finalInventory),
-          scene.location
+          toGmCharacter(character, attributes, forcedSurvival, finalConditions, finalInventory),
+          scene.location,
+          run?.next.currentDepth ?? 0
         )
       } catch (err) {
         console.warn(`[Memory] failed to load turns for session ${session.id}:`, err)
@@ -539,7 +995,9 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
     })()
   }
 
-  if (gameOver) {
+  // A run that ends by coming home earns its Chronicle exactly like one that
+  // ends in death — `runOver`, not `gameOver`.
+  if (runOver) {
     void (async () => {
       try {
         await generateChronicle(session.id)
@@ -552,14 +1010,23 @@ export async function resolveTurn(input: ResolveTurnInput): Promise<SceneRespons
   return {
     activeConditions: finalConditions,
     ...(endReason ? { endReason } : {}),
-    iron: character.iron,
+    gold: character.gold + rewardGold,
     scene,
-    survival: restedSurvival,
-    updatedStats: toStatsRecord(restedSurvival),
+    survival: forcedSurvival,
+    updatedStats: toStatsRecord(forcedSurvival),
     updatedInventory: toInventoryRefs(finalInventory),
     notifications: [],
     diceRoll: resolution.diceRoll,
     source: gm.source,
+    // The client learns it is now in a fight from the same response that
+    // narrated the pivot — it never has to poll or infer it from the prose.
+    ...(openedCombat ? { combat: projectCombatState(openedCombat, forcedSurvival) } : {}),
+    // Projected from the inventory as it stands *after* the turn, so the panel
+    // the player reads before deciding to descend reflects what they actually
+    // carry now.
+    ...(run
+      ? { run: projectRun(run.next, countCarriedSupplies(finalInventory), finalInventory) }
+      : {}),
   }
 }
 
@@ -595,7 +1062,7 @@ export async function performInventoryAction(
   if (!result.applied) {
     return {
       activeConditions,
-      iron: character.iron,
+      gold: character.gold,
       survival,
       updatedStats: toStatsRecord(survival),
       updatedInventory: toInventoryRefs(inventory),
@@ -617,6 +1084,7 @@ export async function performInventoryAction(
       calamine: finalSurvival.calamine,
       isDying: finalSurvival.isDying,
       neglectStreak: finalSurvival.neglectStreak,
+      empriseCharges: finalSurvival.empriseCharges,
       activeConditions: result.conditions as unknown as object,
       inventory: result.items as unknown as object,
     },
@@ -624,7 +1092,7 @@ export async function performInventoryAction(
 
   return {
     activeConditions: result.conditions,
-    iron: character.iron,
+    gold: character.gold,
     survival: finalSurvival,
     updatedStats: toStatsRecord(finalSurvival),
     updatedInventory: toInventoryRefs(result.items),
@@ -633,8 +1101,8 @@ export async function performInventoryAction(
 }
 
 /**
- * Ends an active session with the given reason (`inn` or `abandon`) and
- * fires the Chronicle generation, mirroring the `death` path in `resolveTurn`.
+ * Ends an active session with the given reason and fires the Chronicle
+ * generation, mirroring the `death` path in `resolveTurn`.
  * Returns null if the session doesn't exist, isn't the caller's, or has
  * already ended — the route decides how to surface that.
  */
@@ -667,14 +1135,69 @@ async function endSession(
 }
 
 /**
+ * Starts a run: the player accepts a contract at the inn and sets out.
+ *
+ * The contract is built by the backend from validated input — the client never
+ * supplies a duration in minutes or a room count, both of which are derived
+ * from the one length it does supply, the intensity (#269). Only an active
+ * session still at the inn may leave; a session already underground cannot
+ * silently swap contracts mid-run.
+ * @see docs/canon/23-RUN-STRUCTURE.md §1, §2
+ */
+export async function startRun(
+  sessionId: string,
+  userId: string,
+  contract: {
+    family: QuestFamily
+    destination: string
+    commissioner: string
+    danger: QuestDanger
+    duration: QuestDuration
+    intensity: QuestIntensity
+    rewardGold: number
+    objective: string
+    successCondition: string
+    failureConditions: string[]
+  }
+): Promise<SceneResponse | null> {
+  const session = await prisma.gameSession.findFirst({
+    where: { id: sessionId, status: 'active', character: { userId } },
+    include: { character: true },
+  })
+  if (!session || session.gameMode !== 'inn' || hasContract(session)) {
+    return null
+  }
+
+  const state = createRunState(createContract({ id: randomUUID(), ...contract }))
+
+  const updated = await prisma.gameSession.update({
+    where: { id: session.id },
+    data: {
+      ...toContractPersistence(state.contract),
+      ...toRunStatePersistence(state),
+    },
+  })
+
+  // The player leaves with the return estimate already on screen: the cost of
+  // getting home is visible before the first descent, not after it (§4.1).
+  return buildOpeningScene({ session: updated, character: session.character })
+}
+
+/**
  * Ends a session via the player's voluntary choice at the inn, facing
  * L'Aveugle ("Ton aventure se termine ici").
+ *
+ * Recorded as `abandon`, not as a return: the player ends the campaign on their
+ * own initiative, without an objective to fulfil. The contract-aware endings
+ * (`extracted` / `returned_empty`) belong to the return trip and are resolved
+ * in `resolveTurn` when the character climbs back to the surface.
+ * @see docs/canon/23-RUN-STRUCTURE.md §5
  */
 export async function endSessionAtInn(
   sessionId: string,
   userId: string
 ): Promise<GameSession | null> {
-  return endSession(sessionId, userId, 'inn')
+  return endSession(sessionId, userId, 'abandon')
 }
 
 /**

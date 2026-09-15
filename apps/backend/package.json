@@ -1,6 +1,6 @@
 {
   "name": "@grimoire/backend",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "scripts": {
     "dev": "tsx watch src/index.ts",
@@ -41,6 +41,6 @@
     "tsup": "^8.5.1",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0",
-    "vitest": "^3"
+    "vitest": "^4"
   }
 }

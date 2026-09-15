@@ -1,6 +1,6 @@
 .stat-bar {
-  --stat-bar-color: var(--gold, #d9a441);
-  --stat-bar-light: var(--gold-light, #f0d48a);
+  --stat-bar-color: var(--gold);
+  --stat-bar-light: var(--gold-light);
   --stat-bar-height: 12px;
 
   color: var(--stat-bar-light);
@@ -9,18 +9,18 @@
 }
 
 .stat-bar--danger {
-  --stat-bar-color: var(--blood, #c0392b);
-  --stat-bar-light: color-mix(in srgb, var(--blood, #c0392b) 68%, var(--parchment, #e8dcc0));
+  --stat-bar-color: var(--blood);
+  --stat-bar-light: color-mix(in srgb, var(--blood) 68%, var(--parchment));
 }
 
 .stat-bar--aqua {
-  --stat-bar-color: var(--soul, #35c4ac);
-  --stat-bar-light: color-mix(in srgb, var(--soul, #35c4ac) 68%, var(--parchment, #e8dcc0));
+  --stat-bar-color: var(--soul);
+  --stat-bar-light: color-mix(in srgb, var(--soul) 68%, var(--parchment));
 }
 
 .stat-bar--ember {
-  --stat-bar-color: var(--cendre, #e3b341);
-  --stat-bar-light: color-mix(in srgb, var(--cendre, #e3b341) 72%, var(--parchment, #e8dcc0));
+  --stat-bar-color: var(--cendre);
+  --stat-bar-light: color-mix(in srgb, var(--cendre) 72%, var(--parchment));
 }
 
 .stat-bar--sm {
@@ -42,7 +42,7 @@
 .stat-bar__label {
   align-items: center;
   display: inline-flex;
-  font-family: var(--font-display);
+  font-family: var(--font-game-heading);
   font-size: var(--text-stat-label, 1.0625rem);
   font-weight: 500;
   gap: 0.55rem;
@@ -65,15 +65,15 @@
 }
 
 .stat-bar__value {
-  color: var(--parchment, #e8dcc0);
-  font-family: var(--font-accent);
+  color: var(--parchment);
+  font-family: var(--font-game-body);
   font-size: var(--text-stat-value, 1.25rem);
   font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
 
 .stat-bar__track {
-  background: rgba(8, 7, 5, 0.92);
+  background: var(--gauge-well);
 
   height: var(--stat-bar-height);
   isolation: isolate;
@@ -83,8 +83,8 @@
 
 .stat-bar__track::before,
 .stat-bar__track::after {
-  background: #130f0a;
-  border: 1px solid rgba(218, 170, 74, 0.6);
+  background: var(--gauge-stud);
+  border: 1px solid var(--gauge-stud-edge);
   content: '';
   height: 7px;
   position: absolute;
@@ -103,24 +103,35 @@
 }
 
 .stat-bar__fill {
-  background:
-    linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent),
-    linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--stat-bar-color) 72%, #090705),
-      var(--stat-bar-color)
-    );
-  box-shadow:
-    inset 0 1px rgba(255, 255, 255, 0.14),
-    0 0 9px color-mix(in srgb, var(--stat-bar-color) 34%, transparent);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--stat-bar-color) 72%, var(--gauge-shade)),
+    var(--stat-bar-color)
+  );
+  box-shadow: 0 0 9px color-mix(in srgb, var(--stat-bar-color) 34%, transparent);
   display: block;
   height: 100%;
-  max-width: 100%;
-  min-width: 0;
+  overflow: hidden;
+  position: relative;
+  transform: scaleX(var(--stat-bar-fill, 0));
+  transform-origin: left center;
+  width: 100%;
+}
+
+/* La brillance vit sur un pseudo-element contre-mis a l'echelle : sans cela,
+   le `scaleX` du remplissage etirerait le degrade au lieu de le decouvrir. */
+.stat-bar__fill::after {
+  background: linear-gradient(90deg, transparent, var(--gauge-sheen), transparent);
+  border-top: 1px solid var(--gauge-sheen-soft);
+  content: '';
+  inset: 0;
+  position: absolute;
+  transform: scaleX(calc(1 / max(var(--stat-bar-fill, 0), 0.001)));
+  transform-origin: left center;
 }
 
 .stat-bar--animated .stat-bar__fill {
-  transition: width 420ms cubic-bezier(0.2, 0, 0, 1);
+  transition: transform 420ms cubic-bezier(0.2, 0, 0, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {

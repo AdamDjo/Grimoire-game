@@ -25,9 +25,10 @@ function character(overrides: Partial<DbCharacter> = {}): DbCharacter {
     calamine: 10,
     isDying: false,
     neglectStreak: 0,
+    empriseCharges: 0,
     activeConditions: [],
     inventory: [{ id: 'item1', name: 'Waterskin', category: 'bag', quantity: 1 }],
-    iron: 23,
+    gold: 23,
     ...overrides,
   } as unknown as DbCharacter
 }
@@ -87,7 +88,7 @@ describe('performInventoryAction (#183)', () => {
 
     expect(result).toEqual({
       activeConditions: [],
-      iron: 23,
+      gold: 23,
       survival: {
         hp: 17,
         maxHp: 20,
@@ -97,8 +98,17 @@ describe('performInventoryAction (#183)', () => {
         calamine: 10,
         isDying: false,
         neglectStreak: 0,
+        empriseCharges: 0,
       },
-      updatedStats: { hp: 17, maxHp: 20, thirst: 100, hunger: 100, energy: 100, calamine: 10 },
+      updatedStats: {
+        hp: 17,
+        maxHp: 20,
+        thirst: 100,
+        hunger: 100,
+        energy: 100,
+        calamine: 10,
+        empriseCharges: 0,
+      },
       updatedInventory: [],
       applied: true,
     })
@@ -115,7 +125,7 @@ describe('performInventoryAction (#183)', () => {
 
     expect(result).toEqual({
       activeConditions: [],
-      iron: 23,
+      gold: 23,
       survival: {
         hp: 12,
         maxHp: 20,
@@ -125,8 +135,17 @@ describe('performInventoryAction (#183)', () => {
         calamine: 10,
         isDying: false,
         neglectStreak: 0,
+        empriseCharges: 0,
       },
-      updatedStats: { hp: 12, maxHp: 20, thirst: 100, hunger: 100, energy: 100, calamine: 10 },
+      updatedStats: {
+        hp: 12,
+        maxHp: 20,
+        thirst: 100,
+        hunger: 100,
+        energy: 100,
+        calamine: 10,
+        empriseCharges: 0,
+      },
       updatedInventory: [
         expect.objectContaining({
           id: 'item1',

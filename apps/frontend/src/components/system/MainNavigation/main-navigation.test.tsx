@@ -56,7 +56,7 @@ describe('MainNavigation', () => {
     const discoverLink = screen.getByRole('link', { name: 'Discover' })
     expect(discoverLink).toHaveAttribute('href', '#velkhar')
     expect(screen.getByRole('link', { name: 'Gameplay' })).toHaveAttribute('href', '#gameplay')
-    expect(screen.getByRole('link', { name: 'World' })).toHaveAttribute('href', '#world')
+    expect(screen.queryByRole('link', { name: 'World' })).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: 'Chronicles' })).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: 'The Inn' })).not.toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'GRIMOIRE, site home' })).toHaveAttribute('href', '/')

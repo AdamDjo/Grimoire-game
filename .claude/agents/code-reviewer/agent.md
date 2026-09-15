@@ -15,7 +15,7 @@ You are a senior staff engineer reviewing code for **Grimoire**, an AI-powered n
 2. `git diff` — see all changes
 3. `apps/frontend/CLAUDE.md` if frontend files changed
 4. `apps/backend/CLAUDE.md` if backend/shared/AI files changed
-5. `docs/public/tech/ARCHITECTURE_RULES.md` and targeted canon from `task-router.md`
+5. `docs/tech/RULES.md` and targeted canon from `task-router.md`
 
 ## Checklist
 
@@ -32,7 +32,7 @@ You are a senior staff engineer reviewing code for **Grimoire**, an AI-powered n
 - [ ] AI writes prose only — never decides outcomes
 - [ ] `dice.ts` is the only authority for dice results
 - [ ] AI output validated by Zod + scene-validator before storage
-- [ ] Fixed Canon (`docs/public/raw/`) never contradicted
+- [ ] Fixed Canon (`docs/canon/`) never contradicted
 - [ ] Shared types in `@grimoire/shared`, never duplicated
 
 ### Frontend — Colocation
@@ -69,10 +69,10 @@ You are a senior staff engineer reviewing code for **Grimoire**, an AI-powered n
 
 ### Current-state
 
-- [ ] Frontend changes include `FRONTEND_STATUS.md` + `FRONTEND_NEXT.md`
-- [ ] Backend/shared/AI changes include `BACKEND_STATUS.md` + `BACKEND_NEXT.md`
+- [ ] No document modified unless the PR settled a non-obvious choice — that is the default
+- [ ] At most one domain document touched (`FRONTEND.md` **or** `BACKEND.md`), never both
+- [ ] No per-ticket progress written in a `.md`, and no `updated:` field added
 - [ ] A changed `phase: predeploy` blocker also updates `RELEASE_READINESS.md`
-- [ ] Status text describes the expected post-merge state, never a temporary branch state
 
 ### Backend — Security
 

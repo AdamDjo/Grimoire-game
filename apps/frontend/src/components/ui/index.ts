@@ -1,8 +1,5 @@
 export { AmbientEmbers } from './ambient-embers'
-export { AnimatedShinyText } from './animated-shiny-text'
-export { Button } from './button'
 export { Card } from './card'
-export { CustomCursor } from './custom-cursor'
 export { MediaLayer } from './media-layer'
 export { ScrollProgressBar } from './scroll-progress-bar'
 export { SectionProgress } from './section-progress'
@@ -20,7 +17,6 @@ export {
 } from './grimoire'
 export type {
   GameSceneLayoutProps,
-  GameSceneLayoutVariant,
   GameStepDockProps,
   GameTopBarProps,
   LocationIdentityProps,

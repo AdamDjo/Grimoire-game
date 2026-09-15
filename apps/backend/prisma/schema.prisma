@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 // ---------------------------------------------------------------------------
-// Vision domaine complète (voir docs/public/raw/*.md) — NON migrée ici :
+// Vision domaine complète (voir docs/canon/*.md) — NON migrée ici :
 // Peuples, Vocations (catalogues statiques, pas de table), Factions/réputation,
 // Quêtes, Inventaire/Items complet, Traces, World Events. Ces modèles
 // arriveront avec les écrans qui en ont besoin (World Map, inventaire complet).
@@ -49,7 +49,7 @@ model Character {
   avatarUrl   String?
 
   /// Nom de vocation personnalisé par L'Aveugle quand `vocation` a été
-  /// résolue depuis un concept libre. @see docs/public/raw/07-CHARACTER-CREATION.md §2
+  /// résolue depuis un concept libre. @see docs/canon/07-CHARACTER-CREATION.md §2
   customVocationName String?
   /// Trait narratif attribué par L'Aveugle lors de la résolution du concept libre.
   narrativeTrait     String?
@@ -57,10 +57,10 @@ model Character {
   /// (ShiftedSkill[] JSON), voir @grimoire/shared.
   shiftedSkills      Json?   @default("[]")
 
-  // Triptyque canon SANG/SOUFFLE/CENDRE (3-18).
+  // Triptyque canon SANG/SOUFFLE/VOLONTÉ (3-18).
   blood  Int
   breath Int
-  ash    Int
+  will   Int
 
   // Jauges de survie (0-100), voir SurvivalStats.
   hp       Int
@@ -71,24 +71,28 @@ model Character {
   calamine Int
 
   /// True after the first 0-HP hit: one telegraphed turn of reprieve before a
-  /// second 0-HP hit is definitive death. @see docs/public/raw/06-SURVIVAL.md §7
+  /// second 0-HP hit is definitive death. @see docs/canon/06-SURVIVAL.md §7
   isDying Boolean @default(false)
 
   /// Consecutive turns thirst or hunger has been at 0 — drives the prolonged
   /// neglect Calamine source. Resets once both gauges are back above 0.
   neglectStreak Int @default(0)
 
+  /// Charges d'Emprise actuelles (forcer le monde), dérivées du mod VOLONTÉ.
+  /// @see docs/canon/04-ATTRIBUTES.md "Les charges d'Emprise"
+  empriseCharges Int @default(0)
+
   /// États altérés persistants (ActiveCondition[] JSON), voir @grimoire/shared.
-  /// @see docs/public/raw/06-SURVIVAL.md §2
+  /// @see docs/canon/06-SURVIVAL.md §2
   activeConditions Json @default("[]")
 
   /// Inventaire réel (PersistedInventoryItem[] JSON), voir @grimoire/shared.
-  /// @see docs/public/raw/11-INVENTORY-ECONOMY.md §1
+  /// @see docs/canon/11-INVENTORY-ECONOMY.md §1
   inventory Json @default("[]")
 
-  /// Fer (🪙), monnaie in-game de Velkhar. Aucune mécanique de gain/dépense
-  /// n'est encore branchée ailleurs dans le backend — champ persistant seul.
-  iron Int @default(0)
+  /// Or (🪙), monnaie in-game de Velkhar. Gagné au combat (butin des corps,
+  /// `goldGained`) et dépensé au Comptoir (#249).
+  gold Int @default(0)
 
   /// Ids des topics du catalogue statique de L'Aveugle déjà vus par ce joueur
   /// (le contenu des topics reste statique côté frontend, seul l'état "vu" persiste).
@@ -96,10 +100,40 @@ model Character {
 
   createdAt DateTime @default(now())
   sessions  GameSession[]
+  counterPurchases CounterPurchase[]
 
   /// One character per user for now (no multi-character roster yet) — also
   /// closes the createCharacter() findFirst/create race condition.
   @@unique([userId])
+}
+
+/// Une transaction du Comptoir (#249), persistée pour la rendre idempotente et
+/// rejouable. La ligne n'existe que si l'achat a été *accepté* : un refus ne
+/// consomme pas le `purchaseId`, pour que le joueur puisse corriger son panier
+/// et réessayer avec le même id.
+/// @see docs/canon/11-INVENTORY-ECONOMY.md §2
+model CounterPurchase {
+  id          String    @id @default(uuid())
+  characterId String
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  /// Id fourni par le client. Unique *par personnage* : deux joueurs peuvent
+  /// générer le même uuid sans se bloquer mutuellement, et c'est cette
+  /// contrainte que la transaction concurrente heurte (P2002) pour garantir
+  /// qu'un double envoi ne débite le fer qu'une fois.
+  purchaseId String
+
+  /// Lignes achetées (CounterPurchaseLine[] JSON), voir @grimoire/shared.
+  lines Json
+
+  /// Fer débité et solde restant au moment de l'achat — la réponse rejouée est
+  /// reconstruite depuis ces valeurs, jamais recalculée sur l'état courant.
+  totalGold  Int
+  goldAfter  Int
+
+  createdAt DateTime @default(now())
+
+  @@unique([characterId, purchaseId])
 }
 
 model GameSession {
@@ -113,11 +147,69 @@ model GameSession {
   /// normalisé). Persistée pour que la reprise garde la même langue (#168).
   locale     String   @default("en")
   status     String   @default("active") // active | ended
-  /// Why the session ended (death | inn | abandon | calcined). Null while active. Bridge to A3.
+  /// Why the session ended (death | extracted | returned_empty | abandon | calcined).
+  /// Null while active. Bridge to A3. @see docs/canon/23-RUN-STRUCTURE.md §5
   endReason  String?
   /// URL résolue du cache d'images de scène partagé (#207), mise à jour à
   /// chaque compression N2. Null tant qu'aucun chunk n'a encore résolu d'image.
   currentImageUrl String?
+
+  // --- Structure de run (#228) — @see docs/canon/23-RUN-STRUCTURE.md
+  /// Mode de jeu courant (inn | exploration | combat | return). Une session
+  /// commence à l'auberge : c'est là qu'on accepte un contrat.
+  gameMode          String   @default("inn")
+  /// Contrat accepté. Null tant que le joueur n'est pas parti — et sur toutes
+  /// les sessions antérieures à #228, qui restent jouables sans structure de run.
+  contractId        String?
+  /// Famille de quête (dungeon | escort | investigation | hunt | recovery |
+  /// negotiation | dilemma). Seule `dungeon` descend : c'est elle qui décide si
+  /// `contractTargetDepth` a un sens (#260).
+  contractFamily      String?
+  contractDestination String?
+  /// Commanditaire : qui a posé le contrat, et qui paie au retour.
+  contractCommissioner String?
+  /// Tag de danger affiché sur le tableau (easy | medium | hard). Le chiffrage
+  /// qui le produit reste interne et n'est jamais envoyé au client.
+  contractDanger      String?
+  /// Tag de durée affiché (short | long | major). Les minutes restent internes.
+  contractDuration    String?
+  /// Intensité du contrat (3 | 5 | 7) : l'unité universelle de longueur, portée
+  /// par toutes les familles (#269). Null sur les lignes antérieures, relues
+  /// depuis `contractTargetDepth` pour un donjon et depuis le tag de durée
+  /// sinon. Jamais projetée telle quelle au client.
+  contractIntensity   Int?
+  /// Profondeur visée (3 | 5 | 7) : la lecture donjon de `contractIntensity`.
+  /// Null pour toute quête non-donjon — une escorte n'a pas de paliers, et
+  /// aucune règle n'a le droit de lui en inventer.
+  contractTargetDepth Int?
+  /// Fer payé par le commanditaire au retour, si le joueur revient.
+  contractRewardGold  Int?
+  contractObjective   String?
+  /// Ce que le backend vérifie pour déclarer le contrat rempli.
+  contractSuccessCondition String?
+  /// Toutes les façons de perdre le contrat. Vide = seule la mort le fait échouer.
+  contractFailureConditions String[] @default([])
+  /// Palier courant. 0 = en surface (auberge ou sorti du donjon).
+  currentDepth      Int      @default(0)
+  /// Palier le plus profond atteint ce run. Ne redescend jamais — c'est lui qui
+  /// décrit ce que le joueur a réellement osé.
+  maxDepthReached   Int      @default(0)
+  /// Salle en cours de résolution, null entre deux salles.
+  currentRoomId     String?
+  /// True une fois le demi-tour engagé. Irréversible : on ne redescend plus.
+  returnEngaged     Boolean  @default(false)
+  /// True quand l'objectif du contrat est sécurisé. Décide `extracted` vs
+  /// `returned_empty` au retour.
+  objectiveSecured  Boolean  @default(false)
+
+  // --- Combat par tours (#235) — @see docs/canon/10-COMBAT.md
+  /// État complet du combat en cours, sérialisé. Null hors combat — c'est ce
+  /// null qui dit « pas de combat », jamais un `gameMode` désynchronisé.
+  /// Persisté en entier (initiative, round, camp actif, PV et conditions de
+  /// chaque ennemi) pour qu'une reprise de session retrouve la rencontre
+  /// exactement dans l'état où elle a été quittée, sans rejouer un seul dé.
+  combatState       Json?
+
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
@@ -172,9 +264,9 @@ model MemoryChunk {
 }
 
 /// Bibliothèque d'images de scène partagée entre tous les joueurs (#207).
-/// Une ligne par combinaison sceneType_biome_lieuType rencontrée ; générée une
+/// Une ligne par combinaison sceneType_depthBand_lieuType rencontrée ; générée une
 /// seule fois puis réutilisée par tous les chunks qui matchent la même clé.
-/// @see docs/public/tech/DYNAMIC_SCENE_IMAGES.md
+/// @see docs/tech/SCENE_IMAGES.md
 model SceneImage {
   id        String   @id @default(uuid())
   cacheKey  String   @unique
@@ -231,7 +323,8 @@ model Chronicle {
   characterId String
   sessionId   String
 
-  /// Why the run ended (death | inn | abandon | calcined), copied from GameSession.endReason.
+  /// Why the run ended (death | extracted | returned_empty | abandon | calcined),
+  /// copied from GameSession.endReason.
   endReason String
 
   title        String

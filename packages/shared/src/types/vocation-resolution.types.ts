@@ -2,7 +2,7 @@
  * Free-concept host vocation resolution — L'Aveugle identifies which of the
  * 4 canon vocations best fits the player's free-form concept, personalizes
  * it, and the player gets an explicit veto before it's persisted.
- * @see docs/public/raw/07-CHARACTER-CREATION.md §2 step 4
+ * @see docs/canon/07-CHARACTER-CREATION.md §2 step 4
  */
 
 /** A shifted starting skill: the canon vocation skill, renamed to fit the free concept. */

@@ -211,8 +211,8 @@ describe('Grimoire UI primitives', () => {
     render(
       <GameSceneLayout
         top={<GameTopBar start="Départ" center="Centre" end="Fin" />}
-        main={<PlayerIdentity name="Aerion" subtitle="Niveau 1" />}
-        sidebar={<LocationIdentity world="Velkhar" place="Tissan" />}
+        scene={<PlayerIdentity name="Aerion" subtitle="Niveau 1" />}
+        reader={<LocationIdentity world="Velkhar" place="Tissan" />}
         bottom={<GameStepDock actions={<GameButton>Suivant</GameButton>}>Étapes</GameStepDock>}
       />
     )

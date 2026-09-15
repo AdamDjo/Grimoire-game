@@ -72,7 +72,7 @@ export function GameIcon({ className, decorative = false, label, name, size = 48
   return (
     <Image
       className={cn('game-icon', className)}
-      src={`/ui-kit/icons/${name}.webp`}
+      src={`/encre-de-sel/icons/glyphs/${name}.webp`}
       width={size}
       height={size}
       sizes={`${size}px`}

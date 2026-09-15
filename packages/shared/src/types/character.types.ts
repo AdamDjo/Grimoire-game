@@ -1,13 +1,13 @@
 /**
  * Velkhar character model — canon triptyque + survie.
- * @see docs/public/raw/04-ATTRIBUTES.md, 06-SURVIVAL.md
+ * @see docs/canon/04-ATTRIBUTES.md, 06-SURVIVAL.md
  */
 
 import type { PersistedInventoryItem } from "./inventory.types";
 import type { ShiftedSkill } from "./vocation-resolution.types";
 
-/** The three canon attributes (SANG / SOUFFLE / CENDRE). Values range 3–18. */
-export type Attribute = "blood" | "breath" | "ash";
+/** The three canon attributes (SANG / SOUFFLE / VOLONTÉ). Values range 3–18. */
+export type Attribute = "blood" | "breath" | "will";
 
 export type Attributes = Record<Attribute, number>;
 
@@ -26,15 +26,15 @@ export function attributeModifier(value: number): number {
   return 4;
 }
 
-/** Max HP derived from the blood attribute. Canon: PV_max = 10 + mod SANG. */
+/** Max HP derived from the blood attribute. Canon: PV_max = 16 + 4 × mod SANG. */
 export function maxHpFromBlood(blood: number): number {
-  return 10 + attributeModifier(blood);
+  return 16 + 4 * attributeModifier(blood);
 }
 
 /**
  * Persistent altered states beyond the gauges. The id is the sole discriminant —
  * it is also the engine id used by the AI's `applyCondition` proposal.
- * @see docs/public/raw/06-SURVIVAL.md §2
+ * @see docs/canon/06-SURVIVAL.md §2
  */
 export type ConditionId =
   | "fever"
@@ -48,7 +48,7 @@ export type ConditionId =
   | "shaken_reason"
   | "petrification";
 
-/** Which side decided to apply the condition. @see docs/public/raw/06-SURVIVAL.md §2 */
+/** Which side decided to apply the condition. @see docs/canon/06-SURVIVAL.md §2 */
 export type ConditionSource = "backend" | "ai";
 
 /**
@@ -73,13 +73,36 @@ export interface SurvivalStats {
   thirst: number;
   hunger: number;
   energy: number;
-  /** Accumulated Cendre corruption (0–100). 100 = death (Calciné). */
+  /** Accumulated Calamine (0–100), the single magic cost gauge. 100 = death (Calciné). */
   calamine: number;
   /** True after the first 0-HP hit: one telegraphed turn of reprieve before a second 0-HP hit is definitive death. */
   isDying: boolean;
   /** Consecutive turns thirst or hunger has been at 0 — drives the prolonged-neglect Calamine source. */
   neglectStreak: number;
+  /** Current Emprise charges (forcing the world). Max is derived from the WILL modifier, see empriseCharges(). */
+  empriseCharges: number;
 }
+
+/** The 4 actions Emprise can force. No fifth without revising the canon table. @see docs/canon/04-ATTRIBUTES.md */
+export type EmpriseAction =
+  | "submit_enemy"
+  | "command_ally"
+  | "force_awaken_artefact"
+  | "break_deadlock";
+
+/**
+ * Canon Calamine base cost per Emprise action, before resistance. Shared so the client can
+ * display the cost of an action before the player commits to it (11-INVENTORY-ECONOMY.md).
+ * `submit_enemy` and `command_ally` mirror the base artefact-power tier; forcing an
+ * artefact awake mirrors the Tisse-Verbe Éveil tier it substitutes for.
+ * @see docs/canon/11-INVENTORY-ECONOMY.md §5, §5bis
+ */
+export const EMPRISE_BASE_CALAMINE_COST: Record<EmpriseAction, number> = {
+  submit_enemy: 5,
+  command_ally: 5,
+  force_awaken_artefact: 10,
+  break_deadlock: 5,
+};
 
 export interface CharacterStats {
   attributes: Attributes;

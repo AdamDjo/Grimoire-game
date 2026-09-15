@@ -41,7 +41,7 @@ const character = {
   name: 'Yarel',
   people: 'sahelin',
   vocation: 'salt-walker',
-  iron: 12,
+  gold: 12,
   aveugleSeenTopics: ['salt-guild'],
 }
 
@@ -60,7 +60,7 @@ beforeEach(() => {
 })
 
 describe('getAveugleHubState', () => {
-  it('splits named vs spendable Souvenirs and reports iron + seen topics', async () => {
+  it('splits named vs spendable Souvenirs and reports gold + seen topics', async () => {
     souvenirFindMany.mockResolvedValue([
       {
         id: 's1',
@@ -105,7 +105,7 @@ describe('getAveugleHubState', () => {
 
     const state = await getAveugleHubState('user1')
 
-    expect(state.iron).toBe(12)
+    expect(state.gold).toBe(12)
     expect(state.spendableSouvenirCount).toBe(1)
     expect(state.namedSouvenirs).toHaveLength(1)
     expect(state.namedSouvenirs[0]?.id).toBe('s1')
@@ -117,7 +117,7 @@ describe('getAveugleHubState', () => {
 
     const state = await getAveugleHubState('user1')
 
-    expect(state.iron).toBe(0)
+    expect(state.gold).toBe(0)
     expect(state.seenTopicIds).toEqual([])
   })
 })

@@ -1,0 +1,14 @@
+-- #264 : l'attribut CENDRE devient VOLONTÉ (épic balancing #263).
+--
+-- Deux raisons, aucune cosmétique : « Cendre » désignait à la fois l'attribut du
+-- personnage et la Cendre dorée qui recouvre le monde, et l'attribut faisait
+-- doublon avec la Calamine, coût magique unifié déjà persisté. VOLONTÉ = la
+-- réserve ; Calamine = le prix.
+--
+-- RENAME COLUMN et non drop/create : la colonne porte les attributs des
+-- personnages vivants, et un drop les perdrait. Le rename est atomique et
+-- préserve valeurs, contraintes et index.
+--
+-- La Cendre du *lore* reste `ash` partout où elle désigne le monde
+-- (ash_scorpion, peuple Cendreur, prose de scène) : elle n'est pas renommée.
+ALTER TABLE "Character" RENAME COLUMN "ash" TO "will";

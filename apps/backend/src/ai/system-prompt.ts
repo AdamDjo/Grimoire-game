@@ -1,14 +1,84 @@
 import { CONDITIONS, getConditionDefinition, localeDisplayName } from '@grimoire/shared'
 
+import { creaturesForDepth, creaturesForReturn } from '../game-rules/bestiary'
 import { gaugeTier } from '../game-rules/survival'
 
+import type { ReturnWarning } from '../game-rules/run'
 import type { MemoryChunkModel, SouvenirModel } from '../generated/prisma/models'
-import type { Character, Locale } from '@grimoire/shared'
+import type {
+  Character,
+  CombatAction,
+  CombatOutcome,
+  DeathIntensity,
+  FleeDirection,
+  GameMode,
+  KnockoutVerdict,
+  Locale,
+} from '@grimoire/shared'
 
 /** Narrow projection of a `SceneLog` used for the N1 recent-turns window. */
 export interface RecentTurnSummary {
   turnNumber: number
   turnSummary: string | null
+}
+
+/**
+ * Where the character stands in the run, as the prompt needs to know it.
+ * Everything here is decided by the backend — the AI receives it as fact, and
+ * `warnings` in particular is an order to narrate, not a hint to consider.
+ * @see docs/canon/23-RUN-STRUCTURE.md §4.2
+ */
+export interface RunPromptContext {
+  destination: string
+  objective: string
+  /**
+   * How long the contract runs, on the universal 3-7 scale every family now
+   * carries (#269). The narrator gets it so a run can be paced — a third beat
+   * out of seven is not written like a last one — and is forbidden from ever
+   * printing it (§4).
+   */
+  intensity: number
+  /**
+   * The same length told as floors, for a `dungeon` only. Undefined elsewhere:
+   * a hunt is as long as a delve but does not *descend*, and the section says
+   * so rather than handing it a depth it has no fiction for (#260, #269).
+   */
+  targetDepth?: number
+  currentDepth: number
+  maxDepthReached: number
+  mode: GameMode
+  returnEngaged: boolean
+  /** Supply thresholds crossed this turn. Each one MUST surface in the prose. */
+  warnings: ReturnWarning[]
+}
+
+/**
+ * The fight as the prompt needs to know it: a mechanical result, already
+ * resolved, handed to the AI to be given a voice.
+ *
+ * `events` are plain sentences derived from the combat log by the backend — the
+ * AI is never shown raw dice, DCs or hit points, because a model that reads a
+ * number tends to print it, and canon keeps the arithmetic off the page.
+ * @see docs/canon/10-COMBAT.md §3
+ */
+export interface CombatPromptContext {
+  /** The tactical action actually resolved (after any prose translation). */
+  action: CombatAction
+  round: number
+  /** What happened this turn, in order, already phrased for narration. */
+  events: string[]
+  /** Null while the fight is still running. */
+  outcome: CombatOutcome | null
+  /** How losing was arbitrated (§8), when the fight ended in defeat. */
+  knockoutVerdict?: KnockoutVerdict
+  /**
+   * How graphically a `dead` verdict must be narrated, from the equipment-vs-
+   * danger gap (§2bis). Only meaningful alongside `knockoutVerdict: 'dead'` —
+   * a fixed instruction, not a tone the AI is free to pick.
+   * @see docs/canon/23-RUN-STRUCTURE.md §2bis
+   */
+  deathIntensity?: DeathIntensity
+  fleeDirection?: FleeDirection
 }
 
 /**
@@ -85,7 +155,7 @@ function buildSouvenirsSection(souvenirs: SouvenirModel[]): string[] {
  * already applies the mechanical effect (Désavantage at 25 and below, via
  * `computeDisadvantage`, non-cumulative across gauges) — this section never
  * asks the AI to decide or apply anything, only to color the prose.
- * @see docs/public/raw/06-SURVIVAL.md §1 "Échelle de chaque jauge"
+ * @see docs/canon/06-SURVIVAL.md §1 "Échelle de chaque jauge"
  */
 function buildGaugeTiersSection(character: Character): string[] {
   const { thirst, hunger, energy } = character.stats.survival
@@ -130,7 +200,7 @@ function buildGaugeTiersSection(character: Character): string[] {
  * `apply_condition`. `[BACKEND]` conditions (fever, wound) are applied
  * automatically server-side and are deliberately excluded from the whitelist
  * shown here — the AI cannot propose them.
- * @see docs/public/raw/06-SURVIVAL.md §2 "Les deux familles de conditions"
+ * @see docs/canon/06-SURVIVAL.md §2 "Les deux familles de conditions"
  */
 function buildConditionsSection(character: Character, locale: Locale): string[] {
   const nameKey = locale === 'fr' ? 'fr' : 'en'
@@ -178,7 +248,7 @@ function buildConditionsSection(character: Character, locale: Locale): string[] 
  * the AI never re-grants a duplicate) and the rules for proposing a new item.
  * The backend re-validates category/slot/capacity in `game-rules/inventory.ts`
  * before ever persisting a proposal — this is guidance only.
- * @see docs/public/raw/11-INVENTORY-ECONOMY.md §1
+ * @see docs/canon/11-INVENTORY-ECONOMY.md §1
  */
 function buildInventorySection(character: Character): string[] {
   const items = character.stats.inventory ?? []
@@ -207,7 +277,7 @@ function buildInventorySection(character: Character): string[] {
  * applies the canon rates (`game-rules/rest.ts`) and narrates the calm scene
  * itself. Only "short" and "fire" are in scope; "inn" belongs to the
  * separate session-ending inn flow and is never proposed mid-run.
- * @see docs/public/raw/06-SURVIVAL.md §3, docs/public/raw/15-GAME-MASTER.md §4.5
+ * @see docs/canon/06-SURVIVAL.md §3, docs/canon/15-GAME-MASTER.md §4.5
  */
 function buildRestSection(): string[] {
   return [
@@ -223,16 +293,46 @@ function buildRestSection(): string[] {
 }
 
 /**
+ * Builds the break_deadlock section (#267): tells the AI it may signal a
+ * forced Emprise resolution when no other narrative path exists, but only
+ * while the character actually has a charge to spend. Omitted entirely at 0
+ * charges — canon is explicit that the forced action "ne doit jamais
+ * apparaître dans les choix proposés par l'IA" (04-ATTRIBUTES.md
+ * "Garde-fous"), so the safest way to honour that is to never mention the
+ * option at all rather than trust the model to self-censor. The backend
+ * still re-checks `canForceAction` independently before spending anything —
+ * this section only shapes when the AI is even invited to try.
+ * @see docs/canon/04-ATTRIBUTES.md "Les charges d'Emprise"
+ * @see docs/canon/11-INVENTORY-ECONOMY.md §5bis
+ */
+function buildDeadlockSection(character: Character): string[] {
+  if (character.stats.survival.empriseCharges <= 0) return []
+
+  return [
+    '',
+    'Breaking a deadlock (break_deadlock):',
+    '- The character has at least one Emprise charge left: reserve willpower they',
+    '  can spend to force the world when no other path exists — submitting a foe',
+    '  without a fight, overriding an ally, waking an artefact, or breaking open a',
+    '  scene that has genuinely run out of options.',
+    '- Only propose break_deadlock when the narrative has truly cornered the',
+    "  player — never as a shortcut around a choice they haven't earned or lost.",
+    '- Give a short reason for why this moment calls for it. Never state a charge',
+    '  count or a Calamine cost yourself — the backend applies and displays those.',
+  ]
+}
+
+/**
  * Builds the physical-danger crescendo section (#185): pushes the AI to keep
  * offering regular physical pivots (combat, flee, a rescue/save decision) and
  * to let stakes climb from the character's REAL mechanical state (HP ratio,
  * calamine tier, active conditions, dying) rather than any invented act/beat
  * counter — no act state is persisted server-side (deliberately out of scope,
- * see docs/public/plans/gameplay-survie-v2.md ticket #6). The backend still
+ * see issue #185). The backend still
  * owns every roll, damage value, condition, item, and ending; this section
  * only shapes staging and pacing of the prose.
- * @see docs/public/raw/09-ACTION-LOOP.md §6 "La bascule narrative invisible"
- * @see docs/public/raw/15-GAME-MASTER.md §0
+ * @see docs/canon/09-ACTION-LOOP.md §6 "La bascule narrative invisible"
+ * @see docs/canon/15-GAME-MASTER.md §0
  */
 function buildDangerCrescendoSection(character: Character): string[] {
   const { hp, maxHp, calamine, isDying } = character.stats.survival
@@ -302,6 +402,191 @@ function buildDangerCrescendoSection(character: Character): string[] {
 }
 
 /**
+ * Builds the run-structure section (#228): tells the AI where the character
+ * stands in the run — which floor, descending or climbing back — and, when the
+ * engine detected a supply crossing under what the trip home costs, orders the
+ * warning to be delivered *in character*.
+ *
+ * This is the writing half of the canon guarantee "le retour peut tuer, mais
+ * jamais par surprise". The engine decides that a warning is owed
+ * (`detectReturnWarnings`); this section decides only how it sounds. The AI
+ * never states a ration count, a minute estimate, or a threshold number — those
+ * belong to the interface, which reads them from the backend's own projection.
+ * A warning phrased as a system popup would break both the fiction and the
+ * canon rule that the world speaks, not the UI.
+ * @see docs/canon/23-RUN-STRUCTURE.md §4.2, §6
+ */
+function buildRunSection(run: RunPromptContext | null): string[] {
+  if (!run) return []
+
+  const lines = [
+    '',
+    'Run structure (the backend owns every value below — never contradict it):',
+    run.targetDepth === undefined
+      ? `- Contract: "${run.objective}" at ${run.destination}. It runs about ${run.intensity} beats —` +
+        ' pace it to that length, but never speak of descending, of paliers, or of a bottom to' +
+        ' reach: this contract has no floors.'
+      : `- Contract: "${run.objective}" at ${run.destination}. Target depth: ${run.targetDepth} floors.`,
+    `- The character stands on floor ${run.currentDepth}, deepest reached ${run.maxDepthReached}.`,
+    `- Current mode: ${run.mode}.`,
+  ]
+
+  if (run.returnEngaged) {
+    lines.push(
+      '- The character has TURNED BACK and is climbing out. There is no descending again.',
+      '  The way home is a different route than the way down, and it is quieter and shorter —',
+      '  the danger here is attrition and exhaustion, not a new monster waiting at the bottom.',
+      '  Never introduce a boss or a climactic set-piece on the way home.'
+    )
+  } else {
+    lines.push(
+      '- The character is still descending. Deeper means richer and more dangerous, and it also',
+      '  means the trip home costs more. Let the descent feel like a decision being paid for.'
+    )
+  }
+
+  for (const warning of run.warnings) {
+    const supply = warning.supply === 'water' ? 'water' : 'food'
+    lines.push(
+      `- WARNING OWED THIS TURN: the character's ${supply} just dropped below what getting back`,
+      '  to the surface costs. You MUST make this land inside the narration, in the character’s',
+      '  own senses and in the world’s voice — the dry weight of a near-empty skin, a hand that',
+      '  finds less than it expected, a companion going quiet about the count. Never as a system',
+      '  message, never as a number, never as a UI-style alert. The player must finish this',
+      '  narration knowing, without being told mechanically, that the way home has become a',
+      '  problem.',
+      `  Severity to pitch it at: ${warning.risk}.`
+    )
+  }
+
+  lines.push(
+    '- You never decide when a warning is owed, how deep the run goes, whether the character',
+    '  turns back, or how the run ends. The backend resolves all of it; you give it a voice.'
+  )
+
+  return lines
+}
+
+/**
+ * Tells the AI how — and only when — it may open a fight (#235).
+ *
+ * Canon puts the trigger squarely on this side: "Le combat n'est jamais activé
+ * par le joueur : c'est une bascule narrative annoncée par l'IA" (§1). So the
+ * prompt has to hand the AI a real lever, and the two rules that make that lever
+ * safe are split by nature:
+ *
+ * - **which creatures may appear** is a floor rule, and the backend enforces it
+ *   structurally in `openCombatFromEncounter`. It is still listed here because a
+ *   proposal the backend silently drops costs the player a turn where the prose
+ *   promised a fight and no fight came;
+ * - **offering a way out** is a *prose* rule (§1 "Éviter le combat"), and no
+ *   backend check can enforce it — a defusal option is a choice written one turn
+ *   earlier, so only the AI can honour it. Hence the emphasis: canon's line is
+ *   that the fight "doit être un choix — pas un funnel forcé".
+ *
+ * Omitted entirely when a fight is already running: the engine, not the
+ * narrator, decides when that one ends.
+ * @see docs/canon/10-COMBAT.md §1
+ * @see docs/canon/03-BESTIARY.md §6bis
+ */
+function buildEncounterSection(run: RunPromptContext | null, inCombat: boolean): string[] {
+  if (inCombat) return []
+
+  const available = run
+    ? run.returnEngaged
+      ? creaturesForReturn(run.maxDepthReached)
+      : creaturesForDepth(run.currentDepth)
+    : creaturesForDepth(1)
+
+  return [
+    '',
+    'Opening a fight (combat_encounter):',
+    '- A fight is never started by the player pressing a button — it is a narrative',
+    '  pivot YOU announce. Signal it with combat_encounter when the scene you just',
+    '  wrote turns hostile: an ambush, a challenge, a predator that spotted them, or',
+    '  a hostile meeting the player failed to defuse.',
+    '- Unless it is a pure ambush, the player must have been offered a way out on the',
+    '  PREVIOUS turn — fleeing, parleying, intimidating or hiding. A fight has to be',
+    '  the consequence of a choice, never a corridor with one exit. When you feel a',
+    '  fight coming, write that turn first and let them answer it.',
+    '- Set ambush: true only when the fiction genuinely gave them no such chance.',
+    '  It is not a difficulty setting: it decides who acts first, nothing else.',
+    '- Only these creatures exist here. Naming anything else cancels the fight and',
+    '  leaves your scene without the encounter it promised:',
+    ...available.map((creature) => `  - ${creature.id} — ${creature.name}`),
+    '- Name between 1 and 4 of them in creatureIds, repeating an id for a group of the',
+    '  same creature. Never state their HP, armour or damage — those are the backend’s,',
+    '  and it will contradict you. Describe what the player SEES.',
+  ]
+}
+
+/**
+ * Turns the fight the engine just resolved into prose orders.
+ *
+ * This section is the strictest in the prompt, and deliberately so: every line
+ * below is an outcome that has *already happened* in the persisted state. The
+ * AI is told what the dice said and asked to make it land — it never chooses
+ * who hit, who died, or how the fight ends. Reversing that order is the one
+ * failure mode combat cannot survive, since a narration that contradicts the
+ * state leaves the player fighting an enemy the engine has already buried.
+ * @see docs/canon/10-COMBAT.md §3
+ */
+function buildCombatSection(combat: CombatPromptContext | null): string[] {
+  if (!combat) return []
+
+  const lines = [
+    '',
+    'Combat resolved this turn (ALREADY DECIDED by the backend — narrate it, never re-decide it):',
+    `- The player's action: ${combat.action}. Round ${combat.round}.`,
+    ...combat.events.map((event) => `- ${event}`),
+  ]
+
+  if (combat.outcome === null) {
+    lines.push(
+      '- The fight CONTINUES. End the narration inside the fight, with the enemies still a threat.',
+      '  Do not resolve it, do not have them surrender, do not skip to the aftermath.'
+    )
+  } else if (combat.outcome === 'victory') {
+    lines.push('- The player WON. Narrate the last blow landing and the silence after it.')
+  } else if (combat.outcome === 'fled') {
+    lines.push(
+      combat.fleeDirection === 'backward'
+        ? '- The player ESCAPED and is now heading back the way they came. Narrate the retreat.'
+        : '- The player ESCAPED forward, deeper along their route. The quest continues, so does the risk.'
+    )
+  } else {
+    // §8: the backend already arbitrated what losing means. The AI narrates the
+    // verdict it is given — it never gets to decide that a downed player lives.
+    const verdict =
+      combat.knockoutVerdict === 'saved'
+        ? '- The player FELL but was PULLED OUT ALIVE by an ally. They live. Narrate the rescue.'
+        : combat.knockoutVerdict === 'captured'
+          ? '- The player FELL and was TAKEN PRISONER, not killed. Narrate the capture, not a death.'
+          : '- The player FELL and DIED. Narrate the death. Do not soften it, do not leave a way out.'
+    lines.push(verdict)
+
+    if (combat.knockoutVerdict === 'dead') {
+      // §2bis: the equipment-vs-danger gap fixes how graphic the death reads,
+      // the same way it fixed the verdict above — not a tone for the AI to pick.
+      const intensity =
+        combat.deathIntensity === 'gore_total'
+          ? '- Death intensity: GORE TOTAL. Do not cut away. Describe the wound and the body in full, unflinching detail.'
+          : combat.deathIntensity === 'brutal'
+            ? '- Death intensity: BRUTAL. Do not sanitize it — show the violence plainly, without lingering past it.'
+            : '- Death intensity: SOBER. State the death plainly, without gratuitous gore.'
+      lines.push(intensity)
+    }
+  }
+
+  lines.push(
+    '- Never invent a hit, a wound, a death or an escape that is not listed above. Numbers stay',
+    '  out of the prose: write the blow, not the damage roll.'
+  )
+
+  return lines
+}
+
+/**
  * Builds the Game Master system prompt.
  * The AI writes narration and choice labels only; the backend owns all rules,
  * dice, stats, and canon consistency. Canon brand terms are NOT re-translated —
@@ -312,7 +597,9 @@ export function buildSystemPrompt(
   locale: Locale,
   memoryChunks: MemoryChunkModel[] = [],
   recentTurns: RecentTurnSummary[] = [],
-  souvenirs: SouvenirModel[] = []
+  souvenirs: SouvenirModel[] = [],
+  run: RunPromptContext | null = null,
+  combat: CombatPromptContext | null = null
 ): string {
   const languageName = localeDisplayName(locale)
 
@@ -337,7 +624,11 @@ export function buildSystemPrompt(
     ...buildConditionsSection(character, locale),
     ...buildInventorySection(character),
     ...buildRestSection(),
+    ...buildDeadlockSection(character),
     ...buildDangerCrescendoSection(character),
+    ...buildRunSection(run),
+    ...buildEncounterSection(run, combat !== null),
+    ...buildCombatSection(combat),
     '',
     'Respond with a single JSON object and nothing else, matching exactly:',
     '{',
@@ -349,6 +640,8 @@ export function buildSystemPrompt(
     '  "souvenir_candidate"?: { "title_suggestion": string, "body": string, "type": "npc-death"|"moral-choice"|"secret-discovery"|"boss-victory"|"strong-promise" }',
     '  "apply_condition"?: { "id": string, "reason": string, "calamineDelta"?: number }',
     '  "item_gained"?: { "name": string, "category": "equipment"|"bag"|"artifact"|"key", "slot"?: string, "effect"?: { "healAmount"?: number, "calamineReduction"?: number, "removesCondition"?: string, "damage"?: string }, "description"?: string }',
+    '  "rest_requested"?: { "type": "short"|"fire" }',
+    '  "combat_encounter"?: { "creatureIds": string[], "ambush"?: boolean, "reason": string }',
     '}',
     '',
     'turnSummary: a short factual sentence (max 200 characters) condensing what just',
@@ -371,5 +664,11 @@ export function buildSystemPrompt(
     'item_gained: OPTIONAL, omit on most turns. Only include it when the',
     'narrative you just wrote clearly has the player finding or receiving an',
     'item THIS turn. Never invent an item that was not part of the narrative.',
+    '',
+    'combat_encounter: OPTIONAL, omit on most turns. Only include it when the',
+    'scene you just wrote turns into an actual fight, under the rules above.',
+    'creatureIds must come from the list given above, 1 to 4 entries. reason:',
+    'one short sentence on what made it a fight (e.g. "the brigands were not',
+    'fooled and drew their blades").',
   ].join('\n')
 }

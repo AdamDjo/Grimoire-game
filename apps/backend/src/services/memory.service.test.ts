@@ -14,7 +14,6 @@ vi.mock('../lib/prisma', () => ({
 
 const resolveSceneImage = vi.fn<(...args: unknown[]) => Promise<string | null>>()
 vi.mock('./scene-image.service', () => ({
-  classifyBiome: () => 'coeur',
   classifyLieuType: () => 'plein_air',
   resolveSceneImage: (...args: unknown[]) => resolveSceneImage(...args),
 }))
@@ -28,7 +27,7 @@ const character = {
   people: 'sahelin',
   vocation: 'salt-walker',
   stats: {
-    attributes: { blood: 10, breath: 10, ash: 10 },
+    attributes: { blood: 10, breath: 10, will: 10 },
     survival: {
       hp: 20,
       maxHp: 20,
@@ -38,6 +37,7 @@ const character = {
       calamine: 0,
       isDying: false,
       neglectStreak: 0,
+      empriseCharges: 0,
     },
     conditions: [],
     inventory: [],
@@ -83,7 +83,7 @@ describe('compressScene', () => {
       content: JSON.stringify(validCompression),
     })
 
-    await compressScene('s1', turns, character, 'Calamine')
+    await compressScene('s1', turns, character, 'Calamine', 1)
 
     expect(callOpenRouter).toHaveBeenCalledTimes(1)
     expect(memoryChunkCreate).toHaveBeenCalledWith({
@@ -105,15 +105,27 @@ describe('compressScene', () => {
       success: true,
       content: JSON.stringify(validCompression),
     })
-    resolveSceneImage.mockResolvedValue('https://cache/exploration_coeur_plein_air.jpg')
+    resolveSceneImage.mockResolvedValue('https://cache/exploration_mid_plein_air.jpg')
 
-    await compressScene('s1', turns, character, 'Calamine')
+    await compressScene('s1', turns, character, 'Calamine', 3)
 
-    expect(resolveSceneImage).toHaveBeenCalledWith('exploration', 'coeur', 'plein_air')
+    expect(resolveSceneImage).toHaveBeenCalledWith('exploration', 'mid', 'plein_air')
     expect(gameSessionUpdate).toHaveBeenCalledWith({
       where: { id: 's1' },
-      data: { currentImageUrl: 'https://cache/exploration_coeur_plein_air.jpg' },
+      data: { currentImageUrl: 'https://cache/exploration_mid_plein_air.jpg' },
     })
+  })
+
+  it('derives the image band from the run depth, not from the narration', async () => {
+    callOpenRouter.mockResolvedValueOnce({
+      success: true,
+      content: JSON.stringify(validCompression),
+    })
+    resolveSceneImage.mockResolvedValue('https://cache/exploration_abyss_plein_air.jpg')
+
+    await compressScene('s1', turns, character, 'Calamine', 7)
+
+    expect(resolveSceneImage).toHaveBeenCalledWith('exploration', 'abyss', 'plein_air')
   })
 
   it('falls back to the second model when the primary model fails', async () => {
@@ -121,7 +133,7 @@ describe('compressScene', () => {
       .mockResolvedValueOnce({ success: false, error: 'OpenRouter request timed out' })
       .mockResolvedValueOnce({ success: true, content: JSON.stringify(validCompression) })
 
-    await compressScene('s1', turns, character, 'Calamine')
+    await compressScene('s1', turns, character, 'Calamine', 1)
 
     expect(callOpenRouter).toHaveBeenCalledTimes(2)
     expect(memoryChunkCreate).toHaveBeenCalledTimes(1)
@@ -132,7 +144,7 @@ describe('compressScene', () => {
       .mockResolvedValueOnce({ success: false, error: 'timeout' })
       .mockResolvedValueOnce({ success: false, error: 'timeout' })
 
-    await expect(compressScene('s1', turns, character, 'Calamine')).resolves.toBeUndefined()
+    await expect(compressScene('s1', turns, character, 'Calamine', 1)).resolves.toBeUndefined()
 
     expect(callOpenRouter).toHaveBeenCalledTimes(2)
     expect(memoryChunkCreate).not.toHaveBeenCalled()
@@ -141,7 +153,7 @@ describe('compressScene', () => {
   it('never throws and creates no chunk when the AI returns non-JSON', async () => {
     callOpenRouter.mockResolvedValue({ success: true, content: 'not json' })
 
-    await expect(compressScene('s1', turns, character, 'Calamine')).resolves.toBeUndefined()
+    await expect(compressScene('s1', turns, character, 'Calamine', 1)).resolves.toBeUndefined()
 
     expect(memoryChunkCreate).not.toHaveBeenCalled()
   })
@@ -152,7 +164,7 @@ describe('compressScene', () => {
       content: JSON.stringify({ summary: 'too short a payload' }),
     })
 
-    await expect(compressScene('s1', turns, character, 'Calamine')).resolves.toBeUndefined()
+    await expect(compressScene('s1', turns, character, 'Calamine', 1)).resolves.toBeUndefined()
 
     expect(memoryChunkCreate).not.toHaveBeenCalled()
   })

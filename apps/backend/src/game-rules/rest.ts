@@ -1,5 +1,7 @@
 import { attributeModifier } from '@grimoire/shared'
 
+import { maxEmpriseCharges } from './emprise'
+
 import type { PersistedInventoryItem, SurvivalStats } from '@grimoire/shared'
 
 const clamp = (value: number, min: number, max: number): number =>
@@ -10,7 +12,7 @@ const clamp = (value: number, min: number, max: number): number =>
  * session-ending flow (`endSessionAtInn` in `session.service.ts`, canon
  * 09-ACTION-LOOP §7) and is deliberately out of scope for this ticket (#184,
  * issue title: "Action de repos — court / feu").
- * @see docs/public/raw/06-SURVIVAL.md §3
+ * @see docs/canon/06-SURVIVAL.md §3
  */
 export type RestType = 'short' | 'fire'
 
@@ -42,12 +44,11 @@ export interface RestOptions {
   /**
    * Whether the character has provisions (food/water) for the "fire" rest's
    * hunger/thirst recovery (canon: "« +60 faim/soif » ne s'applique que si
-   * le perso a des provisions"). NOTE: the shared inventory contract has no
-   * structural flag for a food/water item (unlike healing, which maps to
-   * `effect.healAmount`) — #183's V2 scope never implemented a depletable
-   * provisions stock. Callers must supply this explicitly; `session.service.ts`
-   * currently defaults it to `true` until a real provisions mechanic exists
-   * (tracked as a follow-up, not invented here).
+   * le perso a des provisions"). Since #249 this is a real reading of the bag
+   * (`countCarriedSupplies`, via `hasProvisionsInBag`) and no longer a hardcoded
+   * `true`: the Comptoir gives supplies a structural `supply` marker, so a
+   * character who bought nothing must not recover +60 out of thin air — that
+   * would make buying rations optional and void canon §1's arbitrage.
    */
   hasProvisions: boolean
   rng?: () => number
@@ -76,12 +77,18 @@ function rollDie(sides: number, rng: () => number): number {
  *
  * All gauges clamp to [0, 100] (HP clamps to `maxHp`). Rest risk (ambush) is
  * explicitly deferred to a future ticket — this function is always safe.
+ *
+ * A fire rest also recharges Emprise charges to the character's max (derived
+ * from `willAttribute`). This is purely additive: it never touches Calamine —
+ * the -10 fire-rest drain above is a separate, unrelated cost.
+ * @see docs/canon/04-ATTRIBUTES.md "Rechargement"
  */
 export function applyRest(
   type: RestType,
   survival: SurvivalStats,
   items: PersistedInventoryItem[],
   bloodAttribute: number,
+  willAttribute: number,
   { hasProvisions, rng = Math.random }: RestOptions
 ): RestResult {
   const rates = REST_RATES[type]
@@ -96,6 +103,9 @@ export function applyRest(
   const hungerGain = hasProvisions ? rates.hunger : 0
   const thirstGain = hasProvisions ? rates.thirst : 0
 
+  const empriseCharges =
+    type === 'fire' ? maxEmpriseCharges(attributeModifier(willAttribute)) : survival.empriseCharges
+
   return {
     survival: {
       ...survival,
@@ -104,6 +114,7 @@ export function applyRest(
       thirst: clamp(survival.thirst + thirstGain, 0, 100),
       hp: clamp(survival.hp + healRolled, 0, survival.maxHp),
       calamine: clamp(survival.calamine + rates.calamine, 0, 100),
+      empriseCharges,
     },
     healRolled,
   }

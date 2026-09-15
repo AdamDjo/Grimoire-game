@@ -2,6 +2,9 @@
   --game-panel-accent: var(--gold, #d9a441);
   --game-panel-accent-light: var(--gold-light, #f0d48a);
 
+  background: var(--ink-raised);
+  border: 0;
+  box-shadow: none;
   isolation: isolate;
   min-width: 0;
   position: relative;
@@ -9,40 +12,45 @@
 }
 
 .game-panel::before {
-  border: 24px solid transparent;
-  border-image-source: url('/ui-kit/surfaces/structural-frame-v2.webp');
-  border-image-slice: 48 62 fill;
-  border-image-width: 24px;
+  background:
+    linear-gradient(var(--game-panel-accent-light), var(--game-panel-accent-light)) left 7px top 7px / 14px 1px no-repeat,
+    linear-gradient(var(--game-panel-accent-light), var(--game-panel-accent-light)) left 7px top 7px / 1px 14px no-repeat,
+    linear-gradient(var(--game-panel-accent-light), var(--game-panel-accent-light)) left 7px bottom 7px / 14px 1px no-repeat,
+    linear-gradient(var(--game-panel-accent-light), var(--game-panel-accent-light)) left 7px bottom 7px / 1px 14px no-repeat,
+    linear-gradient(var(--game-panel-accent-light), var(--game-panel-accent-light)) right 7px top 7px / 14px 1px no-repeat,
+    linear-gradient(var(--game-panel-accent-light), var(--game-panel-accent-light)) right 7px top 7px / 1px 14px no-repeat,
+    linear-gradient(var(--game-panel-accent-light), var(--game-panel-accent-light)) right 7px bottom 7px / 14px 1px no-repeat,
+    linear-gradient(var(--game-panel-accent-light), var(--game-panel-accent-light)) right 7px bottom 7px / 1px 14px no-repeat;
+  border: 1px solid color-mix(in srgb, var(--game-panel-accent) 68%, transparent);
+  box-sizing: border-box;
   content: '';
-  filter: brightness(1) saturate(1);
   inset: 0;
   pointer-events: none;
   position: absolute;
-  transition:
-    filter 220ms ease,
-    opacity 220ms ease;
-  z-index: -2;
+  z-index: 2;
 }
 
 .game-panel::after {
-  background:
-    radial-gradient(
-      circle at 50% 8%,
-      color-mix(in srgb, var(--game-panel-accent) 9%, transparent),
-      transparent 44%
-    ),
-    rgba(7, 6, 4, 0.2);
-  content: '';
-  inset: 3.5%;
-  opacity: 0.7;
-  box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.2);
-  pointer-events: none;
-  position: absolute;
-  transition:
-    background-color 220ms ease,
-    box-shadow 220ms ease,
-    opacity 220ms ease;
-  z-index: -1;
+  display: none;
+}
+
+.game-panel--narrative-frame {
+  background: var(--ink-black);
+  border: 0;
+  box-shadow: 0 22px 68px rgba(0, 0, 0, 0.58);
+}
+
+.game-panel--narrative-frame::before {
+  background: transparent;
+  border: 24px solid transparent;
+  border-image: url('/encre-de-sel/frames/narrative-surface-frame.webp') 38 52 fill / 24px 32px stretch;
+  box-sizing: border-box;
+  inset: 0;
+  z-index: 0;
+}
+
+.game-panel--narrative-frame .game-panel__content {
+  z-index: 1;
 }
 
 .game-panel__content {
@@ -74,49 +82,6 @@
   min-height: 7rem;
 }
 
-.game-panel--form-frame-legacy::before,
-.game-panel--aside-frame-legacy::before,
-.game-panel--form-frame::before,
-.game-panel--aside-frame::before,
-.game-panel--dialogue-frame::before {
-  border: 0;
-  filter: none;
-  inset: 0;
-}
-
-.game-panel--form-frame-legacy::before {
-  background: url('/ui-kit/character-create/character-form-frame.webp') center / 100% 100% no-repeat;
-}
-
-.game-panel--aside-frame-legacy::before {
-  background: url('/ui-kit/character-create/character-aside-frame.webp') center / 100% 100%
-    no-repeat;
-}
-
-.game-panel--form-frame::before {
-  background: url('/ui-kit/character-create/character-form-frame-v2.webp') center / 100% 100%
-    no-repeat;
-}
-
-.game-panel--dialogue-frame::before {
-  background: url('/ui-kit/character-create/character-form-frame-v2.webp') center / 100% 100%
-    no-repeat;
-  z-index: 0;
-}
-
-.game-panel--aside-frame::before {
-  background: url('/ui-kit/character-create/character-aside-frame-v2.webp') center / 100% 100%
-    no-repeat;
-}
-
-.game-panel--form-frame-legacy::after,
-.game-panel--aside-frame-legacy::after,
-.game-panel--form-frame::after,
-.game-panel--aside-frame::after,
-.game-panel--dialogue-frame::after {
-  display: none;
-}
-
 .game-panel--padding-none {
   padding: 0;
 }
@@ -133,13 +98,17 @@
   padding: clamp(2.75rem, 7vw, 5.5rem);
 }
 
+.game-panel--narrative-frame.game-panel--padding-lg {
+  padding: clamp(3rem, 7vw, 5.75rem) clamp(2.5rem, 6vw, 5rem);
+}
+
 .game-panel--neutral {
   --game-panel-accent: var(--gold, #d9a441);
   --game-panel-accent-light: var(--gold-light, #f0d48a);
 }
 
 .game-panel--gold::before {
-  filter: brightness(1.08) saturate(1.12);
+  border-color: var(--material-gold-bright);
 }
 
 .game-panel--danger {
@@ -179,14 +148,11 @@
 }
 
 .game-panel--interactive:hover::before {
-  filter: brightness(1.08) saturate(1.08);
+  border-color: var(--material-gold-bright);
 }
 
 .game-panel--interactive:hover::after {
-  box-shadow:
-    inset 0 0 0 1px rgba(240, 212, 138, 0.48),
-    0 0 34px color-mix(in srgb, var(--game-panel-accent) 18%, transparent);
-  opacity: 1;
+  border-color: var(--material-gold-bright);
 }
 
 .game-panel__ornament {
@@ -203,31 +169,6 @@
   align-items: center;
   display: inline-flex;
   justify-content: center;
-}
-
-@media (max-width: 900px) {
-  .game-panel--aside-frame-legacy::before {
-    background-image: url('/ui-kit/character-create/character-aside-frame-mobile.webp');
-  }
-
-  .game-panel--aside-frame::before {
-    background-image: url('/ui-kit/character-create/character-aside-frame-v2-mobile.webp');
-  }
-
-  .game-panel--dialogue-frame::before {
-    background-image: url('/ui-kit/character-create/character-form-frame-v2-mobile.webp');
-  }
-}
-
-@media (max-width: 640px) {
-  .game-panel--form-frame-legacy::before {
-    background-image: url('/ui-kit/character-create/character-form-frame-mobile.webp');
-  }
-
-  .game-panel--form-frame::before {
-    background-image: url('/ui-kit/character-create/character-form-frame-v2-mobile.webp');
-  }
-
 }
 
 @media (max-width: 720px) {

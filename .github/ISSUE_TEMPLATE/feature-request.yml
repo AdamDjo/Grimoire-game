@@ -1,7 +1,7 @@
 name: "Feature Request"
 description: "Proposer une nouvelle fonctionnalité"
 title: "[FEATURE] "
-labels: ["type:feature"]
+labels: []
 body:
   - type: textarea
     id: description
@@ -33,13 +33,11 @@ body:
     id: domain
     attributes:
       label: Domaine
+      description: "Pose le label `domain: *` correspondant après création."
       options:
-        - "domain:frontend"
-        - "domain:backend"
-        - "domain:shared"
-        - "domain:ai"
-        - "domain:database"
-        - "domain:devops"
+        - "domain: frontend"
+        - "domain: backend"
+        - "domain: ai"
     validations:
       required: true
 
@@ -47,40 +45,12 @@ body:
     id: phase
     attributes:
       label: Phase
+      description: "`predeploy` bloque la release courante, `postdeploy` la suit."
       options:
-        - "phase:1a"
-        - "phase:1b"
-        - "phase:2"
-        - "phase:2b"
-        - "phase:3"
+        - "phase: predeploy"
+        - "phase: postdeploy"
     validations:
       required: true
-
-  - type: dropdown
-    id: priority
-    attributes:
-      label: Priorité
-      options:
-        - "priority:critical"
-        - "priority:high"
-        - "priority:medium"
-        - "priority:low"
-    validations:
-      required: true
-
-  - type: dropdown
-    id: size
-    attributes:
-      label: Taille estimée
-      options:
-        - "size:XS (< 1h)"
-        - "size:S (1-3h)"
-        - "size:M (3-8h)"
-        - "size:L (1-2j)"
-        - "size:XL (2-5j)"
-        - "size:XXL (> 5j)"
-    validations:
-      required: false
 
   - type: textarea
     id: dependencies

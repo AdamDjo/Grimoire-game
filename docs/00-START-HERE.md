@@ -7,49 +7,65 @@ source_of_truth: true
 
 # 00 — Start Here
 
-Point d'entrée stable pour tout agent IA. Ne pas y stocker l'état vivant du projet.
-`../MEMORY.md` est le shim universel qui conduit ici ; il ne duplique aucune information vivante.
+Point d'entrée unique du vault, pour un humain comme pour un agent. Aucun état vivant ici.
 
-## Attribution des chantiers
+## Où en est le projet
 
-- Par défaut : Claude sur backend/shared/IA, Codex sur frontend.
-- L'utilisateur peut assigner n'importe quel domaine à Claude ou Codex ; les règles du domaine
-  restent identiques quel que soit l'agent.
-- Les contrats backend/shared sont mergés avant leur consommation dans une PR frontend distincte.
+**Sur GitHub, pas dans les docs.**
 
-## Lecture minimale
+```bash
+gh issue list --milestone "v0.2.1 - Roguelike jouable" --state all
+```
 
-1. Index d'état : [[public/current-state/PROJECT_STATUS]]
-2. Préparation release : [[public/current-state/RELEASE_READINESS]]
-3. Statut du domaine concerné : [[public/current-state/FRONTEND_STATUS]] ou [[public/current-state/BACKEND_STATUS]]
-4. Prochaines actions du domaine : [[public/current-state/FRONTEND_NEXT]] ou [[public/current-state/BACKEND_NEXT]]
-5. Routeur de tâche : [[public/nav/task-router]]
-6. Règles d'architecture : [[public/tech/ARCHITECTURE_RULES]]
-7. Politique canon privé : [[public/nav/PRIVATE_CANON_POLICY]]
-8. Workflow IA versionné : [[public/nav/AI_WORKFLOW]]
+Objectif courant et décisions structurantes : [[state/PROJECT_STATUS]].
+
+## Lecture minimale avant de coder
+
+1. **Objectif et priorités** : [[state/PROJECT_STATUS]]
+2. **Décisions du domaine** : [[state/BACKEND]] ou [[state/FRONTEND]]
+3. **Quel canon lire pour cette tâche** : [[task-router]]
+4. **Invariants** : [[tech/RULES]]
+
+Pour une tâche de release, ajouter [[state/RELEASE_READINESS]].
 
 ## Règles absolues
 
+- **Lire le canon `docs/canon/` AVANT de coder une mécanique de jeu.** Jamais de constante
+  « provisoire, à valider plus tard » : si le canon n'a pas été lu, la valeur n'est pas écrite.
+- Ne pas lire tout `docs/canon/` d'un coup — passer par [[task-router]].
+- Si un document résumé contredit `docs/canon/`, **le canon gagne**.
+- Le backend arbitre dés, dégâts, conditions et fins de run. **L'IA narre, elle ne décide rien.**
 - Ne pas lire tout le vault.
-- Ne pas lire tout `docs/public/raw/` d'un coup — passer par [[public/nav/task-router]] pour choisir les fichiers ciblés.
-- Si un doc public résumé contredit `docs/public/raw/`, le canon `raw/` gagne.
+
+## Attribution des chantiers
+
+Par défaut Claude sur backend/shared/IA, Codex sur frontend. L'utilisateur peut assigner n'importe
+quel domaine à l'un ou l'autre ; les règles du domaine ne changent pas. Les contrats backend/shared
+sont mergés **avant** leur consommation dans une PR frontend distincte.
+
+## Tenue des docs
+
+**GitHub porte l'avancement, les docs portent les décisions.** Une PR de routine ne modifie aucun
+document ; une PR qui a tranché un choix non évident l'inscrit dans le fichier de son domaine —
+un seul. Détail : [[state/PROJECT_STATUS]] § Règle de tenue des docs.
 
 ## Structure
 
 ```txt
-MEMORY.md                    # pointeur universel, aucun état vivant
 docs/
-├── 00-HOME.md              # dashboard Obsidian humain
-├── 00-START-HERE.md        # point d'entrée IA stable
-├── public/current-state/   # états séparés frontend/backend/release
-├── public/                 # docs partageables, routables, versionnées (canon inclus)
-└── private/                # plans en cours, assets lourds, archives — gitignored
+├── 00-START-HERE.md   # ce fichier — point d'entrée
+├── task-router.md     # quoi lire selon la tâche
+├── log.md             # chronologie des décisions (append-only)
+├── canon/             # canon Velkhar — la référence qui gagne toujours
+├── state/             # PROJECT_STATUS, BACKEND, FRONTEND, RELEASE_READINESS
+├── tech/              # architecture, frontend, auth, sécurité, outillage IA
+└── private/           # plans, assets lourds, archives — gitignored
 ```
+
+Quatre dossiers, un rôle chacun : **ce qui est vrai du jeu** (`canon/`), **ce qui est vrai du code**
+(`tech/`), **où on en est** (`state/`), **ce qui n'est pas publiable** (`private/`).
 
 ## Raccourcis
 
-- Carte du vault : [[public/nav/DOCS_MAP]]
-- Règles RAG : [[public/nav/RAG_RULES]]
-- Workflow IA : [[public/nav/AI_WORKFLOW]]
-- Brief public : [[public/project/PUBLIC_BRIEF]]
-- Log : [[public/nav/log]]
+- Chronologie des décisions : [[log]]
+- Sommaire du canon : [[canon/00-SOMMAIRE]]

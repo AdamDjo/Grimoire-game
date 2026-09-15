@@ -10,6 +10,7 @@ import { userOrIpKey } from './middleware/rate-limit-key'
 import { aveugleRouter } from './routes/aveugle.routes'
 import { characterRouter } from './routes/character.routes'
 import { chronicleRouter } from './routes/chronicle.routes'
+import { counterRouter } from './routes/counter.routes'
 import { gameRouter } from './routes/game.routes'
 import { souvenirRouter } from './routes/souvenir.routes'
 
@@ -89,6 +90,8 @@ app.use('/api/game', preAuthLimiter, requireAuth, gameLimiter, gameRouter)
 app.use('/api/character', preAuthLimiter, requireAuth, apiLimiter, characterRouter)
 app.use('/api/souvenirs', preAuthLimiter, requireAuth, apiLimiter, souvenirRouter)
 app.use('/api/chronicles', preAuthLimiter, requireAuth, apiLimiter, chronicleRouter)
+// The Comptoir touches no AI — it goes on the standard limiter, not gameLimiter.
+app.use('/api/inn', preAuthLimiter, requireAuth, apiLimiter, counterRouter)
 // Aveugle's router also applies its own stricter per-route limiter on AI-backed endpoints.
 app.use('/api/aveugle', preAuthLimiter, requireAuth, apiLimiter, aveugleRouter)
 

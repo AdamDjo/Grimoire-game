@@ -5,7 +5,7 @@ import { TURN_DRAIN } from './survival'
 
 import type { Attributes, Choice, SurvivalStats } from '@grimoire/shared'
 
-const ATTRIBUTES: Attributes = { blood: 15, breath: 10, ash: 10 }
+const ATTRIBUTES: Attributes = { blood: 15, breath: 10, will: 10 }
 
 const survival = (overrides: Partial<SurvivalStats> = {}): SurvivalStats => ({
   hp: 12,
@@ -16,6 +16,7 @@ const survival = (overrides: Partial<SurvivalStats> = {}): SurvivalStats => ({
   calamine: 0,
   isDying: false,
   neglectStreak: 0,
+  empriseCharges: 0,
   ...overrides,
 })
 

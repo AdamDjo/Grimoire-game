@@ -3,7 +3,7 @@ import type { LocalizedString } from "./localized";
 
 /**
  * Velkhar peoples. Each grants a small attribute bonus.
- * @see docs/private/raw/04-ATTRIBUTES.md, 06-SURVIVAL.md
+ * @see docs/canon/04-ATTRIBUTES.md, 06-SURVIVAL.md
  */
 export interface PeopleDefinition {
   id: string;
@@ -29,7 +29,7 @@ export const PEOPLES: PeopleDefinition[] = [
       en: "Oasis-born people of letters, bargains, and careful influence.",
       fr: "Peuple des cités-oasis, lettré, marchand et patient dans l’influence.",
     },
-    attributeBonus: { ash: 1 },
+    attributeBonus: { will: 1 },
   },
   {
     id: "therien",
@@ -56,7 +56,7 @@ export const PEOPLES: PeopleDefinition[] = [
       en: "Marginal shapeshifters whose bodies remember the desert differently.",
       fr: "Métamorphes marginaux dont le corps se souvient autrement du désert.",
     },
-    attributeBonus: { breath: 1, ash: -1 },
+    attributeBonus: { breath: 1, will: -1 },
   },
 ];
 

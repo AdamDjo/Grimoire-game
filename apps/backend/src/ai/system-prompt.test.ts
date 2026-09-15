@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest'
 
-import { buildSystemPrompt, type RecentTurnSummary } from './system-prompt'
+import {
+  buildSystemPrompt,
+  type CombatPromptContext,
+  type RecentTurnSummary,
+  type RunPromptContext,
+} from './system-prompt'
 
 import type { MemoryChunkModel, SouvenirModel } from '../generated/prisma/models'
 
@@ -11,7 +16,7 @@ const character = {
   people: 'sahelin',
   vocation: 'salt-walker',
   stats: {
-    attributes: { blood: 10, breath: 10, ash: 10 },
+    attributes: { blood: 10, breath: 10, will: 10 },
     survival: {
       hp: 20,
       maxHp: 20,
@@ -21,6 +26,7 @@ const character = {
       calamine: 0,
       isDying: false,
       neglectStreak: 0,
+      empriseCharges: 0,
     },
     conditions: [],
     inventory: [],
@@ -322,5 +328,159 @@ describe('buildSystemPrompt — item_gained injection (#183)', () => {
 
     expect(prompt).toContain('"item_gained"?')
     expect(prompt).toContain('Never propose category "heirloom"')
+  })
+})
+
+describe('run section', () => {
+  function run(overrides: Partial<RunPromptContext> = {}): RunPromptContext {
+    return {
+      destination: 'Les Salines Basses',
+      objective: 'Rapporter le sceau du contremaître',
+      intensity: 5,
+      targetDepth: 5,
+      currentDepth: 2,
+      maxDepthReached: 2,
+      mode: 'exploration',
+      returnEngaged: false,
+      warnings: [],
+      ...overrides,
+    }
+  }
+
+  function promptWithRun(context: RunPromptContext): string {
+    return buildSystemPrompt(character, 'en', [], [], [], context)
+  }
+
+  it('says nothing about a run when the session has none', () => {
+    const prompt = buildSystemPrompt(character, 'en')
+
+    expect(prompt).not.toContain('Run structure')
+  })
+
+  it('states where the character stands, and that the backend owns it', () => {
+    const prompt = promptWithRun(run())
+
+    expect(prompt).toContain('Rapporter le sceau du contremaître')
+    expect(prompt).toContain('Les Salines Basses')
+    expect(prompt).toContain('stands on floor 2')
+    expect(prompt).toContain('the backend owns every value below')
+  })
+
+  it('names the target depth of a dungeon contract', () => {
+    // Kept deliberately: the narrator is trusted with the floor count so the
+    // descent can be written with a sense of how far down it goes (#260).
+    expect(promptWithRun(run())).toContain('Target depth: 5 floors')
+  })
+
+  it('gives a floorless contract its length without ever giving it a depth', () => {
+    // An escort has no paliers, and a narrator handed a floor count invents a
+    // descent. It still gets the length, so the run can be paced (#269).
+    const prompt = promptWithRun(run({ targetDepth: undefined, intensity: 7 }))
+
+    expect(prompt).not.toContain('Target depth')
+    expect(prompt).toContain('It runs about 7 beats')
+    expect(prompt).toContain('this contract has no floors')
+  })
+
+  it('forbids a climactic set-piece on the way home', () => {
+    // §4 — the return may kill, but never by ambush.
+    const prompt = promptWithRun(run({ returnEngaged: true, mode: 'return' }))
+
+    expect(prompt).toContain('TURNED BACK')
+    expect(prompt).toContain('Never introduce a boss')
+  })
+
+  it('demands a crossed threshold be narrated in the world’s voice, never as an alert', () => {
+    // §4.2 — the warning is owed, and it is owed in character.
+    const prompt = promptWithRun(
+      run({ warnings: [{ supply: 'water', carried: 1, needed: 3, risk: 'critical' }] })
+    )
+
+    expect(prompt).toContain('WARNING OWED THIS TURN')
+    expect(prompt).toContain("character's water just dropped below")
+    expect(prompt).toContain('never as a number, never as a UI-style alert')
+    expect(prompt).toContain('Severity to pitch it at: critical')
+  })
+
+  it('owes one warning per threshold crossed on the same turn', () => {
+    const prompt = promptWithRun(
+      run({
+        warnings: [
+          { supply: 'water', carried: 2, needed: 3, risk: 'tight' },
+          { supply: 'food', carried: 0, needed: 2, risk: 'critical' },
+        ],
+      })
+    )
+
+    expect(prompt).toContain("character's water just dropped below")
+    expect(prompt).toContain("character's food just dropped below")
+  })
+
+  it('never asks the AI to decide when a warning is owed or how the run ends', () => {
+    const prompt = promptWithRun(run())
+
+    expect(prompt).toContain('You never decide when a warning is owed')
+    expect(prompt).toContain('you give it a voice')
+  })
+})
+
+describe('combat section — death intensity (#268)', () => {
+  function combat(overrides: Partial<CombatPromptContext> = {}): CombatPromptContext {
+    return {
+      action: 'attack',
+      round: 2,
+      events: ['The wolf lunges and connects.'],
+      outcome: 'defeat',
+      knockoutVerdict: 'dead',
+      ...overrides,
+    }
+  }
+
+  function promptWithCombat(context: CombatPromptContext): string {
+    return buildSystemPrompt(character, 'en', [], [], [], null, context)
+  }
+
+  it('says nothing about death intensity when the verdict is not dead', () => {
+    const prompt = promptWithCombat(combat({ knockoutVerdict: 'saved' }))
+
+    expect(prompt).toContain('PULLED OUT ALIVE')
+    expect(prompt).not.toContain('Death intensity')
+  })
+
+  it('says nothing about death intensity when captured', () => {
+    const prompt = promptWithCombat(combat({ knockoutVerdict: 'captured' }))
+
+    expect(prompt).toContain('TAKEN PRISONER')
+    expect(prompt).not.toContain('Death intensity')
+  })
+
+  it('instructs a sober death when deathIntensity is sober', () => {
+    const prompt = promptWithCombat(combat({ deathIntensity: 'sober' }))
+
+    expect(prompt).toContain('FELL and DIED')
+    expect(prompt).toContain('Death intensity: SOBER')
+    expect(prompt).toContain('without gratuitous gore')
+  })
+
+  it('instructs a brutal death when deathIntensity is brutal', () => {
+    const prompt = promptWithCombat(combat({ deathIntensity: 'brutal' }))
+
+    expect(prompt).toContain('Death intensity: BRUTAL')
+    expect(prompt).toContain('show the violence plainly')
+  })
+
+  it('instructs an unflinching gore_total death when deathIntensity is gore_total', () => {
+    const prompt = promptWithCombat(combat({ deathIntensity: 'gore_total' }))
+
+    expect(prompt).toContain('Death intensity: GORE TOTAL')
+    expect(prompt).toContain('Do not cut away')
+  })
+
+  it('defaults to a sober death when a dead verdict carries no deathIntensity', () => {
+    // Sessions with no run/contract (no power-gap to compute against) still
+    // need a safe, non-gratuitous default — never an unset instruction.
+    const prompt = promptWithCombat(combat({ deathIntensity: undefined }))
+
+    expect(prompt).toContain('Death intensity: SOBER')
   })
 })

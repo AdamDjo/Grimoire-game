@@ -15,13 +15,12 @@ interface VelkharSessionToolPanelProps {
   character: Character
   conditions: ActiveCondition[]
   ending: boolean
-  iron: number | null
+  gold: number | null
   inventory: InventoryItemRef[]
   openTool: VelkharSessionTool | null
   onAbandon: () => Promise<void>
   onClose: () => void
   onInventoryAction: (item: InventoryItemRef, action: 'use' | 'equip' | 'unequip') => void
-  source?: 'ai' | 'stub'
   survival: SurvivalStats
 }
 
@@ -29,13 +28,12 @@ export function VelkharSessionToolPanel({
   character,
   conditions,
   ending,
-  iron,
+  gold,
   inventory,
   onAbandon,
   onClose,
   onInventoryAction,
   openTool,
-  source,
   survival,
 }: VelkharSessionToolPanelProps) {
   const t = useTranslations('Session')
@@ -66,7 +64,7 @@ export function VelkharSessionToolPanel({
       }
     >
       {openTool === 'inventory' ? (
-        <VelkharInventoryPanel iron={iron} items={inventory} onAction={onInventoryAction} />
+        <VelkharInventoryPanel gold={gold} items={inventory} onAction={onInventoryAction} />
       ) : null}
 
       {openTool === 'character' ? (
@@ -74,12 +72,7 @@ export function VelkharSessionToolPanel({
       ) : null}
 
       {openTool === 'menu' ? (
-        <VelkharSessionMenu
-          ending={ending}
-          onAbandon={onAbandon}
-          onResume={onClose}
-          source={source}
-        />
+        <VelkharSessionMenu ending={ending} onAbandon={onAbandon} onResume={onClose} />
       ) : null}
     </GameWindow>
   )

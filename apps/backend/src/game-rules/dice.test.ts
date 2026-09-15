@@ -5,14 +5,14 @@ import { DIFFICULTY_TARGET, rollCheck } from './dice'
 import type { Attributes } from '@grimoire/shared'
 
 // blood 15 → modifier +2 (attributeModifier canon table).
-const ATTRIBUTES: Attributes = { blood: 15, breath: 10, ash: 10 }
+const ATTRIBUTES: Attributes = { blood: 15, breath: 10, will: 10 }
 
 /** Returns an rng that makes `rollCheck` produce exactly `roll` (1–20). */
 const fixedRoll = (roll: number) => () => (roll - 1) / 20
 
 describe('rollCheck', () => {
   it('a natural 20 always succeeds, even against the deadliest target', () => {
-    const result = rollCheck(ATTRIBUTES, 'ash', 'deadly', fixedRoll(20))
+    const result = rollCheck(ATTRIBUTES, 'will', 'deadly', fixedRoll(20))
     expect(result.roll).toBe(20)
     expect(result.critical).toBe('success')
     expect(result.success).toBe(true)

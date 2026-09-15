@@ -1,7 +1,7 @@
 .card {
   background-image: image-set(
-    url('/landing/ui/gameplay-card-frame-trimmed.webp') type('image/webp'),
-    url('/landing/ui/gameplay-card-frame-trimmed.png') type('image/png')
+    url('/ui-kit/surfaces/card-frame-gameplay.webp') type('image/webp'),
+    url('/ui-kit/surfaces/card-frame-gameplay.png') type('image/png')
   );
   background-position: center;
   background-repeat: no-repeat;
@@ -45,8 +45,8 @@
 .card p {
   align-items: center;
   background-image: image-set(
-    url('/landing/ui/gameplay-card-note-trimmed.webp') type('image/webp'),
-    url('/landing/ui/gameplay-card-note-trimmed.png') type('image/png')
+    url('/ui-kit/surfaces/card-note.webp') type('image/webp'),
+    url('/ui-kit/surfaces/card-note.png') type('image/png')
   );
   background-position: center;
   background-repeat: no-repeat;
