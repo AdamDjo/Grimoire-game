@@ -28,14 +28,41 @@ Exécuter dans l'ordre :
    git checkout develop && git pull origin develop
    ```
 
-4. **Créer et pousser la branche release**
+4. **Créer la branche release**
 
    ```bash
    git checkout -b release/<version>
+   ```
+
+5. **Bumper les versions des workspaces** (étape manuelle — le workflow ne le fait pas)
+
+   `release.yml` lit la version **depuis le nom de la branche**, jamais depuis les
+   `package.json`. Sans ce bump, le tag et la GitHub Release sortent corrects mais le
+   code mergé dans `main` se déclare encore à la version précédente, et la sync
+   post-merge (qui porte `apps/*/package.json` depuis `main`) devient un no-op silencieux.
+
+   Passer ces 3 fichiers en `<version>` — et eux seuls :
+
+   ```
+   apps/backend/package.json
+   apps/frontend/package.json
+   packages/shared/package.json
+   ```
+
+   Le `package.json` racine n'a pas de champ `version` (workspace privé) : ne pas y toucher.
+   `pnpm-lock.yaml` n'a pas besoin d'être régénéré (workspaces privés, non versionnés).
+
+   ```bash
+   git commit -am "chore(release): bump les workspaces en <version>"
+   ```
+
+6. **Pousser la branche release**
+
+   ```bash
    git push origin release/<version>
    ```
 
-5. **Confirmer à l'utilisateur :**
+7. **Confirmer à l'utilisateur :**
 
    ```
    ✅ release/<version> créée et poussée
