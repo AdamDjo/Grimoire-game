@@ -142,6 +142,13 @@ export const state = {
   focusRing: 'var(--focus-ring)',
 } as const
 
+/** États interactifs partagés. */
+export const interaction = {
+  linkHoverColor: 'var(--link-hover-color)',
+  linkHoverShadow: 'var(--link-hover-shadow)',
+  linkHoverTranslateX: 'var(--link-hover-translate-x)',
+} as const
+
 export type MaterialToken = keyof typeof material
 export type ColorToken = keyof typeof color
 export type FontToken = keyof typeof font
@@ -149,3 +156,4 @@ export type TextGameToken = keyof typeof textGame
 export type TextToken = keyof typeof text
 export type MotionToken = keyof typeof motion
 export type EaseToken = keyof typeof ease
+export type InteractionToken = keyof typeof interaction

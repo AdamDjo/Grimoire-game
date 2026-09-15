@@ -12,6 +12,7 @@ export function LoginForm({ anonymousSession, callbackError = false, nextPath }:
   return (
     <AuthAccessForm
       anonymousSession={anonymousSession}
+      appearance="landing"
       initialError={callbackError}
       mode="login"
       nextPath={nextPath}
