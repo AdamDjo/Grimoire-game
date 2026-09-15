@@ -25,34 +25,6 @@
   position: absolute;
 }
 
-.auth-layout__home {
-  color: var(--material-gold-bright);
-  font-family: var(--font-game-ui);
-  font-size: var(--text-game-label);
-  left: clamp(1.25rem, 3vw, 3rem);
-  letter-spacing: 0.18em;
-  opacity: 0.82;
-  position: absolute;
-  text-transform: uppercase;
-  top: clamp(1.25rem, 3vw, 2.5rem);
-  transition:
-    color 180ms ease,
-    opacity 180ms ease;
-  z-index: 2;
-}
-
-.auth-layout__home:hover {
-  color: var(--salt-white);
-  opacity: 1;
-}
-
-.auth-layout__language {
-  position: absolute;
-  right: clamp(1.25rem, 3vw, 3rem);
-  top: clamp(0.9rem, 2vw, 1.9rem);
-  z-index: 2;
-}
-
 .auth-layout__content {
   margin: 0 auto;
   max-width: 38rem;
@@ -61,26 +33,36 @@
   z-index: 1;
 }
 
+.auth-layout:has(.auth-login) {
+  background: var(--salt-page);
+  display: block;
+  overflow: clip;
+  padding: 0;
+}
+
+.auth-layout:has(.auth-login)::before {
+  display: none;
+}
+
+.auth-layout:has(.auth-login) .auth-layout__content {
+  margin: 0;
+  max-width: none;
+  position: static;
+  width: auto;
+}
+
 @media (max-width: 640px) {
-  .auth-layout {
+  .auth-layout:not(:has(.auth-login)) {
     align-items: start;
     background-position: 62% center;
     overflow: auto;
     padding: 5.5rem 0.75rem 1rem;
   }
 
-  .auth-layout__language {
-    right: 0.75rem;
-    top: 0.55rem;
-  }
 }
 
 @media (max-height: 760px) and (min-width: 641px) {
-  .auth-layout {
+  .auth-layout:not(:has(.auth-login)) {
     padding-block: 2.4rem 1.25rem;
-  }
-
-  .auth-layout__home {
-    top: 1.4rem;
   }
 }

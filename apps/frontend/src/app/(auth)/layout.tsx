@@ -1,23 +1,14 @@
-import Link from 'next/link'
-import { getTranslations } from 'next-intl/server'
-
-import { LanguageSwitcher } from '@/components/ui/language-switcher'
+import { AuthNavigation } from './_components/AuthNavigation'
 
 import type { ReactNode } from 'react'
 
+import '../(home)/_components/LandingExperience/landing-experience.css'
 import './auth-layout.css'
 
-export default async function AuthLayout({ children }: Readonly<{ children: ReactNode }>) {
-  const t = await getTranslations('Auth')
-
+export default function AuthLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <main className="auth-layout">
-      <Link className="auth-layout__home" href="/">
-        {t('backHome')}
-      </Link>
-      <div className="auth-layout__language">
-        <LanguageSwitcher variant="standalone" />
-      </div>
+    <main className="auth-layout salt-landing">
+      <AuthNavigation />
       <div className="auth-layout__content">{children}</div>
     </main>
   )

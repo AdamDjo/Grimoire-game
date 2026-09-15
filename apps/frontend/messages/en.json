@@ -62,6 +62,7 @@
     "emailLabel": "Email address",
     "emailPlaceholder": "you@example.com",
     "resendLink": "Send another sign-in link",
+    "or": "or",
     "externalAccess": "Sign in with an external service",
     "continueGoogle": "Continue with Google",
     "continueDiscord": "Continue with Discord",
