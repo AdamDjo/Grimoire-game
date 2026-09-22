@@ -27,9 +27,6 @@ export function LandingAtmosphere() {
         </span>
         <span className="salt-counter__label" />
       </div>
-      <div className="salt-veil" aria-hidden="true">
-        <span className="salt-veil__mark">Velkhar</span>
-      </div>
     </>
   )
 }

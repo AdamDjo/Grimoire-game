@@ -64,29 +64,6 @@
   background: var(--salt-gold);
 }
 
-/* ── Page veil ──────────────────────────────────────────────────────────────
-   Covers the viewport while the next route loads, so leaving the landing
-   reads as a cut in the same film rather than a browser navigation. */
-.salt-veil {
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  display: grid;
-  place-items: center;
-  background: var(--salt-page);
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-}
-.salt-veil__mark {
-  font-family: var(--font-display);
-  font-size: clamp(20px, 2vw, 30px);
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
-  color: var(--salt-gold);
-  opacity: 0;
-}
-
 /* ── Seam ───────────────────────────────────────────────────────────────────
    A gold hairline drawn across the top edge of each plan as the reader crosses
    into it. Injected by JS, so it never exists without motion. */
@@ -170,7 +147,6 @@
   }
   .salt-atmosphere__beam,
   .salt-cursor,
-  .salt-veil,
   .salt-counter,
   .salt-seam {
     display: none;

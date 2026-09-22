@@ -1,11 +1,9 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-
 import { useLenis } from '@/hooks/use-lenis'
 import { gsap, ScrollTrigger, useGSAP } from '@/lib/gsap-init'
 
-import { attachCursor, attachPageVeil, attachReadingBeam } from './landing-atmosphere'
+import { attachCursor, attachReadingBeam } from './landing-atmosphere'
 import {
   animateLivingAsh,
   attachMagneticButtons,
@@ -34,12 +32,10 @@ const MOTION = '(prefers-reduced-motion: no-preference)'
 /** The camera moves; essential text never fades out or waits for scrub progress. */
 export function useLandingMotion(root: RefObject<HTMLDivElement | null>) {
   useLenis()
-  const router = useRouter()
   useGSAP(
     () => {
       const element = root.current
       if (!element) return
-      const navigate = (to: string) => router.push(to)
       ScrollTrigger.config({ ignoreMobileResize: true })
       const media = gsap.matchMedia()
       let mounted = true
@@ -102,14 +98,6 @@ export function useLandingMotion(root: RefObject<HTMLDivElement | null>) {
           cursor ? attachCursor(cursor) : () => undefined,
         ]
         return () => cleanups.forEach((cleanup) => cleanup())
-      })
-
-      // The veil covers the cut to the next route. Reduced motion keeps the
-      // browser's own instant navigation instead.
-      media.add(MOTION, () => {
-        const veil = element.querySelector<HTMLElement>('.salt-veil')
-        if (!veil) return
-        return attachPageVeil(element, veil, navigate)
       })
 
       media.add({ desktop: DESKTOP, flow: FLOW, reduce: REDUCE }, (context) => {
