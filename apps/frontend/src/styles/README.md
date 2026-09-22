@@ -97,6 +97,14 @@ repos long) et `--ease-grimoire-standard` (déplacement neutre, qui ne doit pas 
 remarquer). Une transition qui n'entre dans aucune de ces quatre durées est
 probablement une transition de trop.
 
+### Interactions textuelles
+
+| Token                      | Rôle                                               |
+| -------------------------- | -------------------------------------------------- |
+| `--link-hover-color`       | Couleur d'un lien textuel au survol                |
+| `--link-hover-shadow`      | Halo discret d'un lien textuel au survol           |
+| `--link-hover-translate-x` | Déplacement horizontal d'un lien textuel au survol |
+
 ---
 
 ## 2. Primitives

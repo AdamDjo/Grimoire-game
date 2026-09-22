@@ -197,8 +197,14 @@
   --ease-grimoire-standard: cubic-bezier(0.2, 0, 0, 1);
 
   /* ------------------------------------------------------------------ *
-   * 7. États
+   * 7. États et interactions
    * ------------------------------------------------------------------ */
 
   --focus-ring: 0 0 0 3px rgba(217, 164, 65, 0.3);
+
+  /* Lien textuel : signal sans soulignement, réservé aux formulaires et
+     actions secondaires sur fond sombre. */
+  --link-hover-color: var(--salt-gold);
+  --link-hover-shadow: 0 0 0.8rem color-mix(in srgb, var(--salt-gold) 36%, transparent);
+  --link-hover-translate-x: 0.22rem;
 }

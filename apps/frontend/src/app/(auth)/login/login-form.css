@@ -218,6 +218,167 @@
   text-align: center;
 }
 
+/* The login route uses the same public shell and controls as the landing.
+   Signup and recovery keep the existing framed appearance above. */
+.auth-login {
+  align-items: center;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(25rem, 33rem);
+  padding-top: 80px;
+}
+
+.login-form--landing {
+  background: var(--salt-veil-deep);
+  border: 7px solid transparent;
+  border-image: url('/encre-de-sel/landing/input-frame.webp') 22 fill / 7px;
+  justify-self: end;
+  padding: clamp(1.5rem, 2.5vw, 2.25rem);
+  width: 100%;
+}
+
+.login-form--landing .login-form__header {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.login-form--landing .login-form__eyebrow,
+.login-form--landing .game-field__label,
+.login-form--landing .login-form__or {
+  color: var(--salt-gold);
+  font-family: var(--font-ui);
+  font-size: var(--text-game-label);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.login-form--landing .login-form__eyebrow {
+  margin: 0 0 1rem;
+}
+
+.login-form--landing .login-form__header h1 {
+  color: var(--salt-paper);
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: 400;
+  line-height: 0.98;
+  margin: 0;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.login-form--landing .login-form__header > p:last-child {
+  color: var(--salt-paper);
+  font-family: var(--font-serif);
+  font-size: var(--text-body-editorial);
+  line-height: 1.4;
+  margin: 0.7rem 0 1.25rem;
+  max-width: 30ch;
+  text-align: left;
+}
+
+.login-form--landing .game-field {
+  gap: 0.7rem;
+}
+
+.salt-landing .login-form--landing .game-input::before {
+  background: none;
+  border: 7px solid transparent;
+  border-image: url('/encre-de-sel/landing/input-frame.webp') 22 fill / 7px;
+  box-shadow: none;
+}
+
+.login-form--landing .login-form__submit {
+  margin: 0.8rem 0 0;
+  width: 100%;
+}
+
+.login-form--landing .login-form__or {
+  align-items: center;
+  display: flex;
+  gap: 0.9rem;
+  margin: 1.15rem 0 0.75rem;
+}
+
+.login-form--landing .login-form__or::before,
+.login-form--landing .login-form__or::after {
+  background: var(--salt-gold);
+  content: '';
+  flex: 1;
+  height: 1px;
+}
+
+.login-form--landing .login-form__oauth {
+  gap: 0.45rem;
+  grid-template-columns: 1fr;
+}
+
+.login-form--landing .login-form__oauth-link {
+  color: var(--salt-paper);
+  font-family: var(--font-ui);
+  font-size: var(--text-game-label);
+  justify-content: flex-start;
+  letter-spacing: 0.06em;
+  min-height: 44px;
+  padding: 0;
+  text-align: left;
+  text-decoration: none;
+  transition:
+    color var(--motion-fast) var(--ease-grimoire-standard),
+    text-shadow var(--motion-fast) var(--ease-grimoire-standard),
+    transform var(--motion-fast) var(--ease-grimoire-standard);
+}
+
+.login-form--landing .login-form__oauth-link::after {
+  display: none;
+}
+
+.login-form--landing .login-form__recovery-link {
+  margin: 1.15rem 0 0;
+  text-align: left;
+}
+
+.login-form--landing .login-form__text-link {
+  color: var(--salt-paper);
+  font-family: var(--font-ui);
+  font-size: var(--text-game-label);
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  transition:
+    color var(--motion-fast) var(--ease-grimoire-standard),
+    text-shadow var(--motion-fast) var(--ease-grimoire-standard),
+    transform var(--motion-fast) var(--ease-grimoire-standard);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .login-form--landing .login-form__oauth-link:hover,
+  .login-form--landing .login-form__text-link:hover {
+    color: var(--link-hover-color);
+    text-shadow: var(--link-hover-shadow);
+    transform: translateX(var(--link-hover-translate-x));
+  }
+}
+
+.login-form--landing .login-form__status {
+  color: var(--salt-paper);
+  font-family: var(--font-ui);
+  font-size: var(--text-game-caption);
+  text-align: left;
+}
+
+.login-form--landing .login-form__status[role='alert'] {
+  color: color-mix(in srgb, var(--fresh-blood) 58%, var(--salt-paper));
+}
+
+.login-form--landing .login-form__footer {
+  border-top: 1px solid var(--salt-gold);
+  color: var(--salt-paper);
+  font-family: var(--font-ui);
+  font-size: var(--text-game-caption);
+  margin-top: 1.15rem;
+  padding-top: 0.8rem;
+  text-align: left;
+}
+
 @media (max-width: 640px) {
   .login-form.game-panel--padding-lg {
     padding: 2.6rem 1.35rem 3rem;
@@ -230,6 +391,17 @@
 
   .login-form__oauth {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .auth-login {
+    grid-template-columns: 1fr;
+    padding: 2rem 1rem;
+  }
+
+  .login-form--landing {
+    justify-self: stretch;
   }
 }
 

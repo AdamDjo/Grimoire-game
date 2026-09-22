@@ -62,6 +62,7 @@
     "emailLabel": "Adresse email",
     "emailPlaceholder": "vous@exemple.fr",
     "resendLink": "Renvoyer un lien d’accès",
+    "or": "ou",
     "externalAccess": "Accès avec un service externe",
     "continueGoogle": "Continuer avec Google",
     "continueDiscord": "Continuer avec Discord",
