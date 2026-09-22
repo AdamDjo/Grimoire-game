@@ -1,0 +1,143 @@
+.loading-experience {
+  align-items: center;
+  background: var(--salt-page);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(25rem, 33rem);
+  min-height: 100svh;
+  overflow: clip;
+  padding: 5rem 4.5vw 0;
+  position: relative;
+}
+
+.loading-experience__art,
+.loading-experience__veil {
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.loading-experience__art {
+  z-index: -3;
+}
+
+.loading-experience__art img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.loading-experience__veil {
+  background: linear-gradient(
+    90deg,
+    var(--salt-veil-soft) 0%,
+    var(--salt-veil) 42%,
+    var(--salt-veil-deep) 76%,
+    var(--salt-veil-solid) 100%
+  );
+  z-index: -2;
+}
+
+.loading-experience__content {
+  background: var(--salt-veil-deep);
+  border: 7px solid transparent;
+  border-image: url('/encre-de-sel/landing/input-frame.webp') 22 fill / 7px;
+  justify-self: end;
+  padding: clamp(1.5rem, 2.5vw, 2.25rem);
+  width: 100%;
+}
+
+.loading-experience__eyebrow {
+  color: var(--salt-gold);
+  font-family: var(--font-ui);
+  font-size: var(--text-game-label);
+  letter-spacing: 0.16em;
+  margin: 0 0 1rem;
+  text-transform: uppercase;
+}
+
+.loading-experience h1 {
+  color: var(--salt-paper);
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: 400;
+  line-height: 0.98;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.loading-experience__body {
+  color: var(--salt-paper);
+  font-family: var(--font-serif);
+  font-size: var(--text-body-editorial);
+  line-height: 1.4;
+  margin: 0.7rem 0 0;
+  max-width: 30ch;
+}
+
+.loading-experience__marks {
+  display: flex;
+  gap: 0.7rem;
+  margin-top: 1.5rem;
+}
+
+.loading-experience__marks span {
+  animation: loading-experience-mark var(--motion-page) var(--ease-grimoire-standard) infinite;
+  background: var(--salt-gold);
+  height: 0.4rem;
+  opacity: 0.3;
+  transform: rotate(45deg) scale(0.72);
+  width: 0.4rem;
+}
+
+.loading-experience__marks span:nth-child(2) {
+  animation-delay: var(--motion-fast);
+}
+
+.loading-experience__marks span:nth-child(3) {
+  animation-delay: var(--motion-ui);
+}
+
+@keyframes loading-experience-mark {
+  0%,
+  60%,
+  100% {
+    opacity: 0.3;
+    transform: rotate(45deg) scale(0.72);
+  }
+
+  30% {
+    opacity: 1;
+    transform: rotate(45deg) scale(1);
+  }
+}
+
+@media (max-width: 760px) {
+  .loading-experience {
+    align-items: end;
+    grid-template-columns: 1fr;
+    min-height: 100svh;
+    padding: 6.5rem 1rem 2rem;
+  }
+
+  .loading-experience__veil {
+    background: linear-gradient(
+      180deg,
+      var(--salt-veil) 0%,
+      var(--salt-veil-soft) 32%,
+      var(--salt-veil-deep) 72%,
+      var(--salt-veil-solid) 100%
+    );
+  }
+
+  .loading-experience__content {
+    justify-self: stretch;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-experience__marks span {
+    animation: none;
+    opacity: 0.72;
+    transform: rotate(45deg);
+  }
+}

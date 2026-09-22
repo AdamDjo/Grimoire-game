@@ -8,17 +8,12 @@ interface SystemStateProps {
   action?: ReactNode
   body: string
   eyebrow: string
-  isLoading?: boolean
   title: string
 }
 
-export function SystemState({ action, body, eyebrow, isLoading = false, title }: SystemStateProps) {
+export function SystemState({ action, body, eyebrow, title }: SystemStateProps) {
   return (
-    <main
-      className="system-state"
-      aria-live={isLoading ? 'polite' : undefined}
-      aria-busy={isLoading || undefined}
-    >
+    <main className="system-state">
       <div className="system-state__grain" aria-hidden="true" />
 
       <section className="system-state__content" aria-labelledby="system-state-title">
@@ -38,14 +33,6 @@ export function SystemState({ action, body, eyebrow, isLoading = false, title }:
           {title}
         </h1>
         <p className="system-state__body">{body}</p>
-
-        {isLoading ? (
-          <div className="system-state__loading" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-          </div>
-        ) : null}
 
         {action ? <div className="system-state__action-wrap">{action}</div> : null}
       </section>
