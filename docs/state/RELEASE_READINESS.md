@@ -80,6 +80,11 @@ des décors neutres et exigent une correspondance événementielle explicite. Ce
 le `NO-GO` : le résolveur déterministe #248 et les autres chantiers de la boucle roguelike restent à
 livrer avant le playtest de validation.
 
+État attendu après merge de la PR #325 : l'entrée dans l'Auberge présente le lore essentiel et la
+boucle de survie dans un prologue illustré, puis conduit au flux existant de création du personnage
+et de dialogue avec L'Aveugle. Ce jalon améliore le golden path joueur mais ne change pas le
+`NO-GO` : la boucle roguelike complète et son playtest de validation restent à livrer.
+
 ## Post-déploiement
 
 Profil complet (#136), Chronologie (#130), Galerie (#131), World Map (#127), linking

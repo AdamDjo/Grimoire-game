@@ -1,12 +1,13 @@
 .auberge-intro {
-  background: #050403;
+  background: var(--ink-black);
   color: var(--salt-white);
   inset: 0;
+  min-height: 100dvh;
   opacity: 1;
   overflow: hidden;
   position: fixed;
-  transition: opacity 450ms cubic-bezier(0.4, 0, 1, 1);
-  z-index: 1000;
+  transition: opacity var(--motion-page) var(--ease-grimoire-standard);
+  z-index: var(--prologue-layer);
 }
 
 .auberge-intro[data-exiting='true'] {
@@ -14,146 +15,255 @@
   pointer-events: none;
 }
 
-.auberge-intro__video,
-.auberge-intro__shade {
-  height: 100%;
+.auberge-intro__scroller {
+  display: flex;
+  height: 100dvh;
+  overscroll-behavior: contain;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.auberge-intro__scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.auberge-intro__chapter {
+  align-items: flex-end;
+  box-sizing: border-box;
+  display: flex;
+  flex: 0 0 100vw;
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow: hidden;
+  padding: var(--prologue-page-block) var(--prologue-page-inline) var(--prologue-copy-bottom);
+  position: relative;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  width: 100vw;
+}
+
+.auberge-intro__visual,
+.auberge-intro__image,
+.auberge-intro__shade,
+.auberge-intro__grain {
   inset: 0;
   position: absolute;
+}
+
+.auberge-intro__visual {
+  background: var(--ink-black);
+  overflow: hidden;
+  transform-origin: center center;
+}
+
+.auberge-intro__image {
+  height: 100%;
+  object-fit: cover;
   width: 100%;
 }
 
-.auberge-intro__video {
-  background: #050403;
-  object-fit: cover;
+.auberge-intro__shade {
+  background: var(--prologue-scrim);
 }
 
-.auberge-intro__shade {
-  background:
-    linear-gradient(180deg, rgba(5, 4, 3, 0.46) 0%, transparent 24%),
-    linear-gradient(0deg, rgba(5, 4, 3, 0.68) 0%, transparent 26%);
+.auberge-intro__grain {
+  background-image: var(--prologue-grain);
+  background-size: var(--prologue-grain-size);
+  mix-blend-mode: soft-light;
+  opacity: var(--prologue-grain-opacity);
   pointer-events: none;
+}
+
+.auberge-intro__header,
+.auberge-intro__footer {
+  left: var(--prologue-page-inline);
+  position: fixed;
+  right: var(--prologue-page-inline);
+  z-index: 2;
+}
+
+.auberge-intro__header,
+.auberge-intro__footer,
+.auberge-intro__controls {
+  align-items: center;
+  display: flex;
+}
+
+.auberge-intro__header {
+  justify-content: space-between;
+  pointer-events: none;
+  top: var(--prologue-page-block);
+}
+
+.auberge-intro__header .game-button,
+.auberge-intro__footer .game-button {
+  pointer-events: auto;
 }
 
 .auberge-intro__location {
   display: grid;
-  gap: 0.35rem;
-  inset: clamp(1.25rem, 4vw, 3.5rem) auto auto clamp(1.25rem, 4vw, 3.5rem);
-  position: absolute;
-  text-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.92);
+  gap: var(--prologue-label-gap);
+  text-shadow: var(--prologue-text-shadow);
 }
 
-.auberge-intro__location span {
+.auberge-intro__location span,
+.auberge-intro__chapter-number {
   color: var(--material-gold-bright);
   font-family: var(--font-game-ui);
   font-size: var(--text-game-kicker);
-  letter-spacing: 0.24em;
+  letter-spacing: var(--prologue-kicker-tracking);
   text-transform: uppercase;
 }
 
 .auberge-intro__location strong {
-  font-family: var(--font-game-heading);
-  font-size: clamp(1.35rem, 2.2vw, 2.15rem);
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  line-height: 1.1;
+  font-family: var(--font-game-display);
+  font-size: var(--text-game-heading);
+  font-weight: 400;
+  letter-spacing: var(--prologue-title-tracking);
+  line-height: 1;
+}
+
+.auberge-intro__copy {
+  display: grid;
+  gap: var(--prologue-copy-gap);
+  max-width: var(--prologue-copy-max);
+  position: relative;
+  text-shadow: var(--prologue-text-shadow);
+  z-index: 1;
+}
+
+.auberge-intro__chapter-number {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.auberge-intro__chapter-number::after {
+  background: var(--material-gold-bright);
+  content: '';
+  height: 1px;
+  width: 3rem;
+}
+
+.auberge-intro__copy h1 {
+  color: var(--salt-white);
+  font-family: var(--font-game-display);
+  font-size: var(--text-game-title);
+  font-weight: 400;
+  letter-spacing: var(--prologue-title-tracking);
+  line-height: 1.08;
   text-wrap: balance;
 }
 
-.auberge-intro__controls {
-  align-items: center;
-  bottom: clamp(1.25rem, 3vw, 2.5rem);
-  display: flex;
-  gap: 0.65rem;
+.auberge-intro__copy p {
+  color: var(--prologue-body-color);
+  font-family: var(--font-game-body);
+  font-size: var(--text-game-lead);
+  line-height: 1.5;
+  max-width: var(--prologue-body-max);
+  text-wrap: pretty;
+}
+
+.auberge-intro__footer {
+  bottom: var(--prologue-page-block);
+  gap: var(--prologue-footer-gap);
   justify-content: space-between;
-  left: clamp(1.25rem, 4vw, 3.5rem);
+  pointer-events: none;
+}
+
+.auberge-intro__progress {
+  background: var(--prologue-progress-track);
+  height: var(--prologue-progress-height);
+  max-width: var(--prologue-progress-max);
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.auberge-intro__progress span {
+  background: var(--material-gold-bright);
+  inset: 0;
   position: absolute;
-  right: clamp(1.25rem, 4vw, 3.5rem);
+  transform: scaleX(var(--prologue-progress));
+  transform-origin: left center;
+  transition: transform var(--motion-step) var(--ease-grimoire-out);
 }
 
-.auberge-intro__control,
-.auberge-intro__play {
-  backdrop-filter: blur(8px);
-  background: rgba(5, 4, 3, 0.72);
-  border: 1px solid rgba(217, 164, 65, 0.44);
-  color: var(--salt-white);
-  cursor: pointer;
-  font-family: var(--font-game-ui);
-  font-size: var(--text-game-label);
-  letter-spacing: 0.07em;
-  min-height: 44px;
-  padding: 0.65rem 1rem;
-  transition-property: background-color, border-color, color, opacity, scale;
-  transition-duration: 160ms;
-  transition-timing-function: ease-out;
+.auberge-intro__controls {
+  flex: 0 0 auto;
+  gap: var(--prologue-control-gap);
 }
 
-.auberge-intro__control:hover:not(:disabled),
-.auberge-intro__control:focus-visible,
-.auberge-intro__play:hover,
-.auberge-intro__play:focus-visible {
-  background: rgba(26, 18, 9, 0.88);
-  border-color: rgba(240, 212, 138, 0.72);
-  color: var(--gold-light);
-  outline: none;
+.auberge-intro__previous .game-button__icon {
+  transform: rotate(180deg);
 }
 
-.auberge-intro__control:focus-visible,
-.auberge-intro__play:focus-visible {
-  box-shadow:
-    0 0 0 2px rgba(5, 4, 3, 0.9),
-    0 0 0 4px var(--gold-dark);
-}
-
-.auberge-intro__control:active:not(:disabled),
-.auberge-intro__play:active {
-  scale: 0.96;
-}
-
-.auberge-intro__control:disabled {
-  cursor: default;
-  opacity: 0.35;
-}
-
-.auberge-intro__sound {
-  min-width: 9.5rem;
-}
-
-.auberge-intro__skip span {
-  display: inline-block;
-  margin-left: 0.35rem;
-  transform: translateY(-0.04em);
-}
-
-.auberge-intro__play {
-  left: 50%;
-  min-width: min(18rem, calc(100vw - 3rem));
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
+.auberge-intro__next.game-button--landing {
+  min-height: var(--prologue-primary-height);
+  min-width: var(--prologue-primary-width);
+  padding-inline: var(--prologue-primary-padding);
 }
 
 @media (max-width: 640px) {
-  .auberge-intro__video {
-    object-position: 52% center;
+  .auberge-intro__chapter {
+    padding: var(--prologue-page-block-mobile) var(--prologue-page-inline-mobile)
+      var(--prologue-copy-bottom-mobile);
+  }
+
+  .auberge-intro__header,
+  .auberge-intro__footer {
+    left: var(--prologue-page-inline-mobile);
+    right: var(--prologue-page-inline-mobile);
+  }
+
+  .auberge-intro__header {
+    top: var(--prologue-page-block-mobile);
+  }
+
+  .auberge-intro__footer {
+    align-items: stretch;
+    bottom: var(--prologue-page-block-mobile);
+    flex-direction: column;
   }
 
   .auberge-intro__controls {
-    align-items: stretch;
+    gap: 1rem;
+    justify-content: space-between;
+    width: 100%;
   }
 
-  .auberge-intro__control {
-    font-size: var(--text-game-caption);
+  .auberge-intro__previous {
+    flex: 0 0 auto;
+  }
+
+  .auberge-intro__controls .auberge-intro__next.game-button--landing {
+    flex: 1 1 auto;
+    font-size: clamp(1rem, 4.8vw, 1.25rem);
+    max-width: 15rem;
+    min-height: var(--prologue-primary-height-mobile);
     min-width: 0;
+    padding-inline: var(--prologue-primary-padding-mobile);
+    width: auto;
+  }
+
+  .auberge-intro__copy h1 {
+    font-size: clamp(2.7rem, 12vw, 4.5rem);
+  }
+
+  .auberge-intro__copy p {
+    font-size: clamp(1rem, 4.7vw, 1.25rem);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .auberge-intro {
+  .auberge-intro,
+  .auberge-intro__progress span {
     transition: none;
   }
 
-  .auberge-intro__control,
-  .auberge-intro__play {
-    transition: none;
+  .auberge-intro__scroller {
+    scroll-behavior: auto;
   }
 }

@@ -3,6 +3,7 @@ export const WORLD_ROUTES = {
     aveugle: '/velkhar/aveugle',
     campaign: '/velkhar/campaign',
     characterCreate: '/velkhar/character-create',
+    landingEntry: '/velkhar/aveugle?transition=home',
     root: '/velkhar',
     session: '/velkhar/session',
     world: '/velkhar/world',

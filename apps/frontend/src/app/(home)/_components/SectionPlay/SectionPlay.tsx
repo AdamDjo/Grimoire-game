@@ -53,7 +53,7 @@ function useLandingTurn(): GameSceneTurn {
     choices: [t('choice1'), t('choice2'), t('choice3')],
     response: t('demoResponse'),
     continueLabel: t('enter'),
-    continueHref: WORLD_ROUTES.velkhar.aveugle,
+    continueHref: WORLD_ROUTES.velkhar.landingEntry,
     composer: {
       label: t('free'),
       placeholder: t('placeholder'),
