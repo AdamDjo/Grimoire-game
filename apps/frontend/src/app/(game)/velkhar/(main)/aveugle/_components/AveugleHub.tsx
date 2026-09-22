@@ -100,8 +100,7 @@ export function AveugleHub({
     const nextHasActiveSession = readActiveSessionCookie()
     setCharacter(nextCharacter)
     setHasActiveSessionState(nextHasActiveSession)
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    setShowIntro(previewIntro || (!reduceMotion && !hasSeenAubergeIntro()))
+    setShowIntro(previewIntro || !hasSeenAubergeIntro())
     setHydrated(true)
   }, [isRunReturn, previewIntro])
 

@@ -94,6 +94,42 @@
   /* Braise claire : les cendres qui montent au seuil. */
   --salt-ember: #eac36f;
 
+  /* Prologue : un seul voile narratif, une seule matière de progression. */
+  --prologue-body-color: color-mix(in srgb, var(--salt-white) 88%, transparent);
+  --prologue-progress-track: color-mix(in srgb, var(--salt-white) 24%, transparent);
+  --prologue-scrim:
+    linear-gradient(180deg, var(--salt-veil) 0%, transparent 34%),
+    linear-gradient(90deg, var(--salt-veil-deep) 0%, var(--salt-veil-soft) 58%, transparent 86%),
+    linear-gradient(0deg, var(--salt-veil-deep) 0%, transparent 52%);
+  --prologue-grain: url('/ui-kit/surfaces/grain.svg');
+  --prologue-grain-size: 220px 220px;
+  --prologue-grain-opacity: 0.18;
+  --prologue-text-shadow: 0 0.25rem 1rem var(--salt-veil-solid);
+  --prologue-layer: 1000;
+
+  /* Mesures du prologue : larges sur desktop, compactes mais tactiles sur mobile. */
+  --prologue-page-inline: clamp(1.5rem, 5vw, 5rem);
+  --prologue-page-block: clamp(1.5rem, 4vh, 3.5rem);
+  --prologue-page-inline-mobile: 1rem;
+  --prologue-page-block-mobile: 1rem;
+  --prologue-copy-max: 47rem;
+  --prologue-body-max: 40rem;
+  --prologue-copy-gap: clamp(0.75rem, 1.5vh, 1.25rem);
+  --prologue-copy-bottom: clamp(9.5rem, 18vh, 13rem);
+  --prologue-copy-bottom-mobile: 10rem;
+  --prologue-footer-gap: clamp(1rem, 3vw, 3rem);
+  --prologue-control-gap: 0.75rem;
+  --prologue-label-gap: 0.25rem;
+  --prologue-progress-height: 2px;
+  --prologue-progress-max: 24rem;
+  --prologue-primary-height: 3.75rem;
+  --prologue-primary-height-mobile: 3.25rem;
+  --prologue-primary-padding: 2rem;
+  --prologue-primary-padding-mobile: 1.25rem;
+  --prologue-primary-width: 14rem;
+  --prologue-kicker-tracking: 0.22em;
+  --prologue-title-tracking: 0.025em;
+
   /* Jauges : le creux du rail, ses sertissages et la brillance du remplissage.
      Une jauge n'invente jamais sa propre matiere. */
   --gauge-well: color-mix(in srgb, var(--ink-black) 92%, transparent);
