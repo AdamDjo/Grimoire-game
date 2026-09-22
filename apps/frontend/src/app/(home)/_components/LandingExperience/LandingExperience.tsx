@@ -33,7 +33,7 @@ export function LandingExperience({ resumeHref }: { resumeHref?: string }) {
   const t = useTranslations('SaltLanding')
   const root = useRef<HTMLDivElement>(null)
   useLandingMotion(root)
-  const beginHref = resumeHref ?? WORLD_ROUTES.velkhar.aveugle
+  const beginHref = resumeHref ?? WORLD_ROUTES.velkhar.landingEntry
   const resuming = Boolean(resumeHref)
 
   return (

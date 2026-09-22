@@ -178,6 +178,14 @@ describe('AveugleHub', () => {
     ).toBeInTheDocument()
   })
 
+  it('rejoue l’introduction après un clic depuis la landing même si elle a déjà été vue', async () => {
+    render(<AveugleHub transitionFromHome />)
+
+    expect(
+      await screen.findByRole('dialog', { name: "Introduction to The Blind One's Inn" })
+    ).toBeInTheDocument()
+  })
+
   it('ne transmet plus de présage mécanique local au prochain run', async () => {
     window.localStorage.setItem(CHARACTER_RESULT_STORAGE_KEY, JSON.stringify(CHARACTER))
 

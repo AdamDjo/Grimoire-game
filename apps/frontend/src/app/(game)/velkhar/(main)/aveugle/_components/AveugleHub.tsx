@@ -100,9 +100,9 @@ export function AveugleHub({
     const nextHasActiveSession = readActiveSessionCookie()
     setCharacter(nextCharacter)
     setHasActiveSessionState(nextHasActiveSession)
-    setShowIntro(previewIntro || !hasSeenAubergeIntro())
+    setShowIntro(previewIntro || transitionFromHome || !hasSeenAubergeIntro())
     setHydrated(true)
-  }, [isRunReturn, previewIntro])
+  }, [isRunReturn, previewIntro, transitionFromHome])
 
   const loadHub = useCallback(async () => {
     setHubLoading(true)

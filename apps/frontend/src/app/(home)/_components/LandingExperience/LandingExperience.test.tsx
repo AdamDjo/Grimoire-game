@@ -31,8 +31,8 @@ describe('Landing', () => {
     // Le seuil invite, l'outro conclut : deux libellés, une seule destination.
     const begin = screen.getByRole('link', { name: 'Begin' })
     const enter = screen.getByRole('link', { name: 'Enter the inn' })
-    expect(begin).toHaveAttribute('href', '/velkhar/aveugle')
-    expect(enter).toHaveAttribute('href', '/velkhar/aveugle')
+    expect(begin).toHaveAttribute('href', '/velkhar/aveugle?transition=home')
+    expect(enter).toHaveAttribute('href', '/velkhar/aveugle?transition=home')
   })
 
   it("reprend la partie en cours au lieu de renvoyer à l'auberge", () => {
