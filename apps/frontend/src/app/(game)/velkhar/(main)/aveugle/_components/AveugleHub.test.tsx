@@ -161,7 +161,7 @@ describe('AveugleHub', () => {
     )
 
     await user.click(screen.getByRole('button', { name: 'Other topics' }))
-    await user.click(screen.getByRole('button', { name: 'Another question…' }))
+    await user.click(screen.getByRole('button', { name: 'Ask a question of your own…' }))
     expect(screen.getByPlaceholderText('Ask your question…')).toBeInTheDocument()
   })
 

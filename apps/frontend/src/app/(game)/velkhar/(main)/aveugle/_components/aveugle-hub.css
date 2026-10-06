@@ -146,7 +146,6 @@ body:has(.aveugle-hub) {
 }
 
 .aveugle-hub__dialogue {
-  border-top: 1px solid var(--line-gold);
   min-width: 0;
   padding-top: clamp(1.25rem, 2.4vh, 2rem);
 }
@@ -189,6 +188,20 @@ body:has(.aveugle-hub) {
 .aveugle-hub__topic-actions {
   display: grid;
   gap: clamp(1rem, 2vh, 1.4rem);
+}
+
+.aveugle-hub__free-question {
+  align-items: center;
+  display: flex;
+  gap: 0.9rem;
+}
+
+.aveugle-hub__free-question > span {
+  color: var(--salt-muted);
+  font-family: var(--font-game-ui);
+  font-size: var(--text-game-micro);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .aveugle-hub__other-question {

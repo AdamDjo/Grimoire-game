@@ -159,7 +159,7 @@
   "Auberge": {
     "metadataTitle": "L’Auberge de L’Aveugle · GRIMOIRE",
     "stageCharacterCreate": "Approche. Avant la route, donne-moi ton nom.",
-    "stageReady": "Ton nom est inscrit. La route, elle, ne l’est pas encore.",
+    "stageReady": "Que veux-tu savoir avant de partir ?",
     "stageActiveSession": "Ta place est encore chaude. Reprends la route là où tu l’as laissée.",
     "stageRunReturn": "Tu reviens changé. La route a laissé de la cendre dans tes pas.",
     "unknownPeople": "Peuple inconnu",
@@ -184,7 +184,8 @@
     "topicsLabel": "Sujets à aborder avec L’Aveugle",
     "new": "Nouveau",
     "newAria": "{label}, nouveau",
-    "otherQuestion": "Autre question…",
+    "otherQuestion": "Poser une question libre…",
+    "or": "ou",
     "speak": "Parler",
     "questionPlaceholder": "Pose ta question…",
     "backToTopics": "Revenir aux sujets",

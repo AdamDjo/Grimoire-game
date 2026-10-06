@@ -311,17 +311,6 @@ export function AubergeDock({
 
               {dialogueMode === 'topics' && !interactionError ? (
                 <div className="aveugle-hub__topic-actions">
-                  <GameButton
-                    className="aveugle-hub__other-question"
-                    data-dialogue-action
-                    disabled={isPending}
-                    onClick={() => setIsComposerOpen(true)}
-                    size="sm"
-                    variant="secondary"
-                  >
-                    {t('otherQuestion')}
-                  </GameButton>
-
                   <div className="aveugle-hub__topics">
                     <DialogueChoiceGroup label={t('topicsLabel')}>
                       {topics.map((topic, index) => {
@@ -345,6 +334,20 @@ export function AubergeDock({
                         )
                       })}
                     </DialogueChoiceGroup>
+                  </div>
+
+                  <div className="aveugle-hub__free-question">
+                    <span aria-hidden="true">{t('or')}</span>
+                    <GameButton
+                      className="aveugle-hub__other-question"
+                      data-dialogue-action
+                      disabled={isPending}
+                      onClick={() => setIsComposerOpen(true)}
+                      size="sm"
+                      variant="secondary"
+                    >
+                      {t('otherQuestion')}
+                    </GameButton>
                   </div>
                 </div>
               ) : null}

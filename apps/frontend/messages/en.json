@@ -159,7 +159,7 @@
   "Auberge": {
     "metadataTitle": "The Blind One's Inn · GRIMOIRE",
     "stageCharacterCreate": "Come closer. Before the road, give me your name.",
-    "stageReady": "Your name is written. The road is not, yet.",
+    "stageReady": "What do you want to know before you leave?",
     "stageActiveSession": "Your seat is still warm. Resume the road where you left it.",
     "stageRunReturn": "You return changed. The road left ash on your steps.",
     "unknownPeople": "Unknown people",
@@ -184,7 +184,8 @@
     "topicsLabel": "Topics to discuss with The Blind One",
     "new": "New",
     "newAria": "{label}, new",
-    "otherQuestion": "Another question…",
+    "otherQuestion": "Ask a question of your own…",
+    "or": "or",
     "speak": "Speak",
     "questionPlaceholder": "Ask your question…",
     "backToTopics": "Return to topics",
