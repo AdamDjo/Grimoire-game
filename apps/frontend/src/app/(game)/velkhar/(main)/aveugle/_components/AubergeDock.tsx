@@ -248,23 +248,27 @@ export function AubergeDock({
       </header>
 
       <nav className="aveugle-hub__destinations" aria-label={t('dockNavigation')}>
-        <DialogueChoiceGroup label={t('dockNavigation')}>
-          <DialogueChoice
+        <div className="aveugle-hub__destination-list">
+          <GameButton
+            aria-pressed={activePanel === 'dialogue'}
+            className="aveugle-hub__destination-button"
             data-dialogue-action
-            number={1}
             onClick={() => changePanel('dialogue')}
-            selected={activePanel === 'dialogue'}
+            size="sm"
+            variant="ghost"
           >
             <span className="aveugle-hub__choice-copy">
               <span>{t('talk')}</span>
               {unreadTopicCount > 0 ? <small>{unreadTopicCount}</small> : null}
             </span>
-          </DialogueChoice>
-          <DialogueChoice
+          </GameButton>
+          <GameButton
+            aria-pressed={activePanel === 'memories'}
+            className="aveugle-hub__destination-button"
             data-dialogue-action
-            number={2}
             onClick={() => changePanel('memories')}
-            selected={activePanel === 'memories'}
+            size="sm"
+            variant="ghost"
           >
             <span className="aveugle-hub__choice-copy">
               <span>{t('memories')}</span>
@@ -272,8 +276,8 @@ export function AubergeDock({
                 <small>{hubState.namedSouvenirs.length}</small>
               ) : null}
             </span>
-          </DialogueChoice>
-        </DialogueChoiceGroup>
+          </GameButton>
+        </div>
       </nav>
 
       <section className="aveugle-hub__dialogue" aria-labelledby="aveugle-panel-title">
@@ -306,39 +310,43 @@ export function AubergeDock({
               {syncWarning ? <p role="status">{t('topicSyncWarning')}</p> : null}
 
               {dialogueMode === 'topics' && !interactionError ? (
-                <DialogueChoiceGroup label={t('topicsLabel')}>
-                  {topics.map((topic) => {
-                    const isUnread = !hubState.seenTopicIds.includes(topic.id)
-                    return (
-                      <DialogueChoice
-                        key={topic.id}
-                        aria-label={isUnread ? t('newAria', { label: topic.label }) : topic.label}
-                        data-dialogue-action
-                        disabled={isPending}
-                        icon={<GameIcon decorative name={topic.icon} size={32} />}
-                        onClick={() => selectTopic(topic.id)}
-                      >
-                        <span className="aveugle-hub__choice-copy">
-                          <span>{topic.label}</span>
-                          {isUnread ? <small>{t('new')}</small> : null}
-                        </span>
-                      </DialogueChoice>
-                    )
-                  })}
-                </DialogueChoiceGroup>
-              ) : null}
+                <div className="aveugle-hub__topic-actions">
+                  <GameButton
+                    className="aveugle-hub__other-question"
+                    data-dialogue-action
+                    disabled={isPending}
+                    onClick={() => setIsComposerOpen(true)}
+                    size="sm"
+                    variant="secondary"
+                  >
+                    {t('otherQuestion')}
+                  </GameButton>
 
-              {dialogueMode === 'topics' && !interactionError ? (
-                <GameButton
-                  className="aveugle-hub__other-question"
-                  data-dialogue-action
-                  disabled={isPending}
-                  onClick={() => setIsComposerOpen(true)}
-                  size="sm"
-                  variant="ghost"
-                >
-                  {t('otherQuestion')}
-                </GameButton>
+                  <div className="aveugle-hub__topics">
+                    <DialogueChoiceGroup label={t('topicsLabel')}>
+                      {topics.map((topic, index) => {
+                        const isUnread = !hubState.seenTopicIds.includes(topic.id)
+                        return (
+                          <DialogueChoice
+                            key={topic.id}
+                            aria-label={
+                              isUnread ? t('newAria', { label: topic.label }) : topic.label
+                            }
+                            data-dialogue-action
+                            disabled={isPending}
+                            number={index + 1}
+                            onClick={() => selectTopic(topic.id)}
+                          >
+                            <span className="aveugle-hub__choice-copy">
+                              <span>{topic.label}</span>
+                              {isUnread ? <small>{t('new')}</small> : null}
+                            </span>
+                          </DialogueChoice>
+                        )
+                      })}
+                    </DialogueChoiceGroup>
+                  </div>
+                </div>
               ) : null}
 
               {dialogueMode === 'composer' ? (

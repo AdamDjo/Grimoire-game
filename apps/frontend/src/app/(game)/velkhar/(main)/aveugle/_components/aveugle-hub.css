@@ -127,8 +127,22 @@ body:has(.aveugle-hub) {
   padding-bottom: clamp(0.25rem, 1vh, 0.75rem);
 }
 
-.aveugle-hub__destinations .dialogue-choice-group {
+.aveugle-hub__destination-list {
+  border-bottom: 1px solid var(--line-gold);
+  display: grid;
+  gap: clamp(1rem, 3vw, 2.5rem);
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.aveugle-hub__destination-button {
+  justify-content: flex-start;
+  padding: 0.45rem 0.15rem 0.75rem;
+  width: 100%;
+}
+
+.aveugle-hub__destination-button[aria-pressed='true'] {
+  box-shadow: inset 0 -2px var(--material-gold-bright);
+  color: var(--material-gold-bright);
 }
 
 .aveugle-hub__dialogue {
@@ -172,8 +186,17 @@ body:has(.aveugle-hub) {
   text-transform: uppercase;
 }
 
+.aveugle-hub__topic-actions {
+  display: grid;
+  gap: clamp(1rem, 2vh, 1.4rem);
+}
+
 .aveugle-hub__other-question {
   justify-self: start;
+}
+
+.aveugle-hub__topics {
+  width: 100%;
 }
 
 .aveugle-hub__composer {
@@ -394,10 +417,6 @@ body:has(.aveugle-hub) {
   .aveugle-hub__reader-header .game-icon {
     height: 2.75rem;
     width: 2.75rem;
-  }
-
-  .aveugle-hub__destinations .dialogue-choice-group {
-    grid-template-columns: 1fr;
   }
 
   .aveugle-hub__footer .game-hud-dock__content {
