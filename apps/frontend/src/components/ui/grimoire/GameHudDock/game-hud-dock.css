@@ -1,7 +1,5 @@
 .game-hud-dock {
-  background:
-    linear-gradient(90deg, rgba(109, 33, 27, 0.04), transparent 24%),
-    var(--ink-black);
+  background: color-mix(in srgb, var(--ink-black) 97%, var(--material-gold));
   isolation: isolate;
   padding: clamp(1.25rem, 2vw, 2rem);
   position: relative;
@@ -11,12 +9,12 @@
 .game-hud-dock::before {
   background: url('/encre-de-sel/chrome/footer-separator.webp') center / 100% 100% no-repeat;
   content: '';
-  height: 14px;
+  height: 6px;
   left: 0;
   pointer-events: none;
   position: absolute;
   right: 0;
-  top: -7px;
+  top: 0;
   z-index: 0;
 }
 

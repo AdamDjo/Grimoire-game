@@ -297,7 +297,7 @@ export function AubergeIntro({ onComplete, preview = false }: AubergeIntroProps)
           <span>{t('prologueName')}</span>
           <strong>Velkhar</strong>
         </div>
-        <GameButton onClick={finishIntro} size="sm" variant="landing-ghost">
+        <GameButton onClick={finishIntro} size="sm" variant="ghost">
           {t('skip')}
         </GameButton>
       </header>
@@ -321,7 +321,7 @@ export function AubergeIntro({ onComplete, preview = false }: AubergeIntroProps)
             leadingIcon={<GameIcon decorative name="arrow" size={24} />}
             onClick={showPreviousChapter}
             size="sm"
-            variant="landing-ghost"
+            variant="ghost"
           >
             {t('prologuePrevious')}
           </GameButton>
@@ -330,7 +330,7 @@ export function AubergeIntro({ onComplete, preview = false }: AubergeIntroProps)
             onClick={showNextChapter}
             size="sm"
             trailingIcon={<GameIcon decorative name="arrow" size={24} />}
-            variant="landing"
+            variant="primary"
           >
             {isLastChapter ? t('enterInn') : t('prologueNext')}
           </GameButton>

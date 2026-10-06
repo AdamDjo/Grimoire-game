@@ -2,6 +2,8 @@
 
 import { useTranslations } from 'next-intl'
 
+import { GameLink } from '@/components/ui/game-link'
+
 import { LandingArt } from '../LandingExperience/LandingArt'
 
 import './section-contract.css'
@@ -24,9 +26,9 @@ export function SectionContract() {
         <p className="salt-eyebrow">{t('contractLabel')}</p>
         <h2 id="contract-title">{t('contractTitle')}</h2>
         <p>{t('contractBody')}</p>
-        <a className="salt-text-link" href="#gameplay">
+        <GameLink variant="secondary" href="#gameplay" size="sm">
           {t('contractLink')} →
-        </a>
+        </GameLink>
       </div>
       <div className="salt-contract-details">
         <dl>

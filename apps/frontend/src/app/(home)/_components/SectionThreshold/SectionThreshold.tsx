@@ -38,10 +38,12 @@ export function SectionThreshold({
         <h1 id="salt-title">{t('heroTitle')}</h1>
         <p>{t('heroBody')}</p>
         <div className="salt-actions">
-          <GameLink variant="landing" href={beginHref} size="lg">
+          <GameLink variant="primary" href={beginHref} size="lg">
             {t(resuming ? 'resume' : 'start')}
           </GameLink>
-          <a href="#gameplay">{t('watch')}</a>
+          <GameLink variant="secondary" href="#gameplay" size="sm">
+            {t('watch')}
+          </GameLink>
         </div>
       </div>
       <a className="salt-scroll" href="#contrat">

@@ -5,6 +5,8 @@ import { GameSessionHud } from '../../components/GameSessionHud'
 import type { StatBarTone } from '@/components/ui/grimoire/StatBar/StatBar'
 import type { SurvivalStats } from '@grimoire/shared'
 
+import './game-hud.css'
+
 interface Gauge {
   id: keyof GameHudLabels['gauges']
   tone: StatBarTone
@@ -65,7 +67,7 @@ export interface GameHudProps {
 export function GameHud({ survival, labels, className, gaugeClassNames }: GameHudProps) {
   return (
     <GameSessionHud
-      className={className}
+      className={`game-hud ${className ?? ''}`}
       label={labels.region}
       statusBars={GAUGES.map(({ id, tone, read }) => {
         const [value, max] = read(survival)

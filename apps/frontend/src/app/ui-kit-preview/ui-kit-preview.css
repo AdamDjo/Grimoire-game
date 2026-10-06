@@ -1,0 +1,117 @@
+.primary-ui-preview {
+  background: var(--ink-page);
+  color: var(--control-text);
+  display: grid;
+  gap: 5rem;
+  min-height: 100dvh;
+  padding: clamp(2rem, 6vw, 6rem);
+}
+
+.primary-ui-preview__header,
+.primary-ui-preview__section {
+  margin-inline: auto;
+  max-width: 76rem;
+  width: 100%;
+}
+
+.primary-ui-preview__header p,
+.primary-ui-preview__section > h2,
+.primary-ui-preview__group h3 {
+  color: var(--material-gold-bright);
+  font-family: var(--font-ui);
+}
+
+.primary-ui-preview__header p,
+.primary-ui-preview__group h3 {
+  font-size: var(--text-game-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.primary-ui-preview__header h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-game-title);
+  font-weight: 400;
+  margin-block: 0.5rem 1rem;
+  text-transform: uppercase;
+}
+
+.primary-ui-preview__header span {
+  color: var(--control-text-muted);
+  font-family: var(--font-serif);
+  font-size: var(--text-game-body);
+}
+
+.primary-ui-preview__note {
+  color: var(--control-text-muted);
+  font-family: var(--font-serif);
+  font-size: var(--text-game-body);
+  margin: -1rem 0 0;
+}
+
+.primary-ui-preview__section {
+  display: grid;
+  gap: 2rem;
+}
+
+.primary-ui-preview__section > h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-game-heading);
+  font-weight: 400;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.primary-ui-preview__grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.primary-ui-preview__group {
+  border-top: 1px solid var(--line-gold);
+  padding-top: 1.25rem;
+}
+
+.primary-ui-preview__group h3 {
+  margin-block: 0 1.5rem;
+}
+
+.primary-ui-preview__group > div,
+.primary-ui-preview__fields,
+.primary-ui-preview .dialogue-choice-group {
+  display: grid;
+  gap: 1rem;
+}
+
+.primary-ui-preview__group .game-button {
+  justify-self: start;
+}
+
+.primary-ui-preview__fields,
+.primary-ui-preview .dialogue-choice-group,
+.primary-ui-preview .narrative-composer {
+  max-width: 52rem;
+}
+
+.primary-ui-preview__dock-frame {
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .primary-ui-preview__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .primary-ui-preview {
+    gap: 3.5rem;
+    padding-inline: 1rem;
+  }
+
+  .primary-ui-preview__group .game-button {
+    justify-self: stretch;
+    width: 100%;
+  }
+}

@@ -54,6 +54,24 @@ vi.mock('next/image', () => ({
 }))
 
 describe('Grimoire UI primitives', () => {
+  it('expose uniquement les quatre rôles canoniques de GameButton', () => {
+    render(
+      <>
+        <GameButton variant="primary">Primaire</GameButton>
+        <GameButton variant="secondary">Secondaire</GameButton>
+        <GameButton variant="ghost">Discret</GameButton>
+        <GameButton aria-label="Icône" variant="icon">
+          I
+        </GameButton>
+      </>
+    )
+
+    expect(screen.getByRole('button', { name: 'Primaire' })).toHaveClass('game-button--primary')
+    expect(screen.getByRole('button', { name: 'Secondaire' })).toHaveClass('game-button--secondary')
+    expect(screen.getByRole('button', { name: 'Discret' })).toHaveClass('game-button--ghost')
+    expect(screen.getByRole('button', { name: 'Icône' })).toHaveClass('game-button--icon')
+  })
+
   it('désactive réellement un GameButton en chargement', () => {
     render(<GameButton loading>Continuer</GameButton>)
 

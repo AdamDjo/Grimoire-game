@@ -200,7 +200,7 @@
   transform: rotate(180deg);
 }
 
-.auberge-intro__next.game-button--landing {
+.auberge-intro__next.game-button--primary {
   min-height: var(--prologue-primary-height);
   min-width: var(--prologue-primary-width);
   padding-inline: var(--prologue-primary-padding);
@@ -238,7 +238,7 @@
     flex: 0 0 auto;
   }
 
-  .auberge-intro__controls .auberge-intro__next.game-button--landing {
+  .auberge-intro__controls .auberge-intro__next.game-button--primary {
     flex: 1 1 auto;
     font-size: clamp(1rem, 4.8vw, 1.25rem);
     max-width: 15rem;

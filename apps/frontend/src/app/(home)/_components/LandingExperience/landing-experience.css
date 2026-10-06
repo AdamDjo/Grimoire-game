@@ -121,35 +121,11 @@
   gap: 20px 30px;
   margin-top: 28px;
 }
-.salt-actions > a:not(.game-button),
-.salt-text-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  font-size: 19px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  border-bottom: 1px solid var(--salt-gold);
-  text-decoration: none;
-}
-.salt-text-link {
-  color: var(--salt-gold);
-}
-.salt-landing .game-button {
-  max-width: 100%;
-  white-space: normal;
-}
-.salt-landing .game-button__label {
-  white-space: normal;
-  text-wrap: balance;
-}
 .game-scene__location {
-  text-align: center;
-  text-transform: uppercase;
   font-family: var(--font-display);
   font-size: 28px;
-  padding: 9px;
-  border-bottom: 1px solid var(--salt-gold);
+  text-align: center;
+  text-transform: uppercase;
 }
 .game-scene__location small {
   display: block;
@@ -257,10 +233,6 @@
     gap: 12px 18px;
     margin-top: 18px;
   }
-  .salt-actions > a:not(.game-button),
-  .salt-text-link {
-    font-size: 16px;
-  }
   .salt-plan > .salt-art {
     position: relative;
     inset: auto;
@@ -274,7 +246,10 @@
     display: none;
   }
   .game-scene__location {
-    font-size: 24px;
+    font-size: 20px;
+  }
+  .game-scene__location small {
+    font-size: 12px;
   }
   .game-scene__reader {
     padding: 18px 12px;
@@ -296,17 +271,6 @@
     transition: none !important;
     scroll-behavior: auto !important;
   }
-}
-/* Existing landing CTA variant: keep the approved gold material without the old halo. */
-.salt-landing .game-button--landing {
-  min-width: 0;
-  min-height: 62px;
-  padding: 10px 34px;
-  font-size: clamp(21px, 1.8vw, 28px);
-  text-transform: uppercase;
-}
-.salt-landing .game-button--landing::after {
-  box-shadow: none;
 }
 .salt-landing .main-navigation__brand .game-brand {
   width: auto;
@@ -331,7 +295,7 @@
 .salt-skip:focus {
   top: 8px;
 }
-@media (min-width: 1121px) {
+@media (min-width: 1121px) and (min-height: 700px) {
   /* One plan, one screen — the deck's own unit. Paired with the min-height
        above, the height is pinned rather than merely floored. */
   .salt-plan {
@@ -352,8 +316,8 @@
     scrollbar-color: color-mix(in srgb, var(--salt-gold) 55%, transparent) transparent;
   }
   .game-scene__reader > p {
-    font-size: 24px;
-    line-height: 1.2;
+    font-size: clamp(20px, 1.45vw, 22px);
+    line-height: 1.24;
     margin-bottom: 14px;
   }
   .game-scene__reader {
@@ -371,37 +335,18 @@
   .salt-landing .main-navigation__brand .game-brand__subtitle {
     font-size: 9px;
   }
-  .salt-landing .game-button--landing {
-    min-height: 56px;
-    padding: 10px 24px;
-    font-size: 21px;
+}
+.salt-landing .game-scene__topbar.game-top-bar {
+  min-height: 66px;
+  padding-block: 0.45rem;
+}
+.salt-landing .game-scene__topbar .game-top-bar__center {
+  display: flex;
+}
+@media (max-width: 760px) {
+  .salt-landing .game-scene__topbar.game-top-bar {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   }
-}
-/* ImageGen masters rebuilt from the approved compositions, with fixed corner slices. */
-.salt-landing .game-button--landing::before,
-.salt-landing .game-button--landing:hover::before {
-  background: none;
-  border: 10px solid transparent;
-  border-image: url('/encre-de-sel/landing/button-gold.webp') 44 fill / 10px;
-  filter: none;
-}
-.salt-landing .game-button--landing {
-  color: var(--salt-on-gold);
-  font-family: var(--font-display);
-  letter-spacing: 0.01em;
-  transition:
-    filter 180ms ease,
-    transform 220ms ease;
-}
-.salt-landing .game-button--landing:hover {
-  filter: brightness(1.08);
-}
-.salt-landing .game-button--landing:active {
-  transform: translateY(2px);
-}
-.game-scene__location {
-  border-bottom: 3px solid transparent;
-  border-image: url('/encre-de-sel/landing/input-frame.webp') 22 / 0 0 3px 0;
 }
 .salt-ash--gate {
   left: 71%;
@@ -444,37 +389,6 @@ html.lenis body {
   padding: 0.12em 0.05em 0.08em;
   margin: -0.12em -0.05em -0.08em;
 }
-.salt-landing .game-button--landing {
-  overflow: hidden;
-}
-.salt-landing .game-button--landing .game-button__label {
-  position: relative;
-  overflow: hidden;
-}
-.salt-landing .game-button--landing .game-button__label::after {
-  content: '';
-  position: absolute;
-  inset: -20% -10%;
-  background: linear-gradient(105deg, transparent 38%, var(--salt-sheen) 50%, transparent 62%);
-  transform: translateX(-130%) skewX(-18deg);
-  pointer-events: none;
-}
-.salt-actions > a:not(.game-button),
-.salt-text-link {
-  position: relative;
-  border-bottom-color: transparent;
-}
-.salt-actions > a:not(.game-button)::after,
-.salt-text-link::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1px;
-  height: 1px;
-  background: var(--salt-gold);
-  transform-origin: left center;
-}
 @media (prefers-reduced-motion: no-preference) {
   .salt-landing .main-navigation--marketing.game-top-bar {
     opacity: 0;
@@ -487,13 +401,6 @@ html.lenis body {
   .salt-landing--motion .salt-seuil .salt-depth,
   .salt-landing--motion .main-navigation--marketing.game-top-bar {
     animation: none;
-  }
-  .salt-landing .game-button--landing:hover .game-button__label::after {
-    animation: salt-sheen 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  }
-  .salt-actions > a:not(.game-button):hover::after,
-  .salt-text-link:hover::after {
-    animation: salt-underline 0.6s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .game-scene__response {
     animation: salt-fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1);
@@ -512,29 +419,6 @@ html.lenis body {
   }
   50% {
     transform: translateY(6px);
-  }
-}
-@keyframes salt-sheen {
-  to {
-    transform: translateX(130%) skewX(-18deg);
-  }
-}
-@keyframes salt-underline {
-  0% {
-    transform: scaleX(1);
-    transform-origin: right center;
-  }
-  49% {
-    transform: scaleX(0);
-    transform-origin: right center;
-  }
-  51% {
-    transform: scaleX(0);
-    transform-origin: left center;
-  }
-  100% {
-    transform: scaleX(1);
-    transform-origin: left center;
   }
 }
 @keyframes salt-fade-up {

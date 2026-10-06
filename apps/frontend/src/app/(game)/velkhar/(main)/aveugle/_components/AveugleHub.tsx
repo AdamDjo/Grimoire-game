@@ -298,11 +298,11 @@ export function AveugleHub({
               <h1>{showAccountPrompt ? sessionT('chronicleWaiting') : t('hubErrorTitle')}</h1>
               <p>{showAccountPrompt ? sessionT('limitBody') : t('hubErrorBody')}</p>
               {showAccountPrompt ? (
-                <GameLink href={getAuthHref('/signup', accountReturnPath)} variant="radiant">
+                <GameLink href={getAuthHref('/signup', accountReturnPath)} variant="primary">
                   {sessionT('createAccount')}
                 </GameLink>
               ) : (
-                <GameButton loading={hubLoading} onClick={() => void loadHub()} variant="radiant">
+                <GameButton loading={hubLoading} onClick={() => void loadHub()} variant="primary">
                   {t('retry')}
                 </GameButton>
               )}
@@ -348,7 +348,7 @@ export function AveugleHub({
               <GameLink
                 href={snapshot.primaryHref}
                 trailingIcon={<GameIcon decorative name="arrow" size={24} />}
-                variant="radiant"
+                variant="primary"
               >
                 {snapshot.primaryLabel}
               </GameLink>
