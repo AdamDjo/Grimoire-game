@@ -54,8 +54,8 @@ describe('AubergeIntro', () => {
 
     const nextButton = screen.getByRole('button', { name: 'Continue' })
     const previousButton = screen.getByRole('button', { name: 'Previous' })
-    expect(nextButton).toHaveClass('game-button--landing')
-    expect(previousButton).toHaveClass('game-button--landing-ghost')
+    expect(nextButton).toHaveClass('game-button--primary')
+    expect(previousButton).toHaveClass('game-button--ghost')
 
     fireEvent.click(nextButton)
     expect(container.querySelector('[data-prologue-chapter="2"]')).toHaveAttribute(

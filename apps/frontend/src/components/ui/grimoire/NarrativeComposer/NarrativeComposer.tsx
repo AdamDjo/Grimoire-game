@@ -25,7 +25,7 @@ export const NarrativeComposer = forwardRef<HTMLTextAreaElement, NarrativeCompos
       className = '',
       heading = 'Action libre',
       onAction,
-      placeholder = 'Autre action — décris ce que tu veux faire…',
+      placeholder = 'Autre action : décris ce que tu veux faire…',
       ...props
     },
     ref

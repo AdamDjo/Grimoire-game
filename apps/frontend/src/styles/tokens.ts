@@ -16,8 +16,11 @@
 /** Palette brute — nommée par la matière, pas par l'usage. */
 export const material = {
   inkBlack: 'var(--ink-black)',
+  inkPage: 'var(--ink-page)',
   inkRaised: 'var(--ink-raised)',
   inkOnPaper: 'var(--ink-on-paper)',
+  paperWhite: 'var(--paper-white)',
+  paperMuted: 'var(--paper-muted)',
   saltWhite: 'var(--salt-white)',
   saltMuted: 'var(--salt-muted)',
   gold: 'var(--material-gold)',

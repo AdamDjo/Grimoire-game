@@ -6,16 +6,7 @@ import type { ButtonHTMLAttributes, ReactNode } from 'react'
 
 import './game-button.css'
 
-export type GameButtonVariant =
-  | 'primary'
-  | 'secondary'
-  | 'ghost'
-  | 'icon'
-  | 'cinematic'
-  | 'radiant'
-  | 'landing'
-  | 'landing-ghost'
-  | 'landing-gameplay'
+export type GameButtonVariant = 'primary' | 'secondary' | 'ghost' | 'icon'
 export type GameButtonTone = 'gold' | 'danger' | 'aqua' | 'ember'
 export type GameButtonSize = 'sm' | 'md' | 'lg'
 

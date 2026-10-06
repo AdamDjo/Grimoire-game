@@ -20,10 +20,12 @@ export function SectionOutro({ beginHref, resuming }: { beginHref: string; resum
         <h2 id="outro-title">{t('outroTitle')}</h2>
         <p>{t('outroBody')}</p>
         <div className="salt-actions">
-          <GameLink variant="landing" href={beginHref} size="lg">
+          <GameLink variant="primary" href={beginHref} size="lg">
             {t(resuming ? 'resume' : 'enter')}
           </GameLink>
-          <a href="/dashboard">{t('chronicle')}</a>
+          <GameLink variant="secondary" href="/dashboard" size="sm">
+            {t('chronicle')}
+          </GameLink>
         </div>
         <p className="salt-meta">{t('meta')}</p>
       </div>

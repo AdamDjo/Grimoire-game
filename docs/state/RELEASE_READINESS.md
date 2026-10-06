@@ -85,6 +85,11 @@ boucle de survie dans un prologue illustré, puis conduit au flux existant de cr
 et de dialogue avec L'Aveugle. Ce jalon améliore le golden path joueur mais ne change pas le
 `NO-GO` : la boucle roguelike complète et son playtest de validation restent à livrer.
 
+État attendu après merge de la PR #335 : Encre de Sel devient le design system canonique du
+frontend. Les contrôles, le HUD, l'Auberge et la démonstration de session partagent les mêmes
+primitives et les anciens assets du UI Kit sont retirés. Ce jalon homogénéise le golden path mais ne
+change pas le `NO-GO` : la boucle roguelike complète et son playtest de validation restent à livrer.
+
 ## Post-déploiement
 
 Profil complet (#136), Chronologie (#130), Galerie (#131), World Map (#127), linking

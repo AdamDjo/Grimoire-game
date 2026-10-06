@@ -482,7 +482,7 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                         <GameButton
                           trailingIcon={<GameIcon decorative name="arrow" size={24} />}
                           type="submit"
-                          variant="radiant"
+                          variant="primary"
                         >
                           {t('next')}
                         </GameButton>
@@ -638,7 +638,7 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                                     <GameButton
                                       onClick={acceptResolvedVocation}
                                       size="sm"
-                                      variant="radiant"
+                                      variant="primary"
                                     >
                                       {t('acceptProposal')}
                                     </GameButton>
@@ -736,7 +736,7 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                             value={draft.backstory}
                           />
                         </GameField>
-                        <GameButton onClick={continueHistory} variant="radiant">
+                        <GameButton onClick={continueHistory} variant="primary">
                           {draft.backstory ? t('keepHistory') : t('keepSilence')}
                         </GameButton>
                       </div>
@@ -804,7 +804,7 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                           <GameButton
                             loading={isSubmitting}
                             onClick={finishCreation}
-                            variant="radiant"
+                            variant="primary"
                           >
                             {t('createCharacter')}
                           </GameButton>

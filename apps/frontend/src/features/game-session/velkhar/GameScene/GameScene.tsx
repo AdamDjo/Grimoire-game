@@ -5,6 +5,7 @@ import { useState, type ReactNode } from 'react'
 import { GameLink } from '@/components/ui/game-link'
 import { DialogueChoice } from '@/components/ui/grimoire/DialogueChoice/DialogueChoice'
 import { GameSceneLayout } from '@/components/ui/grimoire/GameSceneLayout/GameSceneLayout'
+import { GameTopBar } from '@/components/ui/grimoire/GameTopBar/GameTopBar'
 import { NarrativeComposer } from '@/components/ui/grimoire/NarrativeComposer/NarrativeComposer'
 
 import { GameHud, type GameHudLabels, type GameHudProps } from '../GameHud/GameHud'
@@ -83,10 +84,18 @@ export function GameScene({
       className={className}
       aria-label={label}
       top={
-        <div className="game-scene__location">
-          {location}
-          <small>{label}</small>
-        </div>
+        <GameTopBar
+          className="game-scene__topbar"
+          label={label}
+          start={<span aria-hidden="true" />}
+          center={
+            <div className="game-scene__location">
+              {location}
+              <small>{label}</small>
+            </div>
+          }
+          end={<span aria-hidden="true" />}
+        />
       }
       background={background}
       scene={<span className="game-scene__marker" aria-hidden="true" />}
@@ -124,7 +133,7 @@ export function GameScene({
             {resolved ? (
               <>
                 <p>{response}</p>
-                <GameLink variant="landing" href={turn.continueHref}>
+                <GameLink variant="primary" href={turn.continueHref}>
                   {turn.continueLabel}
                 </GameLink>
               </>

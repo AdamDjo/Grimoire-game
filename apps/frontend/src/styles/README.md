@@ -167,16 +167,16 @@ s'applique aussi à l'intérieur d'un SVG.
 <GameButton loading>Chargement</GameButton>
 ```
 
-| Prop                           | Valeurs                                                                                                 |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------- |
-| `variant`                      | `primary` `secondary` `ghost` `icon` `cinematic` `radiant` `landing` `landing-ghost` `landing-gameplay` |
-| `tone`                         | `gold` `danger` `aqua` `ember`                                                                          |
-| `size`                         | `sm` `md` `lg`                                                                                          |
-| `loading`                      | pose `aria-busy` et affiche le spinner                                                                  |
-| `leadingIcon` / `trailingIcon` | `ReactNode`                                                                                             |
+| Prop                           | Valeurs                                |
+| ------------------------------ | -------------------------------------- |
+| `variant`                      | `primary` `secondary` `ghost` `icon`   |
+| `tone`                         | `gold` `danger` `aqua` `ember`         |
+| `size`                         | `sm` `md` `lg`                         |
+| `loading`                      | pose `aria-busy` et affiche le spinner |
+| `leadingIcon` / `trailingIcon` | `ReactNode`                            |
 
-Les variantes `landing-*` sont réservées à la landing éditoriale — ne pas les employer
-in-game.
+Ces quatre variantes sont partagées par la page d’accueil et les écrans de jeu afin de
+conserver une identité visuelle unique.
 
 ### `GamePanel` / `GameSurface`
 

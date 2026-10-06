@@ -32,11 +32,10 @@
   --salt-white: #e9dfc9;
   --salt-muted: #b9aa8e;
 
-  /* Landing : la marque est plus contrastée que l'in-game. Trois matières
-     propres, volontairement distinctes de `ink-black` / `salt-white`. */
-  --landing-black: #080908;
-  --landing-paper: #eee8db;
-  --landing-paper-dim: #d1c9b7;
+  /* Matières principales : plus contrastées que l'ancien rendu in-game. */
+  --ink-page: #080908;
+  --paper-white: #eee8db;
+  --paper-muted: #d1c9b7;
 
   /* Or : l'accent unique de la marque. Les trois degrés suffisent. */
   --material-gold: #bd7b26;
@@ -69,30 +68,47 @@
   --ink-2: rgba(232, 220, 192, 0.75);
   --ink-manuscript: var(--ink-on-paper);
 
-  /* Landing. `salt-*` est le préfixe historique de la marque : on le garde,
-     mais il pointe désormais ici plutôt que d'être redéclaré dans un composant. */
-  --salt-page: var(--landing-black);
-  --salt-paper: var(--landing-paper);
-  --salt-paper-dim: var(--landing-paper-dim);
+  /* `salt-*` reste le vocabulaire de marque des pages éditoriales. */
+  --salt-page: var(--ink-page);
+  --salt-paper: var(--paper-white);
+  --salt-paper-dim: var(--paper-muted);
   --salt-gold: var(--material-gold);
   --salt-gold-bright: var(--material-gold-bright);
   /* Texte posé sur un aplat d'or : presque noir, jamais le noir de page. */
-  --salt-on-gold: color-mix(in srgb, var(--landing-black) 82%, var(--material-gold));
+  --salt-on-gold: color-mix(in srgb, var(--ink-page) 82%, var(--material-gold));
 
   /* Voiles : le noir de page à quatre opacités. Aucune autre valeur admise. */
-  --salt-veil-soft: color-mix(in srgb, var(--landing-black) 40%, transparent);
-  --salt-veil: color-mix(in srgb, var(--landing-black) 50%, transparent);
-  --salt-veil-strong: color-mix(in srgb, var(--landing-black) 75%, transparent);
-  --salt-veil-deep: color-mix(in srgb, var(--landing-black) 91%, transparent);
-  --salt-veil-solid: color-mix(in srgb, var(--landing-black) 97%, transparent);
+  --salt-veil-soft: color-mix(in srgb, var(--ink-page) 40%, transparent);
+  --salt-veil: color-mix(in srgb, var(--ink-page) 50%, transparent);
+  --salt-veil-strong: color-mix(in srgb, var(--ink-page) 75%, transparent);
+  --salt-veil-deep: color-mix(in srgb, var(--ink-page) 91%, transparent);
+  --salt-veil-solid: color-mix(in srgb, var(--ink-page) 97%, transparent);
 
   /* Filets et lueurs de la landing. */
-  --salt-rule: color-mix(in srgb, var(--landing-paper) 60%, transparent);
+  --salt-rule: color-mix(in srgb, var(--paper-white) 60%, transparent);
   --salt-glow-gold: color-mix(in srgb, var(--material-gold) 8%, transparent);
   --salt-glow-warm: color-mix(in srgb, #f4d9a0 7%, transparent);
   --salt-sheen: color-mix(in srgb, #fff5d9 33%, transparent);
   /* Braise claire : les cendres qui montent au seuil. */
   --salt-ember: #eac36f;
+
+  /* Contrôles canoniques. La direction autrefois locale à la page d'accueil
+     devient la source unique des boutons, champs et choix narratifs. */
+  --control-surface: var(--ink-page);
+  --control-text: var(--paper-white);
+  --control-text-muted: var(--paper-muted);
+  --control-text-on-primary: var(--salt-on-gold);
+  --control-text-on-secondary: var(--ink-on-paper);
+  --control-placeholder: color-mix(in srgb, var(--paper-white) 62%, transparent);
+  --control-disabled-text: color-mix(in srgb, var(--paper-muted) 54%, transparent);
+  --control-primary-frame: url('/encre-de-sel/frames/button-gold.webp');
+  --control-secondary-frame: url('/encre-de-sel/frames/button-secondary-salt-white.webp');
+  --control-field-frame: url('/encre-de-sel/frames/input-frame.webp');
+  --control-choice-frame: url('/encre-de-sel/frames/choice-paper.webp');
+  --control-choice-number: url('/encre-de-sel/frames/choice-number.webp');
+  --control-shadow: 0 0.8rem 1.8rem color-mix(in srgb, var(--ink-black) 46%, transparent);
+  --control-shadow-raised: 0 1rem 2rem color-mix(in srgb, var(--ink-black) 58%, transparent);
+  --control-focus-shadow: 0 0 0.7rem color-mix(in srgb, var(--material-gold) 24%, transparent);
 
   /* Prologue : un seul voile narratif, une seule matière de progression. */
   --prologue-body-color: color-mix(in srgb, var(--salt-white) 88%, transparent);

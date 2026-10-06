@@ -5,8 +5,8 @@
 }
 
 .game-field__label {
-  color: var(--gold-light, #f0d48a);
-  font-family: var(--font-game-ui);
+  color: var(--material-gold-bright);
+  font-family: var(--font-ui);
   font-size: var(--text-game-label);
   font-weight: 500;
   letter-spacing: 0.11em;
@@ -16,17 +16,17 @@
 
 .game-field__required,
 .game-field__error {
-  color: var(--blood, #c0392b);
+  color: color-mix(in srgb, var(--fresh-blood) 70%, var(--salt-white));
 }
 
 .game-field__hint,
 .game-field__error {
-  font-family: var(--font-game-ui);
+  font-family: var(--font-ui);
   font-size: var(--text-game-body-sm);
   line-height: 1.55;
   margin: 0;
 }
 
 .game-field__hint {
-  color: color-mix(in srgb, var(--parchment, #e8dcc0) 74%, transparent);
+  color: var(--control-text-muted);
 }

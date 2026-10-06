@@ -158,7 +158,7 @@ export function AuthAccessForm({
           loading={status === 'loading'}
           size="lg"
           type="submit"
-          variant={isLandingAppearance ? 'landing' : 'primary'}
+          variant="primary"
         >
           {copy.submit}
         </GameButton>
@@ -177,7 +177,7 @@ export function AuthAccessForm({
             disabled={status === 'loading' || status === 'sent'}
             onClick={() => handleOAuth('google')}
             type="button"
-            variant={isLandingAppearance ? 'landing-ghost' : 'secondary'}
+            variant={isLandingAppearance ? 'ghost' : 'secondary'}
           >
             {t('continueGoogle')}
           </GameButton>
@@ -186,7 +186,7 @@ export function AuthAccessForm({
             disabled={status === 'loading' || status === 'sent'}
             onClick={() => handleOAuth('discord')}
             type="button"
-            variant={isLandingAppearance ? 'landing-ghost' : 'secondary'}
+            variant={isLandingAppearance ? 'ghost' : 'secondary'}
           >
             {t('continueDiscord')}
           </GameButton>

@@ -230,7 +230,7 @@
 .login-form--landing {
   background: var(--salt-veil-deep);
   border: 7px solid transparent;
-  border-image: url('/encre-de-sel/landing/input-frame.webp') 22 fill / 7px;
+  border-image: var(--control-field-frame) 22 fill / 7px;
   justify-self: end;
   padding: clamp(1.5rem, 2.5vw, 2.25rem);
   width: 100%;
@@ -278,13 +278,6 @@
 
 .login-form--landing .game-field {
   gap: 0.7rem;
-}
-
-.salt-landing .login-form--landing .game-input::before {
-  background: none;
-  border: 7px solid transparent;
-  border-image: url('/encre-de-sel/landing/input-frame.webp') 22 fill / 7px;
-  box-shadow: none;
 }
 
 .login-form--landing .login-form__submit {

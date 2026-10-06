@@ -127,8 +127,9 @@ vingtaine de littéraux `#080908e8` en dur. Deux réflexes étaient faux :
 
 - **Les aligner sur `--ink-black` / `--salt-white`** aurait restylé 36 points d'appel : la landing
   est volontairement plus contrastée que l'in-game. Ces couleurs sont donc devenues de vraies
-  matières dans `tokens.css` (`--landing-black`, `--landing-paper`, `--landing-paper-dim`), avec
-  les rôles `--salt-*` en alias. Le préfixe historique survit, la déclaration remonte au centre.
+  matières dans `tokens.css` (`--ink-page`, `--paper-white`, `--paper-muted`), avec les rôles
+  éditoriaux `--salt-*` en alias. La déclaration reste centrale sans faire de la landing une
+  variante du design system.
 - **Garder le motif `var(--token, #hex)`** — le « token legacy ». Le fallback ne servait jamais
   (le token existait), mais il faisait croire à deux sources de vérité et masquait une divergence :
   `var(--material-gold, #d9ac55)` rendait `#bd7b26` depuis longtemps. Tout fallback de couleur a
@@ -139,6 +140,13 @@ Les opacités ne s'écrivent plus en suffixe hexadécimal mais en tokens nommés
 une intention ; `#08090866` n'en a pas. Reste autorisé : `var(--x, <valeur>)` pour un **paramètre
 d'animation** posé par JS ou par une section (`--beam-x`, `--salt-veil-strength`) — là, le défaut
 est la valeur de repos, pas une couleur de secours.
+
+**La page d'accueil est la référence, pas une apparence (ticket #326).** Une primitive partagée ne
+porte plus de variante `landing*` et une route ne reskinne plus l'intérieur d'un bouton, d'un champ,
+d'un choix ou du compositeur. `GameButton` et `GameLink` exposent quatre rôles fermés : `primary`,
+`secondary`, `ghost`, `icon`. Les cadres approuvés vivent uniquement sous
+`public/encre-de-sel/frames/` et sont consommés par les primitives via des tokens `--control-*`.
+Les CSS de route ne règlent plus que la composition de la page.
 
 ## Dette et suivis connus
 

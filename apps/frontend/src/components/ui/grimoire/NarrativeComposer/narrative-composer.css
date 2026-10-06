@@ -1,5 +1,6 @@
 .narrative-composer {
   align-items: center;
+  background: var(--control-surface);
   display: grid;
   gap: 0.8rem;
   grid-template-columns: auto minmax(0, 1fr) auto;
@@ -11,8 +12,8 @@
 }
 
 .narrative-composer::before {
-  border: 28px solid transparent;
-  border-image: url('/encre-de-sel/frames/action-input-gore.webp') 72 190 72 190 fill / 28px 76px;
+  border: 7px solid transparent;
+  border-image: var(--control-field-frame) 22 fill / 7px;
   content: '';
   inset: 0;
   pointer-events: none;
@@ -20,9 +21,13 @@
   z-index: -1;
 }
 
+.narrative-composer:focus-within {
+  filter: drop-shadow(var(--control-focus-shadow));
+}
+
 .narrative-composer__icon {
   align-items: center;
-  color: var(--salt-white);
+  color: var(--control-text);
   display: flex;
   justify-content: center;
   width: 2.75rem;
@@ -45,7 +50,7 @@
 .narrative-composer__heading {
   color: var(--material-gold-bright);
   display: block;
-  font-family: var(--font-game-display);
+  font-family: var(--font-ui);
   font-size: var(--text-game-label);
   letter-spacing: 0.08em;
   line-height: 1;
@@ -66,22 +71,18 @@
   align-self: center;
   border: 0;
   flex: 0 0 auto;
-  height: clamp(3.6rem, 4.5vw, 4.8rem);
+  height: clamp(3.4rem, 4.2vw, 4.4rem);
   min-height: 0;
-  min-width: clamp(3.6rem, 4.5vw, 4.8rem);
+  min-width: clamp(3.4rem, 4.2vw, 4.4rem);
   padding: 0;
   position: relative;
-  width: clamp(3.6rem, 4.5vw, 4.8rem);
+  width: clamp(3.4rem, 4.2vw, 4.4rem);
   z-index: 2;
 }
 
 .narrative-composer__action .game-button__label {
   inset: 0;
   position: absolute;
-}
-
-.narrative-composer__action::before {
-  display: none;
 }
 
 .narrative-composer__action img {
@@ -93,10 +94,6 @@
     gap: 0.55rem;
     min-height: 84px;
     padding: 0.8rem 0.8rem 0.8rem 1rem;
-  }
-
-  .narrative-composer::before {
-    border-image-width: 24px 58px;
   }
 
   .narrative-composer__icon {
