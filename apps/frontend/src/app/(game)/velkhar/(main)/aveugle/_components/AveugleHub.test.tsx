@@ -122,15 +122,25 @@ describe('AveugleHub', () => {
     expect(
       screen.queryByRole('group', { name: 'Topics to discuss with The Blind One' })
     ).not.toBeInTheDocument()
+    expect(
+      screen.getByRole('complementary', { name: 'Character status and field kit' })
+    ).toBeInTheDocument()
   })
 
   it('affiche le personnage et rend les sujets du hub interactifs', async () => {
     const user = userEvent.setup()
     window.localStorage.setItem(CHARACTER_RESULT_STORAGE_KEY, JSON.stringify(CHARACTER))
 
-    render(<AveugleHub />)
+    const { container } = render(<AveugleHub />)
 
     expect(await screen.findByLabelText('Character: Amani')).toBeInTheDocument()
+    expect(screen.getByRole('navigation', { name: 'Spaces of the inn' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /^Talk/ })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByRole('button', { name: /^Memories/ })).toHaveAttribute(
+      'aria-pressed',
+      'false'
+    )
+    expect(container.querySelector('.game-panel')).not.toBeInTheDocument()
     expect(screen.getByText('17')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Begin the run/ })).toHaveAttribute(
       'href',

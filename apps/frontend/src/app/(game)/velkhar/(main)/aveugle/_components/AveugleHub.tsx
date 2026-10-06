@@ -1,7 +1,7 @@
 'use client'
 
 import { useLocale, useTranslations } from 'next-intl'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { GameLink } from '@/components/ui/game-link'
 import { GameButton } from '@/components/ui/grimoire/GameButton/GameButton'
@@ -10,7 +10,6 @@ import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
 import { GameSceneLayout } from '@/components/ui/grimoire/GameSceneLayout/GameSceneLayout'
 import { ResourceCounter } from '@/components/ui/grimoire/ResourceCounter/ResourceCounter'
 import { ACTIVE_GAME_SESSION_COOKIE, hasActiveGameSession } from '@/lib/active-game-session'
-import { gsap, useGSAP } from '@/lib/gsap-init'
 import { getAuthHref } from '@/lib/internal-navigation'
 import { ensureAnonymousSession } from '@/lib/supabase/ensure-session'
 
@@ -85,9 +84,6 @@ export function AveugleHub({
   const [spendableSouvenirs, setSpendableSouvenirs] = useState<Souvenir[]>([])
   const [hubError, setHubError] = useState(false)
   const [hubLoading, setHubLoading] = useState(false)
-  const ambienceRef = useRef<HTMLDivElement>(null)
-  const fireGlowRef = useRef<HTMLDivElement>(null)
-  const departureRef = useRef<HTMLDivElement>(null)
   const stageCopy: Record<AveugleHubStage, string> = {
     'character-create': t('stageCharacterCreate'),
     ready: t('stageReady'),
@@ -148,65 +144,6 @@ export function AveugleHub({
     [campaignId, character, hasActiveSessionState, isRunReturn, locale, t]
   )
   const openingLine = stageCopy[snapshot.stage]
-
-  useGSAP(
-    () => {
-      const glow = fireGlowRef.current
-      if (!glow || !hydrated || !snapshot.character) return undefined
-
-      const media = gsap.matchMedia()
-      media.add('(prefers-reduced-motion: no-preference)', () => {
-        gsap.fromTo(
-          glow,
-          { opacity: 0.34, scale: 0.98 },
-          {
-            duration: 2.8,
-            ease: 'sine.inOut',
-            opacity: 0.58,
-            repeat: -1,
-            scale: 1.03,
-            yoyo: true,
-          }
-        )
-      })
-
-      return () => media.revert()
-    },
-    { dependencies: [hydrated, snapshot.character], revertOnUpdate: true }
-  )
-
-  useGSAP(
-    () => {
-      const ambience = ambienceRef.current
-      const departure = departureRef.current
-      if (!ambience || !departure || !hydrated || !snapshot.character) return undefined
-
-      const media = gsap.matchMedia()
-      media.add('(prefers-reduced-motion: no-preference)', () => {
-        const targetOpacity = activePanel === 'memories' ? 0.5 : 0.64
-        const timeline = gsap.timeline({ defaults: { ease: 'power2.out' } })
-        timeline
-          .to(ambience, { duration: 0.5, opacity: targetOpacity, overwrite: 'auto' }, 0)
-          .fromTo(
-            departure,
-            { autoAlpha: 0, y: 8 },
-            {
-              autoAlpha: 1,
-              clearProps: 'opacity,transform,visibility',
-              duration: 0.36,
-              y: 0,
-            },
-            0.12
-          )
-      })
-
-      return () => media.revert()
-    },
-    {
-      dependencies: [activePanel, hydrated, snapshot.character],
-      revertOnUpdate: true,
-    }
-  )
 
   const handleTopicSeen = useCallback((topicId: string) => {
     setHubState((current) =>
@@ -321,16 +258,7 @@ export function AveugleHub({
         <AubergeIntro onComplete={() => setShowIntro(false)} preview={previewIntro} />
       ) : null}
       <GameSceneLayout
-        background={
-          <>
-            <div className="aveugle-hub__scene" data-velkhar-scene />
-            <div
-              ref={ambienceRef}
-              className={`aveugle-hub__ambience aveugle-hub__ambience--${activePanel}`}
-            />
-            <div ref={fireGlowRef} className="aveugle-hub__fire-glow" />
-          </>
-        }
+        background={<div className="aveugle-hub__scene" data-velkhar-scene />}
         bottom={
           <GameHudDock className="aveugle-hub__footer" label={t('innName')}>
             <div className="aveugle-hub__footer-resources">
@@ -344,7 +272,7 @@ export function AveugleHub({
                 />
               ))}
             </div>
-            <div ref={departureRef} className="aveugle-hub__departure" data-velkhar-enter>
+            <div className="aveugle-hub__departure" data-velkhar-enter>
               <GameLink
                 href={snapshot.primaryHref}
                 trailingIcon={<GameIcon decorative name="arrow" size={24} />}

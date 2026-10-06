@@ -4,7 +4,10 @@ import { GameLink } from '@/components/ui/game-link'
 import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
 import { GameSceneLayout } from '@/components/ui/grimoire/GameSceneLayout/GameSceneLayout'
 
-import { VelkharFlowTopBar } from '../../../_components/VelkharFlowChrome/VelkharFlowChrome'
+import {
+  VelkharDormantHud,
+  VelkharFlowTopBar,
+} from '../../../_components/VelkharFlowChrome/VelkharFlowChrome'
 import { VELKHAR_WORLD } from '../../../_config/velkhar-world'
 
 import { VelkharMotionShell } from './velkhar-motion-shell'
@@ -36,6 +39,7 @@ export function AveugleThreshold({
             <div className="aveugle-threshold__veil" aria-hidden="true" />
           </>
         }
+        bottom={<VelkharDormantHud />}
         className="aveugle-threshold__layout"
         reader={
           <section className="aveugle-threshold__dialogue" aria-labelledby="aveugle-title">
@@ -48,6 +52,7 @@ export function AveugleThreshold({
               <GameLink
                 href={getCharacterCreateHref(campaignId)}
                 trailingIcon={<GameIcon decorative name="arrow" size={24} />}
+                variant="primary"
               >
                 {t('answer')}
               </GameLink>
