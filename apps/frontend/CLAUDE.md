@@ -115,7 +115,7 @@ useEffect(() => {
 ## Tests
 
 ```bash
-pnpm type-check --filter @grimoire/frontend
-pnpm test --filter @grimoire/frontend
+pnpm type-check --filter @velkhar/frontend
+pnpm test --filter @velkhar/frontend
 pnpm cypress open
 ```

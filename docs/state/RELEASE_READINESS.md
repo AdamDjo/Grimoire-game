@@ -90,6 +90,11 @@ frontend. Les contrôles, le HUD, l'Auberge et la démonstration de session part
 primitives et les anciens assets du UI Kit sont retirés. Ce jalon homogénéise le golden path mais ne
 change pas le `NO-GO` : la boucle roguelike complète et son playtest de validation restent à livrer.
 
+État attendu après merge de la PR #336 : le seuil et le hub de L'Aveugle reprennent la composition
+Encre de Sel de la landing, sans coque vitrée, panel générique ni ancien décor. Ce jalon aligne
+l'Auberge sur l'identité visuelle canonique sans modifier sa logique métier et ne change pas le
+`NO-GO` : la boucle roguelike complète et son playtest de validation restent à livrer.
+
 ## Post-déploiement
 
 Profil complet (#136), Chronologie (#130), Galerie (#131), World Map (#127), linking

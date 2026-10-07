@@ -1,6 +1,6 @@
-import type { GameIconName } from '@/components/ui/grimoire/GameIcon/GameIcon'
+import type { GameIconName } from '@/components/ui/velkhar/GameIcon/GameIcon'
 import type { UiLocale } from '@/i18n/config'
-import type { AveugleExchangeType } from '@grimoire/shared'
+import type { AveugleExchangeType } from '@velkhar/shared'
 
 export type AveugleTopicId = 'salt-guild' | 'calcines' | 'artifact'
 

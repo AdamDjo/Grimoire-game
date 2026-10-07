@@ -1,8 +1,8 @@
-import { CONDITIONS, getConditionDefinition } from '@grimoire/shared'
+import { CONDITIONS, getConditionDefinition } from '@velkhar/shared'
 
 import { gaugeTier } from './survival'
 
-import type { ActiveCondition, ConditionId, Locale, SurvivalStats } from '@grimoire/shared'
+import type { ActiveCondition, ConditionId, Locale, SurvivalStats } from '@velkhar/shared'
 
 const clamp = (value: number, min: number, max: number): number =>
   Math.max(min, Math.min(max, value))

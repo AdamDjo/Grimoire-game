@@ -1,4 +1,4 @@
-# GRIMOIRE — Of Ash and Salt
+# VELKHAR: Of Ash and Salt
 
 > Fichier projet lu par les outils IA.
 > Lire d'abord : `MEMORY.md`, puis `docs/00-START-HERE.md`.

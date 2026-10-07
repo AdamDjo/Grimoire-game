@@ -3,7 +3,7 @@ import { createRemoteJWKSet, jwtVerify } from 'jose'
 import { env } from '../config/env.js'
 import { prisma } from '../lib/prisma.js'
 
-import type { ApiResponse } from '@grimoire/shared'
+import type { ApiResponse } from '@velkhar/shared'
 import type { NextFunction, Request, Response } from 'express'
 
 declare global {
@@ -67,7 +67,7 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
     email =
       typeof payload.email === 'string' && payload.email.length > 0
         ? payload.email
-        : `${userId}@anonymous.grimoire`
+        : `${userId}@anonymous.velkhar`
   } catch {
     const body: ApiResponse<never> = { success: false, error: 'Invalid or expired token' }
     res.status(401).json(body)

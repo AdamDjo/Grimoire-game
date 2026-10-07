@@ -3,12 +3,11 @@
 import { useLocale, useTranslations } from 'next-intl'
 import { useMemo, useRef, useState } from 'react'
 
-import { DialogueChoice } from '@/components/ui/grimoire/DialogueChoice/DialogueChoice'
-import { DialogueChoiceGroup } from '@/components/ui/grimoire/DialogueChoiceGroup/DialogueChoiceGroup'
-import { GameButton } from '@/components/ui/grimoire/GameButton/GameButton'
-import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
-import { GamePanel } from '@/components/ui/grimoire/GamePanel/GamePanel'
-import { NarrativeComposer } from '@/components/ui/grimoire/NarrativeComposer/NarrativeComposer'
+import { DialogueChoice } from '@/components/ui/velkhar/DialogueChoice/DialogueChoice'
+import { DialogueChoiceGroup } from '@/components/ui/velkhar/DialogueChoiceGroup/DialogueChoiceGroup'
+import { GameButton } from '@/components/ui/velkhar/GameButton/GameButton'
+import { GameIcon } from '@/components/ui/velkhar/GameIcon/GameIcon'
+import { NarrativeComposer } from '@/components/ui/velkhar/NarrativeComposer/NarrativeComposer'
 import { gsap, useGSAP } from '@/lib/gsap-init'
 
 import { getAveugleExchanges, getAveugleTopics } from '../_data/aveugle-catalogue'
@@ -20,7 +19,7 @@ import type {
   AveugleHubState,
   Souvenir,
   SpendSouvenirResponse,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 export type AubergePanel = 'dialogue' | 'memories'
 
@@ -238,54 +237,288 @@ export function AubergeDock({
 
   return (
     <div ref={rootRef} className="aveugle-hub__dock">
-      <nav className="aveugle-hub__dock-nav" aria-label={t('dockNavigation')}>
-        <GameButton
-          aria-pressed={activePanel === 'dialogue'}
-          leadingIcon={<GameIcon decorative name="dialogue" size={24} />}
-          onClick={() => changePanel('dialogue')}
-          size="sm"
-          variant="ghost"
-        >
-          {t('talk')}
-          {unreadTopicCount > 0 ? ` · ${unreadTopicCount}` : ''}
-        </GameButton>
-        <GameButton
-          aria-pressed={activePanel === 'memories'}
-          leadingIcon={<GameIcon decorative name="memory" size={24} />}
-          onClick={() => changePanel('memories')}
-          size="sm"
-          variant="ghost"
-        >
-          {t('memories')}
-          {hubState.namedSouvenirs.length > 0 ? ` · ${hubState.namedSouvenirs.length}` : ''}
-        </GameButton>
+      <header className="aveugle-hub__reader-header">
+        <div ref={emblemRef} className="aveugle-hub__speaker-mark">
+          <GameIcon decorative name={panelMeta.icon} size={64} />
+        </div>
+        <div>
+          <p>{t('innName')}</p>
+          <h1 id="aveugle-panel-title">{panelMeta.title}</h1>
+        </div>
+      </header>
+
+      <nav className="aveugle-hub__destinations" aria-label={t('dockNavigation')}>
+        <div className="aveugle-hub__destination-list">
+          <GameButton
+            aria-pressed={activePanel === 'dialogue'}
+            className="aveugle-hub__destination-button"
+            data-dialogue-action
+            onClick={() => changePanel('dialogue')}
+            size="sm"
+            variant="ghost"
+          >
+            <span className="aveugle-hub__choice-copy">
+              <span>{t('talk')}</span>
+              {unreadTopicCount > 0 ? <small>{unreadTopicCount}</small> : null}
+            </span>
+          </GameButton>
+          <GameButton
+            aria-pressed={activePanel === 'memories'}
+            className="aveugle-hub__destination-button"
+            data-dialogue-action
+            onClick={() => changePanel('memories')}
+            size="sm"
+            variant="ghost"
+          >
+            <span className="aveugle-hub__choice-copy">
+              <span>{t('memories')}</span>
+              {hubState.namedSouvenirs.length > 0 ? (
+                <small>{hubState.namedSouvenirs.length}</small>
+              ) : null}
+            </span>
+          </GameButton>
+        </div>
       </nav>
 
-      <GamePanel
-        className="aveugle-hub__dialogue"
-        data-auberge-frame
-        padding="none"
-        variant="dialogue-frame"
-      >
-        <div className="aveugle-hub__dialogue-content">
-          <header>
-            <div ref={emblemRef} className="aveugle-hub__speaker-mark">
-              <GameIcon decorative name={panelMeta.icon} size={64} />
-            </div>
-            <h1>{panelMeta.title}</h1>
-          </header>
+      <section className="aveugle-hub__dialogue" aria-labelledby="aveugle-panel-title">
+        <div ref={stageRef} className="aveugle-hub__conversation-stage">
+          {activePanel === 'dialogue' ? (
+            <>
+              <blockquote aria-live="polite">
+                «{' '}
+                {isPending && pendingAction?.kind === 'talk'
+                  ? t('blindOneThinking')
+                  : (dialogueReply ?? openingLine)}{' '}
+                »
+              </blockquote>
 
-          <div ref={stageRef} className="aveugle-hub__conversation-stage">
-            {activePanel === 'dialogue' ? (
+              {interactionError ? (
+                <div className="aveugle-hub__interaction-error" role="alert">
+                  <p>{interactionError}</p>
+                  {lastAction ? (
+                    <GameButton
+                      loading={isPending}
+                      onClick={() => void runAction(lastAction)}
+                      size="sm"
+                      variant="secondary"
+                    >
+                      {t('retry')}
+                    </GameButton>
+                  ) : null}
+                </div>
+              ) : null}
+              {syncWarning ? <p role="status">{t('topicSyncWarning')}</p> : null}
+
+              {dialogueMode === 'topics' && !interactionError ? (
+                <div className="aveugle-hub__topic-actions">
+                  <div className="aveugle-hub__topics">
+                    <DialogueChoiceGroup label={t('topicsLabel')}>
+                      {topics.map((topic, index) => {
+                        const isUnread = !hubState.seenTopicIds.includes(topic.id)
+                        return (
+                          <DialogueChoice
+                            key={topic.id}
+                            aria-label={
+                              isUnread ? t('newAria', { label: topic.label }) : topic.label
+                            }
+                            data-dialogue-action
+                            disabled={isPending}
+                            number={index + 1}
+                            onClick={() => selectTopic(topic.id)}
+                          >
+                            <span className="aveugle-hub__choice-copy">
+                              <span>{topic.label}</span>
+                              {isUnread ? <small>{t('new')}</small> : null}
+                            </span>
+                          </DialogueChoice>
+                        )
+                      })}
+                    </DialogueChoiceGroup>
+                  </div>
+
+                  <div className="aveugle-hub__free-question">
+                    <span aria-hidden="true">{t('or')}</span>
+                    <GameButton
+                      className="aveugle-hub__other-question"
+                      data-dialogue-action
+                      disabled={isPending}
+                      onClick={() => setIsComposerOpen(true)}
+                      size="sm"
+                      variant="secondary"
+                    >
+                      {t('otherQuestion')}
+                    </GameButton>
+                  </div>
+                </div>
+              ) : null}
+
+              {dialogueMode === 'composer' ? (
+                <div className="aveugle-hub__composer" data-dialogue-action>
+                  <NarrativeComposer
+                    actionDisabled={isPending || !customAction.trim()}
+                    actionLabel={t('speak')}
+                    onAction={submitCustomAction}
+                    onChange={(event) => setCustomAction(event.target.value)}
+                    placeholder={t('questionPlaceholder')}
+                    value={customAction}
+                  />
+                  <GameButton onClick={returnToTopics} size="sm" variant="ghost">
+                    {t('backToTopics')}
+                  </GameButton>
+                </div>
+              ) : null}
+
+              {dialogueMode === 'answer' ? (
+                <div className="aveugle-hub__response-actions">
+                  {selectedTopic && !isTopicExpanded ? (
+                    <GameButton
+                      data-dialogue-action
+                      disabled={isPending}
+                      onClick={() => {
+                        setDialogueReply(null)
+                        setIsTopicExpanded(true)
+                        void runAction({
+                          kind: 'talk',
+                          message: `${selectedTopic.prompt} ${t('goDeeperPrompt')}`,
+                          topicId: selectedTopic.id,
+                        })
+                      }}
+                      size="sm"
+                      variant="secondary"
+                    >
+                      {t('goDeeper')}
+                    </GameButton>
+                  ) : null}
+                  <GameButton
+                    data-dialogue-action
+                    onClick={returnToTopics}
+                    size="sm"
+                    variant="ghost"
+                  >
+                    {t('otherTopics')}
+                  </GameButton>
+                </div>
+              ) : null}
+            </>
+          ) : null}
+
+          {activePanel === 'memories' ? (
+            selectedMemory ? (
+              <article className="aveugle-hub__memory-detail">
+                <p className="aveugle-hub__memory-kicker">{t('memoryDetailKicker')}</p>
+                <h2>{selectedMemory.title}</h2>
+                <blockquote aria-live="polite">« {selectedMemory.body} »</blockquote>
+                <GameButton
+                  data-dialogue-action
+                  onClick={returnToMemories}
+                  size="sm"
+                  variant="ghost"
+                >
+                  {t('reviewMemories')}
+                </GameButton>
+              </article>
+            ) : loreResult ? (
+              <article className="aveugle-hub__memory-detail">
+                <p className="aveugle-hub__memory-kicker">{t('memoryResultKicker')}</p>
+                <h2>{t('memoryResultTitle')}</h2>
+                <blockquote aria-live="polite">« {loreResult} »</blockquote>
+                <GameButton
+                  data-dialogue-action
+                  onClick={returnToMemories}
+                  size="sm"
+                  variant="ghost"
+                >
+                  {t('reviewMemories')}
+                </GameButton>
+              </article>
+            ) : (
               <>
-                <blockquote aria-live="polite">
-                  «{' '}
-                  {isPending && pendingAction?.kind === 'talk'
-                    ? t('blindOneThinking')
-                    : (dialogueReply ?? openingLine)}{' '}
-                  »
+                <blockquote className="aveugle-hub__memory-intro">
+                  « {t('memoryIntro')} »
                 </blockquote>
 
+                <section
+                  className="aveugle-hub__memory-archive"
+                  aria-labelledby="aveugle-memory-archive-title"
+                >
+                  <header className="aveugle-hub__memory-archive-header">
+                    <div>
+                      <p className="aveugle-hub__memory-kicker">{t('memoryArchiveKicker')}</p>
+                      <h2 id="aveugle-memory-archive-title">{t('memoryArchiveTitle')}</h2>
+                    </div>
+                    <span>{t('memoryCount', { count: hubState.namedSouvenirs.length })}</span>
+                  </header>
+                  <p className="aveugle-hub__memory-archive-copy">{t('memoryArchiveBody')}</p>
+
+                  {hubState.namedSouvenirs.length > 0 ? (
+                    <div className="aveugle-hub__memory-list" aria-label={t('memoriesLabel')}>
+                      {hubState.namedSouvenirs.map((memory) => (
+                        <button
+                          key={memory.id}
+                          aria-label={t('memoryOpen', { title: memory.title })}
+                          className="aveugle-hub__memory-entry"
+                          data-dialogue-action
+                          onClick={() => setSelectedMemoryId(memory.id)}
+                          type="button"
+                        >
+                          <GameIcon decorative name="memory" size={32} />
+                          <span className="aveugle-hub__memory-entry-copy">
+                            <strong>{memory.title}</strong>
+                            <small>{memory.body}</small>
+                          </span>
+                          <span className="aveugle-hub__memory-entry-action">
+                            {t('memoryRead')}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="aveugle-hub__empty" role="status">
+                      {t('noNamedMemories')}
+                    </p>
+                  )}
+                </section>
+
+                <section className="aveugle-hub__exchange" aria-labelledby="aveugle-exchange-title">
+                  <h2 id="aveugle-exchange-title">{t('exchangeTitle')}</h2>
+                  {hubState.spendableSouvenirCount > 0 ? (
+                    <>
+                      <p>{t('exchangeIntro', { count: hubState.spendableSouvenirCount })}</p>
+                      <DialogueChoiceGroup
+                        className="aveugle-hub__exchange-choices"
+                        label={t('exchangeLabel')}
+                      >
+                        {exchanges.map((exchange, index) => (
+                          <DialogueChoice
+                            key={exchange.exchangeType}
+                            data-dialogue-action
+                            disabled={isPending}
+                            number={index + 1}
+                            onClick={() =>
+                              void runAction({
+                                kind: 'spend',
+                                exchangeType: exchange.exchangeType,
+                              })
+                            }
+                          >
+                            <span className="aveugle-hub__choice-copy">
+                              <span>{exchange.label}</span>
+                              <small>{t('exchangeCost')}</small>
+                            </span>
+                          </DialogueChoice>
+                        ))}
+                      </DialogueChoiceGroup>
+                    </>
+                  ) : (
+                    <p className="aveugle-hub__empty" role="status">
+                      {t('noSpendableMemories')}
+                    </p>
+                  )}
+                </section>
+
+                {pendingAction?.kind === 'spend' ? (
+                  <p aria-live="polite">{t('exchangePending')}</p>
+                ) : null}
                 {interactionError ? (
                   <div className="aveugle-hub__interaction-error" role="alert">
                     <p>{interactionError}</p>
@@ -301,200 +534,11 @@ export function AubergeDock({
                     ) : null}
                   </div>
                 ) : null}
-                {syncWarning ? <p role="status">{t('topicSyncWarning')}</p> : null}
-
-                {dialogueMode === 'topics' && !interactionError ? (
-                  <DialogueChoiceGroup label={t('topicsLabel')}>
-                    {topics.map((topic) => {
-                      const isUnread = !hubState.seenTopicIds.includes(topic.id)
-                      return (
-                        <DialogueChoice
-                          key={topic.id}
-                          aria-label={isUnread ? t('newAria', { label: topic.label }) : topic.label}
-                          data-dialogue-action
-                          disabled={isPending}
-                          icon={<GameIcon decorative name={topic.icon} size={32} />}
-                          onClick={() => selectTopic(topic.id)}
-                        >
-                          <span className="aveugle-hub__choice-copy">
-                            <span>{topic.label}</span>
-                            {isUnread ? <small>{t('new')}</small> : null}
-                          </span>
-                        </DialogueChoice>
-                      )
-                    })}
-                  </DialogueChoiceGroup>
-                ) : null}
-
-                {dialogueMode === 'topics' && !interactionError ? (
-                  <GameButton
-                    className="aveugle-hub__other-question"
-                    data-dialogue-action
-                    disabled={isPending}
-                    onClick={() => setIsComposerOpen(true)}
-                    size="sm"
-                    variant="ghost"
-                  >
-                    {t('otherQuestion')}
-                  </GameButton>
-                ) : null}
-
-                {dialogueMode === 'composer' ? (
-                  <div className="aveugle-hub__composer" data-dialogue-action>
-                    <NarrativeComposer
-                      actionDisabled={isPending || !customAction.trim()}
-                      actionLabel={t('speak')}
-                      onAction={submitCustomAction}
-                      onChange={(event) => setCustomAction(event.target.value)}
-                      placeholder={t('questionPlaceholder')}
-                      value={customAction}
-                    />
-                    <GameButton onClick={returnToTopics} size="sm" variant="ghost">
-                      {t('backToTopics')}
-                    </GameButton>
-                  </div>
-                ) : null}
-
-                {dialogueMode === 'answer' ? (
-                  <div className="aveugle-hub__response-actions">
-                    {selectedTopic && !isTopicExpanded ? (
-                      <GameButton
-                        data-dialogue-action
-                        disabled={isPending}
-                        onClick={() => {
-                          setDialogueReply(null)
-                          setIsTopicExpanded(true)
-                          void runAction({
-                            kind: 'talk',
-                            message: `${selectedTopic.prompt} ${t('goDeeperPrompt')}`,
-                            topicId: selectedTopic.id,
-                          })
-                        }}
-                        size="sm"
-                        variant="secondary"
-                      >
-                        {t('goDeeper')}
-                      </GameButton>
-                    ) : null}
-                    <GameButton
-                      data-dialogue-action
-                      onClick={returnToTopics}
-                      size="sm"
-                      variant="ghost"
-                    >
-                      {t('otherTopics')}
-                    </GameButton>
-                  </div>
-                ) : null}
               </>
-            ) : null}
-
-            {activePanel === 'memories' ? (
-              selectedMemory ? (
-                <>
-                  <blockquote aria-live="polite">« {selectedMemory.body} »</blockquote>
-                  <GameButton
-                    data-dialogue-action
-                    onClick={returnToMemories}
-                    size="sm"
-                    variant="ghost"
-                  >
-                    {t('reviewMemories')}
-                  </GameButton>
-                </>
-              ) : loreResult ? (
-                <>
-                  <blockquote aria-live="polite">« {loreResult} »</blockquote>
-                  <GameButton
-                    data-dialogue-action
-                    onClick={returnToMemories}
-                    size="sm"
-                    variant="ghost"
-                  >
-                    {t('reviewMemories')}
-                  </GameButton>
-                </>
-              ) : (
-                <>
-                  <blockquote>« {t('memoryIntro')} »</blockquote>
-
-                  {hubState.namedSouvenirs.length > 0 ? (
-                    <DialogueChoiceGroup label={t('memoriesLabel')}>
-                      {hubState.namedSouvenirs.map((memory) => (
-                        <DialogueChoice
-                          key={memory.id}
-                          data-dialogue-action
-                          icon={<GameIcon decorative name="memory" size={32} />}
-                          onClick={() => setSelectedMemoryId(memory.id)}
-                        >
-                          {memory.title}
-                        </DialogueChoice>
-                      ))}
-                    </DialogueChoiceGroup>
-                  ) : (
-                    <p className="aveugle-hub__empty" role="status">
-                      {t('noNamedMemories')}
-                    </p>
-                  )}
-
-                  <section
-                    className="aveugle-hub__exchange"
-                    aria-labelledby="aveugle-exchange-title"
-                  >
-                    <h2 id="aveugle-exchange-title">{t('exchangeTitle')}</h2>
-                    {hubState.spendableSouvenirCount > 0 ? (
-                      <>
-                        <p>{t('exchangeIntro', { count: hubState.spendableSouvenirCount })}</p>
-                        <DialogueChoiceGroup label={t('exchangeLabel')}>
-                          {exchanges.map((exchange) => (
-                            <DialogueChoice
-                              key={exchange.exchangeType}
-                              data-dialogue-action
-                              disabled={isPending}
-                              icon={<GameIcon decorative name={exchange.icon} size={32} />}
-                              onClick={() =>
-                                void runAction({
-                                  kind: 'spend',
-                                  exchangeType: exchange.exchangeType,
-                                })
-                              }
-                            >
-                              {exchange.label}
-                            </DialogueChoice>
-                          ))}
-                        </DialogueChoiceGroup>
-                      </>
-                    ) : (
-                      <p className="aveugle-hub__empty" role="status">
-                        {t('noSpendableMemories')}
-                      </p>
-                    )}
-                  </section>
-
-                  {pendingAction?.kind === 'spend' ? (
-                    <p aria-live="polite">{t('exchangePending')}</p>
-                  ) : null}
-                  {interactionError ? (
-                    <div className="aveugle-hub__interaction-error" role="alert">
-                      <p>{interactionError}</p>
-                      {lastAction ? (
-                        <GameButton
-                          loading={isPending}
-                          onClick={() => void runAction(lastAction)}
-                          size="sm"
-                          variant="secondary"
-                        >
-                          {t('retry')}
-                        </GameButton>
-                      ) : null}
-                    </div>
-                  ) : null}
-                </>
-              )
-            ) : null}
-          </div>
+            )
+          ) : null}
         </div>
-      </GamePanel>
+      </section>
     </div>
   )
 }

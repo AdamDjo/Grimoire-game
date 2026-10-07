@@ -49,7 +49,7 @@ ligne** — charger tout le vault n'apporte rien et noie la tâche.
 | Inventaire / économie        | `docs/canon/11-INVENTORY-ECONOMY.md`                                 |
 | PNJ et relations             | `docs/canon/12-NPCS-RELATIONS.md`                                    |
 | Réputation / factions        | `docs/canon/13-REPUTATION.md` + `docs/canon/03-FACTIONS.md`          |
-| Auberge de L'Aveugle         | `docs/canon/15-GAME-MASTER.md` + `docs/canon/14-META-WORLD.md`       |
+| El Makhzen / L'Aveugle       | `docs/canon/15-GAME-MASTER.md` + `docs/canon/14-META-WORLD.md`       |
 | Mémoire narrative            | `docs/canon/16-MEMORY.md`                                            |
 | Chronique de run             | `docs/canon/17-RUN-CHRONICLE.md`                                     |
 | World Map                    | `docs/canon/02-WORLD-BIBLE.md` + `docs/canon/03-FACTIONS.md`         |

@@ -3,7 +3,7 @@ import type {
   GameSessionInventoryActionResponse,
   GameSessionResponse,
 } from '../model/game-session.types'
-import type { ApiResponse, Locale } from '@grimoire/shared'
+import type { ApiResponse, Locale } from '@velkhar/shared'
 
 /**
  * Payload accepted by the game action route. Mirrors the backend Zod schema.

@@ -1,9 +1,9 @@
-import { INVENTORY_BAG_CAPACITY } from '@grimoire/shared'
+import { INVENTORY_BAG_CAPACITY } from '@velkhar/shared'
 import { describe, expect, it } from 'vitest'
 
 import { bagSlotsFree, bagSlotsUsed, buildPreparationSnapshot, resolvePurchase } from './counter'
 
-import type { PersistedInventoryItem } from '@grimoire/shared'
+import type { PersistedInventoryItem } from '@velkhar/shared'
 
 /** Deterministic ids so assertions stay readable. */
 function sequentialIds(): () => string {

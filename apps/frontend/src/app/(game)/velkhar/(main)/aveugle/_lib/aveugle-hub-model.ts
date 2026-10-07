@@ -1,4 +1,4 @@
-import { getPeople, getVocation } from '@grimoire/shared'
+import { getPeople, getVocation } from '@velkhar/shared'
 
 import { VELKHAR_WORLD } from '../../../_config/velkhar-world'
 import {

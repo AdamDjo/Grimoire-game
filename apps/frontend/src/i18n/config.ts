@@ -3,7 +3,7 @@ export const UI_LOCALES = ['en', 'fr'] as const
 export type UiLocale = (typeof UI_LOCALES)[number]
 
 export const DEFAULT_UI_LOCALE: UiLocale = 'en'
-export const UI_LOCALE_COOKIE = 'grimoire-ui-locale'
+export const UI_LOCALE_COOKIE = 'velkhar-ui-locale'
 export const UI_LOCALE_METADATA_KEY = 'ui_locale'
 
 export function isUiLocale(value: unknown): value is UiLocale {

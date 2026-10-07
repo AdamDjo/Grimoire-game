@@ -21,7 +21,7 @@ export function ChroniclePublicPage({ slug }: ChroniclePublicPageProps) {
     <main className="chronicle-page">
       <nav className="chronicle-page__nav" aria-label={t('mainNavigation')}>
         <Link href="/" aria-label={t('home')}>
-          GRIMOIRE
+          VELKHAR
         </Link>
         <div className="chronicle-page__nav-actions">
           <span>{t('velkharTrace')}</span>

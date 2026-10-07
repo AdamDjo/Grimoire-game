@@ -1,4 +1,4 @@
-import { GameBrand } from '@/components/ui/grimoire/GameBrand/GameBrand'
+import { GameBrand } from '@/components/ui/velkhar/GameBrand/GameBrand'
 
 import type { ReactNode } from 'react'
 

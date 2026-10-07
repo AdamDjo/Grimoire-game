@@ -3,14 +3,14 @@
 import { useState, type ReactNode } from 'react'
 
 import { GameLink } from '@/components/ui/game-link'
-import { DialogueChoice } from '@/components/ui/grimoire/DialogueChoice/DialogueChoice'
-import { GameSceneLayout } from '@/components/ui/grimoire/GameSceneLayout/GameSceneLayout'
-import { GameTopBar } from '@/components/ui/grimoire/GameTopBar/GameTopBar'
-import { NarrativeComposer } from '@/components/ui/grimoire/NarrativeComposer/NarrativeComposer'
+import { DialogueChoice } from '@/components/ui/velkhar/DialogueChoice/DialogueChoice'
+import { GameSceneLayout } from '@/components/ui/velkhar/GameSceneLayout/GameSceneLayout'
+import { GameTopBar } from '@/components/ui/velkhar/GameTopBar/GameTopBar'
+import { NarrativeComposer } from '@/components/ui/velkhar/NarrativeComposer/NarrativeComposer'
 
 import { GameHud, type GameHudLabels, type GameHudProps } from '../GameHud/GameHud'
 
-import type { SurvivalStats } from '@grimoire/shared'
+import type { SurvivalStats } from '@velkhar/shared'
 
 /** The free-text box under the choices. */
 export interface GameSceneComposer {

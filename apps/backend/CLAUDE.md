@@ -38,7 +38,7 @@ src/
 - **Lire le canon `docs/canon/` AVANT de coder toute mécanique de jeu** (dés, DC, dégâts, survie, conditions, économie…). Jamais de constante « provisoire, à valider plus tard » : si le canon n'a pas été lu, la valeur n'est pas écrite. Le canon est versionné → lisible directement dans tout worktree.
 - Zod validation sur toutes les routes.
 - Réponses API : `{ success: boolean, data?: T, error?: string }`.
-- Types partagés dans `@grimoire/shared`, jamais dupliqués.
+- Types partagés dans `@velkhar/shared`, jamais dupliqués.
 - Output IA toujours parsé et validé avant stockage.
 - Le canon Velkhar ne doit jamais être contredit.
 - Le d20 et les conséquences mécaniques sont résolus côté backend.
@@ -60,7 +60,7 @@ Utiliser `../../docs/task-router.md`.
 ## Commandes
 
 ```bash
-pnpm type-check --filter @grimoire/backend
-pnpm test --filter @grimoire/backend
-pnpm dev --filter @grimoire/backend
+pnpm type-check --filter @velkhar/backend
+pnpm test --filter @velkhar/backend
+pnpm dev --filter @velkhar/backend
 ```

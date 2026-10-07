@@ -10,7 +10,7 @@ import type {
   CounterPurchaseResult,
   PersistedInventoryItem,
   PreparationSnapshot,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 /**
  * The Comptoir (#249): persistence for the Inn's supply counter.

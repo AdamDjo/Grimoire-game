@@ -1,7 +1,7 @@
 // @ts-check
 'use strict'
 
-const { createNextConfig } = require('@grimoire/eslint-config/next')
+const { createNextConfig } = require('@velkhar/eslint-config/next')
 
 module.exports = [
   // Ancienne landing conservée pour référence — non typée (exclue du tsconfig),

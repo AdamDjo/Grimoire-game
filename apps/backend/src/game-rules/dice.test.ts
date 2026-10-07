@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { DIFFICULTY_TARGET, rollCheck } from './dice'
 
-import type { Attributes } from '@grimoire/shared'
+import type { Attributes } from '@velkhar/shared'
 
 // blood 15 → modifier +2 (attributeModifier canon table).
 const ATTRIBUTES: Attributes = { blood: 15, breath: 10, will: 10 }

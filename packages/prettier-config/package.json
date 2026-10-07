@@ -1,5 +1,5 @@
 {
-  "name": "@grimoire/prettier-config",
+  "name": "@velkhar/prettier-config",
   "version": "0.1.0",
   "private": true,
   "main": "index.js",

@@ -3,14 +3,14 @@
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 
-import { GameButton } from '@/components/ui/grimoire/GameButton/GameButton'
-import { GameIcon, type GameIconName } from '@/components/ui/grimoire/GameIcon/GameIcon'
-import { InventorySlot } from '@/components/ui/grimoire/InventorySlot/InventorySlot'
+import { GameButton } from '@/components/ui/velkhar/GameButton/GameButton'
+import { GameIcon, type GameIconName } from '@/components/ui/velkhar/GameIcon/GameIcon'
+import { InventorySlot } from '@/components/ui/velkhar/InventorySlot/InventorySlot'
 import { cn } from '@/lib/utils'
 
 import { buildVelkharInventoryView, VELKHAR_BAG_CAPACITY } from '../_lib/velkhar-inventory-model'
 
-import type { InventoryItemRef } from '@grimoire/shared'
+import type { InventoryItemRef } from '@velkhar/shared'
 
 interface VelkharInventoryPanelProps {
   gold: number | null

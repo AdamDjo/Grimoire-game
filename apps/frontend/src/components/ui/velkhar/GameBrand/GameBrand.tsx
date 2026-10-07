@@ -36,7 +36,7 @@ export function GameBrand({
   variant = 'lockup',
 }: GameBrandProps) {
   const accessibleLabel =
-    label ?? (variant === 'lockup' ? 'GRIMOIRE — Of Ash and Salt' : 'Sceau de GRIMOIRE')
+    label ?? (variant === 'lockup' ? 'VELKHAR: Of Ash and Salt' : 'Sceau de VELKHAR')
 
   return (
     <span
@@ -49,7 +49,7 @@ export function GameBrand({
         <BookOpen aria-hidden="true" strokeWidth={1.25} />
       ) : (
         <>
-          <span className="game-brand__name">Grimoire</span>
+          <span className="game-brand__name">Velkhar</span>
           <span className="game-brand__subtitle">Of Ash and Salt</span>
         </>
       )}

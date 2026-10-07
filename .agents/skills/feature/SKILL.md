@@ -23,7 +23,7 @@ Exécuter dans l'ordre :
 2. **Ajouter l'issue au projet Scrum Board**
 
    ```bash
-   ISSUE_NODE_ID=$(gh api repos/AdamDjo/Grimoire-game/issues/<numéro> --jq '.node_id')
+   ISSUE_NODE_ID=$(gh api repos/AdamDjo/Velkhar-game/issues/<numéro> --jq '.node_id')
    gh api graphql -f query='mutation { addProjectV2ItemById(input: { projectId: "PVT_kwHOAacnj84BU6rS" contentId: "'$ISSUE_NODE_ID'" }) { item { id } } }'
    ```
 

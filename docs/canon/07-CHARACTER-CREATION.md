@@ -6,7 +6,7 @@
 
 ## 0. Principe
 
-La création de personnage **n'est pas un écran de stats**. C'est le **prologue** du jeu. Le joueur ne remplit pas un formulaire — il vit une scène avec **L'Aveugle**, aubergiste-prophète du _Doigt-Cassé_, et la fiche se construit naturellement à partir de la conversation.
+La création de personnage **n'est pas un écran de stats**. C'est le **prologue** du jeu. Le joueur ne remplit pas un formulaire — il vit une scène avec **L'Aveugle**, gardien-prophète d'_El Makhzen_, et la fiche se construit naturellement à partir de la conversation.
 
 > _Aucun joueur ne doit voir un slider de stats. Tout passe par la voix de L'Aveugle, et l'IA traduit en triptyque._
 
@@ -18,7 +18,7 @@ La création de personnage **n'est pas un écran de stats**. C'est le **prologue
 
 ### Le socle commun à tous les personnages
 
-Le personnage n'arrive pas comme un novice. Survivre jusqu'au _Doigt-Cassé_ signifie qu'il sait
+Le personnage n'arrive pas comme un novice. Survivre jusqu'à _El Makhzen_ signifie qu'il sait
 déjà se battre, fuir, camper, reconnaître un danger immédiat et rationner eau et vivres. La vocation
 ne décide pas s'il est compétent ; elle décide **comment** cette compétence s'exprime.
 
@@ -32,9 +32,11 @@ et ne devient jamais automatiquement celle de son successeur.
 
 ---
 
-## 1. L'auberge de L'Aveugle
+## 1. El Makhzen
 
-L'auberge — _Le Doigt-Cassé_ — est le **hub unique** de GRIMOIRE. Chaque run commence et finit ici.
+_El Makhzen_ est le **hub unique** de VELKHAR. Son nom vient de l'ancien arabe _al-makhzan_, le
+lieu où l'on conserve et protège. Chaque run commence et finit ici : les survivants y rapportent
+leurs Souvenirs, choisissent un contrat et préparent leur prochain départ.
 
 ### Ambiance (à respecter dans le prompt IA)
 
@@ -316,7 +318,7 @@ L'Aveugle accueille **le successeur** comme à l'Étape 1, mais avec **une varia
 
 Le successeur est une nouvelle personne. Il n'hérite ni du corps, ni du nom, ni de la réputation
 complète, ni des relations du mort. Après une mort ordinaire, il a trouvé, reçu ou arraché l'artefact
-d'héritage, puis choisi de le porter jusqu'au _Doigt-Cassé_. Ce chemin précis peut rester
+d'héritage, puis choisi de le porter jusqu'à _El Makhzen_. Ce chemin précis peut rester
 fragmentaire afin que le concept libre du nouveau personnage conserve sa place.
 
 Après une transformation en Calciné, aucun artefact n'arrive à l'Auberge. Le successeur y vient pour
@@ -347,7 +349,7 @@ laissées dans le monde._
 ```
 LANCEMENT DU JEU
    ↓
-🏠 Auberge de L'Aveugle (visuelle, ambiance)
+🏠 El Makhzen (visuel, ambiance)
    ↓
 L'Aveugle demande le NOM (saisie libre)
    ↓

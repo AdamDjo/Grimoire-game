@@ -10,7 +10,7 @@
 
 **3 niveaux de mémoire, chacun avec un budget tokens fixe. Au-delà → compression. Jamais de "dump tout".**
 
-L'IA ne peut pas tout retenir — financièrement (coût par token) ni qualitativement (un contexte saturé dégrade la cohérence narrative). GRIMOIRE organise la mémoire en **3 couches** distinctes, chacune servant un horizon temporel précis :
+L'IA ne peut pas tout retenir — financièrement (coût par token) ni qualitativement (un contexte saturé dégrade la cohérence narrative). VELKHAR organise la mémoire en **3 couches** distinctes, chacune servant un horizon temporel précis :
 
 | Niveau              | Horizon                         | Stockage            | Budget contexte |
 | ------------------- | ------------------------------- | ------------------- | --------------- |

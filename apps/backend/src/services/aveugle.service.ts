@@ -1,4 +1,4 @@
-import { getPeople, getVocation, localeDisplayName, resolveLocale } from '@grimoire/shared'
+import { getPeople, getVocation, localeDisplayName, resolveLocale } from '@velkhar/shared'
 
 import {
   type AveugleLoreOutput,
@@ -10,7 +10,7 @@ import { callOpenRouter } from '../ai/openrouter.provider'
 import { env } from '../config/env'
 import { prisma } from '../lib/prisma'
 
-import type { AveugleExchangeType, AveugleHubState, Locale, SouvenirType } from '@grimoire/shared'
+import type { AveugleExchangeType, AveugleHubState, Locale, SouvenirType } from '@velkhar/shared'
 
 const AVEUGLE_TIMEOUT_MS = 8000
 
@@ -184,7 +184,7 @@ function buildAveugleTalkPrompt(params: {
     params
 
   return [
-    "Tu es L'Aveugle, aubergiste-prophète du Doigt-Cassé, à Velkhar.",
+    "Tu es L'Aveugle, gardien-prophète d'El Makhzen, à Velkhar.",
     // Language instruction comes early (#168/#181 fix): a model that only sees
     // it after a long French voice block may ignore it and answer in French
     // regardless of the player's locale.
@@ -307,7 +307,7 @@ function buildAveugleLorePrompt(params: {
   } = params
 
   return [
-    "Tu es L'Aveugle, aubergiste-prophète du Doigt-Cassé, à Velkhar. Un voyageur t'échange un Souvenir contre du savoir.",
+    "Tu es L'Aveugle, gardien-prophète d'El Makhzen, à Velkhar. Un voyageur t'échange un Souvenir contre du savoir.",
     // Language instruction comes early (#168/#181 fix): see buildAveugleTalkPrompt above.
     `Write your reply in ${languageName}. Keep this instruction even though the rest of this prompt is in French. English is the default.`,
     '',

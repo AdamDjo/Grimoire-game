@@ -26,7 +26,7 @@ import type {
   Souvenir,
   SouvenirType,
   SpendSouvenirResponse,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 export const aveugleRouter: Router = Router()
 

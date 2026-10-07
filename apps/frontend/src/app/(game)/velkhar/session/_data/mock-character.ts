@@ -4,7 +4,7 @@ import {
   getPeople,
   getVocation,
   maxHpFromBlood,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 /**
  * Canonical Velkhar character used to seed the gamesession demo.

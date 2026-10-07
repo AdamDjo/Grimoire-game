@@ -23,7 +23,7 @@ COPY turbo.json ./
 # The generated Prisma client lives in src/generated/prisma (see schema.prisma)
 # and is bundled by tsup, so it must exist before the build runs.
 COPY --from=deps /app/apps/backend/src/generated ./apps/backend/src/generated
-RUN pnpm --filter @grimoire/backend build
+RUN pnpm --filter @velkhar/backend build
 
 # Production dependencies only — the deps stage carries devDependencies (tsup,
 # vitest, eslint, the Prisma CLI) that have no business in the runtime image.
@@ -43,7 +43,7 @@ FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
-# tsup inlines the app and @grimoire/shared into a single ESM file, but leaves
+# tsup inlines the app and @velkhar/shared into a single ESM file, but leaves
 # runtime packages external — including @prisma/client/runtime/client — so
 # node_modules is still required at runtime.
 COPY --from=builder /app/apps/backend/dist ./dist

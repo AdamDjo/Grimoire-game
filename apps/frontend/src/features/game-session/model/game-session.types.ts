@@ -1,5 +1,5 @@
 import type { CreateSessionLocaleInput } from '../api/game-session-api'
-import type { ActiveCondition, SessionEndReason, SurvivalStats } from '@grimoire/shared'
+import type { ActiveCondition, SessionEndReason, SurvivalStats } from '@velkhar/shared'
 
 export type GameSessionRiskLevel = 'safe' | 'low' | 'medium' | 'high' | 'deadly'
 

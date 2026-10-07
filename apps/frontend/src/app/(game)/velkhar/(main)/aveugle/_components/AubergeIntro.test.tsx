@@ -37,9 +37,7 @@ describe('AubergeIntro', () => {
   it('ouvre cinq écrans illustrés sans vidéo et raconte la fracture du monde', () => {
     const { container } = render(<AubergeIntro onComplete={vi.fn()} />)
 
-    expect(
-      screen.getByRole('dialog', { name: "Introduction to The Blind One's Inn" })
-    ).toBeInTheDocument()
+    expect(screen.getByRole('dialog', { name: 'Introduction to El Makhzen' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'The world broke apart.' })).toBeInTheDocument()
     expect(screen.getByText(/Archons unleashed a magic/)).toBeInTheDocument()
     expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '1')
@@ -117,7 +115,7 @@ describe('AubergeIntro', () => {
     expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '3')
   })
 
-  it('termine sur le Doigt-Cassé puis mémorise le prologue', () => {
+  it('termine sur El Makhzen puis mémorise le prologue', () => {
     const onComplete = vi.fn()
     render(<AubergeIntro onComplete={onComplete} />)
 
@@ -126,7 +124,7 @@ describe('AubergeIntro', () => {
     }
 
     expect(screen.getByRole('heading', { name: 'One door still stands.' })).toBeInTheDocument()
-    fireEvent.click(screen.getByRole('button', { name: 'Enter the inn' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Enter El Makhzen' }))
 
     expect(hasSeenAubergeIntro()).toBe(true)
     expect(onComplete).not.toHaveBeenCalled()

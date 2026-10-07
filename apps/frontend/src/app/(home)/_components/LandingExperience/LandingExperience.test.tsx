@@ -30,7 +30,7 @@ describe('Landing', () => {
 
     // Le seuil invite, l'outro conclut : deux libellés, une seule destination.
     const begin = screen.getByRole('link', { name: 'Begin' })
-    const enter = screen.getByRole('link', { name: 'Enter the inn' })
+    const enter = screen.getByRole('link', { name: 'Enter El Makhzen' })
     expect(begin).toHaveAttribute('href', '/velkhar/aveugle?transition=home')
     expect(enter).toHaveAttribute('href', '/velkhar/aveugle?transition=home')
   })

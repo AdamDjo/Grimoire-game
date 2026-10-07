@@ -1,11 +1,11 @@
-import { ATTRIBUTE_LABELS, attributeModifier, getPeople, getVocation } from '@grimoire/shared'
+import { ATTRIBUTE_LABELS, attributeModifier, getPeople, getVocation } from '@velkhar/shared'
 import { useLocale, useTranslations } from 'next-intl'
 
-import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
+import { GameIcon } from '@/components/ui/velkhar/GameIcon/GameIcon'
 
 import { VelkharActiveConditions } from './VelkharActiveConditions'
 
-import type { ActiveCondition, Character, SurvivalStats } from '@grimoire/shared'
+import type { ActiveCondition, Character, SurvivalStats } from '@velkhar/shared'
 
 interface VelkharCharacterSheetProps {
   character: Character

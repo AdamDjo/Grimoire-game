@@ -1,4 +1,4 @@
-import type { SurvivalStats } from '@grimoire/shared'
+import type { SurvivalStats } from '@velkhar/shared'
 
 /** The scripted gauges of the landing's turn — mid-run, already worn. */
 export const LANDING_SURVIVAL: SurvivalStats = {

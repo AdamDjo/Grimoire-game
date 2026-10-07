@@ -6,10 +6,10 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
-import { GameBrand } from '@/components/ui/grimoire/GameBrand/GameBrand'
-import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
-import { GameTopBar } from '@/components/ui/grimoire/GameTopBar/GameTopBar'
 import { LanguageSwitcher } from '@/components/ui/language-switcher'
+import { GameBrand } from '@/components/ui/velkhar/GameBrand/GameBrand'
+import { GameIcon } from '@/components/ui/velkhar/GameIcon/GameIcon'
+import { GameTopBar } from '@/components/ui/velkhar/GameTopBar/GameTopBar'
 import { WORLD_ROUTES } from '@/config/worlds'
 import { cn } from '@/lib/utils'
 

@@ -1,37 +1,24 @@
 body:has(.aveugle-threshold) .main-navigation {
   display: none;
 }
+
 body:has(.aveugle-threshold) {
   overflow: hidden;
 }
 
 .aveugle-threshold {
-  background: var(--void);
+  background: var(--ink-black);
   height: 100dvh;
   overflow: hidden;
 }
 
 .aveugle-threshold__layout.game-scene-layout {
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
   height: 100%;
   min-height: 0;
 }
 
-.aveugle-threshold__layout.game-scene-layout::after {
-  display: none;
-}
-.aveugle-threshold__layout .game-scene-layout__top {
-  padding: 0;
-}
-.aveugle-threshold__layout .game-scene-layout__scene,
-.aveugle-threshold__layout .game-scene-layout__reader {
-  min-height: 0;
-}
-
 .aveugle-threshold__scene {
-  background: url('/scenes/aveugle-cendres.webp') 44% center / cover no-repeat;
-  filter: saturate(0.76) contrast(1.12) brightness(0.8);
+  background: url('/encre-de-sel/landing/seuil.webp') center / cover no-repeat;
   height: 100%;
   transform: scale(1.012);
   width: 100%;
@@ -39,8 +26,8 @@ body:has(.aveugle-threshold) {
 
 .aveugle-threshold__veil {
   background:
-    linear-gradient(90deg, transparent 52%, rgba(3, 3, 2, 0.55) 77%, rgba(3, 3, 2, 0.82)),
-    linear-gradient(0deg, rgba(0, 0, 0, 0.3), transparent 38%);
+    linear-gradient(90deg, transparent 52%, var(--salt-veil-strong)),
+    linear-gradient(0deg, var(--salt-veil-soft), transparent 38%);
   inset: 0;
   pointer-events: none;
   position: absolute;
@@ -56,22 +43,18 @@ body:has(.aveugle-threshold) {
 .aveugle-threshold__location {
   color: var(--salt-white);
   font-family: var(--font-game-display);
-  font-size: clamp(1rem, 1.4vw, 1.3rem);
+  font-size: var(--text-game-label);
   letter-spacing: 0.08em;
   margin: 0;
-  text-shadow: 0 0.25rem 0.7rem #000;
+  text-shadow: var(--prologue-text-shadow);
   text-transform: uppercase;
 }
 
 .aveugle-threshold__dialogue {
   align-content: center;
-  background: rgba(4, 4, 3, 0.94);
-  border-left: 1px solid var(--gold-dark);
   display: grid;
   gap: clamp(1.6rem, 3dvh, 2.6rem);
-  height: 100%;
-  min-height: 0;
-  overflow-y: auto;
+  min-height: 100%;
   padding: clamp(2rem, 5vw, 5rem) clamp(1.6rem, 4vw, 4.4rem);
 }
 
@@ -82,94 +65,84 @@ body:has(.aveugle-threshold) {
 }
 
 .aveugle-threshold__speaker .game-icon {
-  filter: sepia(0.5) drop-shadow(0 0.35rem 0.6rem #000);
+  filter: sepia(0.5) drop-shadow(var(--control-shadow));
 }
 
 .aveugle-threshold__speaker h1 {
   color: var(--material-gold-bright);
-  font-family: var(--font-game-heading);
-  font-size: clamp(1.85rem, 3vw, 3rem);
-  font-weight: 500;
+  font-family: var(--font-game-display);
+  font-size: var(--text-game-title);
+  font-weight: 400;
   letter-spacing: 0.08em;
+  line-height: 1.05;
   margin: 0;
   text-transform: uppercase;
+  text-wrap: balance;
 }
 
 .aveugle-threshold blockquote {
-  color: var(--salt-white);
+  color: var(--narrative-ink-on-dark);
   font-family: var(--font-game-body);
-  font-size: clamp(1.35rem, 2vw, 2rem);
-  line-height: 1.58;
+  font-size: var(--text-game-quote);
+  line-height: 1.55;
   margin: 0;
   max-width: 30ch;
+  text-wrap: pretty;
 }
 
 .aveugle-threshold__actions {
-  background: url('/encre-de-sel/frames/choice-frame-gore.webp') center / 100% 100% no-repeat;
-  min-height: 6.8rem;
-  padding: 1.25rem clamp(1.5rem, 3vw, 3rem);
-}
-
-.aveugle-threshold__actions .game-button {
-  background: transparent;
-  border: 0;
-  color: var(--ink-strong, #17110b);
-  font-family: var(--font-game-heading);
-  font-size: clamp(1.05rem, 1.5vw, 1.35rem);
-  justify-content: space-between;
-  min-height: 4rem;
-  padding: 0;
+  display: flex;
+  max-width: 24rem;
   width: 100%;
 }
 
-.aveugle-threshold__actions .game-button::before,
-.aveugle-threshold__actions .game-button::after {
-  background: transparent;
-  border: 0;
-  box-shadow: none;
-  opacity: 0;
+.aveugle-threshold__actions > * {
+  width: 100%;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1120px) {
   body:has(.aveugle-threshold) {
     overflow: auto;
   }
+
   .aveugle-threshold {
     height: auto;
     min-height: 100dvh;
     overflow: visible;
   }
+
   .aveugle-threshold__layout.game-scene-layout {
     height: auto;
   }
+
   .aveugle-threshold__stage {
-    min-height: 30dvh;
+    min-height: 0;
   }
+
   .aveugle-threshold__dialogue {
-    border-left: 0;
-    border-top: 1px solid var(--gold-dark);
-    min-height: 48dvh;
+    margin-inline: auto;
+    max-width: 50rem;
+    min-height: 0;
+    width: 100%;
   }
 }
 
-@media (max-width: 620px) {
-  .aveugle-threshold__stage {
-    min-height: 26dvh;
-    padding: 0.8rem;
+@media (max-width: 720px) {
+  .aveugle-threshold__scene {
+    background-image: url('/encre-de-sel/landing/seuil-mobile.webp');
   }
+
+  .aveugle-threshold__stage {
+    padding: 0.8rem 1rem;
+  }
+
   .aveugle-threshold__dialogue {
     gap: 1.25rem;
-    padding: 1.5rem 1.15rem 2rem;
+    padding: 1.5rem 1rem 2rem;
   }
-  .aveugle-threshold__speaker h1 {
-    font-size: 1.55rem;
-  }
-  .aveugle-threshold blockquote {
-    font-size: 1.18rem;
-  }
+
   .aveugle-threshold__actions {
-    min-height: 5.8rem;
-    padding: 0.85rem 1.25rem;
+    max-width: none;
   }
 }
 

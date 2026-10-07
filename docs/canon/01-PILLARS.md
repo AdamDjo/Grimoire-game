@@ -1,12 +1,12 @@
 # 01 — Pillars & Vision
 
-> Ce que GRIMOIRE doit être. Ce qu'il ne doit jamais devenir.
+> Ce que VELKHAR doit être. Ce qu'il ne doit jamais devenir.
 
 ---
 
 ## 1. La promesse unique
 
-**GRIMOIRE ne vend pas une fonctionnalité. Il vend une émotion.**
+**VELKHAR ne vend pas une fonctionnalité. Il vend une émotion.**
 
 L'émotion ciblée, unique et obsessionnelle :
 
@@ -62,7 +62,7 @@ Le joueur ne joue pas un "personnage générique". Il incarne une **vocation** �
 
 > _Le même monde. Mille histoires._
 
-GRIMOIRE est un **roguelike narratif**. Chaque run est une aventure complète, avec un début, un milieu et une fin. À la fin, le joueur reçoit sa **Chronique** — le récit de ce qu'il a vécu. Il peut recommencer avec la même vocation ou une autre.
+VELKHAR est un **roguelike narratif**. Chaque run est une aventure complète, avec un début, un milieu et une fin. À la fin, le joueur reçoit sa **Chronique** — le récit de ce qu'il a vécu. Il peut recommencer avec la même vocation ou une autre.
 
 > **⏱️ Durée d'un run : 2h30 maximum** (décision du 2026-08-06). Le joueur choisit son engagement
 > en acceptant un **contrat** à l'auberge, présenté comme expédition courte, longue ou majeure. La
@@ -84,7 +84,7 @@ GRIMOIRE est un **roguelike narratif**. Chaque run est une aventure complète, a
 
 > _Ta mort n'est pas stérile. Quelque chose survit._
 
-GRIMOIRE est un **roguelike** — ce qui signifie que la mort est définitive, mais qu'elle **n'est pas vide**. Ce qui survit n'est pas de la puissance : c'est de la **connaissance** et de l'**accès**.
+VELKHAR est un **roguelike** — ce qui signifie que la mort est définitive, mais qu'elle **n'est pas vide**. Ce qui survit n'est pas de la puissance : c'est de la **connaissance** et de l'**accès**.
 
 > **⚖️ La règle non négociable** (décision du 2026-08-06) :
 > **la méta-progression débloque de la connaissance et de l'accès, jamais de la puissance.**
@@ -115,9 +115,9 @@ s'effondre avec.
 
 ---
 
-## 3. L'anti-vision (ce que GRIMOIRE n'est PAS)
+## 3. L'anti-vision (ce que VELKHAR n'est PAS)
 
-| GRIMOIRE n'est PAS…                  | …parce que                                                               |
+| VELKHAR n'est PAS…                   | …parce que                                                               |
 | ------------------------------------ | ------------------------------------------------------------------------ |
 | ❌ Un chatbot fantasy                | Les réponses s'appuient sur un monde mémorisé + des mécaniques de jeu    |
 | ❌ Un Visual Novel à embranchements  | Les conséquences émergent, l'IA improvise                                |
@@ -132,7 +132,7 @@ s'effondre avec.
 
 ## 4. Le ton
 
-GRIMOIRE navigue entre trois influences :
+VELKHAR navigue entre trois influences :
 
 - **Dark fantasy désertique** (Dune, Glen Cook, Le Premier Magicien) — survie, perte, beauté morose, sable
 - **RPG narratif** (Baldur's Gate 3, Disco Elysium) — choix moraux complexes, personnages qui comptent
@@ -152,7 +152,7 @@ C'est la formule qui tranche toutes les hésitations de registre. Elle sépare *
 
 Sans cette séparation, les deux registres s'annulent : un monde baroque **raconté** en liturgie
 devient pompeux, et une voix sèche appliquée à un monde neutre devient plate. Le contraste — image
-atroce, ton posé — est **la** signature de GRIMOIRE.
+atroce, ton posé — est **la** signature de VELKHAR.
 
 Détail d'application de la voix : `15-GAME-MASTER §1.2`.
 
@@ -174,7 +174,7 @@ scène devient un sketch, la tension meurt. Si le tour est déjà court ou tendu
 
 ### Le budget gore _(ajout 2026-08-15, #281)_
 
-Le gore n'est pas une intensité, c'est un **signal**. Un corps mutilé dans GRIMOIRE dit toujours
+Le gore n'est pas une intensité, c'est un **signal**. Un corps mutilé dans VELKHAR dit toujours
 quelque chose de mécanique : ce qui vit ici, ce qui est arrivé au dernier passant, ce qui attend le
 joueur au prochain tour.
 
@@ -247,7 +247,7 @@ Pas un combat. Pas un loot. Un **détail** : la façon dont un PNJ a détourné 
 
 ## 7. Différenciateurs concurrentiels
 
-| Dimension                   | ChatGPT RP | AI Dungeon | Character.AI | D&D Beyond   | BG3        | **GRIMOIRE**          |
+| Dimension                   | ChatGPT RP | AI Dungeon | Character.AI | D&D Beyond   | BG3        | **VELKHAR**           |
 | --------------------------- | ---------- | ---------- | ------------ | ------------ | ---------- | --------------------- |
 | Mémoire long-terme          | ❌         | ❌         | ❌           | N/A          | ✅ (fixe)  | ✅ (scope run + méta) |
 | Dés / résolution            | ❌         | 🟡         | ❌           | ✅ (DM gère) | ✅✅       | ✅✅ (pivots)         |
@@ -319,7 +319,7 @@ Objectif mature : **≥ 60% completion + ≥ 45% 2ᵉ run à J+7.**
 
 ## 11. Pitch en une phrase pour l'équipe
 
-> _GRIMOIRE n'est pas un chatbot. C'est un roguelike narratif où chaque run est un roman de survie, de dés et de magie interdite — et où le monde change entre tes aventures._
+> _VELKHAR n'est pas un chatbot. C'est un roguelike narratif où chaque run est un roman de survie, de dés et de magie interdite — et où le monde change entre tes aventures._
 
 ---
 

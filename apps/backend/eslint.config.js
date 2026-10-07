@@ -1,7 +1,7 @@
 // @ts-check
 'use strict'
 
-const { createBackendConfig } = require('@grimoire/eslint-config/backend')
+const { createBackendConfig } = require('@velkhar/eslint-config/backend')
 
 module.exports = createBackendConfig({
   tsconfigRootDir: __dirname,

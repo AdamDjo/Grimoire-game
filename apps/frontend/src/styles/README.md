@@ -10,13 +10,13 @@ fois est une couleur qui finira par diverger d'elle-même.
 
 ## Où vivent les choses
 
-| Fichier                       | Rôle                                                                    |
-| ----------------------------- | ----------------------------------------------------------------------- |
-| `src/styles/tokens.css`       | **Source unique.** Toute valeur y est déclarée, et nulle part ailleurs. |
-| `src/styles/tokens.ts`        | Miroir TypeScript : les _noms_, pour l'autocomplétion et GSAP.          |
-| `src/app/globals.css`         | Importe les tokens, puis les ré-expose à Tailwind via `@theme inline`.  |
-| `public/design-system/`       | Les SVG (filets, cadres, ornements, grain), utilisables hors React.     |
-| `src/components/ui/grimoire/` | L'UI kit partagé.                                                       |
+| Fichier                      | Rôle                                                                    |
+| ---------------------------- | ----------------------------------------------------------------------- |
+| `src/styles/tokens.css`      | **Source unique.** Toute valeur y est déclarée, et nulle part ailleurs. |
+| `src/styles/tokens.ts`       | Miroir TypeScript : les _noms_, pour l'autocomplétion et GSAP.          |
+| `src/app/globals.css`        | Importe les tokens, puis les ré-expose à Tailwind via `@theme inline`.  |
+| `public/design-system/`      | Les SVG (filets, cadres, ornements, grain), utilisables hors React.     |
+| `src/components/ui/velkhar/` | L'UI kit partagé.                                                       |
 
 ### Le piège Tailwind
 
@@ -92,8 +92,8 @@ Quatre durées, pas une de plus.
 | `--motion-step` | 280 ms | Passage d'une étape    |
 | `--motion-page` | 650 ms | Voile de navigation    |
 
-Deux courbes : `--ease-grimoire-out` (la courbe par défaut du projet — sortie franche,
-repos long) et `--ease-grimoire-standard` (déplacement neutre, qui ne doit pas se
+Deux courbes : `--ease-velkhar-out` (la courbe par défaut du projet — sortie franche,
+repos long) et `--ease-velkhar-standard` (déplacement neutre, qui ne doit pas se
 remarquer). Une transition qui n'entre dans aucune de ces quatre durées est
 probablement une transition de trop.
 
@@ -218,7 +218,7 @@ les glyphes sont dessinés pour ces paliers. La liste des 40 noms fait foi dans
 
 1. **Jamais de littéral.** Couleur, police, durée : un token, toujours.
 2. **Un rôle, pas une matière.** `var(--gold)`, pas `var(--material-gold)`.
-3. **Ne pas modifier l'UI kit partagé** depuis une route. `components/ui/grimoire/`
+3. **Ne pas modifier l'UI kit partagé** depuis une route. `components/ui/velkhar/`
    appartient à tout le jeu : le toucher pour un besoin local casse ailleurs.
 4. **Responsive en CSS**, jamais via un hook JS.
 5. **Code et naming en anglais**, copy affichée en français.

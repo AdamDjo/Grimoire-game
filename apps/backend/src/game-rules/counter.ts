@@ -1,4 +1,4 @@
-import { COUNTER_CATALOGUE, INVENTORY_BAG_CAPACITY, findCounterItem } from '@grimoire/shared'
+import { COUNTER_CATALOGUE, INVENTORY_BAG_CAPACITY, findCounterItem } from '@velkhar/shared'
 
 import type {
   CounterCatalogItem,
@@ -7,7 +7,7 @@ import type {
   PersistedInventoryItem,
   PreparationCatalogueEntry,
   PreparationSnapshot,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 /**
  * The Comptoir's purchase arbitration (#249). Pure and deterministic: no

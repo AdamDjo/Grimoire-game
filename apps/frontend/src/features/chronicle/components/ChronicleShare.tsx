@@ -48,7 +48,7 @@ export function ChronicleShare({ title }: ChronicleShareProps) {
         Bluesky
       </a>
       <a
-        href={`mailto:rgpd@grimoire.game?subject=${encodeURIComponent(t('reportSubject', { title }))}`}
+        href={`mailto:rgpd@velkhar.game?subject=${encodeURIComponent(t('reportSubject', { title }))}`}
       >
         {t('report')}
       </a>

@@ -12,7 +12,7 @@ source_of_truth: true
 
 ## Décision
 
-GRIMOIRE utilise les images comme décors de la narration, pas comme sortie improvisée d'un modèle à
+VELKHAR utilise les images comme décors de la narration, pas comme sortie improvisée d'un modèle à
 chaque partie. La v0.2.1 ne génère aucune image pendant un tour, un run ou la découverte d'un lieu.
 
 La direction visuelle de production est définie dans [[ART_DIRECTION]]. Cette décision privilégie :

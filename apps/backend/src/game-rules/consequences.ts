@@ -17,7 +17,7 @@ import type {
   Difficulty,
   Locale,
   SurvivalStats,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 /**
  * Which attribute a choice tests, derived from its `type`.

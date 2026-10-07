@@ -10,7 +10,7 @@
     "outDir": "./dist",
     "sourceMap": true,
     "paths": {
-      "@grimoire/shared": ["../../packages/shared/src"]
+      "@velkhar/shared": ["../../packages/shared/src"]
     }
   },
   "include": ["src/**/*", "../../packages/shared/src/**/*"]

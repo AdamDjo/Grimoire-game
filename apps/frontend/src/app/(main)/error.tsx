@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl'
 
 import { SystemState } from '@/components/system/SystemState/SystemState'
-import { GameButton } from '@/components/ui/grimoire/GameButton/GameButton'
+import { GameButton } from '@/components/ui/velkhar/GameButton/GameButton'
 
 interface MainErrorProps {
   error: Error & { digest?: string }

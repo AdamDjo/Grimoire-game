@@ -1,5 +1,5 @@
 import type { AiScenePayload } from './scene-validator'
-import type { Character, Locale } from '@grimoire/shared'
+import type { Character, Locale } from '@velkhar/shared'
 
 /**
  * Deterministic fallback scene — no AI, no API key, no token cost.

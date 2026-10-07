@@ -1,6 +1,6 @@
 import { WORLD_ROUTES } from '@/config/worlds'
 
-const INTERNAL_ORIGIN = 'https://grimoire.local'
+const INTERNAL_ORIGIN = 'https://velkhar.local'
 
 const ALLOWED_DESTINATIONS = [
   '/',
@@ -24,7 +24,7 @@ function isAllowedPathname(pathname: string): boolean {
 }
 
 /**
- * Keeps post-auth navigation inside known GRIMOIRE surfaces. Absolute URLs,
+ * Keeps post-auth navigation inside known VELKHAR surfaces. Absolute URLs,
  * protocol-relative URLs and auth loops always fall back to a safe route.
  */
 export function getSafeInternalDestination(

@@ -6,7 +6,7 @@
   opacity: 1;
   overflow: hidden;
   position: fixed;
-  transition: opacity var(--motion-page) var(--ease-grimoire-standard);
+  transition: opacity var(--motion-page) var(--ease-velkhar-standard);
   z-index: var(--prologue-layer);
 }
 
@@ -188,7 +188,7 @@
   position: absolute;
   transform: scaleX(var(--prologue-progress));
   transform-origin: left center;
-  transition: transform var(--motion-step) var(--ease-grimoire-out);
+  transition: transform var(--motion-step) var(--ease-velkhar-out);
 }
 
 .auberge-intro__controls {

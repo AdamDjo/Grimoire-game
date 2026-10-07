@@ -4,9 +4,9 @@ import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 
 import { GameLink } from '@/components/ui/game-link'
-import { GameButton } from '@/components/ui/grimoire/GameButton/GameButton'
-import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
 import { LanguageSwitcher } from '@/components/ui/language-switcher'
+import { GameButton } from '@/components/ui/velkhar/GameButton/GameButton'
+import { GameIcon } from '@/components/ui/velkhar/GameIcon/GameIcon'
 
 import { VELKHAR_WORLD } from '../../_config/velkhar-world'
 

@@ -1,7 +1,7 @@
-import type { SurvivalStats } from '@grimoire/shared'
+import type { SurvivalStats } from '@velkhar/shared'
 
-export type { EmpriseAction } from '@grimoire/shared'
-export { EMPRISE_BASE_CALAMINE_COST } from '@grimoire/shared'
+export type { EmpriseAction } from '@velkhar/shared'
+export { EMPRISE_BASE_CALAMINE_COST } from '@velkhar/shared'
 
 const clamp = (value: number, min: number, max: number): number =>
   Math.max(min, Math.min(max, value))

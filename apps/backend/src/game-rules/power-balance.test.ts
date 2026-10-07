@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { CONTRACT_WEIGHT, computePowerScore, projectPowerGap, relicScore } from './power-balance'
 
-import type { PersistedInventoryItem } from '@grimoire/shared'
+import type { PersistedInventoryItem } from '@velkhar/shared'
 
 function weapon(name: string): PersistedInventoryItem {
   return { id: 'w1', name, category: 'equipment', quantity: 1, equippedSlot: 'main-hand' }

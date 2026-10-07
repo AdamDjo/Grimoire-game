@@ -1,13 +1,13 @@
 import { useTranslations } from 'next-intl'
 
-import { GameWindow } from '@/components/ui/grimoire/GameWindow/GameWindow'
+import { GameWindow } from '@/components/ui/velkhar/GameWindow/GameWindow'
 import { cn } from '@/lib/utils'
 
 import { VelkharCharacterSheet } from './VelkharCharacterSheet'
 import { VelkharInventoryPanel } from './VelkharInventoryPanel'
 import { VelkharSessionMenu } from './VelkharSessionMenu'
 
-import type { ActiveCondition, Character, InventoryItemRef, SurvivalStats } from '@grimoire/shared'
+import type { ActiveCondition, Character, InventoryItemRef, SurvivalStats } from '@velkhar/shared'
 
 export type VelkharSessionTool = 'character' | 'inventory' | 'menu'
 

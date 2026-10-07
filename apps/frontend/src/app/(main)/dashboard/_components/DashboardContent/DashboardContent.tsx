@@ -1,9 +1,9 @@
 import { useTranslations } from 'next-intl'
 
 import { GameLink } from '@/components/ui/game-link'
-import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
-import { GamePanel } from '@/components/ui/grimoire/GamePanel/GamePanel'
-import { GameSectionHeading } from '@/components/ui/grimoire/GameSectionHeading/GameSectionHeading'
+import { GameIcon } from '@/components/ui/velkhar/GameIcon/GameIcon'
+import { GamePanel } from '@/components/ui/velkhar/GamePanel/GamePanel'
+import { GameSectionHeading } from '@/components/ui/velkhar/GameSectionHeading/GameSectionHeading'
 import { WORLD_ROUTES } from '@/config/worlds'
 import { SignOutButton } from '@/features/auth/components/SignOutButton/SignOutButton'
 import { getAuthHref } from '@/lib/internal-navigation'

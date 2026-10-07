@@ -9,8 +9,8 @@
 ## Getting started
 
 ```bash
-git clone https://github.com/AdamDjo/Grimoire-game.git
-cd Grimoire-game
+git clone https://github.com/AdamDjo/Velkhar-game.git
+cd Velkhar-game
 bash scripts/setup.sh
 ```
 

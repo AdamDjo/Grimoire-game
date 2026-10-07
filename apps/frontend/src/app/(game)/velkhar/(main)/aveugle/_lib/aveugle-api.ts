@@ -5,7 +5,7 @@ import type {
   AveugleTalkResponse,
   Souvenir,
   SpendSouvenirResponse,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 export class AveugleApiError extends Error {
   constructor(

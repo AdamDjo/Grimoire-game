@@ -8,7 +8,7 @@ import { useChronicle } from '../hooks/use-chronicle'
 import { ChronicleReader } from './ChronicleReader'
 import { ChronicleState } from './ChronicleState'
 
-import type { SessionEndReason } from '@grimoire/shared'
+import type { SessionEndReason } from '@velkhar/shared'
 
 interface ChronicleEndExperienceProps {
   endReason?: SessionEndReason | null

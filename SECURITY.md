@@ -10,7 +10,7 @@
 
 **Do not open a public GitHub issue for security vulnerabilities.**
 
-Please report them via [GitHub Private Security Advisory](https://github.com/AdamDjo/Grimoire-game/security/advisories/new) or by emailing **adem.benmessaoud.dev@gmail.com**.
+Please report them via [GitHub Private Security Advisory](https://github.com/AdamDjo/Velkhar-game/security/advisories/new) or by emailing **adem.benmessaoud.dev@gmail.com**.
 
 Include:
 

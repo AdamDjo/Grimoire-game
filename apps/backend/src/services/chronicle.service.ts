@@ -1,11 +1,11 @@
-import { getPeople, getVocation, localeDisplayName, resolveLocale } from '@grimoire/shared'
+import { getPeople, getVocation, localeDisplayName, resolveLocale } from '@velkhar/shared'
 
 import { type ChronicleOutput, validateChronicleOutput } from '../ai/chronicle-validator'
 import { callOpenRouter } from '../ai/openrouter.provider'
 import { env } from '../config/env'
 import { prisma } from '../lib/prisma'
 
-import type { ChronicleEndReason } from '@grimoire/shared'
+import type { ChronicleEndReason } from '@velkhar/shared'
 
 const CHRONICLE_TIMEOUT_MS = 8000
 /** Below this many turns there isn't enough narrative material for a Chronicle (17-RUN-CHRONICLE.md §7). */

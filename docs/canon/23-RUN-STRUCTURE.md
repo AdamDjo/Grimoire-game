@@ -10,7 +10,7 @@ Ce fichier définit la forme d'un run : pourquoi le joueur part, comment la quê
 où vit la structure roguelike et comment il rentre. La révision du **2026-08-08** remplace la
 séparation en quatre interfaces décidée le 2026-08-06.
 
-> **GRIMOIRE reste un storytelling continu.** Le roguelike vient des règles, des ressources, du
+> **VELKHAR reste un storytelling continu.** Le roguelike vient des règles, des ressources, du
 > risque, de la mort et des conséquences — pas d'une carte de salles ni d'un changement d'écran.
 
 Le run complet suit cette continuité :
@@ -26,9 +26,9 @@ combat transforme temporairement la scène en interface tactique dédiée.
 
 ---
 
-## 1. L'Auberge — point d'entrée unique
+## 1. El Makhzen — point d'entrée unique
 
-Chaque partie commence à l'Auberge de L'Aveugle. Ce n'est ni un menu ni un tableau de gestion :
+Chaque partie commence à El Makhzen. Ce n'est ni un menu ni un tableau de gestion :
 c'est un lieu vivant composé de scènes illustrées et de dialogues.
 
 Quatre destinations restent accessibles sans coût depuis l'interface narrative :

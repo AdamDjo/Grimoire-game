@@ -1,5 +1,5 @@
 {
-  "name": "@grimoire/backend",
+  "name": "@velkhar/backend",
   "version": "0.2.1",
   "private": true,
   "scripts": {
@@ -15,7 +15,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@grimoire/shared": "workspace:*",
+    "@velkhar/shared": "workspace:*",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "@supabase/supabase-js": "^2.47.0",
@@ -29,8 +29,8 @@
     "zod": "^3.24.0"
   },
   "devDependencies": {
-    "@grimoire/eslint-config": "workspace:*",
-    "@grimoire/prettier-config": "workspace:*",
+    "@velkhar/eslint-config": "workspace:*",
+    "@velkhar/prettier-config": "workspace:*",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.0.0",

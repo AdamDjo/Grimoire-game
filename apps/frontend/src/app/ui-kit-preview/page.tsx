@@ -9,7 +9,7 @@ import {
   GameInput,
   GameTextarea,
   NarrativeComposer,
-} from '@/components/ui/grimoire'
+} from '@/components/ui/velkhar'
 import { GameHud } from '@/features/game-session/velkhar/GameHud/GameHud'
 
 import './ui-kit-preview.css'

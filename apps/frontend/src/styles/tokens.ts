@@ -130,9 +130,9 @@ export const seconds = {
 
 export const ease = {
   /** Sortie franche puis repos long — la courbe par défaut du projet. */
-  out: 'var(--ease-grimoire-out)',
+  out: 'var(--ease-velkhar-out)',
   /** Entrée/sortie neutre, pour un déplacement qui ne doit pas se remarquer. */
-  standard: 'var(--ease-grimoire-standard)',
+  standard: 'var(--ease-velkhar-standard)',
 } as const
 
 /** Équivalents GSAP des courbes CSS ci-dessus (GSAP n'accepte pas `var()`). */

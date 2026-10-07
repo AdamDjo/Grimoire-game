@@ -9,7 +9,7 @@
 
 ## §0 — Principe : un solo dev, des versions courtes, des signaux clairs
 
-GRIMOIRE n'est pas un MVP qu'on "scale". C'est un **produit éditorial** qui grandit par couches narratives. Chaque version vise :
+VELKHAR n'est pas un MVP qu'on "scale". C'est un **produit éditorial** qui grandit par couches narratives. Chaque version vise :
 
 1. **Un objectif produit binaire** (atteint / pas atteint)
 2. **Un signal de marché chiffré** qui débloque la suivante
@@ -31,7 +31,7 @@ C'est l'unique question à laquelle V1 doit répondre. Si oui → V1.1. Si non �
 
 #### Gameplay
 
-- ✅ Auberge de L'Aveugle (hub permanent, voix canon)
+- ✅ El Makhzen (hub permanent, voix canon de L'Aveugle)
 - ✅ Création personnage (nom + vocation + peuple)
 - ✅ 4 vocations : Marcheur-du-Sel, Lame-Ombre, Veilleur, Tisse-Verbe
 - ✅ Triptyque stats (SANG/SOUFFLE/VOLONTÉ), dés d20
@@ -158,7 +158,7 @@ V1.1 ne s'attaque pas à la croissance — elle approfondit l'existant.
 
 - Monitoring avancé (dashboard Adem-only : coûts, latences, completion)
 - Système A/B testing prompts IA (versions de phrases canon par voix)
-- Refonte triptyque `@grimoire/shared` (TODO connu)
+- Refonte triptyque `@velkhar/shared` (TODO connu)
 
 #### Monétisation
 
@@ -238,7 +238,7 @@ Si 3+ signaux sur 5 → V2 envisageable. Sinon → V1.2 ou consolidation.
 
 ### 4.1 — Objectif
 
-> _"GRIMOIRE devient une plateforme narrative IA, plus juste un jeu."_
+> _"VELKHAR devient une plateforme narrative IA, plus juste un jeu."_
 
 V3+ est à plusieurs années (T0 + 18-36 mois) et **dépend totalement** d'un MRR > 2 500€/mois stable.
 
@@ -353,7 +353,7 @@ Si 100+ Premium et signaux "j'ai tout vu" majoritaires → **alors** envisager u
 
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
-│                      ROADMAP GRIMOIRE                                │
+│                      ROADMAP VELKHAR                                │
 ├──────────────────────────────────────────────────────────────────────┤
 │                                                                      │
 │  V1 (T0 +5-6m)        V1.1 (+3-6m)         V2 (+6-12m)              │

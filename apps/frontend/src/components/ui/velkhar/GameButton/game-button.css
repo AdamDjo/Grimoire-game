@@ -25,10 +25,10 @@
   text-shadow: none;
   transform: translateY(0) scale(1);
   transition:
-    filter var(--motion-fast) var(--ease-grimoire-standard),
-    transform var(--motion-ui) var(--ease-grimoire-standard),
-    color var(--motion-fast) var(--ease-grimoire-standard),
-    opacity var(--motion-fast) var(--ease-grimoire-standard);
+    filter var(--motion-fast) var(--ease-velkhar-standard),
+    transform var(--motion-ui) var(--ease-velkhar-standard),
+    color var(--motion-fast) var(--ease-velkhar-standard),
+    opacity var(--motion-fast) var(--ease-velkhar-standard);
   white-space: nowrap;
 }
 
@@ -241,7 +241,7 @@
 .game-button__icon,
 .game-button__spinner {
   position: relative;
-  transition: transform var(--motion-ui) var(--ease-grimoire-standard);
+  transition: transform var(--motion-ui) var(--ease-velkhar-standard);
   z-index: 1;
 }
 
@@ -284,7 +284,7 @@
 @media (prefers-reduced-motion: no-preference) {
   .game-button--primary:hover:not(:disabled):not([aria-disabled='true'])
     .game-button__label::after {
-    animation: game-button-sheen var(--motion-page) var(--ease-grimoire-out) forwards;
+    animation: game-button-sheen var(--motion-page) var(--ease-velkhar-out) forwards;
   }
 }
 

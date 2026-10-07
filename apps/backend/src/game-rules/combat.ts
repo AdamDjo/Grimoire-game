@@ -1,4 +1,4 @@
-import { attributeModifier, FISTS_DAMAGE } from '@grimoire/shared'
+import { attributeModifier, FISTS_DAMAGE } from '@velkhar/shared'
 
 import { getCreature } from './bestiary'
 import { resolveDying } from './survival'
@@ -24,7 +24,7 @@ import type {
   KnockoutContext,
   KnockoutVerdict,
   SurvivalStats,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 /**
  * The turn-based combat engine — the only place a fight is arbitrated.

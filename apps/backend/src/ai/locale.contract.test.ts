@@ -1,4 +1,4 @@
-import { DEFAULT_LOCALE, localeDisplayName, normalizeLocale, resolveLocale } from '@grimoire/shared'
+import { DEFAULT_LOCALE, localeDisplayName, normalizeLocale, resolveLocale } from '@velkhar/shared'
 import { describe, expect, it } from 'vitest'
 
 /**

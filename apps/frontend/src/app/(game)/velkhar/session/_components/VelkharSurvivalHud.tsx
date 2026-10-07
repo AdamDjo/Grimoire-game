@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 
-import type { InventoryItemRef, SurvivalStats } from '@grimoire/shared'
+import type { InventoryItemRef, SurvivalStats } from '@velkhar/shared'
 import type { CSSProperties } from 'react'
 
 interface HudStatStyle extends CSSProperties {

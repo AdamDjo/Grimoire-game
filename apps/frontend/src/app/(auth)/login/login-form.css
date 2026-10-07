@@ -316,9 +316,9 @@
   text-align: left;
   text-decoration: none;
   transition:
-    color var(--motion-fast) var(--ease-grimoire-standard),
-    text-shadow var(--motion-fast) var(--ease-grimoire-standard),
-    transform var(--motion-fast) var(--ease-grimoire-standard);
+    color var(--motion-fast) var(--ease-velkhar-standard),
+    text-shadow var(--motion-fast) var(--ease-velkhar-standard),
+    transform var(--motion-fast) var(--ease-velkhar-standard);
 }
 
 .login-form--landing .login-form__oauth-link::after {
@@ -337,9 +337,9 @@
   letter-spacing: 0.06em;
   text-decoration: none;
   transition:
-    color var(--motion-fast) var(--ease-grimoire-standard),
-    text-shadow var(--motion-fast) var(--ease-grimoire-standard),
-    transform var(--motion-fast) var(--ease-grimoire-standard);
+    color var(--motion-fast) var(--ease-velkhar-standard),
+    text-shadow var(--motion-fast) var(--ease-velkhar-standard),
+    transform var(--motion-fast) var(--ease-velkhar-standard);
 }
 
 @media (prefers-reduced-motion: no-preference) {

@@ -5,11 +5,11 @@ import Link from 'next/link'
 import { useLocale, useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState, type KeyboardEvent } from 'react'
 
-import { GameButton } from '@/components/ui/grimoire/GameButton/GameButton'
-import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
-import { GameSceneLayout } from '@/components/ui/grimoire/GameSceneLayout/GameSceneLayout'
-import { GameTopBar } from '@/components/ui/grimoire/GameTopBar/GameTopBar'
-import { NarrativeComposer } from '@/components/ui/grimoire/NarrativeComposer/NarrativeComposer'
+import { GameButton } from '@/components/ui/velkhar/GameButton/GameButton'
+import { GameIcon } from '@/components/ui/velkhar/GameIcon/GameIcon'
+import { GameSceneLayout } from '@/components/ui/velkhar/GameSceneLayout/GameSceneLayout'
+import { GameTopBar } from '@/components/ui/velkhar/GameTopBar/GameTopBar'
+import { NarrativeComposer } from '@/components/ui/velkhar/NarrativeComposer/NarrativeComposer'
 import { SoftSignupPrompt } from '@/features/auth/components/SoftSignupPrompt/SoftSignupPrompt'
 import { ChronicleEndExperience } from '@/features/chronicle/components/ChronicleEndExperience'
 import { gameSessionApi } from '@/features/game-session/api/game-session-api'
@@ -32,7 +32,7 @@ import type {
   Locale,
   SceneResponse,
   SurvivalStats,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 import '../_theme/velkhar-session.css'
 import '@/features/chronicle/chronicle.css'

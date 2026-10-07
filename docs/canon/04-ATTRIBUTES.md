@@ -1,12 +1,12 @@
 # 04 — Attributs
 
-> Le triptyque **SANG · SOUFFLE · VOLONTÉ**. La fondation mathématique de GRIMOIRE.
+> Le triptyque **SANG · SOUFFLE · VOLONTÉ**. La fondation mathématique de VELKHAR.
 
 ---
 
 ## 0. Pourquoi un triptyque
 
-GRIMOIRE n'utilise **pas** les 6 attributs D&D (Force, Dex, Con, Int, Sag, Cha). Trop génériques, trop spreadsheet, trop éloignés de l'âme de Velkhar.
+VELKHAR n'utilise **pas** les 6 attributs D&D (Force, Dex, Con, Int, Sag, Cha). Trop génériques, trop spreadsheet, trop éloignés de l'âme de Velkhar.
 
 À la place : **trois attributs forts**, ancrés dans le lore, qui parlent de _qui tu es_ dans un monde recouvert de Cendre dorée.
 
@@ -249,7 +249,7 @@ Jet de dés = d20 + modificateur d'attribut + bonus de compétence
 
 ## 5. Évolution des attributs dans un run
 
-GRIMOIRE est un roguelike — la progression se fait **au sein d'un run**, pas entre les runs.
+VELKHAR est un roguelike — la progression se fait **au sein d'un run**, pas entre les runs.
 
 ### Au sein d'un run — Approche équipement-driven 🟢
 
@@ -305,7 +305,7 @@ Les attributs influencent aussi les statistiques de survie (détail dans `06-SUR
 
 La magie est rare et coûteuse (voir `02-WORLD-BIBLE.md`). Le système est **unifié** : un seul source de pouvoir (les artefacts), un seul coût (la Calamine).
 
-### La magie dans GRIMOIRE
+### La magie dans VELKHAR
 
 - **Les artefacts** = la seule source de vraie magie. Chacun unique, chacun offre un pouvoir unique.
 - **Tout le monde** peut utiliser un artefact (pouvoir de base).

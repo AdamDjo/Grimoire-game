@@ -111,7 +111,7 @@ ticket à la main, et dérivaient malgré tout.
 Le besoin « voir où en est le projet depuis la PR » et la règle « une PR ne modifie aucun document »
 ne s'opposent que si le statut est écrit à la main. Il est donc **généré** : le job `Project Status`
 de `.github/workflows/pr.yml` lit le milestone via `gh issue list` et poste un commentaire unique,
-réécrit à chaque push (marqueur `<!-- grimoire:project-status -->`, script
+réécrit à chaque push (marqueur `<!-- velkhar:project-status -->`, script
 `scripts/pr-status-comment.mjs`).
 
 Un hook git a été écarté : local à une seule machine, contournable par `--no-verify`, et il aurait

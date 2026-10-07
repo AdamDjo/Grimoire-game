@@ -9,7 +9,7 @@
 
 ## §0 — Principe directeur
 
-**GRIMOIRE doit être rentable pour un solo dev à 50-200 abonnés Premium, sans compromettre l'éthique narrative.** Le payant achète **"plus de jeu"**, jamais **"un meilleur jeu"**. Égalité narrative absolue pour tous les joueurs (anonymes inclus).
+**VELKHAR doit être rentable pour un solo dev à 50-200 abonnés Premium, sans compromettre l'éthique narrative.** Le payant achète **"plus de jeu"**, jamais **"un meilleur jeu"**. Égalité narrative absolue pour tous les joueurs (anonymes inclus).
 
 **Trois règles cardinales** :
 
@@ -98,13 +98,13 @@ Choix difficile tranché le 2026-06-30 après débat. **Premium n'aura PAS de mo
 
 ### 2.2 — Implémentation file prioritaire
 
-| Composant                     | Comportement                                                                                     |
-| ----------------------------- | ------------------------------------------------------------------------------------------------ |
-| Queue Redis (Upstash)         | 2 niveaux : `priority:high` (Premium) / `priority:normal` (gratuit+anonyme)                      |
-| Worker IA                     | Pop `priority:high` d'abord, fallback `priority:normal`                                          |
-| Saturation cascade OpenRouter | Premium reste servi tant qu'AU MOINS 1 modèle répond — gratuit voit message d'attente            |
-| UX Premium                    | "Le MJ réfléchit..." standard, jamais de queue visible                                           |
-| UX gratuit                    | Si saturation : "GRIMOIRE est très populaire ce soir. Premium = pas d'attente." (CTA conversion) |
+| Composant                     | Comportement                                                                                    |
+| ----------------------------- | ----------------------------------------------------------------------------------------------- |
+| Queue Redis (Upstash)         | 2 niveaux : `priority:high` (Premium) / `priority:normal` (gratuit+anonyme)                     |
+| Worker IA                     | Pop `priority:high` d'abord, fallback `priority:normal`                                         |
+| Saturation cascade OpenRouter | Premium reste servi tant qu'AU MOINS 1 modèle répond — gratuit voit message d'attente           |
+| UX Premium                    | "Le MJ réfléchit..." standard, jamais de queue visible                                          |
+| UX gratuit                    | Si saturation : "VELKHAR est très populaire ce soir. Premium = pas d'attente." (CTA conversion) |
 
 → Détails techniques dans [20-ARCHITECTURE §6](20-ARCHITECTURE.md) (à compléter Phase D).
 
@@ -321,7 +321,7 @@ async function handleStripeWebhook(event: Stripe.Event) {
 ### 7.4 — Flow signup → premium (parcours utilisateur)
 
 ```
-1. Visiteur lance run anonyme (cookie HTTPOnly grimoire_session)
+1. Visiteur lance run anonyme (cookie HTTPOnly velkhar_session)
    → 30 reqs jouées, cap atteint
 2. Modal : "Crée un compte pour continuer — gratuit"
    → Email magic link → compte créé

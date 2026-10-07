@@ -13,7 +13,7 @@ import {
   type ReturnRisk,
   type RunContract,
   type RunState,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 import { countReturnRooms, MINUTES_PER_ROOM, ROOMS_PER_FLOOR } from './dungeon'
 

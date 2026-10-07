@@ -2,8 +2,8 @@ import Image from 'next/image'
 
 import { GameSessionHud } from '../../components/GameSessionHud'
 
-import type { StatBarTone } from '@/components/ui/grimoire/StatBar/StatBar'
-import type { SurvivalStats } from '@grimoire/shared'
+import type { StatBarTone } from '@/components/ui/velkhar/StatBar/StatBar'
+import type { SurvivalStats } from '@velkhar/shared'
 
 import './game-hud.css'
 

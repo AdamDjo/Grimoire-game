@@ -1,6 +1,6 @@
-import { PEOPLES, VOCATIONS } from '@grimoire/shared'
+import { PEOPLES, VOCATIONS } from '@velkhar/shared'
 
-import type { GameIconName } from '@/components/ui/grimoire/GameIcon/GameIcon'
+import type { GameIconName } from '@/components/ui/velkhar/GameIcon/GameIcon'
 import type { UiLocale } from '@/i18n/config'
 
 interface LocalizedValue {

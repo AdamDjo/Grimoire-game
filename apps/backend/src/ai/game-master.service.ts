@@ -17,7 +17,7 @@ import {
 } from './system-prompt'
 
 import type { MemoryChunkModel, SouvenirModel } from '../generated/prisma/models'
-import type { Character, Locale } from '@grimoire/shared'
+import type { Character, Locale } from '@velkhar/shared'
 
 export interface GameMasterInput {
   character: Character

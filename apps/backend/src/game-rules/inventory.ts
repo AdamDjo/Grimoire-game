@@ -1,4 +1,4 @@
-import { INVENTORY_BAG_CAPACITY, INVENTORY_EQUIPMENT_SLOTS } from '@grimoire/shared'
+import { INVENTORY_BAG_CAPACITY, INVENTORY_EQUIPMENT_SLOTS } from '@velkhar/shared'
 
 import { bagSlotsUsed } from './counter'
 
@@ -9,7 +9,7 @@ import type {
   ItemGained,
   PersistedInventoryItem,
   SurvivalStats,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 const clamp = (value: number, min: number, max: number): number =>
   Math.max(min, Math.min(max, value))

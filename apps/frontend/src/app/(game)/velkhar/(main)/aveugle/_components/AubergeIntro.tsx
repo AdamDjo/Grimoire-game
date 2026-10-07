@@ -4,8 +4,8 @@ import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { GameButton } from '@/components/ui/grimoire/GameButton/GameButton'
-import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
+import { GameButton } from '@/components/ui/velkhar/GameButton/GameButton'
+import { GameIcon } from '@/components/ui/velkhar/GameIcon/GameIcon'
 import { gsap, ScrollTrigger, useGSAP } from '@/lib/gsap-init'
 import { easeGsap, seconds } from '@/styles/tokens'
 
@@ -13,7 +13,7 @@ import type { CSSProperties, UIEvent } from 'react'
 
 import './auberge-intro.css'
 
-export const AUBERGE_INTRO_STORAGE_KEY = 'grimoire:auberge-intro:v2'
+export const AUBERGE_INTRO_STORAGE_KEY = 'velkhar:auberge-intro:v2'
 
 const PROLOGUE_IMAGES = [
   '/encre-de-sel/prologue/archontes.webp',

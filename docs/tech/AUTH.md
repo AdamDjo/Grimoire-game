@@ -86,7 +86,7 @@ Le fallback naïf `typeof email === 'string' ? email : synthétique` stockait do
 Dès le **2ᵉ** utilisateur anonyme → collision sur la contrainte unique `User.email`
 (Prisma **P2002**), masquée en `401 Invalid or expired token`.
 
-**Fix** : fallback `${userId}@anonymous.grimoire` si l'email est absent **ou vide**.
+**Fix** : fallback `${userId}@anonymous.velkhar` si l'email est absent **ou vide**.
 Règle générale : pour tout champ d'un JWT anonyme, tester la **chaîne non vide**,
 jamais seulement `typeof === 'string'`.
 
@@ -102,7 +102,7 @@ jamais seulement `typeof === 'string'`.
   (RGPD/consentement + dépendance tierce). Décision prise le 2026-07-12.
 - **Linking multi-provider avancé** : un utilisateur connecté doit pouvoir ajouter
   plusieurs méthodes de connexion au même compte depuis un écran dédié. Différé en
-  [#159](https://github.com/AdamDjo/Grimoire-game/issues/159).
+  [#159](https://github.com/AdamDjo/Velkhar-game/issues/159).
 - **RLS Postgres** : différé (décision #7). Autorisation V1 = filtrage `userId` Express.
 - **OAuth** : Google vérifié live. Discord à re-tester de bout en bout.
 

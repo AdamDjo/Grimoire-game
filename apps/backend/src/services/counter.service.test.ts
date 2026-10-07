@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import type { PersistedInventoryItem } from '@grimoire/shared'
+import type { PersistedInventoryItem } from '@velkhar/shared'
 
 const characterFindFirst = vi.fn()
 const characterUpdate = vi.fn()

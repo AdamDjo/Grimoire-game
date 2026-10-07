@@ -4,7 +4,7 @@ import type {
   Character,
   ShiftedSkill,
   VocationResolutionResponse,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 /** Payload accepted by the backend character route. Mirrors the backend Zod schema. */
 export interface CreateCharacterInput {

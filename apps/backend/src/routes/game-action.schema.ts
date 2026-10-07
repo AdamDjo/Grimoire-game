@@ -1,4 +1,4 @@
-import { normalizeLocale } from '@grimoire/shared'
+import { normalizeLocale } from '@velkhar/shared'
 import { z } from 'zod'
 
 /**

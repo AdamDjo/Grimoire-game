@@ -24,7 +24,7 @@ import {
   type SessionEndReason,
   type SurvivalStats,
   weaponDamageForItemName,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 import { generateScene } from '../ai/game-master.service'
 import { persistedChoicesSchema } from '../ai/scene-validator'

@@ -8,7 +8,7 @@ import { MOCK_CHARACTER } from '../_data/mock-character'
 
 import { VelkharSession } from './VelkharSession'
 
-import type { SceneResponse } from '@grimoire/shared'
+import type { SceneResponse } from '@velkhar/shared'
 
 const { abandonSessionMock, createSessionMock, postGameActionMock, postInventoryActionMock } =
   vi.hoisted(() => ({

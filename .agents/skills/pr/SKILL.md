@@ -105,7 +105,7 @@ Exécuter dans l'ordre :
 
 8. **Créer la PR via `gh pr create`**
    - owner: `AdamDjo`
-   - repo: `Grimoire-game`
+   - repo: `Velkhar-game`
    - head: branche courante
    - base: cible déterminée à l'étape 3
    - assignees: `["AdamDjo"]`
@@ -117,7 +117,7 @@ Exécuter dans l'ordre :
 
    ```bash
    # Récupérer le node_id de la PR
-   PR_NODE_ID=$(gh api repos/AdamDjo/Grimoire-game/pulls/<PR_NUMBER> --jq '.node_id')
+   PR_NODE_ID=$(gh api repos/AdamDjo/Velkhar-game/pulls/<PR_NUMBER> --jq '.node_id')
 
    # Ajouter au projet Scrum Board (Projects V2)
    gh api graphql -f query='

@@ -1,8 +1,8 @@
-import { attributeModifier } from '@grimoire/shared'
+import { attributeModifier } from '@velkhar/shared'
 
 import { maxEmpriseCharges } from './emprise'
 
-import type { PersistedInventoryItem, SurvivalStats } from '@grimoire/shared'
+import type { PersistedInventoryItem, SurvivalStats } from '@velkhar/shared'
 
 const clamp = (value: number, min: number, max: number): number =>
   Math.max(min, Math.min(max, value))

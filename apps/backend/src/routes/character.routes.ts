@@ -6,7 +6,7 @@ import { resolveVocation } from '../services/vocation-resolution.service'
 
 import { createCharacterSchema, resolveVocationSchema } from './character.schema'
 
-import type { ApiResponse, Character, VocationResolutionResponse } from '@grimoire/shared'
+import type { ApiResponse, Character, VocationResolutionResponse } from '@velkhar/shared'
 
 export const characterRouter: Router = Router()
 

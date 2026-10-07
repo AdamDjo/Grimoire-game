@@ -1,4 +1,4 @@
-import { QUEST_INTENSITY_TAG } from '@grimoire/shared'
+import { QUEST_INTENSITY_TAG } from '@velkhar/shared'
 
 import { projectPowerGap } from '../game-rules/power-balance'
 import {
@@ -29,7 +29,7 @@ import type {
   RunState,
   SessionEndReason,
   PersistedInventoryItem,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 /**
  * Bridges the pure run rules (`game-rules/run.ts`, `game-rules/dungeon.ts`) to

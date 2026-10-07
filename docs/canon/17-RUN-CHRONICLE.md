@@ -14,7 +14,7 @@ La Chronique a **deux fonctions distinctes mais convergentes** :
 
 1. **Récompense émotionnelle pour le joueur** : son aventure devient un objet — un texte qu'il peut relire, partager, garder. La mort en roguelike n'est plus une perte sèche, c'est une page écrite.
 
-2. **Asset d'acquisition gratuit pour GRIMOIRE** : URL publique, OG image générée, partageable sur X / Bluesky / Discord. **Chaque Chronique partagée est une pub gratuite.** C'est le moteur viral du jeu — pas une fonctionnalité bonus, **le canal d'acquisition principal V1**.
+2. **Asset d'acquisition gratuit pour VELKHAR** : URL publique, OG image générée, partageable sur X / Bluesky / Discord. **Chaque Chronique partagée est une pub gratuite.** C'est le moteur viral du jeu — pas une fonctionnalité bonus, **le canal d'acquisition principal V1**.
 
 **Règle absolue** : la Chronique reste **gratuite pour tous**, anonymes inclus. Aucun gating, jamais. Tout joueur qui termine un run obtient sa Chronique partageable, point.
 
@@ -159,7 +159,7 @@ Le prompt inclut **10 exemples canoniques** dans le système (versionné `prompt
 ### OG Image (1200×630, pour partage social)
 
 - Générée **côté frontend** au build de la page Chronique
-- Composée : illustration (à droite, 50% largeur) + titre Cinzel + tagline + logo GRIMOIRE
+- Composée : illustration (à droite, 50% largeur) + titre Cinzel + tagline + logo VELKHAR
 - Format PNG, stockée Supabase Storage
 - Disponible aux URLs Open Graph standards
 
@@ -176,7 +176,7 @@ Le prompt inclut **10 exemples canoniques** dans le système (versionné `prompt
 ### URL
 
 ```
-grimoire.game/chronique/{slug}
+velkhar.game/chronique/{slug}
 ```
 
 Le `slug` est un **hash court non-énumérable** (8-10 caractères, base62) :
@@ -190,7 +190,7 @@ Le `slug` est un **hash court non-énumérable** (8-10 caractères, base62) :
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│   GRIMOIRE — Of Ash and Salt                            │  ← nav minimaliste
+│   VELKHAR: Of Ash and Salt                            │  ← nav minimaliste
 ├─────────────────────────────────────────────────────────┤
 │                                                         │
 │   [ ILLUSTRATION pleine largeur, 1200×600 ]             │
@@ -223,13 +223,13 @@ Le `slug` est un **hash court non-énumérable** (8-10 caractères, base62) :
 ### Métas HTML
 
 ```html
-<title>Les Cendres de Tissan — Chronique GRIMOIRE</title>
+<title>Les Cendres de Tissan — Chronique VELKHAR</title>
 <meta property="og:title" content="Les Cendres de Tissan" />
 <meta
   property="og:description"
   content="L'aventure de Kael, Marcheur-du-Sel, à Velkhar."
 />
-<meta property="og:image" content="https://grimoire.game/og/{slug}.png" />
+<meta property="og:image" content="https://velkhar.game/og/{slug}.png" />
 <meta property="og:type" content="article" />
 <meta name="twitter:card" content="summary_large_image" />
 ```
@@ -381,7 +381,7 @@ Si le perso termine par choix à l'auberge :
 | **Contenu inapproprié dans la Chronique** (l'IA hallucine quelque chose offensant)                | (1) Filtre regex post-génération sur termes blacklistés. (2) Bouton "Signaler" sur chaque page publique → modération manuelle Adem. (3) Si signalement validé → Chronique dépubliée (URL renvoie 404), joueur notifié. |
 | **Slug deviné/scrapé**                                                                            | Hash 8-10 chars base62 = ~62^8 = 218 milliards de combinaisons. Rate-limiting sur 404 (10/min/IP). Pas d'API publique de listing.                                                                                      |
 | **Illustration ratée** (Pollinations renvoie image vide ou nulle)                                 | 5 illustrations fallback pré-générées par `mood` (5 PNG dans `/public/fallbacks/`). Si fail → fallback automatique.                                                                                                    |
-| **OG image cassée** (problème font Cinzel ou Canvas)                                              | Tests E2E sur 10 Chroniques exemples avant chaque déploiement. Si fail → fallback "OG générique GRIMOIRE".                                                                                                             |
+| **OG image cassée** (problème font Cinzel ou Canvas)                                              | Tests E2E sur 10 Chroniques exemples avant chaque déploiement. Si fail → fallback "OG générique VELKHAR".                                                                                                              |
 | **Chronique trop longue** (l'IA sort 3000 mots)                                                   | Hard cap 1800 tokens sortie, tronqué propre + retry avec rappel _"800-1200 mots, pas plus"_.                                                                                                                           |
 | **Joueur veut supprimer sa Chronique** (regret post-partage)                                      | Bouton "Supprimer cette Chronique" dans le profil (compte requis). Anonyme → URL irrévocable, mais demande RGPD acceptée.                                                                                              |
 | **Conflit RGPD** (Chronique stockée 2 ans même compte purgé)                                      | Politique transparente : "Les Chroniques restent publiques 2 ans même si tu fermes ton compte, sauf demande de suppression explicite". Consentement à la création de compte.                                           |
@@ -429,7 +429,7 @@ Si le perso termine par choix à l'auberge :
                                      ▼
                   ┌─────────────────────────────────────┐
                   │   URL publique permanente :         │
-                  │   grimoire.game/chronique/{slug}    │
+                  │   velkhar.game/chronique/{slug}    │
                   │                                     │
                   │   Joueur voit + partage             │
                   │   → traffic externe                 │

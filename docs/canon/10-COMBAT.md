@@ -18,7 +18,7 @@
 > Ce fichier est donc à lire comme un **cahier des charges d'implémentation** pour l'EPIC #215, pas
 > comme une description de l'existant.
 
-Le combat dans GRIMOIRE utilise les mêmes attributs et le même dé que le reste du jeu
+Le combat dans VELKHAR utilise les mêmes attributs et le même dé que le reste du jeu
 (`09-ACTION-LOOP`). Pas de grille hexagonale, pas de positionnement précis au pixel : on cherche le
 **ressenti tactique de BG3** sans la complexité d'un wargame.
 
@@ -215,7 +215,7 @@ seuil dur qui double le nombre d'actions d'un coup._
 
 ## 5. Le rôle de VOLONTÉ — "Leader"
 
-C'est **la décision design clé** de GRIMOIRE-combat. VOLONTÉ n'est pas qu'un attribut social — c'est un **rôle de soutien tactique** au combat.
+C'est **la décision design clé** de VELKHAR-combat. VOLONTÉ n'est pas qu'un attribut social — c'est un **rôle de soutien tactique** au combat.
 
 ### Les 3 compétences de Leader
 

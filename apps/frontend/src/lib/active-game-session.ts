@@ -1,4 +1,4 @@
-export const ACTIVE_GAME_SESSION_COOKIE = 'grimoire_active_session'
+export const ACTIVE_GAME_SESSION_COOKIE = 'velkhar_active_session'
 
 const LEGACY_ACTIVE_GAME_SESSION_VALUE = '1'
 const ACTIVE_GAME_SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 30

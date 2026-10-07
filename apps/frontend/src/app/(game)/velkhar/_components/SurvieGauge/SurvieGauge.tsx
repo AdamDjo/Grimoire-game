@@ -1,7 +1,7 @@
-import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
-import { StatBar } from '@/components/ui/grimoire/StatBar/StatBar'
+import { GameIcon } from '@/components/ui/velkhar/GameIcon/GameIcon'
+import { StatBar } from '@/components/ui/velkhar/StatBar/StatBar'
 
-import type { StatBarSize } from '@/components/ui/grimoire/StatBar/StatBar'
+import type { StatBarSize } from '@/components/ui/velkhar/StatBar/StatBar'
 
 import './survie-gauge.css'
 

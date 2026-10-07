@@ -53,7 +53,7 @@ vi.mock('next/image', () => ({
   ),
 }))
 
-describe('Grimoire UI primitives', () => {
+describe('Velkhar UI primitives', () => {
   it('expose uniquement les quatre rôles canoniques de GameButton', () => {
     render(
       <>
@@ -134,7 +134,7 @@ describe('Grimoire UI primitives', () => {
 
   it('expose la marque avec une alternative accessible ou décorative', () => {
     const { rerender } = render(<GameBrand variant="lockup" />)
-    expect(screen.getByRole('img', { name: 'GRIMOIRE — Of Ash and Salt' })).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: 'VELKHAR: Of Ash and Salt' })).toBeInTheDocument()
 
     rerender(<GameBrand decorative variant="sigil" />)
     expect(screen.queryByRole('img')).not.toBeInTheDocument()

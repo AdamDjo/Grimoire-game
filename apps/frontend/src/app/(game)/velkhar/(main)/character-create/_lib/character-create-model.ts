@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import type { ShiftedSkill } from '@grimoire/shared'
+import type { ShiftedSkill } from '@velkhar/shared'
 
 export const CHARACTER_CREATE_STEPS = [
   'identity',
@@ -100,8 +100,8 @@ export const {
   name: characterNameSchema,
 } = createCharacterSchemas()
 
-export const CHARACTER_DRAFT_STORAGE_KEY = 'grimoire.character-create.draft.v2'
-export const CHARACTER_RESULT_STORAGE_KEY = 'grimoire.character-create.result.v2'
+export const CHARACTER_DRAFT_STORAGE_KEY = 'velkhar.character-create.draft.v2'
+export const CHARACTER_RESULT_STORAGE_KEY = 'velkhar.character-create.result.v2'
 
 export function parseStoredCharacterDraft(value: string | null): CharacterCreateDraft | null {
   if (!value) return null

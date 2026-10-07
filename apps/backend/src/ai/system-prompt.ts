@@ -1,4 +1,4 @@
-import { CONDITIONS, getConditionDefinition, localeDisplayName } from '@grimoire/shared'
+import { CONDITIONS, getConditionDefinition, localeDisplayName } from '@velkhar/shared'
 
 import { creaturesForDepth, creaturesForReturn } from '../game-rules/bestiary'
 import { gaugeTier } from '../game-rules/survival'
@@ -14,7 +14,7 @@ import type {
   GameMode,
   KnockoutVerdict,
   Locale,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 /** Narrow projection of a `SceneLog` used for the N1 recent-turns window. */
 export interface RecentTurnSummary {

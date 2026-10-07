@@ -1,4 +1,4 @@
-import type { SurvivalStats } from '@grimoire/shared'
+import type { SurvivalStats } from '@velkhar/shared'
 
 /**
  * Per-turn survival drain. Walking the salt roads wears down thirst, hunger and

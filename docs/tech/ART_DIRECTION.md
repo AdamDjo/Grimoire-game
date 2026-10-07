@@ -267,5 +267,5 @@ cause la facture.
 Les trois contextes de production à maintenir sont :
 
 1. un environnement de run noir, blanc et or, sans personnage ;
-2. l'Auberge de L'Aveugle dans le registre humain et chaud ;
+2. El Makhzen dans le registre humain et chaud ;
 3. un écran réel de Game Session utilisant la nouvelle grammaire UI.

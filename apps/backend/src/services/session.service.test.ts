@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { resolveChoice } from '../game-rules/consequences'
 
-import type { Attributes, SurvivalStats } from '@grimoire/shared'
+import type { Attributes, SurvivalStats } from '@velkhar/shared'
 
 // Mock the DB so `resolveChosenChoice` reads a scene we control.
 const sceneFindFirst = vi.fn()

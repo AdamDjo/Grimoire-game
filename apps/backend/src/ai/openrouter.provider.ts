@@ -60,7 +60,7 @@ export async function callOpenRouter(
         'Content-Type': 'application/json',
         // Optional attribution headers recommended by OpenRouter.
         'HTTP-Referer': env.frontendUrl,
-        'X-Title': 'Grimoire - Of Ash and Salt',
+        'X-Title': 'VELKHAR: Of Ash and Salt',
       },
       body: JSON.stringify({
         model,

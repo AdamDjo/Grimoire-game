@@ -7,7 +7,7 @@ import type {
   ItemGained,
   PersistedInventoryItem,
   SurvivalStats,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 const survival = (overrides: Partial<SurvivalStats> = {}): SurvivalStats => ({
   hp: 12,

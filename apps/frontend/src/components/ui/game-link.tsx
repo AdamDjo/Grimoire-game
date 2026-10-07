@@ -6,10 +6,10 @@ import type {
   GameButtonSize,
   GameButtonTone,
   GameButtonVariant,
-} from './grimoire/GameButton/GameButton'
+} from './velkhar/GameButton/GameButton'
 import type { ComponentProps, ReactNode } from 'react'
 
-import './grimoire/GameButton/game-button.css'
+import './velkhar/GameButton/game-button.css'
 
 export interface GameLinkProps extends Omit<ComponentProps<typeof Link>, 'children'> {
   children: ReactNode

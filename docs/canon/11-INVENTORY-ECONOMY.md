@@ -34,7 +34,7 @@
 
 ## 0. Principe
 
-GRIMOIRE a une économie à **deux niveaux** — l'un meurt avec le perso, l'autre persiste à travers les runs. C'est ce qui rend le roguelike "strict" (tu peux tout perdre) **supportable** : le joueur sait qu'il rebâtira, et ce qui compte vraiment (Souvenirs, artefact, écho) traverse la mort.
+VELKHAR a une économie à **deux niveaux** — l'un meurt avec le perso, l'autre persiste à travers les runs. C'est ce qui rend le roguelike "strict" (tu peux tout perdre) **supportable** : le joueur sait qu'il rebâtira, et ce qui compte vraiment (Souvenirs, artefact, écho) traverse la mort.
 
 | Niveau      | Monnaie      | Persistance         | Usage                                              |
 | ----------- | ------------ | ------------------- | -------------------------------------------------- |
@@ -600,7 +600,7 @@ Le butin n'est jamais compté au moment où on le ramasse, seulement au moment o
 
 ```
 ╔════════════════════════════════════════════════════════════════════╗
-║                    ÉCONOMIE DE GRIMOIRE                            ║
+║                    ÉCONOMIE DE VELKHAR                            ║
 ╠════════════════════════════════════════════════════════════════════╣
 ║                                                                    ║
 ║  IN-GAME  🪙 OR                         MÉTA   📖 SOUVENIRS       ║

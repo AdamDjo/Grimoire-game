@@ -21,7 +21,7 @@ import type {
   CombatState,
   RunState,
   SurvivalStats,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 function makePlayer(overrides: Partial<CombatPlayer> = {}): CombatPlayer {
   return {

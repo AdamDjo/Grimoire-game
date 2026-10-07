@@ -16,7 +16,7 @@ import {
 } from './run.service'
 
 import type { GameSession } from '../generated/prisma/client'
-import type { PersistedInventoryItem, QuestIntensity, RunState } from '@grimoire/shared'
+import type { PersistedInventoryItem, QuestIntensity, RunState } from '@velkhar/shared'
 
 /** A session row with the run columns at their schema defaults (no contract). */
 function session(overrides: Partial<GameSession> = {}): GameSession {

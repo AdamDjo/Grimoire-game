@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto'
 
-import { attributeModifier } from '@grimoire/shared'
+import { attributeModifier } from '@velkhar/shared'
 import { z } from 'zod'
 
 import { creaturesForDepth, creaturesForReturn } from '../game-rules/bestiary'
@@ -44,7 +44,7 @@ import type {
   FleeDirection,
   RunState,
   SurvivalStats,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 /**
  * The subset of `CombatAction` that spends an Emprise charge instead of being
@@ -206,7 +206,7 @@ export function toCombatStatePersistence(state: CombatState | null): CombatState
  * Armour class is the non-linear SOUFFLE base plus the worn armour's bonus
  * (`10-COMBAT §4`): the SOUFFLE half is always the character's own attribute,
  * and the armour half comes from whatever is equipped in the `armor` slot,
- * resolved against the closed catalogue in `@grimoire/shared` — never from the
+ * resolved against the closed catalogue in `@velkhar/shared` — never from the
  * item's display name or an AI-supplied field. An unrecognised or missing
  * armour name falls back to tier 0 (no bonus), not a guess.
  */

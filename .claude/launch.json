@@ -4,14 +4,14 @@
     {
       "name": "frontend",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["dev", "--filter", "@grimoire/frontend"],
+      "runtimeArgs": ["dev", "--filter", "@velkhar/frontend"],
       "port": 3000,
       "autoPort": true
     },
     {
       "name": "backend",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["dev", "--filter", "@grimoire/backend"],
+      "runtimeArgs": ["dev", "--filter", "@velkhar/backend"],
       "port": 3001
     }
   ]
