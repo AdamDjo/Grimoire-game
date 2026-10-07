@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { resolveChoice } from './consequences'
 import { TURN_DRAIN } from './survival'
 
-import type { Attributes, Choice, SurvivalStats } from '@grimoire/shared'
+import type { Attributes, Choice, SurvivalStats } from '@velkhar/shared'
 
 const ATTRIBUTES: Attributes = { blood: 15, breath: 10, will: 10 }
 

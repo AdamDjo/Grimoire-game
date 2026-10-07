@@ -1,4 +1,4 @@
-import { COUNTER_ITEM_IDS } from '@grimoire/shared'
+import { COUNTER_ITEM_IDS } from '@velkhar/shared'
 import { z } from 'zod'
 
 /**

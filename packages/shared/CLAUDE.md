@@ -14,7 +14,7 @@ it settled a non-obvious choice. Its merged contract is then consumed from a sep
 
 ## Purpose
 
-Single source of truth for all TypeScript types and constants shared between frontend and backend. Published as `@grimoire/shared`.
+Single source of truth for all TypeScript types and constants shared between frontend and backend. Published as `@velkhar/shared`.
 
 ## Directory Structure
 

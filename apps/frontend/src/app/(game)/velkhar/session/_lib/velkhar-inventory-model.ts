@@ -1,5 +1,5 @@
-import type { GameIconName } from '@/components/ui/grimoire/GameIcon/GameIcon'
-import type { InventoryItemRef } from '@grimoire/shared'
+import type { GameIconName } from '@/components/ui/velkhar/GameIcon/GameIcon'
+import type { InventoryItemRef } from '@velkhar/shared'
 
 export const VELKHAR_BAG_CAPACITY = 12
 

@@ -1,4 +1,4 @@
-import { MAX_CONTRACT_DEPTH } from '@grimoire/shared'
+import { MAX_CONTRACT_DEPTH } from '@velkhar/shared'
 import { describe, expect, it } from 'vitest'
 
 import {
@@ -9,7 +9,7 @@ import {
   listCreatures,
 } from './bestiary'
 
-import type { CreatureId, CreatureStatBlock, CreatureVariant } from '@grimoire/shared'
+import type { CreatureId, CreatureStatBlock, CreatureVariant } from '@velkhar/shared'
 
 /** Canon reference character: `PV = 16 + 4×mod SANG` at the average SANG (#265). */
 const PLAYER_HP = 16

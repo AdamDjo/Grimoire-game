@@ -12,7 +12,7 @@ import {
   tickConditions,
 } from './conditions'
 
-import type { ActiveCondition, SurvivalStats } from '@grimoire/shared'
+import type { ActiveCondition, SurvivalStats } from '@velkhar/shared'
 
 const full = (overrides: Partial<SurvivalStats> = {}): SurvivalStats => ({
   hp: 12,

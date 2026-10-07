@@ -85,7 +85,7 @@
 }
 
 .velkhar-session__stage {
-  animation: gs-scene-enter var(--motion-page) var(--ease-grimoire-out) both;
+  animation: gs-scene-enter var(--motion-page) var(--ease-velkhar-out) both;
   display: grid;
   gap: clamp(0.42rem, 0.7vw, 0.7rem);
   width: 100%;
@@ -137,8 +137,8 @@
   min-height: 7rem;
   position: relative;
   transition:
-    filter var(--motion-step) var(--ease-grimoire-standard),
-    opacity var(--motion-step) var(--ease-grimoire-standard);
+    filter var(--motion-step) var(--ease-velkhar-standard),
+    opacity var(--motion-step) var(--ease-velkhar-standard);
 }
 
 /* La couleur et la famille viennent du composant : la scene ne regle ici
@@ -264,7 +264,7 @@
 }
 
 .game-session-consequences span {
-  animation: gs-consequence-enter 420ms var(--ease-grimoire-out) both;
+  animation: gs-consequence-enter 420ms var(--ease-velkhar-out) both;
   background: rgba(8, 7, 5, 0.82);
   color: var(--material-gold-bright);
   font-family: var(--font-game-ui);
@@ -281,7 +281,7 @@
 
 .game-session-dice {
   align-items: center;
-  animation: gs-dice-enter 520ms var(--ease-grimoire-out) both;
+  animation: gs-dice-enter 520ms var(--ease-velkhar-out) both;
   background: rgba(8, 7, 5, 0.88);
   box-shadow: 0 0 24px rgba(217, 164, 65, 0.14);
   display: flex;
@@ -566,7 +566,7 @@
 
 .velkhar-survival-hud__stat-track::after {
   clip-path: inset(0 calc(100% - var(--hud-stat-value)) 0 0);
-  transition: clip-path var(--motion-step) var(--ease-grimoire-standard);
+  transition: clip-path var(--motion-step) var(--ease-velkhar-standard);
 }
 
 .velkhar-survival-hud__tools {
@@ -625,7 +625,7 @@
 }
 
 .velkhar-session-window .game-window {
-  animation: gs-tool-enter var(--motion-step) var(--ease-grimoire-out) both;
+  animation: gs-tool-enter var(--motion-step) var(--ease-velkhar-out) both;
   bottom: clamp(7.75rem, 15dvh, 9.25rem);
   max-width: min(92vw, 46rem);
 }
@@ -929,8 +929,8 @@
   position: absolute;
   transform: translateY(0.25rem);
   transition:
-    opacity var(--motion-ui) var(--ease-grimoire-out),
-    transform var(--motion-ui) var(--ease-grimoire-out);
+    opacity var(--motion-ui) var(--ease-velkhar-out),
+    transform var(--motion-ui) var(--ease-velkhar-out);
   width: max-content;
   z-index: 4;
 }

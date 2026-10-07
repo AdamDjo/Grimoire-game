@@ -26,10 +26,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('Metadata')
 
   return {
-    metadataBase: new URL('https://grimoire.game'),
+    metadataBase: new URL('https://velkhar.game'),
     title: t('title'),
     description: t('description'),
-    keywords: ['RPG', 'tabletop', 'AI', 'narrative', 'Velkhar', 'Grimoire'],
+    keywords: ['RPG', 'tabletop', 'AI', 'narrative', 'Velkhar', 'Velkhar'],
   }
 }
 

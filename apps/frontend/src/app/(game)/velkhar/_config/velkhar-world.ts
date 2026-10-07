@@ -5,7 +5,7 @@ export const VELKHAR_WORLD = {
   name: 'Velkhar',
   routes: WORLD_ROUTES.velkhar,
   session: {
-    backgroundAlt: 'The crowded room of the Broken Finger tavern',
+    backgroundAlt: 'The hall of El Makhzen',
     fallbackBackground: '/scenes/doigt-casse-session.webp',
   },
 } as const

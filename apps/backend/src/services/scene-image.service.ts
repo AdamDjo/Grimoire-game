@@ -1,7 +1,7 @@
 import { prisma } from '../lib/prisma'
 import { hasSupabaseServiceKey, uploadSceneImage } from '../lib/supabase-storage'
 
-import type { DepthBand, LieuType, SceneType } from '@grimoire/shared'
+import type { DepthBand, LieuType, SceneType } from '@velkhar/shared'
 
 const GENERATION_TIMEOUT_MS = 15000
 

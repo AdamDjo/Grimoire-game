@@ -1,4 +1,4 @@
-import { normalizeLocale, type Locale } from '@grimoire/shared'
+import { normalizeLocale, type Locale } from '@velkhar/shared'
 
 /**
  * Reads the player's preferred narration language from the browser, as a

@@ -5,7 +5,7 @@ import {
   getPeople,
   getVocation,
   maxHpFromBlood,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 import { maxEmpriseCharges } from '../game-rules/emprise'
 import { Prisma } from '../generated/prisma/client'

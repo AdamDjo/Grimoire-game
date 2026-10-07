@@ -1,6 +1,6 @@
 /**
- * The Aveugle's Inn ("Le Doigt-Cassé") — hub state and exchanges with
- * L'Aveugle, the innkeeper-prophet. Player-facing wording always says
+ * El Makhzen — hub state and exchanges with L'Aveugle, its keeper-prophet.
+ * Player-facing wording always says
  * "Souvenirs" (canon), even though the backend distinguishes anonymous
  * (spendable) from named (narrative only) Souvenirs internally.
  * @see 15-GAME-MASTER.md §1.1, 11-INVENTORY-ECONOMY.md §3

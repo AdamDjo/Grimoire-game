@@ -14,7 +14,7 @@ import type {
   GameSessionState,
   PendingGameAction,
 } from '../model/game-session.types'
-import type { Locale } from '@grimoire/shared'
+import type { Locale } from '@velkhar/shared'
 
 interface UseGameSessionOptions<TWorldState, TResponse extends GameSessionResponse> {
   api: GameSessionApi<TResponse>

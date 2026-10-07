@@ -1,4 +1,4 @@
-import type { CreatureId, CreatureStatBlock, CreatureVariant, DamageDice } from '@grimoire/shared'
+import type { CreatureId, CreatureStatBlock, CreatureVariant, DamageDice } from '@velkhar/shared'
 
 /**
  * The 18 canon creatures, with numbers.

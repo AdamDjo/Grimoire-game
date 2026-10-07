@@ -8,7 +8,7 @@ import type {
   ChronicleEndReason,
   ChronicleKeyMoment,
   ChronicleMood,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 export const chronicleRouter: Router = Router()
 

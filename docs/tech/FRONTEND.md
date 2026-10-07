@@ -311,7 +311,7 @@ déclenche que lorsque l'ancêtre porte la classe `is-active`. Respecte automati
 
 ## 3. UI Kit
 
-Le UI Kit Grimoire est la bibliothèque visuelle globale de l'application. Une primitive unique
+Le UI Kit Velkhar est la bibliothèque visuelle globale de l'application. Une primitive unique
 couvre chaque besoin grâce à des variantes typées et des états CSS. Les pages ne doivent pas créer
 leur propre bouton, champ, panel ou icône.
 
@@ -419,7 +419,7 @@ visuel commun et des formulaires accessibles.
 ### Layout unifié — `GameSceneLayout`
 
 Depuis #272 / PR #277, le Hub et la Session partagent **un seul** layout :
-`components/ui/grimoire/GameSceneLayout`. Il n'existe plus de variantes `sidebar`, `immersive` ni
+`components/ui/velkhar/GameSceneLayout`. Il n'existe plus de variantes `sidebar`, `immersive` ni
 `centered` — le composant n'expose aucune prop `variant`, seulement cinq emplacements :
 `background`, `top`, `scene`, `reader` et `bottom`.
 

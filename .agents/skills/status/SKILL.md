@@ -19,7 +19,7 @@ Show the current project status by:
 Format:
 
 ```
-PROJECT STATUS: Grimoire
+PROJECT STATUS: Velkhar
 ================================
 PREDEPLOY:  <completed>/<total> blockers delivered
 POSTDEPLOY: <count> planned improvements

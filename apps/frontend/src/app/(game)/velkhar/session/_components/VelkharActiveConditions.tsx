@@ -1,13 +1,13 @@
 'use client'
 
-import { getConditionDefinition } from '@grimoire/shared'
+import { getConditionDefinition } from '@velkhar/shared'
 import { useLocale, useTranslations } from 'next-intl'
 import { useId } from 'react'
 
-import { GameIcon, type GameIconName } from '@/components/ui/grimoire/GameIcon/GameIcon'
+import { GameIcon, type GameIconName } from '@/components/ui/velkhar/GameIcon/GameIcon'
 import { cn } from '@/lib/utils'
 
-import type { ActiveCondition, ConditionId } from '@grimoire/shared'
+import type { ActiveCondition, ConditionId } from '@velkhar/shared'
 
 const CONDITION_ICONS: Record<ConditionId, GameIconName> = {
   blindness: 'eye',

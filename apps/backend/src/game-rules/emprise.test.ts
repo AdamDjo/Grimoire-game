@@ -9,7 +9,7 @@ import {
   spendEmpriseCharge,
 } from './emprise'
 
-import type { SurvivalStats } from '@grimoire/shared'
+import type { SurvivalStats } from '@velkhar/shared'
 
 const full = (overrides: Partial<SurvivalStats> = {}): SurvivalStats => ({
   hp: 12,

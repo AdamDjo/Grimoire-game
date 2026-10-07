@@ -51,9 +51,9 @@ dans une copie du skill.
 - `docs/private/`, les assets lourds et les sources régénérables.
 
 Un nouveau skill doit être rendu public s'il encode une convention, une commande ou une procédure
-propre à GRIMOIRE. Un skill tiers inchangé reste local et doit être réinstallé depuis sa source.
+propre à VELKHAR. Un skill tiers inchangé reste local et doit être réinstallé depuis sa source.
 
-## Skills globaux utilisés par GRIMOIRE
+## Skills globaux utilisés par VELKHAR
 
 Ces skills tiers sont installés globalement pour Claude Code et Codex. Leur contenu n'est pas copié
 dans le dépôt ; les commandes suivantes constituent la procédure de restauration sur une nouvelle
@@ -72,7 +72,7 @@ npx skills add vercel-labs/agent-skills --skill vercel-react-best-practices --ag
 ```
 
 Les skills globaux complètent les règles du projet sans les remplacer. En cas de contradiction,
-`AGENTS.md`, `CLAUDE.md`, l'architecture et le canon GRIMOIRE gagnent.
+`AGENTS.md`, `CLAUDE.md`, l'architecture et le canon VELKHAR gagnent.
 
 ## Contrôle automatique
 

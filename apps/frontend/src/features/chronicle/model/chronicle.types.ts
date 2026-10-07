@@ -1,4 +1,4 @@
-import type { ChronicleEndReason, ChronicleKeyMoment, ChronicleMood } from '@grimoire/shared'
+import type { ChronicleEndReason, ChronicleKeyMoment, ChronicleMood } from '@velkhar/shared'
 
 export type ChronicleAvailability = 'loading' | 'ready' | 'too-short' | 'unavailable' | 'error'
 

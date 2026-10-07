@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl'
 
-import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
+import { GameIcon } from '@/components/ui/velkhar/GameIcon/GameIcon'
 
 import type { GameSessionDiceRoll } from '../model/game-session.types'
 

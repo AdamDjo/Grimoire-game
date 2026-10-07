@@ -6,7 +6,7 @@
   isolation: isolate;
   min-height: 7rem;
   position: relative;
-  transition: filter var(--motion-fast) var(--ease-grimoire-standard);
+  transition: filter var(--motion-fast) var(--ease-velkhar-standard);
   width: 100%;
 }
 
@@ -21,7 +21,7 @@
   border: 7px solid transparent;
   border-image: var(--control-field-frame) 22 fill / 7px;
   inset: 0;
-  transition: filter var(--motion-fast) var(--ease-grimoire-standard);
+  transition: filter var(--motion-fast) var(--ease-velkhar-standard);
   z-index: 0;
 }
 

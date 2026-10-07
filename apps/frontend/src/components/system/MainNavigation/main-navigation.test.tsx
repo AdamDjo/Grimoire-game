@@ -38,11 +38,11 @@ describe('MainNavigation', () => {
 
     expect(screen.queryByRole('link', { name: 'Discover' })).not.toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Chronicles' })).toHaveAttribute('aria-current', 'page')
-    expect(screen.getByRole('link', { name: 'The Inn' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'El Makhzen' })).toHaveAttribute(
       'href',
       '/velkhar/aveugle'
     )
-    expect(screen.getByRole('link', { name: 'GRIMOIRE, game home' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'VELKHAR, game home' })).toHaveAttribute(
       'href',
       '/velkhar/aveugle'
     )
@@ -58,8 +58,8 @@ describe('MainNavigation', () => {
     expect(screen.getByRole('link', { name: 'Gameplay' })).toHaveAttribute('href', '#gameplay')
     expect(screen.queryByRole('link', { name: 'World' })).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: 'Chronicles' })).not.toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: 'The Inn' })).not.toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'GRIMOIRE, site home' })).toHaveAttribute('href', '/')
+    expect(screen.queryByRole('link', { name: 'El Makhzen' })).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'VELKHAR, site home' })).toHaveAttribute('href', '/')
 
     await user.click(discoverLink)
     expect(scrollToLandingAnchorMock).toHaveBeenCalledWith('#velkhar')
@@ -68,7 +68,7 @@ describe('MainNavigation', () => {
   it('dirige le logo du jeu vers les Chroniques pour un compte', () => {
     render(<MainNavigation context="game" tier="free" />)
 
-    expect(screen.getByRole('link', { name: 'GRIMOIRE, game home' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'VELKHAR, game home' })).toHaveAttribute(
       'href',
       '/dashboard'
     )
@@ -96,7 +96,7 @@ describe('MainNavigation', () => {
     const dialog = screen.getByRole('dialog', { name: 'Game menu' })
     expect(dialog).toBeInTheDocument()
     expect(document.documentElement.style.overflow).toBe('hidden')
-    expect(within(dialog).getByRole('link', { name: 'The Inn' })).toHaveFocus()
+    expect(within(dialog).getByRole('link', { name: 'El Makhzen' })).toHaveFocus()
     expect(within(dialog).getByRole('group', { name: 'Interface language' })).toBeInTheDocument()
 
     await user.keyboard('{Escape}')

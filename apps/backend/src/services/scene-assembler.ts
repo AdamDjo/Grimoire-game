@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 
 import type { AiScenePayload } from '../ai/scene-validator'
-import type { Choice, ChoiceConsequence, Scene } from '@grimoire/shared'
+import type { Choice, ChoiceConsequence, Scene } from '@velkhar/shared'
 
 export interface AssembleSceneInput {
   payload: AiScenePayload

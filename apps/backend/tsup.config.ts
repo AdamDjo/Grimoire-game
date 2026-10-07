@@ -3,7 +3,7 @@ import { defineConfig } from 'tsup'
 /**
  * Build configuration for the backend.
  *
- * The backend imports `@grimoire/shared` from source (the shared package has no
+ * The backend imports `@velkhar/shared` from source (the shared package has no
  * build step). A plain `tsc` build cannot handle that, so we bundle everything
  * — backend + shared — into a single self-contained file with tsup (esbuild).
  */
@@ -21,10 +21,10 @@ export default defineConfig({
   // We run on Node 22, so target its supported syntax.
   target: 'node20',
 
-  // Inline `@grimoire/shared` INTO the bundle instead of leaving it as an
+  // Inline `@velkhar/shared` INTO the bundle instead of leaving it as an
   // external `import`. Runtime packages (express, @prisma/client/runtime) stay
   // external, so node_modules is still required at runtime.
-  noExternal: ['@grimoire/shared'],
+  noExternal: ['@velkhar/shared'],
 
   // Wipe dist/ before each build so no stale files linger.
   clean: true,

@@ -1,8 +1,8 @@
 import { useTranslations } from 'next-intl'
 
 import { GameLink } from '@/components/ui/game-link'
-import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
-import { GameSceneLayout } from '@/components/ui/grimoire/GameSceneLayout/GameSceneLayout'
+import { GameIcon } from '@/components/ui/velkhar/GameIcon/GameIcon'
+import { GameSceneLayout } from '@/components/ui/velkhar/GameSceneLayout/GameSceneLayout'
 
 import {
   VelkharDormantHud,

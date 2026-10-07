@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next'
 
-const SITE_URL = 'https://grimoire.game'
+const SITE_URL = 'https://velkhar.game'
 
 export function sitemap(): MetadataRoute.Sitemap {
   return [

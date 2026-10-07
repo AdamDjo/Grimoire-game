@@ -1,5 +1,5 @@
 {
-  "name": "@grimoire/shared",
+  "name": "@velkhar/shared",
   "version": "0.2.1",
   "private": true,
   "main": "./src/index.ts",

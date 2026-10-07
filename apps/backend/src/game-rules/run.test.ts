@@ -17,7 +17,7 @@ import {
   WATER_PER_RETURN_ROOM,
 } from './run'
 
-import type { ContractDepth, QuestIntensity, RunState } from '@grimoire/shared'
+import type { ContractDepth, QuestIntensity, RunState } from '@velkhar/shared'
 
 function contract(intensity: QuestIntensity = 5) {
   return createContract({

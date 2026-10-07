@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl'
 
-import { DialogueChoice } from '@/components/ui/grimoire/DialogueChoice/DialogueChoice'
-import { DialogueChoiceGroup } from '@/components/ui/grimoire/DialogueChoiceGroup/DialogueChoiceGroup'
+import { DialogueChoice } from '@/components/ui/velkhar/DialogueChoice/DialogueChoice'
+import { DialogueChoiceGroup } from '@/components/ui/velkhar/DialogueChoiceGroup/DialogueChoiceGroup'
 
 import type { GameSessionChoice } from '../model/game-session.types'
 

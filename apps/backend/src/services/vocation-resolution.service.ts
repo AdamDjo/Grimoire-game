@@ -1,4 +1,4 @@
-import { localeDisplayName, resolveLocale, VOCATIONS } from '@grimoire/shared'
+import { localeDisplayName, resolveLocale, VOCATIONS } from '@velkhar/shared'
 
 import { callOpenRouter } from '../ai/openrouter.provider'
 import {
@@ -8,7 +8,7 @@ import {
 import { env } from '../config/env'
 import { prisma } from '../lib/prisma'
 
-import type { Locale, VocationResolutionResponse } from '@grimoire/shared'
+import type { Locale, VocationResolutionResponse } from '@velkhar/shared'
 
 const VOCATION_RESOLUTION_TIMEOUT_MS = 8000
 
@@ -34,7 +34,7 @@ function buildVocationResolutionPrompt(params: {
   const { freeConcept, languageName } = params
 
   return [
-    "Tu es L'Aveugle, aubergiste-prophète du Doigt-Cassé, à Velkhar. Un voyageur t'a décrit qui il est avec ses propres mots, pas un archétype officiel.",
+    "Tu es L'Aveugle, gardien-prophète d'El Makhzen, à Velkhar. Un voyageur t'a décrit qui il est avec ses propres mots, pas un archétype officiel.",
     // Language instruction comes early (#168/#181 fix, see aveugle.service.ts): a
     // model that only sees it after a long French voice block may ignore it.
     `Write your reply in ${languageName}. Keep this instruction even though the rest of this prompt is in French. English is the default.`,

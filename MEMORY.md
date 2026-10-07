@@ -5,7 +5,7 @@ rag: true
 source_of_truth: false
 ---
 
-# GRIMOIRE — Memory Entry
+# VELKHAR — Memory Entry
 
 Ce fichier est l'unique pointeur mémoire générique pour les agents : ne pas chercher ou créer un
 autre `MEMORY.md`. Il ne contient jamais de statut, de backlog, de branche active ni de décision

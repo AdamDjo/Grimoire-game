@@ -134,7 +134,7 @@ describe('AveugleHub', () => {
     const { container } = render(<AveugleHub />)
 
     expect(await screen.findByLabelText('Character: Amani')).toBeInTheDocument()
-    expect(screen.getByRole('navigation', { name: 'Spaces of the inn' })).toBeInTheDocument()
+    expect(screen.getByRole('navigation', { name: 'Spaces of El Makhzen' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /^Talk/ })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByRole('button', { name: /^Memories/ })).toHaveAttribute(
       'aria-pressed',
@@ -165,6 +165,19 @@ describe('AveugleHub', () => {
     expect(screen.getByPlaceholderText('Ask your question…')).toBeInTheDocument()
   })
 
+  it('reprend une sauvegarde locale créée avant le changement d’identité', async () => {
+    const previousStorageKey = 'previous.character-create.result.v2'
+    window.localStorage.setItem(previousStorageKey, JSON.stringify(CHARACTER))
+
+    render(<AveugleHub />)
+
+    expect(await screen.findByLabelText('Character: Amani')).toBeInTheDocument()
+    expect(window.localStorage.getItem(previousStorageKey)).toBeNull()
+    expect(window.localStorage.getItem(CHARACTER_RESULT_STORAGE_KEY)).toBe(
+      JSON.stringify(CHARACTER)
+    )
+  })
+
   it('revient au Hub après la création avant de proposer le premier run', async () => {
     window.localStorage.setItem(CHARACTER_RESULT_STORAGE_KEY, JSON.stringify(CHARACTER))
 
@@ -184,7 +197,7 @@ describe('AveugleHub', () => {
     render(<AveugleHub previewIntro />)
 
     expect(
-      await screen.findByRole('dialog', { name: "Introduction to The Blind One's Inn" })
+      await screen.findByRole('dialog', { name: 'Introduction to El Makhzen' })
     ).toBeInTheDocument()
   })
 
@@ -192,7 +205,7 @@ describe('AveugleHub', () => {
     render(<AveugleHub transitionFromHome />)
 
     expect(
-      await screen.findByRole('dialog', { name: "Introduction to The Blind One's Inn" })
+      await screen.findByRole('dialog', { name: 'Introduction to El Makhzen' })
     ).toBeInTheDocument()
   })
 
@@ -231,7 +244,7 @@ describe('AveugleHub', () => {
     render(<AveugleHub />)
 
     await user.click(await screen.findByRole('button', { name: /Memories/ }))
-    await user.click(screen.getByRole('button', { name: 'A fragment of lore' }))
+    await user.click(screen.getByRole('button', { name: /A fragment of lore/ }))
 
     expect(await screen.findByText(/Your Memory was not spent/)).toBeInTheDocument()
     expect(spendSouvenir).toHaveBeenCalledWith('spendable-1', 'lore-fragment')
@@ -248,10 +261,10 @@ describe('AveugleHub', () => {
     render(<AveugleHub />)
 
     await user.click(await screen.findByRole('button', { name: /Memories/ }))
-    await user.click(screen.getByRole('button', { name: 'A fragment of lore' }))
+    await user.click(screen.getByRole('button', { name: /A fragment of lore/ }))
 
     expect(await screen.findByText(/A buried road still remembers/)).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: 'Review memories' }))
+    await user.click(screen.getByRole('button', { name: 'Return to traces' }))
     expect(screen.getByText('You have no Memory to share with The Blind One.')).toBeInTheDocument()
   })
 
@@ -268,7 +281,7 @@ describe('AveugleHub', () => {
     render(<AveugleHub />)
 
     await user.click(await screen.findByRole('button', { name: 'Memories' }))
-    expect(screen.getByText('No named Memory has crossed this threshold yet.')).toBeInTheDocument()
+    expect(screen.getByText('No named trace has crossed this threshold yet.')).toBeInTheDocument()
     expect(screen.getByText('You have no Memory to share with The Blind One.')).toBeInTheDocument()
     expect(getSouvenirs).not.toHaveBeenCalled()
   })
@@ -280,7 +293,7 @@ describe('AveugleHub', () => {
 
     render(<AveugleHub />)
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('The Inn keeps its door closed')
+    expect(await screen.findByRole('alert')).toHaveTextContent('El Makhzen keeps its door closed')
     await user.click(screen.getByRole('button', { name: 'Try again' }))
     expect(await screen.findByLabelText('Character: Amani')).toBeInTheDocument()
     expect(getAveugleHub).toHaveBeenCalledTimes(2)

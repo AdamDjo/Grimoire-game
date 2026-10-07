@@ -6,7 +6,7 @@
 
 ## 0. Principe
 
-GRIMOIRE utilise un système de dés inspiré de **Baldur's Gate 3**, mais **allégé**. On ne lance pas à chaque action (ça tuerait le rythme narratif) — seulement aux **moments pivots**, quand l'issue est incertaine et importante.
+VELKHAR utilise un système de dés inspiré de **Baldur's Gate 3**, mais **allégé**. On ne lance pas à chaque action (ça tuerait le rythme narratif) — seulement aux **moments pivots**, quand l'issue est incertaine et importante.
 
 > _Le dé n'est pas là pour punir. Il est là pour rendre le monde imprévisible, et les réussites/critiques mémorables._
 

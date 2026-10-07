@@ -4,9 +4,9 @@
 
 ---
 
-## early-2026 — Pivot produit : abandon vision RP générique → GRIMOIRE / Velkhar
+## early-2026 — Pivot produit : abandon vision RP générique → VELKHAR / Velkhar
 
-Abandon complet de la vision "RP générique" (`docs/private/archive/Roleplay_IA_Masterplan.md`) au profit de **GRIMOIRE — Of Ash and Salt**, monde de **Velkhar** (roguelike narratif désertique, run 3-15h). Univers, stack, archi = refondus. L'ancien masterplan est conservé en archive pour référence historique uniquement.
+Abandon complet de la vision "RP générique" (`docs/private/archive/Roleplay_IA_Masterplan.md`) au profit de **VELKHAR: Of Ash and Salt**, monde de **Velkhar** (roguelike narratif désertique, run 3-15h). Univers, stack, archi = refondus. L'ancien masterplan est conservé en archive pour référence historique uniquement.
 
 ---
 
@@ -400,3 +400,33 @@ seule transformation majeure.
 
 Les anciennes explorations de direction artistique et l'ancienne bibliothèque de scènes sont
 archivées de manière récupérable avant la reprise des lots dans cette direction finale.
+
+---
+
+## 2026-10-07 — El Makhzen, nom canonique du hub
+
+Le hub auparavant nommé _L'Auberge de L'Aveugle_ ou _Le Doigt-Cassé_ prend le nom canonique
+**El Makhzen**. Le terme vient de l'ancien arabe _al-makhzan_, le lieu où l'on conserve et protège :
+il désigne ici l'endroit où les survivants rapportent leurs Souvenirs, choisissent un contrat et
+préparent leur prochain départ. « Auberge » reste un nom commun utile pour décrire sa fonction,
+jamais son nom propre affiché au joueur.
+
+La direction narrative peut employer des noms issus de l'arabe ancien lorsqu'ils portent une
+fonction ou une idée compréhensible dans l'univers. Le texte d'interface doit toujours donner au
+joueur assez de contexte pour saisir le rôle du lieu ; un nom évocateur ne remplace jamais une
+explication utile.
+
+---
+
+## 2026-10-07 — Identité officielle VELKHAR
+
+Le produit porte désormais le nom officiel **VELKHAR: Of Ash and Salt**. L'interface emploie la
+forme courte **VELKHAR** ; la signature française de référence reste **« Le Sel se souvient »**.
+Les packages, clés de stockage, domaines, métadonnées et composants adoptent le même radical
+`velkhar` afin que l'identité éditoriale et l'identité technique ne divergent plus.
+
+Les noms issus de l'arabe ancien ou maghrébin construisent le vocabulaire de Velkhar lorsqu'ils
+expriment une fonction réelle. Après **El Makhzen**, les traces mémorielles conservées y sont
+appelées **les Athar**, de _athar_, « trace laissée derrière soi ». À leur première apparition,
+l'interface accompagne toujours le terme de son sens français. Cette règle évite l'exotisme
+décoratif et transforme chaque nom en fragment de lore compréhensible.

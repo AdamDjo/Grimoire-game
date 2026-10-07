@@ -1,4 +1,4 @@
-# GRIMOIRE — Claude Project Entry
+# VELKHAR — Claude Project Entry
 
 > Lire d'abord : `MEMORY.md`, puis `docs/00-START-HERE.md`.
 > Ne pas dupliquer les règles : suivre les sources ci-dessous.

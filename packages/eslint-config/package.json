@@ -1,5 +1,5 @@
 {
-  "name": "@grimoire/eslint-config",
+  "name": "@velkhar/eslint-config",
   "version": "0.1.0",
   "private": true,
   "main": "index.js",

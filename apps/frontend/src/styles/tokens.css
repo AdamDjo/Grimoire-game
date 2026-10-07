@@ -245,8 +245,8 @@
   --motion-step: 280ms; /* passage d'une étape    */
   --motion-page: 650ms; /* voile de navigation    */
 
-  --ease-grimoire-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-grimoire-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-velkhar-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-velkhar-standard: cubic-bezier(0.2, 0, 0, 1);
 
   /* ------------------------------------------------------------------ *
    * 7. États et interactions

@@ -4,11 +4,11 @@ import { useLocale, useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { GameLink } from '@/components/ui/game-link'
-import { GameButton } from '@/components/ui/grimoire/GameButton/GameButton'
-import { GameHudDock } from '@/components/ui/grimoire/GameHudDock/GameHudDock'
-import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
-import { GameSceneLayout } from '@/components/ui/grimoire/GameSceneLayout/GameSceneLayout'
-import { ResourceCounter } from '@/components/ui/grimoire/ResourceCounter/ResourceCounter'
+import { GameButton } from '@/components/ui/velkhar/GameButton/GameButton'
+import { GameHudDock } from '@/components/ui/velkhar/GameHudDock/GameHudDock'
+import { GameIcon } from '@/components/ui/velkhar/GameIcon/GameIcon'
+import { GameSceneLayout } from '@/components/ui/velkhar/GameSceneLayout/GameSceneLayout'
+import { ResourceCounter } from '@/components/ui/velkhar/ResourceCounter/ResourceCounter'
 import { ACTIVE_GAME_SESSION_COOKIE, hasActiveGameSession } from '@/lib/active-game-session'
 import { getAuthHref } from '@/lib/internal-navigation'
 import { ensureAnonymousSession } from '@/lib/supabase/ensure-session'
@@ -32,7 +32,7 @@ import { VelkharMotionShell } from './velkhar-motion-shell'
 
 import './aveugle-hub.css'
 
-import type { AveugleHubState, Souvenir } from '@grimoire/shared'
+import type { AveugleHubState, Souvenir } from '@velkhar/shared'
 
 interface AveugleHubProps {
   campaignId?: string
@@ -53,6 +53,24 @@ function readCharacter(): CharacterCreateDraft | null {
     window.localStorage.getItem(CHARACTER_RESULT_STORAGE_KEY)
   )
   if (persisted) return persisted
+
+  for (let index = 0; index < window.localStorage.length; index += 1) {
+    const key = window.localStorage.key(index)
+    if (
+      !key ||
+      key === CHARACTER_RESULT_STORAGE_KEY ||
+      !key.endsWith('.character-create.result.v2')
+    ) {
+      continue
+    }
+
+    const migrated = parseStoredCharacterResult(window.localStorage.getItem(key))
+    if (migrated) {
+      window.localStorage.setItem(CHARACTER_RESULT_STORAGE_KEY, JSON.stringify(migrated))
+      window.localStorage.removeItem(key)
+      return migrated
+    }
+  }
 
   const legacy = parseStoredCharacterResult(
     window.sessionStorage.getItem(CHARACTER_RESULT_STORAGE_KEY)

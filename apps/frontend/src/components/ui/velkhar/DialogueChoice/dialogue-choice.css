@@ -18,8 +18,8 @@
   position: relative;
   text-align: left;
   transition:
-    filter var(--motion-fast) var(--ease-grimoire-standard),
-    transform var(--motion-fast) var(--ease-grimoire-standard);
+    filter var(--motion-fast) var(--ease-velkhar-standard),
+    transform var(--motion-fast) var(--ease-velkhar-standard);
   width: 100%;
 }
 
@@ -30,7 +30,7 @@
   inset: 0 0 0 40px;
   pointer-events: none;
   position: absolute;
-  transition: filter var(--motion-fast) var(--ease-grimoire-standard);
+  transition: filter var(--motion-fast) var(--ease-velkhar-standard);
   z-index: -1;
 }
 

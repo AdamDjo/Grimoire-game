@@ -1,4 +1,4 @@
-# GRIMOIRE — État du Projet (mémoire de session)
+# VELKHAR — État du Projet (mémoire de session)
 
 _Dernière màj : 2026-06-30 — Garder ce fichier à jour pour préserver les tokens._
 
@@ -10,7 +10,7 @@ _Dernière màj : 2026-06-30 — Garder ce fichier à jour pour préserver les t
 
 | #   | Décision             | Valeur                                                             |
 | --- | -------------------- | ------------------------------------------------------------------ |
-| 1   | Nom produit          | **GRIMOIRE — Of Ash and Salt** (FR : Des Cendres et du Sel)        |
+| 1   | Nom produit          | **VELKHAR: Of Ash and Salt** (FR : Des Cendres et du Sel)          |
 | 2   | Monde                | **Velkhar** (continent désertique, le _Makhzen_)                   |
 | 3   | Genre                | Roguelike narratif (run 3-15h, aventure complète)                  |
 | 4   | Persistance          | Canon fixe + méta-monde vivant + Chronique + écho léger            |
@@ -154,7 +154,7 @@ Aucune n'est canonique. Le joueur choisit par ses actes.
 
 - `15-GAME-MASTER.md` — ✅ **CRÉÉ** (IA voix-only, 3 styles d'écriture L'Aveugle/Narrateur/PNJ, cascade OpenRouter free tier DeepSeek→Llama→Qwen→Mistral, anti-patterns interdits, Zod systématique, budget 8000 tokens, prompt système V1)
 - `16-MEMORY.md` — ✅ **CRÉÉ** (3 niveaux N1 intra-tour 1500t / N2 intra-run 4000t avec pgvector / N3 inter-runs 800t, compression Mistral Small free tous les 8-10 tours, key_facts_pinned, seuil similarité 0.85, anonyme cookie chiffré)
-- `17-RUN-CHRONICLE.md` — ✅ **CRÉÉ** (800-1200 mots Narrateur, déclencheurs mort/auberge/abandon, URL publique grimoire.game/chronique/{slug} permanente, OG image Canvas, Pollinations.ai gratuit, V2+ Sonnet 4.6 Premium ~$0.03, anti-bot 1/jour)
+- `17-RUN-CHRONICLE.md` — ✅ **CRÉÉ** (800-1200 mots Narrateur, déclencheurs mort/auberge/abandon, URL publique velkhar.game/chronique/{slug} permanente, OG image Canvas, Pollinations.ai gratuit, V2+ Sonnet 4.6 Premium ~$0.03, anti-bot 1/jour)
 - `14-META-WORLD.md` — ✅ **CRÉÉ** (3 niveaux A Souvenirs nommés 3/run perso / B traces locales V1 / C world_events 3-5 actifs curés à la main par Adem ~6h/an, L'Aveugle pivot méta, immuabilité Souvenirs sauf RGPD)
 - `20-ARCHITECTURE.md` — ✅ **CRÉÉ** (stack Vercel+Railway+Supabase+pgvector+Upstash+OpenRouter ~3-10€/mois V1, DB 8 tables sans auth/billing, flux turn détaillé 9 étapes, caps middleware sliding-window, cookie HTTPOnly 90j, monitoring SQL minimaliste, sécurité minimale, hors-V1 explicite)
 

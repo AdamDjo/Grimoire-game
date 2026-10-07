@@ -2,7 +2,7 @@ import { type Request, type Response, Router } from 'express'
 
 import { prisma } from '../lib/prisma'
 
-import type { ApiResponse, Souvenir, SouvenirType } from '@grimoire/shared'
+import type { ApiResponse, Souvenir, SouvenirType } from '@velkhar/shared'
 
 export const souvenirRouter: Router = Router()
 

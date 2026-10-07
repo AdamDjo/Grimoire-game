@@ -5,7 +5,7 @@ import {
   type Difficulty,
   type DiceRoll,
   DIFFICULTY_TARGET,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 export type { Difficulty, DiceRoll }
 export { DIFFICULTY_TARGET }

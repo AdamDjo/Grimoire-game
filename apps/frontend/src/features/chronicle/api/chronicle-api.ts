@@ -1,5 +1,5 @@
 import type { ChronicleView, PublicChroniclePayload } from '../model/chronicle.types'
-import type { ApiResponse, Chronicle } from '@grimoire/shared'
+import type { ApiResponse, Chronicle } from '@velkhar/shared'
 
 const CHRONICLE_MOODS = new Set(['tragic', 'epic', 'melancholic', 'serene', 'absurd'])
 const END_REASONS = new Set(['death', 'extracted', 'returned_empty', 'abandon', 'calcined'])

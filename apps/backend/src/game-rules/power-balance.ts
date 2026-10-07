@@ -6,7 +6,7 @@ import {
   type PowerGapRegistry,
   type QuestDanger,
   weaponTierForItemName,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 /**
  * Numeric weight behind each danger tag, on the same 0-9 scale as the power

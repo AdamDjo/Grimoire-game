@@ -1,5 +1,5 @@
 {
-  "name": "@grimoire/frontend",
+  "name": "@velkhar/frontend",
   "version": "0.2.1",
   "private": true,
   "scripts": {
@@ -17,7 +17,7 @@
     "analyze": "ANALYZE=true pnpm build"
   },
   "dependencies": {
-    "@grimoire/shared": "workspace:*",
+    "@velkhar/shared": "workspace:*",
     "@gsap/react": "^2.1.2",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.110.2",
@@ -35,8 +35,8 @@
     "zustand": "^5.0.0"
   },
   "devDependencies": {
-    "@grimoire/eslint-config": "workspace:*",
-    "@grimoire/prettier-config": "workspace:*",
+    "@velkhar/eslint-config": "workspace:*",
+    "@velkhar/prettier-config": "workspace:*",
     "@next/bundle-analyzer": "^15",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6",

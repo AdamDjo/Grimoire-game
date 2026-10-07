@@ -383,7 +383,7 @@
 }
 
 .chronicle-transition span {
-  animation: chronicle-mark 2.4s var(--ease-grimoire-out) both;
+  animation: chronicle-mark 2.4s var(--ease-velkhar-out) both;
   background: var(--gold);
   height: 1px;
   margin-bottom: 2rem;
@@ -391,7 +391,7 @@
 }
 
 .chronicle-transition p {
-  animation: chronicle-copy 2.4s var(--ease-grimoire-out) both;
+  animation: chronicle-copy 2.4s var(--ease-velkhar-out) both;
   color: var(--parchment);
   font-family: var(--font-game-heading);
   font-size: clamp(1.8rem, 5vw, 3.2rem);

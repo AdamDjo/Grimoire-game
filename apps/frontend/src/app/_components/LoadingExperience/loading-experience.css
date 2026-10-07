@@ -81,7 +81,7 @@
 }
 
 .loading-experience__marks span {
-  animation: loading-experience-mark var(--motion-page) var(--ease-grimoire-standard) infinite;
+  animation: loading-experience-mark var(--motion-page) var(--ease-velkhar-standard) infinite;
   background: var(--salt-gold);
   height: 0.4rem;
   opacity: 0.3;

@@ -1,1 +1,1 @@
-module.exports = require('@grimoire/prettier-config')
+module.exports = require('@velkhar/prettier-config')

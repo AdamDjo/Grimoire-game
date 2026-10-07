@@ -40,7 +40,7 @@ Souvenirs du défunt, jamais la même âme ou le même visage. Ce n'est ni un PN
 "allié" : c'est l'**interface du monde** entre les runs.
 
 **Anonyme** _💼 Produit_
-Tier d'utilisateur sans compte créé. Identifié par cookie HTTPOnly `grimoire_session` (90j). Cap = **30 requêtes IA total** sur le cycle de vie du cookie. Données stockées client-side (cookie chiffré ~4KB) + Chronique upload serveur permanent.
+Tier d'utilisateur sans compte créé. Identifié par cookie HTTPOnly `velkhar_session` (90j). Cap = **30 requêtes IA total** sur le cycle de vie du cookie. Données stockées client-side (cookie chiffré ~4KB) + Chronique upload serveur permanent.
 → [19-MONETIZATION §1](19-MONETIZATION.md), [20-ARCHITECTURE §5](20-ARCHITECTURE.md)
 
 **Artefact** _⚙️ Mécanique + 🌍 Lore_
@@ -84,7 +84,7 @@ Récit littéraire de 800-1200 mots généré par l'IA à la fin de chaque run (
 → [17-RUN-CHRONICLE](17-RUN-CHRONICLE.md)
 ⚠️ Gratuite POUR TOUS — pas un produit Premium. Seul l'illustration diffère entre tiers.
 
-**Cookie `grimoire_session`** _🤖 IA / Tech_
+**Cookie `velkhar_session`** _🤖 IA / Tech_
 Cookie HTTPOnly de 90 jours qui identifie un joueur anonyme. Rattaché à `account_id` lors de la création de compte (les datas anonymes deviennent celles du compte).
 → [20-ARCHITECTURE §5](20-ARCHITECTURE.md)
 
@@ -139,7 +139,8 @@ Tier d'utilisateur avec compte créé (email + magic link). Cap = **150 requête
 ## H
 
 **Hub permanent** _⚙️ Mécanique_
-L'Auberge de L'Aveugle — point d'entrée unique de chaque run. Pas de menu, pas de lobby : quatre
+**El Makhzen** — point d'entrée unique de chaque run. Le nom vient de l'ancien arabe _al-makhzan_,
+le lieu où l'on conserve et protège. Pas de menu, pas de lobby : quatre
 destinations fictionnelles restent accessibles, Comptoir, L'Aveugle, Contrats et Forge.
 → [07-CHARACTER-CREATION](07-CHARACTER-CREATION.md), [23-RUN-STRUCTURE §1](23-RUN-STRUCTURE.md)
 
@@ -200,7 +201,7 @@ Bibliothèque d'authentification Next.js utilisée V1 pour les magic links.
 → [20-ARCHITECTURE](20-ARCHITECTURE.md)
 
 **North Star Metric (NSM)** _💼 Produit_
-Métrique unique de pilotage produit. Pour GRIMOIRE : **completion rate × 2ᵉ run J+7**. Cible launch ≥ 0.10 (40% × 25%), cible mature ≥ 0.27 (60% × 45%).
+Métrique unique de pilotage produit. Pour VELKHAR : **completion rate × 2ᵉ run J+7**. Cible launch ≥ 0.10 (40% × 25%), cible mature ≥ 0.27 (60% × 45%).
 → [01-PILLARS §8](01-PILLARS.md), [18-RETENTION §5](18-RETENTION.md), [21-ROADMAP §5.2](21-ROADMAP.md)
 
 ## O
@@ -307,7 +308,7 @@ réputation complète, les relations ou le corps du défunt.
 propre.
 
 **Stripe Checkout / Customer Portal** _🤖 IA / Tech + 💼 Produit_
-Pages hostées Stripe pour le paiement et la gestion d'abonnement. Aucune carte ne touche le backend de GRIMOIRE (sécurité PCI déléguée).
+Pages hostées Stripe pour le paiement et la gestion d'abonnement. Aucune carte ne touche le backend de VELKHAR (sécurité PCI déléguée).
 → [19-MONETIZATION §7](19-MONETIZATION.md), [20-ARCHITECTURE](20-ARCHITECTURE.md)
 
 ## T
@@ -336,7 +337,7 @@ Une des 4 vocations V1. Sentinelle mystique, lecteur de signes, gardien des seui
 → [05-VOCATIONS](05-VOCATIONS.md)
 
 **Velkhar** _🌍 Lore_
-Nom du **monde** unique de GRIMOIRE V1. Continent désertique = le **Makhzen**. Source de vérité produit canonique dans `docs/canon/`.
+Nom du **monde** unique de VELKHAR V1. Continent désertique = le **Makhzen**. Source de vérité produit canonique dans `docs/canon/`.
 → `docs/canon/`, [AGENTS.md projet](../../AGENTS.md)
 ⚠️ "Velkhar" = monde / "Makhzen" = continent. Strict.
 
@@ -368,7 +369,7 @@ Pour éviter la dérive sémantique avec les premières versions du GDD ou des i
 | Terme rejeté                    | Pourquoi                                               | À utiliser à la place                            |
 | ------------------------------- | ------------------------------------------------------ | ------------------------------------------------ |
 | "Mana"                          | Trop générique fantasy                                 | **Calamine** (lore Velkhar)                      |
-| "XP / niveau"                   | GRIMOIRE n'a pas de niveaux RPG classiques             | Triptyque (stats) + Souvenirs (progression méta) |
+| "XP / niveau"                   | VELKHAR n'a pas de niveaux RPG classiques              | Triptyque (stats) + Souvenirs (progression méta) |
 | "Quête principale"              | Pas de quête centrale imposée — narration émergente    | "Trame", "fil narratif", "axe de run"            |
 | "Player Character" / "PC"       | Anglicisme inutile                                     | "Personnage", "perso"                            |
 | "MJ humain"                     | L'IA est la voix, pas le MJ ; le **backend** est le MJ | "Game Master" = backend toujours                 |

@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl'
 
-import { NarrativePassage } from '@/components/ui/grimoire/NarrativePassage/NarrativePassage'
+import { NarrativePassage } from '@/components/ui/velkhar/NarrativePassage/NarrativePassage'
 
 interface NarrativePanelProps {
   narrative: string

@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 
-import { GameTopBar } from '@/components/ui/grimoire/GameTopBar/GameTopBar'
+import { GameTopBar } from '@/components/ui/velkhar/GameTopBar/GameTopBar'
 import { cn } from '@/lib/utils'
 
 import { VELKHAR_WORLD } from '../../_config/velkhar-world'

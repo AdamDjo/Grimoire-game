@@ -6,7 +6,7 @@
 
 ## 0. Principe
 
-GRIMOIRE n'est pas un jeu à tour de table. C'est une **conversation tendue** entre le joueur et le monde, arbitrée par l'IA, ponctuée par les dés (voir `08-DICE-RESOLUTION.md`).
+VELKHAR n'est pas un jeu à tour de table. C'est une **conversation tendue** entre le joueur et le monde, arbitrée par l'IA, ponctuée par les dés (voir `08-DICE-RESOLUTION.md`).
 
 Un **tour de jeu** = une réponse IA + une action joueur. Le joueur **n'attend jamais** : il y a toujours quelque chose à faire, ou quelqu'un à qui répondre.
 
@@ -88,7 +88,7 @@ Le joueur n'est jamais enfermé dans un seul mode. Il choisit naturellement à c
 
 > **Révision du 2026-08-08.** La séparation du 2026-08-06 en quatre interfaces est révoquée après
 > grilling produit. Elle confondait structure roguelike et changement d'écran, au détriment de
-> l'identité storytelling de GRIMOIRE.
+> l'identité storytelling de VELKHAR.
 
 La boucle §1 reste le langage commun de l'Auberge, du voyage, de la quête, du donjon et du retour.
 L'image, la voix, les destinations persistantes et les composants contextuels évoluent, mais le
@@ -159,7 +159,7 @@ bénéfice est explicite et immédiat, et dont le coût est **annoncé sans êtr
 
 ### Exemple
 
-> _Tu entres dans la taverne du Doigt-Cassé. L'air pue la sueur et le sel. Au fond, un Inquisiteur t'observe en silence._
+> _Tu entres dans El Makhzen. L'air pue la sueur et le sel. Au fond, un Inquisiteur t'observe en silence._
 
 **Choix proposés** :
 

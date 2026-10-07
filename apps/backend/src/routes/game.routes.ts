@@ -27,7 +27,7 @@ import type {
   InventoryActionResponse,
   SceneResponse,
   SessionEndReason,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 export const gameRouter: Router = Router()
 

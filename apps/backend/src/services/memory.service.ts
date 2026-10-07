@@ -8,7 +8,7 @@ import { prisma } from '../lib/prisma'
 import { classifyLieuType, resolveSceneImage } from './scene-image.service'
 
 import type { SceneLog } from '../generated/prisma/client'
-import type { Character } from '@grimoire/shared'
+import type { Character } from '@velkhar/shared'
 
 const COMPRESSION_TIMEOUT_MS = 8000
 

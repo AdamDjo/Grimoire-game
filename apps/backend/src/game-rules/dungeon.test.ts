@@ -1,4 +1,4 @@
-import { type ContractDepth, MAX_CONTRACT_DEPTH } from '@grimoire/shared'
+import { type ContractDepth, MAX_CONTRACT_DEPTH } from '@velkhar/shared'
 import { describe, expect, it } from 'vitest'
 
 import {

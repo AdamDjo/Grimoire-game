@@ -4,7 +4,7 @@ import {
   attributeModifier,
   WEAPON_CATALOGUE,
   weaponDamageForItemName,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 import { describe, expect, it } from 'vitest'
 
 import {
@@ -27,7 +27,7 @@ import {
   startCombat,
 } from './combat'
 
-import type { CombatEnemy, CombatPlayer, CombatState, SurvivalStats } from '@grimoire/shared'
+import type { CombatEnemy, CombatPlayer, CombatState, SurvivalStats } from '@velkhar/shared'
 
 /**
  * A scripted RNG: each call returns the next value, so a test states the exact

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { applyRest, hasHealingItem, REST_RATES } from './rest'
 
-import type { PersistedInventoryItem, SurvivalStats } from '@grimoire/shared'
+import type { PersistedInventoryItem, SurvivalStats } from '@velkhar/shared'
 
 const full = (overrides: Partial<SurvivalStats> = {}): SurvivalStats => ({
   hp: 12,

@@ -11,7 +11,7 @@
 
 **La rétention dans un roguelike narratif IA est antifragile par design** : chaque run produit un objet émotionnel (Chronique) + un héritage (Souvenirs) + un monde modifié. Le joueur qui revient ne recommence jamais à zéro — il **reprend une saga**.
 
-**Le piège à éviter** : la rétention par grind (daily quests, log-in streaks, season pass). GRIMOIRE ne fera **jamais** ça. Le joueur revient parce qu'il **veut savoir la suite**, pas parce qu'il a peur de perdre quelque chose.
+**Le piège à éviter** : la rétention par grind (daily quests, log-in streaks, season pass). VELKHAR ne fera **jamais** ça. Le joueur revient parce qu'il **veut savoir la suite**, pas parce qu'il a peur de perdre quelque chose.
 
 **Règle absolue** : aucun mécanisme de rétention ne doit créer de FOMO (_Fear Of Missing Out_). Pas de "événement limité 48h", pas de "ton perso meurt si tu joues pas cette semaine", pas de timer de connexion. Le monde attend.
 

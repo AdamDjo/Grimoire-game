@@ -8,7 +8,7 @@ import {
 
 import { counterPurchaseSchema } from './counter.schema'
 
-import type { ApiResponse, CounterPurchaseResult, PreparationSnapshot } from '@grimoire/shared'
+import type { ApiResponse, CounterPurchaseResult, PreparationSnapshot } from '@velkhar/shared'
 
 export const counterRouter: Router = Router()
 

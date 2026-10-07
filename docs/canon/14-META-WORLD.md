@@ -10,7 +10,7 @@
 
 **Entre les runs, Velkhar évolue subtilement.**
 
-GRIMOIRE n'est pas un MMO. Pas de saisons, pas de raids, pas de classement public. Mais le monde n'est **pas une coquille vide** entre deux runs — c'est un continent vivant dont on hérite à chaque retour. Cette illusion de persistance est ce qui pousse le joueur à dire _« Je dois revenir voir »_.
+VELKHAR n'est pas un MMO. Pas de saisons, pas de raids, pas de classement public. Mais le monde n'est **pas une coquille vide** entre deux runs — c'est un continent vivant dont on hérite à chaque retour. Cette illusion de persistance est ce qui pousse le joueur à dire _« Je dois revenir voir »_.
 
 **3 niveaux d'évolution méta**, hiérarchisés par priorité d'implémentation V1 :
 
@@ -388,7 +388,7 @@ Budget : **~400 tokens** total pour les events (sur les 800 tokens N3 cf. [16-ME
 - **Calendrier éditorial mensuel** (1 nouvel event/mois minimum)
 - **Outil interne minimal** : édition directe table Supabase via dashboard SQL (pas d'UI dédiée V1)
 - **Backup automatique** : tous les events archivés indéfiniment (peut alimenter lore futur)
-- **Lien public optionnel** `grimoire.game/monde/historique` (V2+) — montre que le monde a une histoire évolutive
+- **Lien public optionnel** `velkhar.game/monde/historique` (V2+) — montre que le monde a une histoire évolutive
 
 ### Anti-patterns interdits
 

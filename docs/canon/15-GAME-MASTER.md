@@ -39,7 +39,7 @@ doivent pas apparaître dans le contexte narratif du modèle.
 
 ## §1 — Les 3 voix d'écriture (Pilier #6)
 
-GRIMOIRE n'a **aucun audio en V1**. Tout passe par le **texte**. Mais le texte a une voix — un style, un rythme, un vocabulaire. Pour que Velkhar soit vivant, l'IA doit savoir parler en **3 voix distinctes**, jamais mélangées.
+VELKHAR n'a **aucun audio en V1**. Tout passe par le **texte**. Mais le texte a une voix — un style, un rythme, un vocabulaire. Pour que Velkhar soit vivant, l'IA doit savoir parler en **3 voix distinctes**, jamais mélangées.
 
 ### 1.1 — L'Aveugle (PNJ pilier unique)
 
@@ -135,7 +135,7 @@ fonctions commerciales de l'Auberge.
 
 ## §2 — Stratégie LLM en cascade (Pilier #1)
 
-GRIMOIRE V1 vise **0€ de coût IA par tour**. C'est non-négociable — le projet doit être autonome et profitable dès M3-M6 (cf. décision produit Adem).
+VELKHAR V1 vise **0€ de coût IA par tour**. C'est non-négociable — le projet doit être autonome et profitable dès M3-M6 (cf. décision produit Adem).
 
 ### 2.1 — Les 3 contextes d'exécution
 
@@ -159,7 +159,7 @@ L'ordre exact, défini dans `OPENROUTER_MODELS_CASCADE` (env var, modifiable san
 **Règles de bascule** :
 
 - Si modèle 1 renvoie erreur, timeout > 12 sec, ou rate-limit → bascule modèle 2
-- Si modèle 4 échoue aussi → renvoyer au frontend `{ error: "ai_saturated", message: "GRIMOIRE est très populaire ce soir, réessaye dans 10 min" }`
+- Si modèle 4 échoue aussi → renvoyer au frontend `{ error: "ai_saturated", message: "VELKHAR est très populaire ce soir, réessaye dans 10 min" }`
 - Bascule loggée dans `request_logs.model_used` pour monitoring
 - Si un modèle échoue 3 fois en 5 min → blacklisté 30 min auto (évite le ping-pong)
 
@@ -380,7 +380,7 @@ Voici la **structure** du prompt système envoyé à chaque tour. Le contenu exa
 
 ```
 [RÔLE]
-Tu es le Maître du Jeu de GRIMOIRE — Of Ash and Salt, un roguelike narratif
+Tu es le Maître du Jeu de VELKHAR: Of Ash and Salt, un roguelike narratif
 se déroulant à Velkhar, continent désertique. Tu n'es jamais le joueur.
 Tu décris le monde tel que le moteur te l'indique.
 

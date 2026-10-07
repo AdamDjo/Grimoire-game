@@ -53,7 +53,7 @@ export function LandingExperience({ resumeHref }: { resumeHref?: string }) {
       <footer className="salt-footer">
         <span>{t('brand')} © 2026</span>
         <span>{t('created')}</span>
-        <a href="https://github.com/AdamDjo/Grimoire-game">GitHub</a>
+        <a href="https://github.com/AdamDjo/Velkhar-game">GitHub</a>
       </footer>
       <LandingAtmosphere />
     </div>

@@ -1,4 +1,6 @@
-# Grimoire — AI-Powered Narrative RPG
+# VELKHAR: Of Ash and Salt
+
+Roguelike narratif propulsé par IA, dans un monde de dark fantasy désertique qui se souvient.
 
 An interactive web narrative RPG where AI generates unique universes every playthrough. Players create a character, read narrative scenes, and choose from text options. Roadwarden-style gameplay: stats, inventory, choices with permanent consequences, and Game Over possible. Infinite replayability through AI generation.
 
@@ -10,8 +12,8 @@ An interactive web narrative RPG where AI generates unique universes every playt
 ## Installation
 
 ```bash
-git clone https://github.com/AdamDjo/Grimoire-game.git
-cd Grimoire-game
+git clone https://github.com/AdamDjo/Velkhar-game.git
+cd Velkhar-game
 pnpm install
 ```
 
@@ -53,14 +55,14 @@ pnpm type-check                # TypeScript check across all packages
 ## Project Structure
 
 ```
-Grimoire-game/
+Velkhar-game/
 ├── apps/
 │   ├── frontend/              # Next.js 16 (App Router) — port 3000
 │   └── backend/               # Express + TypeScript — port 3001
 ├── packages/
-│   ├── shared/                # Shared types & constants (@grimoire/shared)
-│   ├── eslint-config/         # Shared ESLint config (@grimoire/eslint-config)
-│   └── prettier-config/       # Shared Prettier config (@grimoire/prettier-config)
+│   ├── shared/                # Shared types & constants (@velkhar/shared)
+│   ├── eslint-config/         # Shared ESLint config (@velkhar/eslint-config)
+│   └── prettier-config/       # Shared Prettier config (@velkhar/prettier-config)
 ├── docs/
 │   ├── 00-START-HERE.md       # AI entrypoint
 │   ├── task-router.md         # What to read for a given task

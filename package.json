@@ -1,5 +1,5 @@
 {
-  "name": "grimoire",
+  "name": "velkhar",
   "private": true,
   "scripts": {
     "dev": "turbo dev",

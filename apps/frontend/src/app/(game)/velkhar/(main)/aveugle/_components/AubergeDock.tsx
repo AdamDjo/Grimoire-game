@@ -3,11 +3,11 @@
 import { useLocale, useTranslations } from 'next-intl'
 import { useMemo, useRef, useState } from 'react'
 
-import { DialogueChoice } from '@/components/ui/grimoire/DialogueChoice/DialogueChoice'
-import { DialogueChoiceGroup } from '@/components/ui/grimoire/DialogueChoiceGroup/DialogueChoiceGroup'
-import { GameButton } from '@/components/ui/grimoire/GameButton/GameButton'
-import { GameIcon } from '@/components/ui/grimoire/GameIcon/GameIcon'
-import { NarrativeComposer } from '@/components/ui/grimoire/NarrativeComposer/NarrativeComposer'
+import { DialogueChoice } from '@/components/ui/velkhar/DialogueChoice/DialogueChoice'
+import { DialogueChoiceGroup } from '@/components/ui/velkhar/DialogueChoiceGroup/DialogueChoiceGroup'
+import { GameButton } from '@/components/ui/velkhar/GameButton/GameButton'
+import { GameIcon } from '@/components/ui/velkhar/GameIcon/GameIcon'
+import { NarrativeComposer } from '@/components/ui/velkhar/NarrativeComposer/NarrativeComposer'
 import { gsap, useGSAP } from '@/lib/gsap-init'
 
 import { getAveugleExchanges, getAveugleTopics } from '../_data/aveugle-catalogue'
@@ -19,7 +19,7 @@ import type {
   AveugleHubState,
   Souvenir,
   SpendSouvenirResponse,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 export type AubergePanel = 'dialogue' | 'memories'
 
@@ -404,7 +404,9 @@ export function AubergeDock({
 
           {activePanel === 'memories' ? (
             selectedMemory ? (
-              <>
+              <article className="aveugle-hub__memory-detail">
+                <p className="aveugle-hub__memory-kicker">{t('memoryDetailKicker')}</p>
+                <h2>{selectedMemory.title}</h2>
                 <blockquote aria-live="polite">« {selectedMemory.body} »</blockquote>
                 <GameButton
                   data-dialogue-action
@@ -414,9 +416,11 @@ export function AubergeDock({
                 >
                   {t('reviewMemories')}
                 </GameButton>
-              </>
+              </article>
             ) : loreResult ? (
-              <>
+              <article className="aveugle-hub__memory-detail">
+                <p className="aveugle-hub__memory-kicker">{t('memoryResultKicker')}</p>
+                <h2>{t('memoryResultTitle')}</h2>
                 <blockquote aria-live="polite">« {loreResult} »</blockquote>
                 <GameButton
                   data-dialogue-action
@@ -426,42 +430,70 @@ export function AubergeDock({
                 >
                   {t('reviewMemories')}
                 </GameButton>
-              </>
+              </article>
             ) : (
               <>
-                <blockquote>« {t('memoryIntro')} »</blockquote>
+                <blockquote className="aveugle-hub__memory-intro">
+                  « {t('memoryIntro')} »
+                </blockquote>
 
-                {hubState.namedSouvenirs.length > 0 ? (
-                  <DialogueChoiceGroup label={t('memoriesLabel')}>
-                    {hubState.namedSouvenirs.map((memory) => (
-                      <DialogueChoice
-                        key={memory.id}
-                        data-dialogue-action
-                        icon={<GameIcon decorative name="memory" size={32} />}
-                        onClick={() => setSelectedMemoryId(memory.id)}
-                      >
-                        {memory.title}
-                      </DialogueChoice>
-                    ))}
-                  </DialogueChoiceGroup>
-                ) : (
-                  <p className="aveugle-hub__empty" role="status">
-                    {t('noNamedMemories')}
-                  </p>
-                )}
+                <section
+                  className="aveugle-hub__memory-archive"
+                  aria-labelledby="aveugle-memory-archive-title"
+                >
+                  <header className="aveugle-hub__memory-archive-header">
+                    <div>
+                      <p className="aveugle-hub__memory-kicker">{t('memoryArchiveKicker')}</p>
+                      <h2 id="aveugle-memory-archive-title">{t('memoryArchiveTitle')}</h2>
+                    </div>
+                    <span>{t('memoryCount', { count: hubState.namedSouvenirs.length })}</span>
+                  </header>
+                  <p className="aveugle-hub__memory-archive-copy">{t('memoryArchiveBody')}</p>
+
+                  {hubState.namedSouvenirs.length > 0 ? (
+                    <div className="aveugle-hub__memory-list" aria-label={t('memoriesLabel')}>
+                      {hubState.namedSouvenirs.map((memory) => (
+                        <button
+                          key={memory.id}
+                          aria-label={t('memoryOpen', { title: memory.title })}
+                          className="aveugle-hub__memory-entry"
+                          data-dialogue-action
+                          onClick={() => setSelectedMemoryId(memory.id)}
+                          type="button"
+                        >
+                          <GameIcon decorative name="memory" size={32} />
+                          <span className="aveugle-hub__memory-entry-copy">
+                            <strong>{memory.title}</strong>
+                            <small>{memory.body}</small>
+                          </span>
+                          <span className="aveugle-hub__memory-entry-action">
+                            {t('memoryRead')}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="aveugle-hub__empty" role="status">
+                      {t('noNamedMemories')}
+                    </p>
+                  )}
+                </section>
 
                 <section className="aveugle-hub__exchange" aria-labelledby="aveugle-exchange-title">
                   <h2 id="aveugle-exchange-title">{t('exchangeTitle')}</h2>
                   {hubState.spendableSouvenirCount > 0 ? (
                     <>
                       <p>{t('exchangeIntro', { count: hubState.spendableSouvenirCount })}</p>
-                      <DialogueChoiceGroup label={t('exchangeLabel')}>
-                        {exchanges.map((exchange) => (
+                      <DialogueChoiceGroup
+                        className="aveugle-hub__exchange-choices"
+                        label={t('exchangeLabel')}
+                      >
+                        {exchanges.map((exchange, index) => (
                           <DialogueChoice
                             key={exchange.exchangeType}
                             data-dialogue-action
                             disabled={isPending}
-                            icon={<GameIcon decorative name={exchange.icon} size={32} />}
+                            number={index + 1}
                             onClick={() =>
                               void runAction({
                                 kind: 'spend',
@@ -469,7 +501,10 @@ export function AubergeDock({
                               })
                             }
                           >
-                            {exchange.label}
+                            <span className="aveugle-hub__choice-copy">
+                              <span>{exchange.label}</span>
+                              <small>{t('exchangeCost')}</small>
+                            </span>
                           </DialogueChoice>
                         ))}
                       </DialogueChoiceGroup>

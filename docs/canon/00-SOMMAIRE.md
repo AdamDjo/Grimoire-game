@@ -1,4 +1,4 @@
-# GRIMOIRE — Of Ash and Salt
+# VELKHAR: Of Ash and Salt
 
 > _Des Cendres et du Sel._
 
@@ -6,7 +6,7 @@
 
 ## À propos de ce document
 
-**GRIMOIRE** est un roguelike narratif par IA, dans un monde de dark fantasy désertique appelé **Velkhar**.
+**VELKHAR** est un roguelike narratif par IA, dans un monde de dark fantasy désertique appelé **Velkhar**.
 
 Le joueur incarne un aventurier — Marcheur-du-Sel, Lame-Ombre, Veilleur ou Tisse-Verbe — et vit une aventure complète en **3 à 15 heures**. À la fin du run, une **Chronique** est générée : le récit de son histoire. Le joueur peut recommencer avec la même vocation ou une autre — le **méta-monde** aura changé, et l'IA générera une toute nouvelle aventure.
 
@@ -22,7 +22,7 @@ Ce Game Design Document décrit l'ensemble du produit. Il est versionné sous Gi
 
 | #                    | Décision                                                                                         | Valeur |
 | -------------------- | ------------------------------------------------------------------------------------------------ | ------ |
-| Nom                  | **GRIMOIRE — Of Ash and Salt**                                                                   |
+| Nom                  | **VELKHAR: Of Ash and Salt**                                                                     |
 | Monde                | **Velkhar** (continent désertique, le _Makhzen_)                                                 |
 | Genre                | Roguelike narratif (run 3-15h, aventure complète)                                                |
 | Persistance          | Canon fixe + méta-monde vivant + Chronique + écho léger                                          |

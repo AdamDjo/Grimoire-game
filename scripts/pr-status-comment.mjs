@@ -5,7 +5,7 @@ import { pathToFileURL } from "node:url";
 // Le statut est régénéré depuis GitHub à chaque push : il ne peut pas être périmé,
 // et aucun document n'est édité à la main. Règle : PROJECT_STATUS.md § Règle de tenue des docs.
 export const MILESTONE = "v0.2.1 - Roguelike jouable";
-export const MARKER = "<!-- grimoire:project-status -->";
+export const MARKER = "<!-- velkhar:project-status -->";
 
 // Les EPICs de coordination ont été retirés du board : un ticket qui ne livre rien
 // ne fait que dupliquer l'état de ses enfants. L'ordre des chantiers reste une

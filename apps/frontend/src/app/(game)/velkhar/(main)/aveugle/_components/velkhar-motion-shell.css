@@ -17,7 +17,7 @@
 .velkhar-motion-shell .game-button__icon:last-child {
   transition-property: transform;
   transition-duration: var(--motion-fast);
-  transition-timing-function: var(--ease-grimoire-out);
+  transition-timing-function: var(--ease-velkhar-out);
 }
 
 .velkhar-motion-shell .game-button:hover .game-button__icon:last-child {

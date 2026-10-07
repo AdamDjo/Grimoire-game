@@ -19,7 +19,7 @@
 | **AI Provider** | Voix narrative         | OpenRouter cascade. Jamais de décision. Validation Zod systématique.          |
 | **DB**          | Persistance            | Postgres + pgvector (Supabase). Cache éphémère Redis (ou in-memory V1).       |
 
-**Aucune couche ne dépend de l'auth en V1.** Les sessions anonymes via cookie suffisent pour faire tourner tout GRIMOIRE V1. L'auth est un _bolt-on_ Phase D, pas une fondation.
+**Aucune couche ne dépend de l'auth en V1.** Les sessions anonymes via cookie suffisent pour faire tourner tout VELKHAR V1. L'auth est un _bolt-on_ Phase D, pas une fondation.
 
 ---
 
@@ -64,7 +64,7 @@
 ### Tooling repo
 
 - **Monorepo** : Turborepo + pnpm 9.15
-- **Lint/Format** : `@grimoire/eslint-config` + `@grimoire/prettier-config`
+- **Lint/Format** : `@velkhar/eslint-config` + `@velkhar/prettier-config`
 - **Tests** : Vitest (unit) + Cypress (E2E)
 - **CI/CD** : GitHub Actions (ci.yml, pr-metadata.yml, release.yml)
 - **Hooks** : Husky + commitlint + lint-staged
@@ -324,7 +324,7 @@ CREATE INDEX idx_logs_model ON request_logs(model_used, request_at DESC);
 │                                                                 │
 │  ┌────────────────────────────────────────────────────────┐    │
 │  │ 1. MIDDLEWARE — sessionMiddleware                      │    │
-│  │    Lit cookie HTTPOnly grimoire_session                │    │
+│  │    Lit cookie HTTPOnly velkhar_session                │    │
 │  │    Récupère player_id depuis players (anon_cookie)     │    │
 │  │    Si inexistant → crée nouveau player anonyme         │    │
 │  └────────────────────────────────────────────────────────┘    │
@@ -449,11 +449,11 @@ Le middleware fonctionne dès aujourd'hui avec `players.anon_cookie` + `players.
 
 ### Cookie HTTPOnly
 
-- **Nom** : `grimoire_session`
+- **Nom** : `velkhar_session`
 - **Valeur** : UUID v4 (cryptographiquement sûr)
 - **Durée** : 90 jours, renouvelée à chaque visite
 - **Flags** : `HttpOnly`, `Secure`, `SameSite=Lax`
-- **Domaine** : `.grimoire.game`
+- **Domaine** : `.velkhar.game`
 
 ### Lifecycle
 
@@ -465,7 +465,7 @@ Le middleware fonctionne dès aujourd'hui avec `players.anon_cookie` + `players.
 ### RGPD anonyme
 
 - Pas de PII collectée sans consentement
-- Cookie consent banner V1 minimal : _"GRIMOIRE utilise un cookie pour sauvegarder ta partie. [Accepter] [Refuser]"_
+- Cookie consent banner V1 minimal : _"VELKHAR utilise un cookie pour sauvegarder ta partie. [Accepter] [Refuser]"_
 - Si refusé → mode "session-only" (localStorage, pas de DB) — fonctionnalités limitées (pas de Chronique partagée)
 
 ### Données stockées côté serveur anonyme
@@ -532,7 +532,7 @@ async callWithCascade(prompt: string, options: AIOptions): Promise<AIResponse> {
 
   // Tous les modèles ont échoué
   throw new AISaturatedError(
-    'GRIMOIRE est très populaire ce soir, réessaye dans 10 min'
+    'VELKHAR est très populaire ce soir, réessaye dans 10 min'
   );
 }
 ```
@@ -651,7 +651,7 @@ EpisodeRPG-game/
 ### Anti-DDoS / Anti-abus
 
 - **Rate limiting Express** par IP : 60 req/min sur `/api/*` (sauf `/api/chronique/:slug` qui est plus permissif)
-- **Rate limiting cookie** : 30 req/min par `grimoire_session` cookie
+- **Rate limiting cookie** : 30 req/min par `velkhar_session` cookie
 - **Anti-bot Chronique** : 1 Chronique max/cookie/IP/jour
 
 ### Validation inputs
@@ -663,7 +663,7 @@ EpisodeRPG-game/
 ### CORS
 
 ```
-CORS_ORIGIN=https://grimoire.game,https://www.grimoire.game
+CORS_ORIGIN=https://velkhar.game,https://www.velkhar.game
 ```
 
 Strict en prod, plus permissif en dev (`localhost:3000`).
@@ -679,7 +679,7 @@ Strict en prod, plus permissif en dev (`localhost:3000`).
 - Cookie consent banner (cf. §5)
 - Bouton "Effacer toutes mes données" dans profil (Phase D quand auth)
 - Bouton "Effacer ma session anonyme" V1 (vide cookie + delete cascade `players`)
-- Email contact `rgpd@grimoire.game` pour demandes manuelles
+- Email contact `rgpd@velkhar.game` pour demandes manuelles
 - Pas de cookies tiers V1 (pas de Google Analytics)
 
 ### Modération contenu
@@ -725,7 +725,7 @@ Documenté ici pour clarté :
                 │  - React 19, Tailwind 4, Zustand        │
                 │  - app/(home), (auth), (main), (game)   │
                 │  - components/ui, lib/home-data         │
-                │  - cookie HTTPOnly grimoire_session     │
+                │  - cookie HTTPOnly velkhar_session     │
                 └────────────────────┬────────────────────┘
                                      │ /api/* proxy
                                      ▼
@@ -788,7 +788,7 @@ export const authOptions = {
   providers: [
     EmailProvider({
       server: process.env.EMAIL_SERVER, // SMTP Resend
-      from: "GRIMOIRE <no-reply@grimoire.game>",
+      from: "VELKHAR <no-reply@velkhar.game>",
       maxAge: 24 * 60 * 60, // magic link valide 24h
     }),
   ],
@@ -807,11 +807,11 @@ export const authOptions = {
 
 #### Flow de rattachement anonyme → compte
 
-1. Visiteur anonyme avec cookie `grimoire_session` → `players.anon_cookie` rempli, `account_id` NULL
+1. Visiteur anonyme avec cookie `velkhar_session` → `players.anon_cookie` rempli, `account_id` NULL
 2. Création de compte (magic link) → NextAuth crée row dans `accounts`
 3. Backend détecte cookie présent + nouveau session → `UPDATE players SET account_id = $1, tier = 'free' WHERE anon_cookie = $2`
 4. **Toutes les données anonymes (characters, runs, scenes, souvenirs, chronicles) restent rattachées** via `player_id` (la `players.account_id` mise à jour suffit)
-5. Cookie `grimoire_session` reste actif (fallback si déconnexion future)
+5. Cookie `velkhar_session` reste actif (fallback si déconnexion future)
 
 ### 13.2 — Schéma DB additionnel Phase D
 
@@ -1042,7 +1042,7 @@ new Worker(
 - **Premium** : priorité 1 → pop en premier → quasi-jamais en file
 - **Gratuit + Anonyme** : priorité 5 → si Premium attendent, ils passent après
 - Frontend reçoit après `waitUntilFinished` (timeout 15s sinon erreur structurée)
-- Si timeout 15s → message _"GRIMOIRE est très populaire ce soir, Premium = pas d'attente"_ (CTA conversion pour gratuit/anonyme uniquement)
+- Si timeout 15s → message _"VELKHAR est très populaire ce soir, Premium = pas d'attente"_ (CTA conversion pour gratuit/anonyme uniquement)
 
 #### Monitoring queue
 
@@ -1149,7 +1149,7 @@ async function executePurges() {
                 │  VERCEL  →  Next.js 15 frontend         │
                 │  - NextAuth magic links                 │
                 │  - Stripe Checkout/Portal redirects     │
-                │  - cookie HTTPOnly grimoire_session     │
+                │  - cookie HTTPOnly velkhar_session     │
                 └────────────────────┬────────────────────┘
                                      │ /api/* proxy
                                      ▼

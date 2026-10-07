@@ -34,7 +34,7 @@ import { instantiateEnemy, startCombat } from '../game-rules/combat'
 import { Prisma } from '../generated/prisma/client'
 
 import type { Character as DbCharacter, GameSession } from '../generated/prisma/client'
-import type { CombatEnemy, CombatPlayer, CombatState, CreatureId } from '@grimoire/shared'
+import type { CombatEnemy, CombatPlayer, CombatState, CreatureId } from '@velkhar/shared'
 
 const character = {
   id: 'char1',

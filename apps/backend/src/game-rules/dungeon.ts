@@ -6,7 +6,7 @@ import {
   type Room,
   type RoomHint,
   type RoomType,
-} from '@grimoire/shared'
+} from '@velkhar/shared'
 
 /**
  * Rooms traversed per floor on the way down. Constant across depths: what grows
