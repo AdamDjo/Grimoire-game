@@ -368,7 +368,9 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
         key={activeVocation?.id ?? 'salt-walker'}
         priority
         sizes="(max-width: 1120px) 100vw, 58vw"
-        src={activeVocation?.heroImageSrc ?? '/encre-de-sel/character-create/marcheur-du-sel.webp'}
+        src={
+          activeVocation?.heroImageSrc ?? '/encre-de-sel/character-create/amani-tousse-a-laube.webp'
+        }
       />
       <div className="character-create__veil" aria-hidden="true" />
     </>

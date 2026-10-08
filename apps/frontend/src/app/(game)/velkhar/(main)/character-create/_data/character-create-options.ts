@@ -63,10 +63,10 @@ const VOCATION_IMAGES: Record<string, string> = {
 }
 
 const VOCATION_HERO_IMAGES: Record<string, string> = {
-  'salt-walker': '/encre-de-sel/character-create/marcheur-du-sel.webp',
+  'salt-walker': '/encre-de-sel/character-create/amani-tousse-a-laube.webp',
   'shadow-blade': '/encre-de-sel/character-create/lame-ombre.webp',
-  watcher: '/encre-de-sel/character-create/veilleur.webp',
-  'word-weaver': '/encre-de-sel/character-create/tisse-verbe.webp',
+  watcher: '/encre-de-sel/character-create/kael-le-muet.webp',
+  'word-weaver': '/encre-de-sel/character-create/syr.webp',
 }
 
 const VOCATION_WITNESSES: Record<
@@ -74,12 +74,12 @@ const VOCATION_WITNESSES: Record<
   { epithet: LocalizedValue; meaning: LocalizedValue; name: string; story: LocalizedValue }
 > = {
   'salt-walker': {
-    epithet: { en: 'The Shadowless Walker', fr: 'Le Marcheur sans ombre' },
-    meaning: { en: 'Nadir of Salt', fr: 'Nadir du Sel' },
-    name: 'Nadir al-Milh',
+    epithet: { en: 'The Thirteen Names', fr: 'Les Treize Noms' },
+    meaning: { en: 'She Who Coughs at Dawn', fr: 'Celle qui tousse à l’aube' },
+    name: 'Amani Tousse-à-l’Aube',
     story: {
-      en: 'He crossed the salt sea with an empty waterskin and a dead man’s name sewn beneath his sleeve. At El Makhzen, he still refuses to say whether the name guards that man’s memory or conceals his own.',
-      fr: 'Il a traversé la mer de sel avec une gourde vide et le nom d’un mort cousu sous sa manche. À El Makhzen, il refuse encore de dire si ce nom protège sa mémoire ou dissimule la sienne.',
+      en: 'Amani knows which wind carries water and which merchant hides Ash beneath their salt. Thirteen names are carved into her route-staff: the travelers she once failed to bring home.',
+      fr: 'Amani sait quel vent porte l’eau et quel marchand cache de la Cendre sous son sel. Treize noms sont gravés sur son bâton de route : les voyageurs qu’elle n’a pas réussi à ramener.',
     },
   },
   'shadow-blade': {
@@ -92,21 +92,21 @@ const VOCATION_WITNESSES: Record<
     },
   },
   watcher: {
-    epithet: { en: 'Reader of Silent Stones', fr: 'Le Lecteur des pierres muettes' },
-    meaning: { en: 'Idris of the Sand', fr: 'Idris du Sable' },
-    name: 'Idris al-Raml',
+    epithet: { en: 'The One Who Listens to Stone', fr: 'Celui qui écoute la pierre' },
+    meaning: { en: 'The Silent One of the Fingers', fr: 'Le Muet des Doigts' },
+    name: 'Kael le Muet',
     story: {
-      en: 'He spent nine days trapped beneath a collapsed ruin, listening to an artefact count the dead. He emerged with the map of a door found on no wall.',
-      fr: 'Il a passé neuf jours sous une ruine effondrée, à écouter un artefact compter les morts. Il en est sorti avec la carte d’une porte qui n’existe sur aucun mur.',
+      en: 'Kael never speaks. He draws his warnings in the dust, studies every mechanism twice and leaves an open handprint on ruins that must never be entered.',
+      fr: 'Kael ne parle jamais. Il dessine ses avertissements dans la poussière, étudie deux fois chaque mécanisme et laisse une main ouverte sur les ruines où personne ne doit entrer.',
     },
   },
   'word-weaver': {
-    epithet: { en: 'She Who Pays for Words', fr: 'Celle qui paie les mots' },
-    meaning: { en: 'Huda of the Letter', fr: 'Huda de la Lettre' },
-    name: 'Huda al-Harf',
+    epithet: { en: 'The Ash-Bearer', fr: 'La Porte-Cendre' },
+    meaning: { en: 'Syr of the Gray Veins', fr: 'Syr aux Veines grises' },
+    name: 'Syr',
     story: {
-      en: 'She awakened an artefact by speaking the name she had sworn to forget. Since that day, every sentence turns a little more of her fingers gray.',
-      fr: 'Elle a éveillé un artefact en prononçant le nom qu’elle avait juré d’oublier. Depuis, chaque phrase grise un peu plus ses doigts.',
+      en: 'Syr awakened an Archon blade by offering it a sentence instead of an order. Since then, the metal obeys, but every spoken word draws another gray vein beneath the skin.',
+      fr: 'Syr a éveillé une lame archonte en lui offrant une phrase plutôt qu’un ordre. Depuis, le métal obéit, mais chaque mot prononcé trace une nouvelle veine grise sous sa peau.',
     },
   },
 }
