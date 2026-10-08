@@ -65,7 +65,7 @@ const VOCATION_IMAGES: Record<string, string> = {
 const VOCATION_HERO_IMAGES: Record<string, string> = {
   'salt-walker': '/encre-de-sel/character-create/amani-tousse-a-laube.webp',
   'shadow-blade': '/encre-de-sel/character-create/lame-ombre.webp',
-  watcher: '/encre-de-sel/character-create/kael-le-muet.webp',
+  watcher: '/encre-de-sel/character-create/kael-le-muet-tablette.webp',
   'word-weaver': '/encre-de-sel/character-create/syr.webp',
 }
 
