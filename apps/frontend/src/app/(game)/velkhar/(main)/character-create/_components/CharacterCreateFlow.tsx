@@ -21,13 +21,10 @@ import { ensureAnonymousSession } from '@/lib/supabase/ensure-session'
 import { VelkharFlowTopBar } from '../../../_components/VelkharFlowChrome/VelkharFlowChrome'
 import { VELKHAR_WORLD } from '../../../_config/velkhar-world'
 import {
-  getCharacterHistoryOptions,
   getCharacterPeopleOptions,
   getCharacterVocationOptions,
-  getLocalizedHistoryValue,
   getPeopleOption,
   getVocationOption,
-  isHistoryOptionSelected,
 } from '../_data/character-create-options'
 import { createCharacter, resolveVocation } from '../_lib/api'
 import {
@@ -140,11 +137,6 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
       icon: 'crossed-swords' as const,
       label: t('vocationLabel'),
     },
-    history: {
-      description: t('historyDescription'),
-      icon: 'journal' as const,
-      label: t('historyLabel'),
-    },
     summary: {
       description: t('summaryDescription'),
       icon: 'book' as const,
@@ -155,13 +147,12 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
     identity: { title: t('identityGuideTitle'), body: t('identityGuideBody') },
     people: { title: t('peopleGuideTitle'), body: t('peopleGuideBody') },
     vocation: { title: t('vocationGuideTitle'), body: t('vocationGuideBody') },
-    history: { title: t('historyGuideTitle'), body: t('historyGuideBody') },
     summary: { title: t('summaryGuideTitle'), body: t('summaryGuideBody') },
   }
   const peopleOptions = getCharacterPeopleOptions(locale)
   const vocationOptions = getCharacterVocationOptions(locale)
 
-  const completedSteps = useMemo(() => getCompletedSteps(currentStep, draft), [currentStep, draft])
+  const completedSteps = useMemo(() => getCompletedSteps(currentStep), [currentStep])
   const currentMeta = stepContent[currentStep]
   const people = getPeopleOption(draft.peopleId, locale)
   const vocation = getVocationOption(draft.vocationId, locale)
@@ -172,10 +163,10 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
   const previewedVocation = previewedVocationId
     ? getVocationOption(previewedVocationId, locale)
     : undefined
+  const activeVocation = previewedVocation ?? vocation ?? vocationOptions[0]
   const guidance = previewedVocation
     ? { title: previewedVocation.name, body: previewedVocation.guidance }
     : stepGuidance[currentStep]
-  const historyOptions = getCharacterHistoryOptions(draft.vocationId, locale)
 
   useEffect(() => {
     const storedDraft = parseStoredCharacterDraft(
@@ -251,8 +242,14 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
   }
 
   const selectPresetVocation = (vocationId: string) => {
-    updateDraft({ freeConcept: '', historyReviewed: false, vocationId, vocationPath: 'preset' })
-    moveToStep('history')
+    updateDraft({
+      backstory: '',
+      freeConcept: '',
+      historyReviewed: true,
+      vocationId,
+      vocationPath: 'preset',
+    })
+    moveToStep('summary')
   }
 
   const continueCustomConcept = async () => {
@@ -294,8 +291,8 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
   }
 
   const acceptResolvedVocation = () => {
-    updateDraft({ historyReviewed: false })
-    moveToStep('history')
+    updateDraft({ backstory: '', historyReviewed: true })
+    moveToStep('summary')
   }
 
   const rejectResolvedVocation = () => {
@@ -308,16 +305,6 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
       vocationPath: 'preset',
       vocationResolutionStatus: 'idle',
     })
-  }
-
-  const continueHistory = () => {
-    try {
-      const backstory = schemas.backstory.parse(draft.backstory)
-      updateDraft({ backstory, historyReviewed: true })
-      moveToStep('summary')
-    } catch (validationError) {
-      setError(getErrorMessage(validationError, t('invalidAnswer')))
-    }
   }
 
   const reviewCreation = () => {
@@ -372,16 +359,26 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
     }
   })
 
+  const sceneBackground = (
+    <>
+      <Image
+        alt=""
+        className="character-create__scene"
+        fill
+        key={activeVocation?.id ?? 'salt-walker'}
+        priority
+        sizes="(max-width: 1120px) 100vw, 58vw"
+        src={activeVocation?.heroImageSrc ?? '/encre-de-sel/character-create/marcheur-du-sel.webp'}
+      />
+      <div className="character-create__veil" aria-hidden="true" />
+    </>
+  )
+
   if (!hydrated) {
     return (
       <main className="character-create" aria-busy="true">
         <GameSceneLayout
-          background={
-            <>
-              <div className="character-create__scene" aria-hidden="true" />
-              <div className="character-create__veil" aria-hidden="true" />
-            </>
-          }
+          background={sceneBackground}
           className="character-create__layout"
           reader={
             <div className="character-create__loading">
@@ -400,30 +397,29 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
   return (
     <main className="character-create">
       <GameSceneLayout
-        background={
-          <>
-            <div className="character-create__scene" aria-hidden="true" />
-            <div className="character-create__veil" aria-hidden="true" />
-          </>
-        }
+        background={sceneBackground}
         className="character-create__layout"
         scene={
           <div className="character-create__scene-content">
-            <button className="character-create__exit" type="button" onClick={leaveCreation}>
-              <GameIcon decorative name="arrow" size={24} />
-              {t('backToInn')}
-            </button>
-            <aside
-              aria-live="polite"
-              className="character-create__heritage"
-              key={`${currentStep}-${previewedVocationId ?? 'default'}`}
+            <GameButton
+              className="character-create__exit"
+              leadingIcon={<GameIcon decorative name="arrow" size={24} />}
+              onClick={leaveCreation}
+              size="sm"
+              variant="ghost"
             >
-              <span className="character-create__heritage-medallion" aria-hidden="true">
-                <GameIcon decorative name="book" size={32} />
+              {t('backToInn')}
+            </GameButton>
+            <aside className="character-create__witness">
+              <span className="character-create__witness-eyebrow">{t('witnessEyebrow')}</span>
+              <strong>{activeVocation?.witness.name}</strong>
+              <span className="character-create__witness-meaning">
+                {activeVocation?.witness.meaning}
               </span>
-              <strong>{guidance.title}</strong>
-              <span className="character-create__heritage-divider" aria-hidden="true" />
-              <p>{guidance.body}</p>
+              <span className="character-create__witness-epithet">
+                {activeVocation?.witness.epithet}
+              </span>
+              <p>{activeVocation?.witness.story}</p>
             </aside>
           </div>
         }
@@ -438,6 +434,7 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                   items={stepperItems}
                   onStepChange={(id) => moveToStep(id as CharacterCreateStep)}
                   orientation="horizontal"
+                  variant="creation"
                 />
               </div>
 
@@ -491,16 +488,17 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
 
                     {currentStep === 'people' ? (
                       <div className="character-create__choice-grid character-create__choice-grid--people">
-                        {peopleOptions.map((option) => (
+                        {peopleOptions.map((option, index) => (
                           <DialogueChoice
                             className="character-create__people-choice"
-                            icon={<GameIcon decorative name={option.icon} size={32} />}
                             key={option.id}
+                            number={index + 1}
                             onClick={() => selectPeople(option.id)}
                             selected={draft.peopleId === option.id}
                           >
                             <strong>{option.name}</strong>
                             <span>{option.description}</span>
+                            <small>{option.effect}</small>
                           </DialogueChoice>
                         ))}
                       </div>
@@ -508,25 +506,6 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
 
                     {currentStep === 'vocation' ? (
                       <div className="character-create__vocation-step">
-                        <a
-                          className="character-create__custom-shortcut"
-                          href="#character-custom-concept"
-                        >
-                          <span
-                            className="character-create__custom-shortcut-icon"
-                            aria-hidden="true"
-                          >
-                            <GameIcon decorative name="quill" size={24} />
-                          </span>
-                          <span>
-                            <small>{t('customShortcutEyebrow')}</small>
-                            <strong>{t('customShortcutTitle')}</strong>
-                          </span>
-                          <span className="character-create__custom-shortcut-action">
-                            {t('start')}
-                          </span>
-                        </a>
-
                         <div className="character-create__choice-grid character-create__choice-grid--vocations">
                           {vocationOptions.map((option) => (
                             <ArchetypeCard
@@ -701,47 +680,6 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                       </div>
                     ) : null}
 
-                    {currentStep === 'history' ? (
-                      <div className="character-create__history-step">
-                        {historyOptions.length > 0 ? (
-                          <div className="character-create__history-options">
-                            {historyOptions.map((history) => (
-                              <DialogueChoice
-                                key={history.id}
-                                icon={<GameIcon decorative name="memory" size={32} />}
-                                onClick={() => updateDraft({ backstory: history.label })}
-                                selected={isHistoryOptionSelected(draft.backstory, history)}
-                              >
-                                {history.label}
-                              </DialogueChoice>
-                            ))}
-                          </div>
-                        ) : null}
-
-                        <GameField
-                          error={error ?? undefined}
-                          hint={t('historyHint')}
-                          label={
-                            historyOptions.length > 0
-                              ? t('historyAlternativeLabel')
-                              : t('historyFreeLabel')
-                          }
-                        >
-                          <GameTextarea
-                            invalid={Boolean(error)}
-                            maxLength={500}
-                            onChange={(event) => updateDraft({ backstory: event.target.value })}
-                            placeholder={t('historyPlaceholder')}
-                            rows={3}
-                            value={draft.backstory}
-                          />
-                        </GameField>
-                        <GameButton onClick={continueHistory} variant="primary">
-                          {draft.backstory ? t('keepHistory') : t('keepSilence')}
-                        </GameButton>
-                      </div>
-                    ) : null}
-
                     {currentStep === 'summary' ? (
                       <div className="character-create__summary">
                         <dl>
@@ -774,14 +712,6 @@ export function CharacterCreateFlow({ campaignId }: CharacterCreateFlowProps) {
                               <dd>{draft.narrativeTrait}</dd>
                             </div>
                           ) : null}
-                          <div>
-                            <dt>{t('traceSummary')}</dt>
-                            <dd>
-                              {draft.backstory
-                                ? getLocalizedHistoryValue(draft.backstory, locale)
-                                : t('noHistory')}
-                            </dd>
-                          </div>
                         </dl>
 
                         <p className="character-create__summary-note">{t('summaryNote')}</p>
