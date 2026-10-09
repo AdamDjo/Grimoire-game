@@ -1,6 +1,5 @@
 import { PEOPLES, VOCATIONS } from '@velkhar/shared'
 
-import type { GameIconName } from '@/components/ui/velkhar/GameIcon/GameIcon'
 import type { UiLocale } from '@/i18n/config'
 
 interface LocalizedValue {
@@ -10,32 +9,31 @@ interface LocalizedValue {
 
 export interface CharacterPeopleOption {
   description: string
-  icon: GameIconName
+  effect: string
   id: string
   name: string
+}
+
+const ATTRIBUTE_LABELS: Record<string, LocalizedValue> = {
+  blood: { en: 'Blood', fr: 'Sang' },
+  breath: { en: 'Breath', fr: 'Souffle' },
+  will: { en: 'Will', fr: 'Volonté' },
 }
 
 export interface CharacterVocationOption {
   description: string
   eyebrow: string
   guidance: string
+  heroImageSrc: string
   id: string
   imageSrc: string
   name: string
-}
-
-export interface CharacterHistoryOption {
-  id: string
-  label: string
-  values: LocalizedValue
-}
-
-const PEOPLE_ICONS: Record<string, GameIconName> = {
-  sahelin: 'wind',
-  rivain: 'coins',
-  therien: 'shield',
-  cendreur: 'fire',
-  changepeau: 'moon',
+  witness: {
+    epithet: string
+    meaning: string
+    name: string
+    story: string
+  }
 }
 
 const VOCATION_GUIDANCE: Record<string, LocalizedValue> = {
@@ -58,17 +56,66 @@ const VOCATION_GUIDANCE: Record<string, LocalizedValue> = {
 }
 
 const VOCATION_IMAGES: Record<string, string> = {
-  'salt-walker': '/characters/vocations/marcheur-du-sel.webp',
-  'shadow-blade': '/characters/vocations/lame-ombre.webp',
-  watcher: '/characters/vocations/veilleur.webp',
-  'word-weaver': '/characters/vocations/tisse-verbe.webp',
+  'salt-walker': '/encre-de-sel/icons/vocations/marcheur-du-sel.webp',
+  'shadow-blade': '/encre-de-sel/icons/vocations/lame-ombre.webp',
+  watcher: '/encre-de-sel/icons/vocations/veilleur.webp',
+  'word-weaver': '/encre-de-sel/icons/vocations/tisse-verbe.webp',
+}
+
+const VOCATION_HERO_IMAGES: Record<string, string> = {
+  'salt-walker': '/encre-de-sel/character-create/amani-tousse-a-laube.webp',
+  'shadow-blade': '/encre-de-sel/character-create/lame-ombre.webp',
+  watcher: '/encre-de-sel/character-create/kael-le-muet-tablette.webp',
+  'word-weaver': '/encre-de-sel/character-create/syr.webp',
+}
+
+const VOCATION_WITNESSES: Record<
+  string,
+  { epithet: LocalizedValue; meaning: LocalizedValue; name: string; story: LocalizedValue }
+> = {
+  'salt-walker': {
+    epithet: { en: 'The Thirteen Names', fr: 'Les Treize Noms' },
+    meaning: { en: 'She Who Coughs at Dawn', fr: 'Celle qui tousse à l’aube' },
+    name: 'Amani Tousse-à-l’Aube',
+    story: {
+      en: 'Amani knows which wind carries water and which merchant hides Ash beneath their salt. Thirteen names are carved into her route-staff: the travelers she once failed to bring home.',
+      fr: 'Amani sait quel vent porte l’eau et quel marchand cache de la Cendre sous son sel. Treize noms sont gravés sur son bâton de route : les voyageurs qu’elle n’a pas réussi à ramener.',
+    },
+  },
+  'shadow-blade': {
+    epithet: { en: 'The Silent Debt', fr: 'La Dette silencieuse' },
+    meaning: { en: 'Zaynab of the Night', fr: 'Zaynab de la Nuit' },
+    name: 'Zaynab al-Layl',
+    story: {
+      en: 'She returned twenty-seven completed contracts to the Shadow Hand. The twenty-eighth bore her own name. Since then, she travels with the blade meant to erase her.',
+      fr: 'Elle a rendu vingt-sept contrats à la Main d’Ombre. Le vingt-huitième portait son propre nom. Depuis, elle voyage avec la lame qui devait l’effacer.',
+    },
+  },
+  watcher: {
+    epithet: { en: 'The One Who Listens to Stone', fr: 'Celui qui écoute la pierre' },
+    meaning: { en: 'The Silent One of the Fingers', fr: 'Le Muet des Doigts' },
+    name: 'Kael le Muet',
+    story: {
+      en: 'Kael never speaks. He draws his warnings in the dust, studies every mechanism twice and leaves an open handprint on ruins that must never be entered.',
+      fr: 'Kael ne parle jamais. Il dessine ses avertissements dans la poussière, étudie deux fois chaque mécanisme et laisse une main ouverte sur les ruines où personne ne doit entrer.',
+    },
+  },
+  'word-weaver': {
+    epithet: { en: 'The Ash-Bearer', fr: 'La Porte-Cendre' },
+    meaning: { en: 'Syr of the Gray Veins', fr: 'Syr aux Veines grises' },
+    name: 'Syr',
+    story: {
+      en: 'Syr awakened an Archon blade by offering it a sentence instead of an order. Since then, the metal obeys, but every spoken word draws another gray vein beneath the skin.',
+      fr: 'Syr a éveillé une lame archonte en lui offrant une phrase plutôt qu’un ordre. Depuis, le métal obéit, mais chaque mot prononcé trace une nouvelle veine grise sous sa peau.',
+    },
+  },
 }
 
 const VOCATION_EYEBROWS: Record<string, LocalizedValue> = {
-  'salt-walker': { en: 'Travel · survival · trade', fr: 'Voyage · survie · négoce' },
-  'shadow-blade': { en: 'Stealth · contracts · secrets', fr: 'Discrétion · contrats · secrets' },
-  watcher: { en: 'Ruins · artifacts · knowledge', fr: 'Ruines · artefacts · savoir' },
-  'word-weaver': { en: 'Ash · language · mastery', fr: 'Cendre · langage · maîtrise' },
+  'salt-walker': { en: 'Travel, survival, trade', fr: 'Voyage, survie, négoce' },
+  'shadow-blade': { en: 'Stealth, contracts, secrets', fr: 'Discrétion, contrats, secrets' },
+  watcher: { en: 'Ruins, artifacts, knowledge', fr: 'Ruines, artefacts, savoir' },
+  'word-weaver': { en: 'Ash, language, mastery', fr: 'Cendre, langage, maîtrise' },
 }
 
 const DEFAULT_VOCATION_EYEBROW: LocalizedValue = {
@@ -76,100 +123,15 @@ const DEFAULT_VOCATION_EYEBROW: LocalizedValue = {
   fr: 'Voie de Velkhar',
 }
 
-/** Canonical fears from raw/05-VOCATIONS, translated without changing their meaning. */
-const CHARACTER_HISTORY_VALUES: Record<string, { id: string; values: LocalizedValue }[]> = {
-  'salt-walker': [
-    {
-      id: 'lost-caravan',
-      values: {
-        en: 'An entire caravan perished because of you.',
-        fr: 'Une caravane entière a péri par ta faute.',
-      },
-    },
-    {
-      id: 'hospitality-debt',
-      values: {
-        en: 'A debt of hospitality was never honored.',
-        fr: 'Une dette d’hospitalité n’a jamais été honorée.',
-      },
-    },
-    {
-      id: 'lost-relative',
-      values: {
-        en: 'You are still searching for someone lost in the desert.',
-        fr: 'Tu cherches encore un proche perdu dans le désert.',
-      },
-    },
-  ],
-  'shadow-blade': [
-    {
-      id: 'surviving-target',
-      values: {
-        en: 'A target survived and is hunting you.',
-        fr: 'Une cible a survécu et te traque.',
-      },
-    },
-    {
-      id: 'wrong-target',
-      values: { en: 'You killed the wrong person.', fr: 'Tu as tué la mauvaise personne.' },
-    },
-    {
-      id: 'mentor-betrayal',
-      values: { en: 'Your former mentor betrayed you.', fr: 'Ton ancien mentor t’a trahi.' },
-    },
-  ],
-  watcher: [
-    {
-      id: 'artifact-death',
-      values: {
-        en: 'An artifact killed one of your companions.',
-        fr: 'Un artefact a tué l’un de tes compagnons.',
-      },
-    },
-    {
-      id: 'buried-partner',
-      values: {
-        en: 'A partner was left buried in a ruin.',
-        fr: 'Un partenaire est resté enseveli dans une ruine.',
-      },
-    },
-    {
-      id: 'artifact-search',
-      values: {
-        en: 'You have searched for one particular artifact for years.',
-        fr: 'Tu recherches un artefact précis depuis des années.',
-      },
-    },
-  ],
-  'word-weaver': [
-    {
-      id: 'calamine-progress',
-      values: {
-        en: 'Calamine is already spreading beneath your skin.',
-        fr: 'La Calamine progresse déjà sous ta peau.',
-      },
-    },
-    {
-      id: 'inquisitor-witness',
-      values: {
-        en: 'An Inquisitor saw your gray hands.',
-        fr: 'Un Inquisiteur a vu tes mains grises.',
-      },
-    },
-    {
-      id: 'artifact-accident',
-      values: {
-        en: 'An artifact beyond your control injured an innocent.',
-        fr: 'Un artefact hors de contrôle a blessé un innocent.',
-      },
-    },
-  ],
-}
-
 export function getCharacterPeopleOptions(locale: UiLocale): CharacterPeopleOption[] {
   return PEOPLES.map((people) => ({
     description: people.description[locale],
-    icon: PEOPLE_ICONS[people.id] ?? 'stranger',
+    effect: Object.entries(people.attributeBonus)
+      .map(([attribute, value]) => {
+        const label = ATTRIBUTE_LABELS[attribute]?.[locale] ?? attribute
+        return `${label} ${value >= 0 ? '+' : ''}${value}`
+      })
+      .join(', '),
     id: people.id,
     name: people.name[locale],
   }))
@@ -180,32 +142,18 @@ export function getCharacterVocationOptions(locale: UiLocale): CharacterVocation
     description: vocation.description[locale],
     eyebrow: (VOCATION_EYEBROWS[vocation.id] ?? DEFAULT_VOCATION_EYEBROW)[locale],
     guidance: (VOCATION_GUIDANCE[vocation.id] ?? vocation.description)[locale],
+    heroImageSrc:
+      VOCATION_HERO_IMAGES[vocation.id] ?? '/encre-de-sel/character-create/veilleur.webp',
     id: vocation.id,
-    imageSrc: VOCATION_IMAGES[vocation.id] ?? '/characters/vocations/veilleur.webp',
+    imageSrc: VOCATION_IMAGES[vocation.id] ?? '/encre-de-sel/icons/vocations/veilleur.webp',
     name: vocation.name[locale],
+    witness: {
+      epithet: VOCATION_WITNESSES[vocation.id]?.epithet[locale] ?? vocation.name[locale],
+      meaning: VOCATION_WITNESSES[vocation.id]?.meaning[locale] ?? vocation.name[locale],
+      name: VOCATION_WITNESSES[vocation.id]?.name ?? vocation.name[locale],
+      story: VOCATION_WITNESSES[vocation.id]?.story[locale] ?? vocation.description[locale],
+    },
   }))
-}
-
-export function getCharacterHistoryOptions(
-  vocationId: string,
-  locale: UiLocale
-): CharacterHistoryOption[] {
-  return (CHARACTER_HISTORY_VALUES[vocationId] ?? []).map((option) => ({
-    ...option,
-    label: option.values[locale],
-  }))
-}
-
-export function getLocalizedHistoryValue(value: string, locale: UiLocale): string {
-  for (const options of Object.values(CHARACTER_HISTORY_VALUES)) {
-    const match = options.find((option) => option.values.en === value || option.values.fr === value)
-    if (match) return match.values[locale]
-  }
-  return value
-}
-
-export function isHistoryOptionSelected(value: string, option: CharacterHistoryOption): boolean {
-  return value === option.values.en || value === option.values.fr
 }
 
 export function getPeopleOption(id: string, locale: UiLocale): CharacterPeopleOption | undefined {

@@ -1,7 +1,6 @@
 'use client'
 
 import { GameButton } from '../GameButton/GameButton'
-import { GamePanel } from '../GamePanel/GamePanel'
 
 import type { ReactNode } from 'react'
 
@@ -39,12 +38,7 @@ export function ArchetypeCard({
   title,
 }: ArchetypeCardProps) {
   return (
-    <GamePanel
-      as="article"
-      variant="compact"
-      tone={selected ? 'gold' : 'neutral'}
-      padding="sm"
-      interactive={!disabled}
+    <article
       className={`archetype-card ${selected ? 'archetype-card--selected' : ''} ${className}`}
       aria-disabled={disabled || undefined}
       onBlur={(event) => {
@@ -72,6 +66,6 @@ export function ArchetypeCard({
       >
         {selected ? selectedLabel : actionLabel}
       </GameButton>
-    </GamePanel>
+    </article>
   )
 }

@@ -44,7 +44,18 @@ describe('CharacterCreateFlow', () => {
     await user.click(screen.getByRole('button', { name: 'Next' }))
 
     await screen.findByRole('heading', { name: 'People' })
+    expect(screen.getAllByText('Blood +1')).not.toHaveLength(0)
     await user.click(screen.getByRole('button', { name: /Sahelin/ }))
+
+    const shadowHeading = await screen.findByRole('heading', { name: 'Shadow-Blade' })
+    const shadowCard = shadowHeading.closest('article')
+    expect(shadowCard).not.toBeNull()
+    fireEvent.mouseEnter(shadowCard!)
+    expect(screen.getByText('Zaynab al-Layl')).toBeInTheDocument()
+    expect(document.querySelector('.character-create__scene')?.getAttribute('src')).toContain(
+      'lame-ombre.webp'
+    )
+    fireEvent.mouseLeave(shadowCard!)
 
     const vocationHeading = await screen.findByRole('heading', { name: 'Salt-Walker' })
     const vocationCard = vocationHeading.closest('article')
@@ -53,13 +64,7 @@ describe('CharacterCreateFlow', () => {
     expect(screen.getAllByText(/Choose this path to play a traveler/)).not.toHaveLength(0)
     await user.click(within(vocationCard!).getByRole('button', { name: 'Follow this path' }))
 
-    await screen.findByRole('heading', { name: 'Past' })
-    await user.click(
-      screen.getByRole('button', { name: 'An entire caravan perished because of you.' })
-    )
-    await user.click(screen.getByRole('button', { name: 'Continue with this past' }))
-
-    expect(await screen.findByRole('heading', { name: 'Summary' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Sealing' })).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Create this character' }))
 
     await waitFor(() => {
@@ -123,7 +128,7 @@ describe('CharacterCreateFlow', () => {
 
     await user.click(screen.getByRole('button', { name: 'Accept this vocation' }))
 
-    await screen.findByRole('heading', { name: 'Past' })
+    await screen.findByRole('heading', { name: 'Sealing' })
   })
 
   it('falls back to the preset choices when the concept cannot be resolved', async () => {
@@ -200,13 +205,13 @@ describe('CharacterCreateFlow', () => {
     render(<CharacterCreateFlow campaignId="nouvelle-chronique" />)
 
     await user.type(await screen.findByLabelText('Character name *'), 'Naïra')
-    await user.click(screen.getByRole('button', { name: 'Leave the Forge' }))
+    await user.click(screen.getByRole('button', { name: 'Return to El Makhzen' }))
 
     expect(confirmMock).toHaveBeenCalledOnce()
     expect(pushMock).not.toHaveBeenCalled()
 
     confirmMock.mockReturnValue(true)
-    await user.click(screen.getByRole('button', { name: 'Leave the Forge' }))
+    await user.click(screen.getByRole('button', { name: 'Return to El Makhzen' }))
 
     expect(pushMock).toHaveBeenCalledWith('/velkhar/aveugle?campaign=nouvelle-chronique')
     confirmMock.mockRestore()

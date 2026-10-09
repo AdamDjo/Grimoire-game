@@ -1,26 +1,51 @@
 .archetype-card {
   align-items: center;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  text-align: center;
+  background: color-mix(in srgb, var(--material-gold) 4%, transparent);
+  border-left: 1px solid var(--material-gold-dim);
+  display: grid;
+  column-gap: clamp(1rem, 2vw, 1.5rem);
+  grid-template-columns: clamp(5rem, 7vw, 6.25rem) minmax(0, 1fr);
+  min-height: 8.5rem;
+  padding: clamp(0.8rem, 1.5vw, 1.1rem);
+  position: relative;
+  row-gap: 0.75rem;
+  text-align: left;
+  transition:
+    background var(--motion-fast) var(--ease-velkhar-standard),
+    border-color var(--motion-fast) var(--ease-velkhar-standard),
+    transform var(--motion-fast) var(--ease-velkhar-standard);
 }
 
 .archetype-card--selected {
-  filter: brightness(1.05);
+  background: color-mix(in srgb, var(--material-gold) 10%, transparent);
+  border-left-color: var(--material-gold-bright);
+}
+
+.archetype-card:hover:not([aria-disabled='true']),
+.archetype-card:focus-within {
+  background: color-mix(in srgb, var(--material-gold) 8%, transparent);
+  border-left-color: var(--material-gold-bright);
+  transform: translateX(3px);
 }
 
 .archetype-card__illustration {
   align-items: center;
+  aspect-ratio: 1;
   display: flex;
+  grid-row: 1 / span 2;
   justify-content: center;
-  min-height: 5rem;
+  min-height: 0;
+  width: 100%;
+}
+
+.archetype-card__body {
+  min-width: 0;
 }
 
 .archetype-card__title {
   color: var(--material-gold-bright);
   font-family: var(--font-game-heading);
-  font-size: var(--text-game-heading);
+  font-size: var(--text-game-section);
   font-weight: 500;
   line-height: 1.2;
   margin: 0;
@@ -28,25 +53,45 @@
 }
 
 .archetype-card__eyebrow {
-  color: var(--material-gold);
+  color: var(--salt-muted);
   display: block;
   font-family: var(--font-game-ui);
   font-size: var(--text-game-label);
   letter-spacing: 0.13em;
-  margin-bottom: 0.45rem;
+  margin-bottom: 0.3rem;
   text-transform: uppercase;
 }
 
 .archetype-card__description {
-  color: color-mix(in srgb, var(--salt-white) 84%, transparent);
+  color: var(--salt-muted);
   font-family: var(--font-game-body);
   font-size: var(--text-game-body);
-  line-height: 1.6;
-  margin: 0.65rem 0 0;
+  line-height: 1.45;
+  margin: 0.4rem 0 0;
   text-wrap: pretty;
 }
 
 .archetype-card > .game-button {
-  max-width: 100%;
-  width: min(18rem, 100%);
+  grid-column: 2;
+  justify-self: start;
+  min-width: 12rem;
+}
+
+@media (max-width: 720px) {
+  .archetype-card {
+    align-items: start;
+    grid-template-columns: 4.75rem minmax(0, 1fr);
+  }
+
+  .archetype-card > .game-button {
+    grid-column: 1 / -1;
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .archetype-card {
+    transition-duration: 0.01ms;
+  }
 }

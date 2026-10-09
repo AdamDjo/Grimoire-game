@@ -2,13 +2,7 @@ import { z } from 'zod'
 
 import type { ShiftedSkill } from '@velkhar/shared'
 
-export const CHARACTER_CREATE_STEPS = [
-  'identity',
-  'people',
-  'vocation',
-  'history',
-  'summary',
-] as const
+export const CHARACTER_CREATE_STEPS = ['identity', 'people', 'vocation', 'summary'] as const
 
 export type CharacterCreateStep = (typeof CHARACTER_CREATE_STEPS)[number]
 export type VocationPath = 'preset' | 'custom'
@@ -124,24 +118,15 @@ export function getResumeStep(draft: CharacterCreateDraft): CharacterCreateStep 
   if (draft.vocationPath === 'custom') {
     if (!freeConceptSchema.safeParse(draft.freeConcept).success) return 'vocation'
     if (draft.vocationResolutionStatus !== 'resolved' || !draft.vocationId) return 'vocation'
-    return draft.historyReviewed ? 'summary' : 'history'
+    return 'summary'
   }
   if (!draft.vocationId) return 'vocation'
-  return draft.historyReviewed ? 'summary' : 'history'
+  return 'summary'
 }
 
-export function getCompletedSteps(
-  currentStep: CharacterCreateStep,
-  draft: CharacterCreateDraft
-): CharacterCreateStep[] {
+export function getCompletedSteps(currentStep: CharacterCreateStep): CharacterCreateStep[] {
   const currentIndex = CHARACTER_CREATE_STEPS.indexOf(currentStep)
-  const completed = CHARACTER_CREATE_STEPS.filter((_, index) => index < currentIndex)
-
-  if (draft.backstory || currentStep === 'summary') {
-    return completed
-  }
-
-  return completed.filter((step) => step !== 'history')
+  return CHARACTER_CREATE_STEPS.filter((_, index) => index < currentIndex)
 }
 
 export function createCharacterResult(draft: CharacterCreateDraft): CharacterCreateDraft {

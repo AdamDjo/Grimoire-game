@@ -95,6 +95,11 @@ Encre de Sel de la landing, sans coque vitrée, panel générique ni ancien déc
 l'Auberge sur l'identité visuelle canonique sans modifier sa logique métier et ne change pas le
 `NO-GO` : la boucle roguelike complète et son playtest de validation restent à livrer.
 
+État attendu après merge de #330 : la création du survivant suit Encre de Sel sur quatre étapes,
+avec les contrôles canoniques, une composition mobile lisible et une première trace narrative
+incarnée par Nadir al-Milh. Le parcours conserve ses règles, son brouillon et sa création réelle ;
+ce jalon ne change pas le `NO-GO` tant que la boucle roguelike complète n'est pas validée.
+
 ## Post-déploiement
 
 Profil complet (#136), Chronologie (#130), Galerie (#131), World Map (#127), linking
