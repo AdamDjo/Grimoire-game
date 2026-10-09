@@ -49,7 +49,7 @@
 }
 
 .auth-layout__content {
-  justify-self: end;
+  justify-self: center;
   max-width: var(--auth-form-width);
   position: relative;
   width: 100%;
