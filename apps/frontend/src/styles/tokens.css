@@ -110,6 +110,44 @@
   --control-shadow-raised: 0 1rem 2rem color-mix(in srgb, var(--ink-black) 58%, transparent);
   --control-focus-shadow: 0 0 0.7rem color-mix(in srgb, var(--material-gold) 24%, transparent);
 
+  /* Parcours d'accès : une coque unique pour connexion, inscription et récupération. */
+  --auth-page-inline: clamp(1rem, 4.5vw, 5rem);
+  --auth-page-block-start: clamp(6.5rem, 13vh, 9rem);
+  --auth-page-block-start-mobile: 6rem;
+  --auth-page-block-end: clamp(1.5rem, 5vh, 3.5rem);
+  --auth-form-width: 38rem;
+  --auth-form-padding: clamp(1.5rem, 3vw, 2.5rem);
+  --auth-form-border-width: 7px;
+  --auth-form-border-slice: 22;
+  --auth-form-background: color-mix(in srgb, var(--ink-page) 91%, transparent);
+  --auth-form-shadow: 0 1.5rem 3.8rem color-mix(in srgb, var(--ink-black) 68%, transparent);
+  --auth-layout-scrim:
+    linear-gradient(90deg, var(--salt-veil-soft), transparent 48%, var(--salt-veil-deep)),
+    linear-gradient(180deg, var(--salt-veil-soft), var(--salt-veil-deep));
+  --auth-layout-glow: radial-gradient(
+    circle at 78% 48%,
+    color-mix(in srgb, var(--material-gold) 10%, transparent),
+    transparent 25rem
+  );
+  --auth-grain-color: color-mix(in srgb, var(--salt-white) 12%, transparent);
+  --auth-grain-size: 3px 3px;
+  --auth-copy-max: 31rem;
+  --auth-control-gap: 0.9rem;
+  --auth-section-gap: 1.2rem;
+  --auth-action-gap: 0.75rem;
+  --auth-rule: color-mix(in srgb, var(--material-gold) 54%, transparent);
+  --auth-kicker-tracking: 0.16em;
+  --auth-link-tracking: 0.045em;
+  --auth-navigation-height: 4.5rem;
+  --auth-navigation-inline: clamp(1.25rem, 3.4vw, 3.5rem);
+  --auth-prompt-background: color-mix(in srgb, var(--ink-black) 94%, transparent);
+  --auth-prompt-shadow: 0 -1rem 3rem color-mix(in srgb, var(--ink-black) 58%, transparent);
+  --auth-prompt-blur: 0.9rem;
+  --auth-prompt-gap: clamp(1rem, 3vw, 2.5rem);
+  --auth-prompt-padding-block: 1rem;
+  --auth-prompt-copy-max: 54rem;
+  --auth-prompt-layer: 50;
+
   /* Prologue : un seul voile narratif, une seule matière de progression. */
   --prologue-body-color: color-mix(in srgb, var(--salt-white) 88%, transparent);
   --prologue-progress-track: color-mix(in srgb, var(--salt-white) 24%, transparent);

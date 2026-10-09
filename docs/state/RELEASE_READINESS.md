@@ -100,6 +100,12 @@ avec les contrôles canoniques, une composition mobile lisible et une première 
 incarnée par Nadir al-Milh. Le parcours conserve ses règles, son brouillon et sa création réelle ;
 ce jalon ne change pas le `NO-GO` tant que la boucle roguelike complète n'est pas validée.
 
+État attendu après merge de #331 : connexion, inscription, récupération d'accès et inscription
+douce partagent une seule coque Encre de Sel et les mêmes primitives canoniques, sans apparence
+`landing` conditionnelle ni asset Auth de l'ancien UI Kit. Les flux Supabase et la conversion des
+traces anonymes restent inchangés ; ce jalon ne change pas le `NO-GO` tant que la boucle roguelike
+complète n'est pas validée.
+
 ## Post-déploiement
 
 Profil complet (#136), Chronologie (#130), Galerie (#131), World Map (#127), linking

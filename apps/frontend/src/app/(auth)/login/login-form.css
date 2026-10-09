@@ -1,63 +1,64 @@
 .login-form {
-  backdrop-filter: blur(14px);
-  filter: drop-shadow(0 24px 50px rgba(0, 0, 0, 0.58));
-  min-height: 0;
-}
-
-.login-form.game-panel--padding-lg {
-  padding: clamp(2.75rem, 5vh, 3.5rem) clamp(2.75rem, 5vw, 4.5rem);
+  backdrop-filter: blur(var(--auth-prompt-blur));
+  background: var(--auth-form-background);
+  border: var(--auth-form-border-width) solid transparent;
+  border-image: var(--control-field-frame) var(--auth-form-border-slice) fill /
+    var(--auth-form-border-width);
+  box-shadow: var(--auth-form-shadow);
+  padding: var(--auth-form-padding);
+  width: 100%;
 }
 
 .login-form__header {
-  align-items: center;
+  align-items: flex-start;
   display: flex;
   flex-direction: column;
-  text-align: center;
+  text-align: left;
+}
+
+.login-form__eyebrow,
+.login-form__or {
+  color: var(--material-gold);
+  font-family: var(--font-ui);
+  font-size: var(--text-game-label);
+  letter-spacing: var(--auth-kicker-tracking);
+  text-transform: uppercase;
+}
+
+.login-form__eyebrow {
+  margin: 0 0 var(--auth-section-gap);
 }
 
 .login-form__header h1 {
-  color: var(--material-gold-bright);
-  font-family: var(--font-game-heading);
-  font-size: var(--text-game-title);
-  font-weight: 500;
-  letter-spacing: 0.035em;
-  line-height: 1.16;
-  margin: 0.3rem 0 0.7rem;
+  color: var(--control-text);
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: 400;
+  line-height: 1.02;
+  margin: 0;
+  text-transform: uppercase;
   text-wrap: balance;
 }
 
 .login-form__header > p:last-child {
-  color: var(--salt-muted);
-  font-family: var(--font-game-body);
-  font-size: var(--text-game-body);
-  line-height: 1.55;
-  margin: 0;
-  max-width: 29rem;
+  color: var(--control-text-muted);
+  font-family: var(--font-serif);
+  font-size: var(--text-game-lead);
+  line-height: 1.45;
+  margin: var(--auth-control-gap) 0 var(--auth-section-gap);
+  max-width: var(--auth-copy-max);
   text-wrap: pretty;
-}
-
-.login-form__eyebrow {
-  color: var(--material-gold);
-  font-family: var(--font-game-ui);
-  font-size: var(--text-game-label);
-  letter-spacing: 0.18em;
-  margin: 0.4rem 0 0;
-  text-transform: uppercase;
-}
-
-.login-form .game-divider {
-  margin-block: 1rem 1.15rem;
 }
 
 .login-form__preservation {
   align-items: flex-start;
   background: color-mix(in srgb, var(--breath-aqua) 7%, var(--ink-raised));
   border: 1px solid color-mix(in srgb, var(--breath-aqua) 26%, transparent);
-  color: var(--salt-muted);
+  color: var(--control-text-muted);
   display: flex;
-  gap: 0.7rem;
-  margin-top: 1.2rem;
-  padding: 0.8rem 0.9rem;
+  gap: var(--auth-action-gap);
+  margin: 0 0 var(--auth-section-gap);
+  padding: var(--auth-control-gap);
 }
 
 .login-form__preservation .game-icon {
@@ -65,141 +66,96 @@
 }
 
 .login-form__preservation p,
-.login-form__account-switch {
-  font-family: var(--font-game-ui);
+.login-form__account-switch,
+.login-form__recovery-link,
+.login-form__footer {
+  font-family: var(--font-ui);
   font-size: var(--text-game-body-sm);
   line-height: 1.5;
+}
+
+.login-form__preservation p,
+.login-form__account-switch {
   margin: 0;
 }
 
 .login-form__account-switch {
-  color: var(--salt-muted);
-  margin-top: 1rem;
-  text-align: center;
-}
-
-.login-form__account-switch a,
-.login-form__recovery-link a {
-  color: var(--material-gold-bright);
-  text-decoration: underline;
-  text-decoration-color: rgba(240, 212, 138, 0.32);
-  text-underline-offset: 0.25em;
+  color: var(--control-text-muted);
+  margin-bottom: var(--auth-section-gap);
 }
 
 .login-form__fields {
   display: grid;
-  gap: 0.85rem;
+  gap: var(--auth-control-gap);
 }
 
-.login-form__options {
-  align-items: center;
-  color: var(--salt-muted);
-  display: flex;
-  font-family: var(--font-game-ui);
-  font-size: var(--text-game-body-sm);
-  justify-content: space-between;
-}
-
-.login-form__options a,
-.login-form__footer a {
-  color: var(--material-gold-bright);
-  text-decoration: underline;
-  text-decoration-color: rgba(240, 212, 138, 0.32);
-  text-underline-offset: 0.25em;
-  transition:
-    color 180ms ease,
-    text-decoration-color 180ms ease;
-}
-
-.login-form__options a:hover,
-.login-form__footer a:hover {
-  color: var(--salt-white);
-  text-decoration-color: currentColor;
-}
-
-.login-form__remember {
-  align-items: center;
-  cursor: pointer;
-  display: inline-flex;
-  gap: 0.55rem;
-  min-height: 44px;
-}
-
-.login-form__remember input {
-  appearance: none;
-  background: rgba(8, 7, 5, 0.76);
-  border: 1px solid rgba(240, 212, 138, 0.58);
-  box-shadow: inset 0 0 0 2px rgba(10, 8, 6, 0.88);
-  color: var(--material-gold-bright);
-  display: grid;
-  height: 1rem;
-  place-content: center;
-  transition:
-    background-color 180ms ease,
-    border-color 180ms ease,
-    box-shadow 180ms ease;
-  width: 1rem;
-}
-
-.login-form__remember input::before {
-  background: currentColor;
-  clip-path: polygon(14% 44%, 0 59%, 40% 100%, 100% 18%, 84% 4%, 38% 70%);
-  content: '';
-  height: 0.58rem;
-  scale: 0;
-  transition: scale 160ms cubic-bezier(0.2, 0, 0, 1);
-  width: 0.58rem;
-}
-
-.login-form__remember input:checked {
-  background: rgba(217, 164, 65, 0.18);
-  border-color: var(--material-gold-bright);
-  box-shadow:
-    inset 0 0 0 2px rgba(10, 8, 6, 0.88),
-    0 0 10px rgba(217, 164, 65, 0.18);
-}
-
-.login-form__remember input:checked::before {
-  scale: 1;
-}
-
-.login-form__remember input:focus-visible {
-  border-color: var(--material-gold-bright);
-  box-shadow:
-    inset 0 0 0 2px rgba(10, 8, 6, 0.88),
-    0 0 0 3px rgba(217, 164, 65, 0.26);
-  outline: 0;
+.login-form__submit,
+.login-form__oauth .game-button {
+  width: 100%;
 }
 
 .login-form__submit {
-  margin: 0.35rem auto 0;
-  width: min(100%, 22rem);
+  margin-top: var(--auth-action-gap);
+}
+
+.login-form__or {
+  align-items: center;
+  display: flex;
+  gap: var(--auth-control-gap);
+  margin: var(--auth-action-gap) 0 0;
+}
+
+.login-form__or::before,
+.login-form__or::after {
+  background: var(--auth-rule);
+  content: '';
+  flex: 1;
+  height: 1px;
 }
 
 .login-form__oauth {
   display: grid;
-  gap: 0.65rem;
+  gap: var(--auth-action-gap);
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .login-form__oauth .game-button {
-  font-size: var(--text-game-label);
+  font-size: var(--text-game-caption);
   min-width: 0;
-  width: 100%;
 }
 
 .login-form__recovery-link {
-  font-family: var(--font-game-ui);
-  font-size: var(--text-game-body-sm);
-  margin: -0.2rem 0 0.15rem;
-  text-align: center;
+  margin: 0;
+  text-align: left;
+}
+
+.login-form__text-link {
+  color: var(--control-text);
+  letter-spacing: var(--auth-link-tracking);
+  text-decoration-color: var(--auth-rule);
+  text-decoration-line: underline;
+  text-underline-offset: 0.25em;
+  transition:
+    color var(--motion-fast) var(--ease-velkhar-standard),
+    text-decoration-color var(--motion-fast) var(--ease-velkhar-standard);
+}
+
+.login-form__text-link:hover {
+  color: var(--link-hover-color);
+  text-decoration-color: currentColor;
+}
+
+.login-form__text-link:focus-visible {
+  outline: 2px solid var(--material-gold-bright);
+  outline-offset: 4px;
 }
 
 .login-form__status {
-  color: var(--material-gold-bright);
-  font-family: var(--font-game-ui);
+  color: var(--control-text);
+  font-family: var(--font-ui);
+  font-size: var(--text-game-caption);
   min-height: 1.5rem;
-  text-align: center;
+  text-align: left;
 }
 
 .login-form__status p {
@@ -207,229 +163,35 @@
 }
 
 .login-form__status[role='alert'] {
-  color: color-mix(in srgb, var(--fresh-blood) 58%, var(--salt-white));
+  color: color-mix(in srgb, var(--fresh-blood) 58%, var(--control-text));
 }
 
 .login-form__footer {
-  color: var(--salt-muted);
-  font-family: var(--font-game-ui);
-  font-size: var(--text-game-body-sm);
-  margin: 1rem 0 0;
-  text-align: center;
-}
-
-/* The login route uses the same public shell and controls as the landing.
-   Signup and recovery keep the existing framed appearance above. */
-.auth-login {
-  align-items: center;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(25rem, 33rem);
-  padding-top: 80px;
-}
-
-.login-form--landing {
-  background: var(--salt-veil-deep);
-  border: 7px solid transparent;
-  border-image: var(--control-field-frame) 22 fill / 7px;
-  justify-self: end;
-  padding: clamp(1.5rem, 2.5vw, 2.25rem);
-  width: 100%;
-}
-
-.login-form--landing .login-form__header {
-  align-items: flex-start;
-  text-align: left;
-}
-
-.login-form--landing .login-form__eyebrow,
-.login-form--landing .game-field__label,
-.login-form--landing .login-form__or {
-  color: var(--salt-gold);
-  font-family: var(--font-ui);
-  font-size: var(--text-game-label);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.login-form--landing .login-form__eyebrow {
-  margin: 0 0 1rem;
-}
-
-.login-form--landing .login-form__header h1 {
-  color: var(--salt-paper);
-  font-family: var(--font-display);
-  font-size: var(--text-h2);
-  font-weight: 400;
-  line-height: 0.98;
-  margin: 0;
-  text-align: left;
-  text-transform: uppercase;
-}
-
-.login-form--landing .login-form__header > p:last-child {
-  color: var(--salt-paper);
-  font-family: var(--font-serif);
-  font-size: var(--text-body-editorial);
-  line-height: 1.4;
-  margin: 0.7rem 0 1.25rem;
-  max-width: 30ch;
-  text-align: left;
-}
-
-.login-form--landing .game-field {
-  gap: 0.7rem;
-}
-
-.login-form--landing .login-form__submit {
-  margin: 0.8rem 0 0;
-  width: 100%;
-}
-
-.login-form--landing .login-form__or {
-  align-items: center;
-  display: flex;
-  gap: 0.9rem;
-  margin: 1.15rem 0 0.75rem;
-}
-
-.login-form--landing .login-form__or::before,
-.login-form--landing .login-form__or::after {
-  background: var(--salt-gold);
-  content: '';
-  flex: 1;
-  height: 1px;
-}
-
-.login-form--landing .login-form__oauth {
-  gap: 0.45rem;
-  grid-template-columns: 1fr;
-}
-
-.login-form--landing .login-form__oauth-link {
-  color: var(--salt-paper);
-  font-family: var(--font-ui);
-  font-size: var(--text-game-label);
-  justify-content: flex-start;
-  letter-spacing: 0.06em;
-  min-height: 44px;
-  padding: 0;
-  text-align: left;
-  text-decoration: none;
-  transition:
-    color var(--motion-fast) var(--ease-velkhar-standard),
-    text-shadow var(--motion-fast) var(--ease-velkhar-standard),
-    transform var(--motion-fast) var(--ease-velkhar-standard);
-}
-
-.login-form--landing .login-form__oauth-link::after {
-  display: none;
-}
-
-.login-form--landing .login-form__recovery-link {
-  margin: 1.15rem 0 0;
-  text-align: left;
-}
-
-.login-form--landing .login-form__text-link {
-  color: var(--salt-paper);
-  font-family: var(--font-ui);
-  font-size: var(--text-game-label);
-  letter-spacing: 0.06em;
-  text-decoration: none;
-  transition:
-    color var(--motion-fast) var(--ease-velkhar-standard),
-    text-shadow var(--motion-fast) var(--ease-velkhar-standard),
-    transform var(--motion-fast) var(--ease-velkhar-standard);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .login-form--landing .login-form__oauth-link:hover,
-  .login-form--landing .login-form__text-link:hover {
-    color: var(--link-hover-color);
-    text-shadow: var(--link-hover-shadow);
-    transform: translateX(var(--link-hover-translate-x));
-  }
-}
-
-.login-form--landing .login-form__status {
-  color: var(--salt-paper);
-  font-family: var(--font-ui);
-  font-size: var(--text-game-caption);
-  text-align: left;
-}
-
-.login-form--landing .login-form__status[role='alert'] {
-  color: color-mix(in srgb, var(--fresh-blood) 58%, var(--salt-paper));
-}
-
-.login-form--landing .login-form__footer {
-  border-top: 1px solid var(--salt-gold);
-  color: var(--salt-paper);
-  font-family: var(--font-ui);
-  font-size: var(--text-game-caption);
-  margin-top: 1.15rem;
-  padding-top: 0.8rem;
+  border-top: 1px solid var(--auth-rule);
+  color: var(--control-text-muted);
+  margin: var(--auth-section-gap) 0 0;
+  padding-top: var(--auth-control-gap);
   text-align: left;
 }
 
 @media (max-width: 640px) {
-  .login-form.game-panel--padding-lg {
-    padding: 2.6rem 1.35rem 3rem;
-  }
-
-  .login-form__options {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
   .login-form__oauth {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 760px) {
-  .auth-login {
-    grid-template-columns: 1fr;
-    padding: 2rem 1rem;
+@media (max-height: 720px) and (min-width: 761px) {
+  .login-form {
+    padding-block: var(--auth-section-gap);
   }
 
-  .login-form--landing {
-    justify-self: stretch;
-  }
-}
-
-@media (max-height: 760px) and (min-width: 641px) {
-  .login-form.game-panel--padding-lg {
-    padding: 2.2rem 4rem;
-  }
-
-  .login-form__header .game-icon {
-    height: 40px;
-    width: 40px;
-  }
-
-  .login-form__header h1 {
-    font-size: 2rem;
-    margin-bottom: 0.4rem;
-  }
-
-  .login-form__header > p:last-child {
-    font-size: 0.94rem;
-  }
-
-  .login-form .game-divider {
-    margin-block: 0.6rem 0.75rem;
+  .login-form__header > p:last-child,
+  .login-form__eyebrow,
+  .login-form__footer {
+    margin-block: var(--auth-action-gap);
   }
 
   .login-form__fields {
-    gap: 0.55rem;
-  }
-
-  .login-form .game-input {
-    min-height: 56px;
-  }
-
-  .login-form__footer {
-    margin-top: 0.65rem;
+    gap: var(--auth-action-gap);
   }
 }

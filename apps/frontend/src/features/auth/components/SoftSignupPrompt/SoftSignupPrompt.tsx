@@ -1,11 +1,14 @@
 'use client'
 
-import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 
+import { GameLink } from '@/components/ui/game-link'
+import { GameButton } from '@/components/ui/velkhar/GameButton/GameButton'
 import { getAuthHref } from '@/lib/internal-navigation'
 import { getAnonymousRequestsRemaining, useSessionStore } from '@/stores/session-store'
+
+import './soft-signup-prompt.css'
 
 export function SoftSignupPrompt() {
   const t = useTranslations('Session')
@@ -20,26 +23,23 @@ export function SoftSignupPrompt() {
   }
 
   return (
-    <div
-      role="status"
-      className="fixed inset-x-0 bottom-0 z-50 flex flex-wrap items-center justify-center gap-4 border-t border-gold-dark bg-ash/95 px-6 py-4 text-center"
-    >
-      <p className="m-0 font-manuscript text-parchment">
+    <aside className="soft-signup-prompt" aria-label={t('keepTrace')}>
+      <p className="soft-signup-prompt__copy" aria-live="polite">
         {remaining > 0 ? t('softPromptRemaining', { count: remaining }) : t('softPromptLimit')}
       </p>
-      <Link
-        href={getAuthHref('/signup', pathname)}
-        className="font-accent text-gold-soft underline"
-      >
-        {t('keepTrace')}
-      </Link>
-      <button
-        type="button"
-        onClick={dismissSoftPrompt}
-        className="font-accent text-parchment/70 underline"
-      >
-        {t('later')}
-      </button>
-    </div>
+      <div className="soft-signup-prompt__actions">
+        <GameLink
+          className="soft-signup-prompt__save"
+          href={getAuthHref('/signup', pathname)}
+          size="sm"
+          variant="primary"
+        >
+          {t('keepTrace')}
+        </GameLink>
+        <GameButton onClick={dismissSoftPrompt} size="sm" type="button" variant="ghost">
+          {t('later')}
+        </GameButton>
+      </div>
+    </aside>
   )
 }
