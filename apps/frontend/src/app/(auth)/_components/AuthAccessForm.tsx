@@ -5,11 +5,9 @@ import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 
 import { GameButton } from '@/components/ui/velkhar/GameButton/GameButton'
-import { GameDivider } from '@/components/ui/velkhar/GameDivider/GameDivider'
 import { GameField } from '@/components/ui/velkhar/GameField/GameField'
 import { GameIcon } from '@/components/ui/velkhar/GameIcon/GameIcon'
 import { GameInput } from '@/components/ui/velkhar/GameInput/GameInput'
-import { GamePanel } from '@/components/ui/velkhar/GamePanel/GamePanel'
 import { getAccessRecoveryHref, getAuthHref } from '@/lib/internal-navigation'
 import { createClient } from '@/lib/supabase/client'
 
@@ -18,12 +16,10 @@ import type { FormEvent } from 'react'
 import '../login/login-form.css'
 
 type AccessMode = 'login' | 'signup'
-type AccessAppearance = 'default' | 'landing'
 type FormStatus = 'idle' | 'loading' | 'sent' | 'error'
 
 interface AuthAccessFormProps {
   anonymousSession: boolean
-  appearance?: AccessAppearance
   initialError?: boolean
   mode: AccessMode
   nextPath: string
@@ -37,7 +33,6 @@ function createCallbackUrl(nextPath: string): string {
 
 export function AuthAccessForm({
   anonymousSession,
-  appearance = 'default',
   initialError = false,
   mode,
   nextPath,
@@ -48,7 +43,6 @@ export function AuthAccessForm({
   const copy =
     mode === 'login'
       ? {
-          icon: 'key' as const,
           eyebrow: t('loginEyebrow'),
           title: t('loginTitle'),
           description: t('loginDescription'),
@@ -56,7 +50,6 @@ export function AuthAccessForm({
           sent: t('loginSent'),
         }
       : {
-          icon: 'book' as const,
           eyebrow: t('signupEyebrow'),
           title: t('signupTitle'),
           description: t('signupDescription'),
@@ -64,7 +57,7 @@ export function AuthAccessForm({
           sent: t('signupSent'),
         }
   const isConversion = mode === 'signup' && anonymousSession
-  const isLandingAppearance = appearance === 'landing'
+  const titleId = `${mode}-title`
 
   async function handleMagicLink(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -105,12 +98,11 @@ export function AuthAccessForm({
     }
   }
 
-  const formContent = (
-    <>
+  return (
+    <section className="login-form" aria-labelledby={titleId}>
       <header className="login-form__header">
-        {!isLandingAppearance ? <GameIcon decorative name={copy.icon} size={48} /> : null}
         <p className="login-form__eyebrow">{copy.eyebrow}</p>
-        <h1 id={isLandingAppearance ? 'login-title' : undefined}>{copy.title}</h1>
+        <h1 id={titleId}>{copy.title}</h1>
         <p>{copy.description}</p>
       </header>
 
@@ -124,23 +116,17 @@ export function AuthAccessForm({
       {mode === 'login' && anonymousSession ? (
         <p className="login-form__account-switch">
           {t('existingAccountBefore')}{' '}
-          <Link
-            className={isLandingAppearance ? 'login-form__text-link' : undefined}
-            href={getAuthHref('/signup', nextPath)}
-          >
+          <Link className="login-form__text-link" href={getAuthHref('/signup', nextPath)}>
             {t('createAccess')}
           </Link>{' '}
           {t('existingAccountAfter')}
         </p>
       ) : null}
 
-      {!isLandingAppearance ? <GameDivider size="sm" /> : null}
-
       <form className="login-form__fields" onSubmit={handleMagicLink}>
-        <GameField label={t('emailLabel')}>
+        <GameField label={t('emailLabel')} required>
           <GameInput
             autoComplete="email"
-            className={isLandingAppearance ? 'login-form__email-input' : undefined}
             disabled={status === 'loading' || status === 'sent'}
             leadingIcon={<GameIcon decorative name="envelope" size={24} />}
             name="email"
@@ -156,43 +142,37 @@ export function AuthAccessForm({
           className="login-form__submit"
           disabled={status === 'sent'}
           loading={status === 'loading'}
-          size="lg"
+          size="sm"
           type="submit"
           variant="primary"
         >
           {copy.submit}
         </GameButton>
 
-        {mode === 'login' && !isLandingAppearance ? (
-          <p className="login-form__recovery-link">
-            <Link href={getAccessRecoveryHref(nextPath)}>{t('resendLink')}</Link>
-          </p>
-        ) : null}
-
-        {isLandingAppearance ? <p className="login-form__or">{t('or')}</p> : null}
+        <p className="login-form__or">{t('or')}</p>
 
         <div className="login-form__oauth" aria-label={t('externalAccess')}>
           <GameButton
-            className={isLandingAppearance ? 'login-form__oauth-link' : undefined}
             disabled={status === 'loading' || status === 'sent'}
             onClick={() => handleOAuth('google')}
+            size="sm"
             type="button"
-            variant={isLandingAppearance ? 'ghost' : 'secondary'}
+            variant="secondary"
           >
             {t('continueGoogle')}
           </GameButton>
           <GameButton
-            className={isLandingAppearance ? 'login-form__oauth-link' : undefined}
             disabled={status === 'loading' || status === 'sent'}
             onClick={() => handleOAuth('discord')}
+            size="sm"
             type="button"
-            variant={isLandingAppearance ? 'ghost' : 'secondary'}
+            variant="secondary"
           >
             {t('continueDiscord')}
           </GameButton>
         </div>
 
-        {mode === 'login' && isLandingAppearance ? (
+        {mode === 'login' ? (
           <p className="login-form__recovery-link">
             <Link className="login-form__text-link" href={getAccessRecoveryHref(nextPath)}>
               {t('resendLink')}
@@ -214,35 +194,19 @@ export function AuthAccessForm({
         {mode === 'login' ? (
           <>
             {t('firstVisit')}{' '}
-            <Link
-              className={isLandingAppearance ? 'login-form__text-link' : undefined}
-              href={getAuthHref('/signup', nextPath)}
-            >
+            <Link className="login-form__text-link" href={getAuthHref('/signup', nextPath)}>
               {t('keepJourney')}
             </Link>
           </>
         ) : (
           <>
             {t('existingChronicle')}{' '}
-            <Link
-              className={isLandingAppearance ? 'login-form__text-link' : undefined}
-              href={getAuthHref('/login', nextPath)}
-            >
+            <Link className="login-form__text-link" href={getAuthHref('/login', nextPath)}>
               {t('signIn')}
             </Link>
           </>
         )}
       </p>
-    </>
-  )
-
-  if (isLandingAppearance) {
-    return <section className="login-form login-form--landing">{formContent}</section>
-  }
-
-  return (
-    <GamePanel className="login-form" ornament="diamond" padding="lg" variant="narrative-frame">
-      {formContent}
-    </GamePanel>
+    </section>
   )
 }

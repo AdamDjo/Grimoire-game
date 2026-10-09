@@ -1,0 +1,58 @@
+.soft-signup-prompt {
+  align-items: center;
+  backdrop-filter: blur(var(--auth-prompt-blur));
+  background: var(--auth-prompt-background);
+  border-top: 1px solid var(--auth-rule);
+  bottom: 0;
+  box-shadow: var(--auth-prompt-shadow);
+  display: grid;
+  gap: var(--auth-prompt-gap);
+  grid-template-columns: minmax(0, 1fr) auto;
+  inset-inline: 0;
+  padding: var(--auth-prompt-padding-block) var(--auth-page-inline);
+  position: fixed;
+  z-index: var(--auth-prompt-layer);
+}
+
+.soft-signup-prompt__copy {
+  color: var(--control-text);
+  font-family: var(--font-serif);
+  font-size: var(--text-game-body);
+  line-height: 1.45;
+  margin: 0;
+  max-width: var(--auth-prompt-copy-max);
+  text-wrap: pretty;
+}
+
+.soft-signup-prompt__actions {
+  align-items: center;
+  display: flex;
+  gap: var(--auth-action-gap);
+}
+
+.soft-signup-prompt__save {
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .soft-signup-prompt {
+    align-items: stretch;
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .soft-signup-prompt__actions {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .soft-signup-prompt__actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .soft-signup-prompt__save {
+    width: 100%;
+  }
+}

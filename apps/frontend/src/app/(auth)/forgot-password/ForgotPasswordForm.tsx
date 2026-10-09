@@ -5,11 +5,9 @@ import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 
 import { GameButton } from '@/components/ui/velkhar/GameButton/GameButton'
-import { GameDivider } from '@/components/ui/velkhar/GameDivider/GameDivider'
 import { GameField } from '@/components/ui/velkhar/GameField/GameField'
 import { GameIcon } from '@/components/ui/velkhar/GameIcon/GameIcon'
 import { GameInput } from '@/components/ui/velkhar/GameInput/GameInput'
-import { GamePanel } from '@/components/ui/velkhar/GamePanel/GamePanel'
 import { getAuthHref } from '@/lib/internal-navigation'
 import { createClient } from '@/lib/supabase/client'
 
@@ -47,16 +45,14 @@ export function ForgotPasswordForm({ nextPath }: ForgotPasswordFormProps) {
   }
 
   return (
-    <GamePanel className="login-form" ornament="diamond" padding="lg" variant="narrative-frame">
+    <section className="login-form" aria-labelledby="recovery-title">
       <header className="login-form__header">
-        <GameIcon decorative name="unlock" size={48} />
         <p className="login-form__eyebrow">{t('recoveryEyebrow')}</p>
-        <h1>{t('recoveryTitle')}</h1>
+        <h1 id="recovery-title">{t('recoveryTitle')}</h1>
         <p>{t('recoveryDescription')}</p>
       </header>
-      <GameDivider size="sm" />
       <form className="login-form__fields" onSubmit={handleSubmit}>
-        <GameField label={t('emailLabel')}>
+        <GameField label={t('emailLabel')} required>
           <GameInput
             autoComplete="email"
             disabled={status === 'loading' || status === 'sent'}
@@ -73,7 +69,7 @@ export function ForgotPasswordForm({ nextPath }: ForgotPasswordFormProps) {
           className="login-form__submit"
           disabled={status === 'sent'}
           loading={status === 'loading'}
-          size="lg"
+          size="sm"
           type="submit"
         >
           {t('recoverySubmit')}
@@ -88,8 +84,10 @@ export function ForgotPasswordForm({ nextPath }: ForgotPasswordFormProps) {
         </div>
       </form>
       <p className="login-form__footer">
-        <Link href={getAuthHref('/login', nextPath)}>{t('backToSignIn')}</Link>
+        <Link className="login-form__text-link" href={getAuthHref('/login', nextPath)}>
+          {t('backToSignIn')}
+        </Link>
       </p>
-    </GamePanel>
+    </section>
   )
 }
